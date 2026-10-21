@@ -5,7 +5,7 @@ header{position:sticky;top:0;background:rgba(255,248,246,.92);backdrop-filter:bl
 .wrap{max-width:780px;margin:0 auto;padding:0 18px}
 header .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:58px}
 .brand{display:flex;align-items:center;gap:9px;font-family:Lora,Georgia,serif;font-weight:600;font-size:21px;color:var(--ink);text-decoration:none}
-.brand svg{width:30px;height:20px}.brand .c1{stroke:var(--rose)}.brand .c2{stroke:var(--gold)}.brand circle{fill:none;stroke-width:2.4}
+.brand svg{width:30px;height:20px}.brand .c1{stroke:var(--rose)}.brand .c2{stroke:var(--gold)}.brand circle,.brand path{fill:none;stroke-width:2.2;stroke-linejoin:round}
 nav a{color:var(--rose);font-weight:700;text-decoration:none;margin-left:14px;font-size:14px}
 main{padding:28px 0 60px}
 h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:34px;line-height:1.15;margin:0 0 6px}

@@ -41,7 +41,7 @@ header.scrolled{border-bottom-color:var(--line)}
 header .wrap{display:flex;align-items:center;gap:16px;padding-block:12px}
 .brand{display:flex;align-items:center;gap:9px;font-family:var(--f-display);font-weight:600;font-size:22px;letter-spacing:-.01em;color:var(--ink);text-decoration:none}
 .mark{width:32px;height:22px}
-.mark circle{fill:none;stroke-width:2.4}
+.mark circle,.mark path{fill:none;stroke-width:2.2;stroke-linejoin:round}
 .mark .c1{stroke:var(--rose)}.mark .c2{stroke:var(--gold)}
 nav.links{display:flex;gap:22px;margin-left:auto;font-weight:600;font-size:14.5px}
 nav.links a{color:var(--muted);text-decoration:none}
@@ -253,7 +253,7 @@ dialog form.card{border:0;box-shadow:none;background:transparent;padding:16px 22
 <div class="strip" id="preview-strip"><div class="wrap"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.6v.2"/></svg><span>Preview: forms work but are not saved yet. Sign-ups go live with the NeuMarry launch.</span></div></div>
 
 <header id="top"><div class="wrap">
-  <a class="brand" href="#hero" aria-label="NeuMarry home"><svg class="mark" viewBox="0 0 32 22" aria-hidden="true"><circle class="c1" cx="11" cy="11" r="8"/><circle class="c2" cx="21" cy="11" r="8"/></svg>NeuMarry</a>
+  <a class="brand" href="#hero" aria-label="NeuMarry home"><svg class="mark" viewBox="0 0 32 22" aria-hidden="true"><path class="c1" d="M11.60 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/><path class="c2" d="M20.40 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/></svg>NeuMarry</a>
   <nav class="links" aria-label="Sections"><a href="#how">How it works</a><a href="#event">Events</a><a href="#partners">Work with us</a><a href="#faq">FAQ</a></nav>
   <a class="btn primary sm" href="#app">Get the app</a>
 </div></header>
@@ -443,7 +443,7 @@ dialog form.card{border:0;box-shadow:none;background:transparent;padding:16px 22
     <li><b>What we keep</b><span>Only what the law requires, such as payment records for tax, and records of accounts removed for fraud. Cancel any Gold subscription in your Google Play or App Store account.</span></li>
   </ol>
 </div></section>
-<footer><div class="wrap"><a class="brand" href="#hero"><svg class="mark" viewBox="0 0 32 22" aria-hidden="true"><circle class="c1" cx="11" cy="11" r="8"/><circle class="c2" cx="21" cy="11" r="8"/></svg>NeuMarry</a><span>NeuMarry · © 2026</span><span>Members must be 18 or older</span><span class="legal-links"><button type="button" class="link" data-legal="terms">Terms of Service</button><button type="button" class="link" data-legal="privacy">Privacy Policy</button><a class="link" href="delete-account.html">Delete account</a><a class="link" href="privacy.html">Full Privacy Policy</a><a class="link" href="terms.html">Full Terms</a></span></div></footer>
+<footer><div class="wrap"><a class="brand" href="#hero"><svg class="mark" viewBox="0 0 32 22" aria-hidden="true"><path class="c1" d="M11.60 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/><path class="c2" d="M20.40 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/></svg>NeuMarry</a><span>NeuMarry · © 2026</span><span>Members must be 18 or older</span><span class="legal-links"><button type="button" class="link" data-legal="terms">Terms of Service</button><button type="button" class="link" data-legal="privacy">Privacy Policy</button><a class="link" href="delete-account.html">Delete account</a><a class="link" href="privacy.html">Full Privacy Policy</a><a class="link" href="terms.html">Full Terms</a></span></div></footer>
 <dialog id="legal" aria-labelledby="legal-title"><div class="dh"><h3 id="legal-title">Terms</h3><button class="x" type="button" id="legal-close" aria-label="Close"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div class="legal-b" id="legal-b"></div></dialog>
 
 
