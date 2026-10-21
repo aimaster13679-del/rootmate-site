@@ -1,0 +1,551 @@
+<title>RootMate Toronto</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: a warm single-theme landing page. Wide hero split (words left, portrait pair right), then proof, steps, the first event, the waitlist form and FAQ. Same rose system as the app. */
+:root{
+  --bg:#FFF8F6; --band:#FFF0EE; --surface:#FFFFFF; --sunk:#FDF0EE; --ink:#3B1F2A; --muted:#86666F; --line:#F3E0E1;
+  --rose:#E8436B; --rose-2:#FF8DA0; --rose-deep:#C8325A; --rose-soft:#FFE7EC; --gold:#B8863A; --gold-soft:#FCF1DE; --good:#2D8A61; --bad:#C8384A;
+  --grad:linear-gradient(135deg,#FF8FA1 0%,#EE4D74 52%,#D3385F 100%);
+  --grad-warm:linear-gradient(135deg,#FFC9AE 0%,#FF93A6 50%,#EE4D74 100%);
+  --shadow:0 1px 2px rgba(120,30,60,.05),0 14px 34px -18px rgba(200,50,90,.32);
+  --shadow-rose:0 12px 26px -10px rgba(232,67,107,.55);
+  --f-display:"Fraunces","Iowan Old Style",Georgia,serif;
+  --f-body:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--rose-deep)}
+:focus-visible{outline:2px solid var(--rose);outline-offset:3px;border-radius:6px}
+h1,h2,h3{margin:0;text-wrap:balance}
+p{margin:0}
+.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.serif{font-family:var(--f-display);font-weight:500;letter-spacing:-.015em}
+
+/* Preview strip */
+.strip{background:var(--ink);color:#FCE9EE;font-size:13px;font-weight:600}
+.strip .wrap{padding-block:8px;display:flex;gap:8px;align-items:center;justify-content:center;text-align:center}
+.strip .ic{width:16px;height:16px;color:var(--rose-2)}
+
+/* Nav */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(255,248,246,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .2s}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:21;background:var(--bg)}
+header.scrolled{border-bottom-color:var(--line)}
+header .wrap{display:flex;align-items:center;gap:16px;padding-block:12px}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--f-display);font-weight:600;font-size:22px;letter-spacing:-.01em;color:var(--ink);text-decoration:none}
+.mark{width:32px;height:22px}
+.mark circle{fill:none;stroke-width:2.4}
+.mark .c1{stroke:var(--rose)}.mark .c2{stroke:var(--gold)}
+nav.links{display:flex;gap:22px;margin-left:auto;font-weight:600;font-size:14.5px}
+nav.links a{color:var(--muted);text-decoration:none}
+nav.links a:hover{color:var(--ink)}
+@media (max-width:760px){nav.links{display:none}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:999px;padding:12px 22px;font-weight:700;font-size:15px;background:var(--surface);color:var(--ink);min-height:48px;text-decoration:none;transition:transform .1s,box-shadow .15s}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--grad);color:#fff;box-shadow:var(--shadow-rose)}
+.btn.ghost{border-color:var(--line)}
+.btn.sm{min-height:40px;padding:8px 16px;font-size:14px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+header .btn{margin-left:auto}
+@media (min-width:761px){header .btn{margin-left:0}}
+
+/* Hero */
+.hero{position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;width:780px;height:780px;right:-260px;top:-300px;border-radius:50%;background:radial-gradient(circle,#FFD3DD 0%,rgba(255,211,221,0) 65%);pointer-events:none}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;padding-block:56px 64px}
+.hero .wrap>*{min-width:0}
+@media (max-width:900px){.hero .wrap{grid-template-columns:1fr;gap:36px;padding-block:32px 48px}}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:7px 13px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:13.5px;font-weight:700;color:var(--rose-deep);box-shadow:var(--shadow)}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--rose);box-shadow:0 0 0 0 rgba(232,67,107,.5);animation:dot 1.8s infinite}
+@keyframes dot{70%{box-shadow:0 0 0 8px rgba(232,67,107,0)}100%{box-shadow:0 0 0 0 rgba(232,67,107,0)}}
+.hero h1{font-family:var(--f-display);font-weight:500;font-size:clamp(40px,6vw,68px);line-height:1.02;letter-spacing:-.03em;margin-top:20px}
+.hero h1 em{font-style:italic;color:var(--rose)}
+.hero .lede{font-size:18.5px;color:var(--muted);max-width:44ch;margin-top:20px}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.avail{margin-top:14px;font-size:13.5px;font-weight:600;color:var(--muted)}
+.count{display:flex;gap:10px;margin-top:28px;flex-wrap:wrap;align-items:center}
+.count .u{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:8px 12px;text-align:center;min-width:64px;box-shadow:var(--shadow)}
+.count .u b{display:block;font-family:var(--f-display);font-weight:500;font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
+.count .u span{font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--muted)}
+.count .lbl{font-size:14px;color:var(--muted);font-weight:600;margin-left:4px}
+.art{position:relative;aspect-ratio:1/1;max-width:480px;width:100%;justify-self:center}
+.art .card{position:absolute;width:52%;aspect-ratio:3/3.7;border-radius:32px;overflow:hidden;border:5px solid #fff;box-shadow:0 26px 50px -22px rgba(120,10,50,.5)}
+.art .card svg{width:100%;height:100%;display:block}
+.art .c-a{left:4%;top:10%;transform:rotate(-7deg)}
+.art .c-b{right:4%;top:20%;transform:rotate(6deg)}
+.art .chip{position:absolute;display:flex;align-items:center;gap:7px;background:#fff;border-radius:999px;padding:9px 14px;font-weight:800;font-size:14px;box-shadow:0 12px 26px -12px rgba(120,10,50,.45);white-space:nowrap}
+.art .chip .ic{width:16px;height:16px}
+.art .m{left:50%;top:44%;transform:translateX(-50%);color:var(--rose-deep);z-index:2}
+.art .r{left:0;bottom:12%;color:var(--ink)}
+.art .l{right:0;bottom:4%;color:var(--ink)}
+.art .r .ic,.art .l .ic{color:var(--rose)}
+@media (prefers-reduced-motion:no-preference){.art .card{animation:float 6s ease-in-out infinite}.art .c-b{animation-delay:-3s}}
+@keyframes float{0%,100%{translate:0 0}50%{translate:0 -8px}}
+
+/* Proof band */
+.proof{background:var(--band);border-block:1px solid var(--line)}
+.proof .wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding-block:28px}
+.proof .wrap>*{min-width:0}
+@media (max-width:760px){.proof .wrap{grid-template-columns:1fr;gap:18px}}
+.proof b{display:block;font-family:var(--f-display);font-weight:500;font-size:34px;line-height:1.1;letter-spacing:-.02em;color:var(--rose-deep);font-variant-numeric:tabular-nums}
+.proof span{font-size:14.5px;color:var(--muted)}
+.proof .src{grid-column:1/-1;font-size:12.5px;color:var(--muted)}
+
+/* Sections */
+section.sec{padding-block:72px}
+@media (max-width:760px){section.sec{padding-block:52px}}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--rose)}
+.sec h2{font-family:var(--f-display);font-weight:500;font-size:clamp(30px,4vw,44px);line-height:1.08;letter-spacing:-.02em;margin-top:10px;max-width:22ch}
+.sec .sub{color:var(--muted);font-size:17px;max-width:56ch;margin-top:14px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:36px 0 0;padding:0;list-style:none;counter-reset:s}
+.steps>*{min-width:0}
+@media (max-width:900px){.steps{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.steps{grid-template-columns:1fr}}
+.steps.del{grid-template-columns:repeat(3,1fr)}
+@media (max-width:900px){.steps.del{grid-template-columns:1fr}}
+.steps li{background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:22px;box-shadow:var(--shadow);display:grid;gap:10px;align-content:start;counter-increment:s}
+.steps li::before{content:counter(s);width:36px;height:36px;border-radius:50%;background:var(--rose-soft);color:var(--rose-deep);display:grid;place-items:center;font-weight:800}
+.steps b{font-size:17px}
+.steps span{color:var(--muted);font-size:14.5px}
+.usp{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:36px}
+.usp>*{min-width:0}
+@media (max-width:760px){.usp{grid-template-columns:1fr}}
+.usp div{display:grid;grid-template-columns:52px 1fr;gap:16px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:22px;box-shadow:var(--shadow)}
+.usp .pi{width:52px;height:52px;border-radius:16px;background:var(--grad-warm);color:#fff;display:grid;place-items:center}
+.usp .pi .ic{width:24px;height:24px}
+.usp b{display:block;font-size:17px}
+.usp p{color:var(--muted);font-size:14.5px;margin-top:4px}
+.usp em{font-style:normal;font-size:12px;font-weight:800;color:var(--gold);background:var(--gold-soft);padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:2px}
+
+/* Event */
+.event{display:grid;grid-template-columns:1fr 1fr;border-radius:34px;overflow:hidden;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);margin-top:36px}
+.event>*{min-width:0}
+@media (max-width:860px){.event{grid-template-columns:1fr}}
+.event .pic{position:relative;min-height:320px;color:#fff;overflow:hidden}
+.event .pic svg{position:absolute;inset:0;width:100%;height:100%}
+.event .date{position:absolute;left:22px;top:22px;background:#fff;color:var(--ink);border-radius:18px;padding:8px 14px;text-align:center;line-height:1.05;box-shadow:0 8px 18px -10px rgba(60,10,30,.5)}
+.event .date b{display:block;font-family:var(--f-display);font-weight:500;font-size:30px}
+.event .date span{font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--rose)}
+.event .tag{position:absolute;right:22px;top:22px;background:rgba(255,255,255,.94);color:var(--rose-deep);padding:7px 12px;border-radius:999px;font-size:13px;font-weight:800;display:flex;gap:6px;align-items:center}
+.event .tag .ic{width:15px;height:15px}
+.event .info{padding:30px;display:grid;gap:16px;align-content:start}
+.event h3{font-family:var(--f-display);font-weight:500;font-size:32px;letter-spacing:-.02em;line-height:1.1}
+.meta{display:flex;flex-wrap:wrap;gap:6px 16px;color:var(--muted);font-size:14.5px}
+.meta span{display:inline-flex;gap:6px;align-items:center}
+.meta .ic{width:17px;height:17px}
+.incl{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.incl li{display:flex;gap:10px;font-size:15px}
+.incl .ic{color:var(--rose);width:18px;height:18px;margin-top:3px}
+.prices{display:flex;flex-wrap:wrap;gap:12px}
+.matchteaser{display:flex;gap:12px;align-items:flex-start;background:var(--blush,#FFF0F3);border-radius:18px;padding:14px 16px;font-size:14.5px;line-height:1.5;color:var(--ink)}
+.matchteaser .ic{width:20px;height:20px;flex:none;margin-top:2px;color:var(--rose)}
+.matchteaser b{font-weight:800}
+.appbox{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:34px;padding:44px;box-shadow:var(--shadow)}
+.appbox>*{min-width:0}
+@media (max-width:860px){.appbox{grid-template-columns:1fr;padding:28px 22px;gap:28px}}
+.stores{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.store{display:inline-flex;align-items:center;gap:10px;background:#2B1620;color:#fff;border-radius:16px;padding:10px 18px 10px 14px;text-decoration:none;min-width:170px;transition:transform .15s}
+.store:hover{transform:translateY(-2px)}
+.store svg{width:26px;height:26px;flex:none}
+.store span{display:grid;line-height:1.15}
+.store small{font-size:11px;font-weight:600;opacity:.8}
+.store b{font-size:18px;font-weight:700}
+.appbox .note{margin-top:14px}
+.appfeat{list-style:none;display:grid;gap:14px;padding:0;margin:0}
+.appfeat li{display:flex;gap:10px;align-items:flex-start;font-size:15.5px;line-height:1.45}
+.appfeat .ic{width:20px;height:20px;flex:none;color:var(--rose);margin-top:1px}
+.price{flex:1;min-width:140px;border:1px solid var(--line);border-radius:18px;padding:12px 14px;background:var(--bg)}
+.price b{font-family:var(--f-display);font-weight:500;font-size:28px}
+.price span{display:block;color:var(--muted);font-size:13px}
+.seatbar{display:grid;gap:6px;font-size:13.5px;color:var(--muted);font-weight:600}
+.seatbar .sb{height:8px;border-radius:8px;background:var(--sunk);overflow:hidden}
+.seatbar .sb i{display:block;height:100%;width:0;background:var(--grad)}
+.note{font-size:13px;color:var(--muted)}
+
+/* Form */
+.joinbox{display:grid;grid-template-columns:.9fr 1.1fr;gap:40px;align-items:start}
+.joinbox>*{min-width:0}
+@media (max-width:900px){.joinbox{grid-template-columns:1fr}}
+.perks{margin:24px 0 0;padding:0;list-style:none;display:grid;gap:14px}
+.perks li{display:flex;gap:12px;align-items:flex-start;font-size:15.5px}
+.perks .ic{color:var(--rose);margin-top:3px}
+form.card{background:var(--surface);border:1px solid var(--line);border-radius:30px;padding:28px;box-shadow:var(--shadow);display:grid;gap:16px}
+@media (max-width:560px){form.card{padding:20px}}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row2>*{min-width:0}
+@media (max-width:460px){.row2{grid-template-columns:1fr}}
+.fld{display:grid;gap:6px;min-width:0}
+.fld>span{font-size:13px;font-weight:700;color:var(--muted)}
+.fld input,.fld select{width:100%;min-height:50px;border:1.5px solid var(--line);border-radius:14px;padding:11px 14px;background:var(--surface);font-size:16px}
+.fld input:focus,.fld select:focus{outline:none;border-color:var(--rose);box-shadow:0 0 0 4px var(--rose-soft)}
+.fld.bad input,.fld.bad select,.seg.bad label span{border-color:var(--bad)}
+.err,.fld>.err{color:var(--bad);font-size:13px;font-weight:700}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg.three{grid-template-columns:repeat(3,1fr)}
+.seg label{position:relative}
+.seg input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.seg span{display:block;text-align:center;padding:12px 8px;border:1.5px solid var(--line);border-radius:14px;font-weight:600;font-size:14.5px;background:var(--surface)}
+.seg input:checked+span{border-color:var(--rose);background:var(--rose-soft);color:var(--ink);font-weight:800}
+.seg input:focus-visible+span{outline:2px solid var(--rose);outline-offset:2px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--muted)}
+.check input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--rose);flex:none}
+.check.bad{color:var(--bad)}
+.done{display:grid;gap:12px;justify-items:center;text-align:center;padding:20px 8px}
+.done .big{width:72px;height:72px;border-radius:50%;background:var(--grad);color:#fff;display:grid;place-items:center;box-shadow:var(--shadow-rose)}
+.done .big .ic{width:34px;height:34px;stroke-width:2.2}
+.done h3{font-family:var(--f-display);font-weight:500;font-size:28px}
+.done p{color:var(--muted);max-width:38ch}
+.code{font-family:ui-monospace,Menlo,monospace;background:var(--sunk);padding:4px 10px;border-radius:8px;font-weight:700;user-select:all}
+
+/* Communities */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.chips span{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-weight:700;font-size:14px;box-shadow:var(--shadow)}
+.chips span.all{background:var(--grad);color:#fff;border-color:transparent}
+.cities{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:22px;font-size:14px;color:var(--muted)}
+.cities b{width:100%;font-weight:700;color:var(--ink)}
+.cities span{border:1px dashed var(--line);border-radius:999px;padding:6px 12px;background:var(--bg)}
+.legal-links{display:flex;gap:16px}
+.legal-links .link{font-size:13.5px;background:none;border:0;padding:0;color:var(--rose-deep);font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.legal-b{padding:14px 22px 24px;display:grid;gap:10px}
+.legal-b li{color:var(--ink);font-size:15px;line-height:1.5}
+.legal-b ul{margin:0;padding-left:20px;display:grid;gap:8px}
+/* FAQ */
+.faq{margin-top:28px;display:grid;gap:10px;max-width:820px}
+.faq details{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:4px 20px;box-shadow:var(--shadow)}
+.faq summary{list-style:none;cursor:pointer;padding:16px 0;font-weight:700;font-size:16.5px;display:flex;justify-content:space-between;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary .ic{transition:transform .2s;color:var(--rose)}
+.faq details[open] summary .ic{transform:rotate(45deg)}
+.faq details p{padding:0 0 18px;color:var(--muted)}
+
+/* CTA band + footer */
+.ctaband{background:var(--grad);color:#fff;border-radius:34px;padding:44px 36px;display:grid;gap:18px;justify-items:start;position:relative;overflow:hidden}
+.ctaband::after{content:"";position:absolute;right:-80px;top:-80px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.14)}
+.ctaband h2{font-family:var(--f-display);font-weight:500;font-size:clamp(28px,4vw,40px);letter-spacing:-.02em;max-width:20ch;line-height:1.1;position:relative}
+.ctaband .btn{background:#fff;color:var(--rose-deep);position:relative}
+footer{border-top:1px solid var(--line);margin-top:72px}
+footer .wrap{padding-block:28px;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;font-size:13.5px;color:var(--muted)}
+footer .brand{font-size:18px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:16px;font-size:14px;font-weight:600;z-index:50;box-shadow:0 14px 30px -10px rgba(30,8,16,.45);max-width:calc(100% - 32px)}
+dialog{border:0;padding:0;border-radius:30px;max-width:560px;width:calc(100% - 24px);background:var(--bg);color:var(--ink);box-shadow:0 30px 60px -20px rgba(60,10,30,.5)}
+dialog::backdrop{background:rgba(40,10,20,.45)}
+dialog .dh{display:flex;align-items:center;justify-content:space-between;padding:20px 22px 0}
+dialog .dh h3{font-family:var(--f-display);font-weight:500;font-size:26px}
+dialog .x{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center}
+dialog form.card{border:0;box-shadow:none;background:transparent;padding:16px 22px 24px}
+.stepper{display:flex;align-items:center;gap:12px}
+.stepper button{width:42px;height:42px;border-radius:50%;border:1.5px solid var(--line);background:var(--surface);font-size:20px;font-weight:700}
+.stepper button[disabled]{opacity:.35;cursor:not-allowed}
+.stepper b{min-width:24px;text-align:center;font-size:18px;font-variant-numeric:tabular-nums}
+.sum{display:grid;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px;font-variant-numeric:tabular-nums}
+.sum div{display:flex;justify-content:space-between;gap:10px;font-size:14.5px}
+.sum .t{font-weight:800;border-top:1px dashed var(--line);padding-top:8px;margin-top:2px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+
+<div class="strip" id="preview-strip"><div class="wrap"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.6v.2"/></svg><span>Preview: forms work but are not saved yet. Sign-ups go live with the RootMate launch.</span></div></div>
+
+<header id="top"><div class="wrap">
+  <a class="brand" href="#hero" aria-label="RootMate home"><svg class="mark" viewBox="0 0 32 22" aria-hidden="true"><circle class="c1" cx="11" cy="11" r="8"/><circle class="c2" cx="21" cy="11" r="8"/></svg>RootMate</a>
+  <nav class="links" aria-label="Sections"><a href="#how">How it works</a><a href="#event">Events</a><a href="#partners">Work with us</a><a href="#faq">FAQ</a></nav>
+  <a class="btn primary sm" href="#app">Get the app</a>
+</div></header>
+
+<main>
+<section class="hero" id="hero"><div class="wrap">
+  <div>
+    <span class="pill"><i></i>Launching in Toronto · November 2026</span>
+    <h1>Your person from <em>back home</em> might live ten minutes away.</h1>
+    <p class="lede">RootMate is matrimony for people living abroad. Meet verified people who share your roots and your mindset, in your city, with your family by your side.</p>
+    <div class="ctas"><a class="btn primary" href="#app">Get the app</a><a class="btn ghost" href="#join">Join the waitlist</a></div>
+    <p class="avail">For Android and iPhone · Google Play first, App Store soon after</p>
+    <div class="count" id="count" aria-live="off"><div class="u"><b id="cd-d">–</b><span>days</span></div><div class="u"><b id="cd-h">–</b><span>hours</span></div><div class="u"><b id="cd-m">–</b><span>min</span></div><span class="lbl" id="cd-l">until the first Family Mixer</span></div>
+  </div>
+  <div class="art" aria-hidden="true">
+    <div class="card c-a" id="p1"></div><div class="card c-b" id="p2"></div>
+    <span class="chip m"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3c.6 4.2 2.8 6.4 7 7-4.2.6-6.4 2.8-7 7-.6-4.2-2.8-6.4-7-7 4.2-.6 6.4-2.8 7-7z"/></svg>96% match</span>
+    <span class="chip r"><svg class="ic" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5A7 7 0 005 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Both from Gujarat</span>
+    <span class="chip l"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>Lives 8 km apart · ID verified</span>
+  </div>
+</div></section>
+
+<div class="proof"><div class="wrap">
+  <div><b>2.57 million</b><span>South Asians live in Canada, the country’s largest racialized group</span></div>
+  <div><b>46%</b><span>of them live in the Toronto area, where they are 19% of the population</span></div>
+  <div><b>32</b><span>is their median age, nine years younger than Canada overall</span></div>
+  <p class="src">Source: <a href="https://www150.statcan.gc.ca/n1/pub/89-657-x/89-657-x2025007-eng.htm" target="_blank" rel="noopener">Statistics Canada, 2021 Census</a></p>
+</div></div>
+
+<section class="sec" id="how"><div class="wrap">
+  <p class="eyebrow">How it works</p>
+  <h2>From sign-up to meeting families, without endless chatting.</h2>
+  <ol class="steps">
+    <li><b>Create and verify</b><span>Your roots, your city and nine questions about values. Then phone, government ID and a live selfie, so everyone you meet is real.</span></li>
+    <li><b>Get matched</b><span>Hand-picked matches who share your roots, live near you and think like you, with the reasons shown on every profile.</span></li>
+    <li><b>Meet in person</b><span>Small hosted evenings in Toronto. Bring up to two parents; they get their own lounge.</span></li>
+    <li><b>Families meet</b><span>When you both say yes, a RootMate host sets up a family call for both sides.</span></li>
+  </ol>
+</div></section>
+
+<section class="sec" id="why" style="padding-top:0"><div class="wrap">
+  <p class="eyebrow">Why RootMate</p>
+  <h2>Built for life abroad, not as a filter on an India app.</h2>
+  <div class="usp">
+    <div><span class="pi"><svg class="ic" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5A7 7 0 005 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span><span><b>Roots, city and mindset</b><p>Matched on where you come from (country, state, language, community), where you live now down to the distance, and how you think.</p></span></div>
+    <div><span class="pi"><svg class="ic" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M15.5 4.8a3.5 3.5 0 010 6.4M18 14.8c1.8.8 3 2.5 3.5 5.2"/></svg></span><span><b>Family by your side</b><p>Hosted Family Mixers with parent tickets, and a Family Circle where parents can suggest profiles. They never chat as you.</p></span></div>
+    <div><span class="pi"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></span><span><b>Only real people</b><p>ID and a live selfie before anyone can message. Every report is read by a person within 24 hours.</p></span></div>
+    <div><span class="pi"><svg class="ic" viewBox="0 0 24 24"><path d="M13 2.5L5 13.5h6.2L10 21.5l8.5-11.5h-6.3z"/></svg></span><span><b>Quick Match<em>December</em></b><p>Both say yes, then a 5-minute video intro the same day. No phone numbers shared.</p></span></div>
+  </div>
+</div></section>
+
+<section class="sec" id="event" style="padding-top:0"><div class="wrap">
+  <p class="eyebrow">The first event</p>
+  <h2>Family Mixer, Toronto.</h2>
+  <p class="sub">Reserve a seat for free in the app. The event is confirmed once 16 women and 16 men reserve by 18 November; then you get 48 hours to pay. If it is not confirmed, nobody pays.</p>
+  <div class="event">
+    <div class="pic" id="event-art"><span class="date"><span>Nov</span><b>28</b><span>Sat</span></span><span class="tag"><svg class="ic" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/></svg>Parents welcome</span></div>
+    <div class="info">
+      <h3>An evening of conversation, dinner and families</h3>
+      <div class="meta"><span><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Sat 28 Nov · 5:30 to 8:30 pm</span><span><svg class="ic" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5A7 7 0 005 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>A partner restaurant in central Toronto</span><span><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4.4 4.2-6.5 8-6.5s7 2.1 8 6.5"/></svg>Members aged 24 to 32</span></div>
+      <ul class="incl">
+        <li><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>A reserved hall at a partner restaurant, and a host who greets every family</li>
+        <li><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Three conversations at your own table, in the same room as everyone else</li>
+        <li><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>A lounge where parents meet other parents</li>
+        <li><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Dinner included, from a fixed event menu: veg, Jain or non-veg, chosen in the app</li>
+        <li><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Private picks afterwards: mutual picks become matches</li>
+      </ul>
+      <div class="matchteaser"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3c.6 4.2 2.8 6.4 7 7-4.2.6-6.4 2.8-7 7-.6-4.2-2.8-6.4-7-7 4.2-.6 6.4-2.8 7-7z"/></svg><span><b>Know who to meet before you go.</b> In the app, see your match % with every member going, both ways: how well they fit you, and how well you fit them. Your top 3 are seated with you.</span></div>
+      <div class="prices"><div class="price"><b>CA$54</b><span>per member, dinner included, if you reserve early (regular CA$64)</span></div><div class="price"><b>CA$40</b><span>per parent, up to 2, dinner included (regular CA$45)</span></div></div>
+      <div class="seatbar"><span>Confirmed at 16 women and 16 men · 40 member seats in total</span></div>
+      <a class="btn primary" href="#app" id="reserve-open">Reserve free in the app</a>
+      <p class="note">Prices plus 13% HST. One payment in the app covers your seat and dinner; nothing to pay at the restaurant. Early price until the event confirms. Full refund up to 48 hours before. Every guest is ID-verified.</p>
+    </div>
+  </div>
+</div></section>
+
+<section class="sec" id="communities" style="padding-top:0"><div class="wrap">
+  <p class="eyebrow">Events for every community</p>
+  <h2>Meet your own community, or everyone.</h2>
+  <p class="sub">Some evenings are for one community, so it is quicker to meet someone who shares your language and traditions. Others are open to all communities, for people who are open to more. In the app you choose which communities you are open to, and see your match % with everyone going.</p>
+  <div class="chips" aria-label="Community events">
+    <span>Gujarati</span><span>Punjabi</span><span>Sikh</span><span>Hindi-speaking</span><span>Marathi</span><span>Tamil</span><span>Telugu</span><span>Malayali</span><span>Kannada</span><span>Bengali</span><span>Muslim</span><span>Pakistani</span><span>Bangladeshi</span><span>Sri Lankan</span><span>Nepali</span><span>Christian</span><span>Jain</span><span>Arab</span><span>Persian</span><span>Filipino</span><span>Chinese</span><span>African</span><span>Latin American</span><span class="all">All communities</span>
+  </div>
+  <div class="cities"><b>The app works in every country. In-person events start in Toronto and Brampton, with online events for New York, New Jersey, London and Leicester. Next in-person cities, based on where the waitlist grows fastest:</b>
+    <span>New York and New Jersey</span><span>London</span><span>Leicester</span><span>Vancouver</span><span>Calgary</span><span>San Francisco Bay Area</span><span>Dallas</span><span>Sydney</span><span>Melbourne</span><span>Dubai</span></div>
+</div></section>
+
+<section class="sec" id="app" style="padding-top:0"><div class="wrap appbox">
+  <div>
+    <p class="eyebrow">Get the app</p>
+    <h2>Everything happens in the app.</h2>
+    <p class="sub">Your profile, verification, daily matches, chats, video calls and event seats all live in the RootMate app. This website is only here to tell you about it.</p>
+    <div class="stores">
+      <a class="store" id="st-play" href="#join"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.5v17l14-8.5z" fill="currentColor"/></svg><span><small id="st-play-s">Coming soon on</small><b>Google Play</b></span></a>
+      <a class="store" id="st-ios" href="#join"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10.5 18.5h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span><small id="st-ios-s">Coming soon on</small><b>App Store</b></span></a>
+    </div>
+    <p class="note" id="st-note">Not live yet. Join the waitlist below and we’ll email you the download link the day it goes live.</p>
+  </div>
+  <ul class="appfeat">
+    <li><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Create your profile and verify in about 5 minutes</li>
+    <li><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Daily matches on roots, city and mindset, with reasons shown</li>
+    <li><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>See your match % with everyone going to an event</li>
+    <li><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Reserve event seats free, pay only when confirmed</li>
+    <li><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Chat and video call, without sharing your number</li>
+  </ul>
+</div></section>
+
+<section class="sec" id="join" style="padding-top:0"><div class="wrap joinbox">
+  <div>
+    <p class="eyebrow">Founding members</p>
+    <h2>Be one of the first 500 in Toronto.</h2>
+    <ul class="perks">
+      <li><svg class="ic" viewBox="0 0 24 24"><path d="M12 3.2l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17.2l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><span>First access to event seats before they go public</span></li>
+      <li><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span>The download link the day the app goes live</span></li>
+      <li><svg class="ic" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/></svg><span>Parents can sign up on behalf of a son or daughter</span></li>
+      <li><svg class="ic" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><span>Your details stay private and are never shown publicly</span></li>
+      <li><svg class="ic" viewBox="0 0 24 24"><path d="M12 3c.6 4.2 2.8 6.4 7 7-4.2.6-6.4 2.8-7 7-.6-4.2-2.8-6.4-7-7 4.2-.6 6.4-2.8 7-7z"/></svg><span>Women in Canada: the first 500 to verify get 3 months of Gold free</span></li>
+    </ul>
+  </div>
+  <form class="card" id="wait" novalidate>
+    <div class="fld"><span>Who is signing up?</span><div class="seg" role="radiogroup" aria-label="Who is signing up"><label><input type="radio" name="who" value="self" checked><span>For myself</span></label><label><input type="radio" name="who" value="parent"><span>Parent or family</span></label></div></div>
+    <label class="fld" id="f-name"><span id="name-label">Your full name</span><input name="name" autocomplete="name" maxlength="60" required></label>
+    <div class="row2">
+      <label class="fld" id="f-email"><span>Email</span><input name="email" type="email" autocomplete="email" maxlength="80" required></label>
+      <label class="fld" id="f-phone"><span>Mobile or WhatsApp</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="+1 416 555 0142" required></label>
+    </div>
+    <div class="fld" id="f-gender"><span id="gender-label">I am</span><div class="seg" role="radiogroup" aria-labelledby="gender-label"><label><input type="radio" name="gender" value="M"><span id="g-m">A man</span></label><label><input type="radio" name="gender" value="F"><span id="g-f">A woman</span></label></div></div>
+    <div class="row2">
+      <label class="fld" id="f-age"><span id="age-label">Age</span><input name="age" type="number" inputmode="numeric" min="18" max="70" required></label>
+      <label class="fld" id="f-city"><span>City</span><select name="city" required><option value="">Choose</option><option>Toronto</option><option>Mississauga</option><option>Brampton</option><option>Markham</option><option>Vaughan</option><option>Oakville</option><option>Milton</option><option>Scarborough</option><option>Hamilton</option><option>Kitchener-Waterloo</option><option>Ottawa</option><option>Elsewhere in Canada</option><option>Outside Canada</option></select></label>
+    </div>
+    <label class="fld" id="f-roots"><span>Roots: country you grew up in</span><input name="roots" list="countries" autocomplete="off" maxlength="60" placeholder="Start typing, e.g. India" required><datalist id="countries"></datalist></label>
+    <label class="check" id="f-consent"><input type="checkbox" name="consent"><span>I agree that RootMate may contact me about the launch and events. My details are stored securely and never shown publicly. I can ask for them to be deleted at any time.</span></label>
+    <button class="btn primary" type="submit">Join the waitlist</button>
+  </form>
+</div></section>
+
+<section class="sec" id="partners" style="padding-top:0"><div class="wrap joinbox">
+  <div>
+    <p class="eyebrow">Work with us</p>
+    <h2>Hosts, restaurants and community groups.</h2>
+    <ul class="perks">
+      <li><svg class="ic" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/></svg><span><b>Hosts</b> run evenings in their city and earn CA$100 for every event, paid weekly. Training, the guest list and the seating plan come from us.</span></li>
+      <li><svg class="ic" viewBox="0 0 24 24"><path d="M4 21V10l8-6 8 6v11M9 21v-6h6v6"/></svg><span><b>Restaurants</b> give us a reserved hall on a quiet afternoon or evening. In return, 30 to 60 guests come with a prepaid meal from a fixed event menu, and you are listed as a RootMate partner venue.</span></li>
+      <li><svg class="ic" viewBox="0 0 24 24"><rect x="3.5" y="9" width="17" height="11.5" rx="2"/><path d="M2.5 9h19M12 9v11.5"/></svg><span><b>Matrimonial bureaus and community associations</b> earn 10% of the first Gold purchase of every member who joins with their partner code, plus ₹1,500 when a couple they brought gets engaged. Members always sign up themselves.</span></li>
+    </ul>
+  </div>
+  <form class="card" id="partner" novalidate>
+    <div class="fld" id="w-role"><span id="role-label">I am</span><div class="seg three" role="radiogroup" aria-labelledby="role-label"><label><input type="radio" name="role" value="host"><span>A host</span></label><label><input type="radio" name="role" value="restaurant"><span>A restaurant</span></label><label><input type="radio" name="role" value="bureau"><span>A bureau or group</span></label></div></div>
+    <label class="fld" id="w-name"><span>Your name</span><input name="name" autocomplete="name" maxlength="60" required></label>
+    <label class="fld" id="w-org"><span id="org-label">Organisation (optional)</span><input name="org" autocomplete="organization" maxlength="80"></label>
+    <div class="row2">
+      <label class="fld" id="w-city"><span>City and country</span><input name="city" maxlength="60" placeholder="e.g. Brampton, Canada" required></label>
+      <label class="fld" id="w-contact"><span>Phone or email</span><input name="contact" maxlength="80" required></label>
+    </div>
+    <label class="fld" id="w-note"><span>Anything we should know (optional)</span><input name="note" maxlength="200" placeholder="Languages, communities, venue size"></label>
+    <label class="check" id="w-consent"><input type="checkbox" name="consent"><span>I agree that RootMate may contact me about working together. My details are used only for this.</span></label>
+    <button class="btn primary" type="submit">Send</button>
+  </form>
+</div></section>
+
+<section class="sec" id="faq" style="padding-top:0"><div class="wrap">
+  <p class="eyebrow">Questions</p>
+  <h2>Before you join.</h2>
+  <div class="faq">
+    <details><summary>Is RootMate free?<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>Joining is free: create your profile, verify, see how many people fit what you are looking for and your match % with each, and reply when a Gold member writes to you. RootMate Gold unlocks names and photos, interests, chat and video calls, daily picks, event guest lists and Quick Match, from CA$49.99 a month. Event tickets are separate and include the meal.</p></details>
+    <details><summary>Who can join?<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>Anyone 18 or older who lives away from the country they grew up in and is looking for marriage. We start in the Greater Toronto Area and open other cities when each has enough members.</p></details>
+    <details><summary>How do you stop fake profiles?<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>Every member verifies a phone number, a government ID and a live selfie before they can send interests or messages. Members can also be vouched for by people who know them, and every report is reviewed by a person.</p></details>
+    <details><summary>Who sees my photos and details?<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>Only verified members. Photos stay blurred and only your first name and last initial show until you both accept. Your phone number is never shown unless you both choose to share it. Religion and community are optional.</p></details>
+    <details><summary>Can my parents be involved?<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>Yes. Parents can sign up on your behalf, come to family events with their own ticket, and join a Family Circle to suggest profiles. They cannot message anyone as you.</p></details>
+    <details><summary>What if an event does not fill?<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>Nobody pays. Reserving in the app is free, and we ask for payment only after enough people reserve to confirm the event. If it is not confirmed in time, it is cancelled or moved to a new date, and you keep your free reservation.</p></details>
+    <details><summary>Can I use RootMate on the website?<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>No. The website tells you about RootMate and lets you join the waitlist. Signing up, matching, chats and event bookings all happen in the app for Android and iPhone, so every member is verified on their own phone.</p></details>
+    <details><summary>Can my parents join from another country?<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>Yes. When you and a match are ready, you can set up a family video call in the app. Parents join with a link from any country, on a phone or computer, without installing anything, and the app shows the time for both families. A RootMate host can join to make the introductions.</p></details>
+    <details><summary>What is RootMate responsible for?<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>We verify members, suggest matches, and host events where you can meet. Decisions after an introduction, and any relationship or marriage, belong to the two people and their families. We do not run criminal background checks, so please follow our safety advice and never send money to anyone you meet.</p></details>
+    <details><summary>When does my city open?<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>Toronto opens first, in November 2026. Join the waitlist from anywhere and choose your city; we open the next cities based on where the waitlist grows fastest.</p></details>
+  </div>
+  <div class="ctaband" style="margin-top:56px"><h2>Your story could start at the first Family Mixer.</h2><a class="btn" href="#app">Get the app</a></div>
+</div></section>
+</main>
+
+<section class="sec" id="delete-account" style="padding-top:0"><div class="wrap">
+  <p class="eyebrow">Your data</p>
+  <h2>Delete your RootMate account.</h2>
+  <ol class="steps del">
+    <li><b>In the app</b><span>Open Me, then Legal and privacy, then Delete my account. Your profile, photos, matches and chats are deleted within 30 days.</span></li>
+    <li><b>Without the app</b><span>Email our support team from the email on your account with the subject "Delete my account". We confirm by email and delete within 30 days.</span></li>
+    <li><b>What we keep</b><span>Only what the law requires, such as payment records for tax, and records of accounts removed for fraud. Cancel any Gold subscription in your Google Play or App Store account.</span></li>
+  </ol>
+</div></section>
+<footer><div class="wrap"><a class="brand" href="#hero"><svg class="mark" viewBox="0 0 32 22" aria-hidden="true"><circle class="c1" cx="11" cy="11" r="8"/><circle class="c2" cx="21" cy="11" r="8"/></svg>RootMate</a><span>RootMate · © 2026</span><span>Members must be 18 or older</span><span class="legal-links"><button type="button" class="link" data-legal="terms">Terms of Service</button><button type="button" class="link" data-legal="privacy">Privacy Policy</button><a class="link" href="#delete-account">Delete account</a></span></div></footer>
+<dialog id="legal" aria-labelledby="legal-title"><div class="dh"><h3 id="legal-title">Terms</h3><button class="x" type="button" id="legal-close" aria-label="Close"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div class="legal-b" id="legal-b"></div></dialog>
+
+
+<script>
+/*__PORTRAIT__*/
+/*__COUNTRIES__*/
+(function(){
+"use strict";
+/* Live backend: set on launch day (Supabase project URL and public anon key). Empty = preview mode, nothing leaves the page. */
+const BACKEND={url:'',anonKey:''};
+const LIVE=!!(BACKEND.url&&BACKEND.anonKey);
+const $=s=>document.querySelector(s);
+const LAUNCH=Date.parse('2026-11-28T22:30:00Z'); // first Family Mixer, 5:30 pm in Toronto
+/* Store links: paste each listing URL when it goes live. Empty = 'Coming soon', button scrolls to the waitlist. */
+const STORE={play:'',ios:''};
+
+if(LIVE){const s=$('#preview-strip');if(s)s.hidden=true}
+[['play','#st-play'],['ios','#st-ios']].forEach(([k,sel])=>{if(STORE[k]){const a=$(sel);a.href=STORE[k];a.target='_blank';a.rel='noopener';a.classList.add('live');$(sel+'-s').textContent=k==='play'?'Get it on':'Download on the'}});
+if(STORE.play||STORE.ios)$('#st-note').textContent=STORE.play&&STORE.ios?'Free to download.':(STORE.play?'Free to download on Android. iPhone coming soon: join the waitlist and we’ll email you.':'Free to download on iPhone. Android coming soon: join the waitlist and we’ll email you.');
+$('#p1').innerHTML=portrait(11,'F');
+$('#p2').innerHTML=portrait(42,'M');
+const dl=$('#countries');dl.innerHTML=COUNTRY_NAMES.map(n=>`<option value="${n.replace(/"/g,'&quot;')}">`).join('');
+
+/* Event art */
+(function(){let s='<svg viewBox="0 0 400 320" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="eg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFC2A6"/><stop offset=".55" stop-color="#FF8399"/><stop offset="1" stop-color="#E8436B"/></linearGradient><radialGradient id="el"><stop offset="0" stop-color="#FFF6D8"/><stop offset="1" stop-color="#FFF6D8" stop-opacity="0"/></radialGradient></defs><rect width="400" height="320" fill="url(#eg)"/>';
+  [[60,250,50],[340,90,70],[250,280,40]].forEach(([x,y,r])=>{s+=`<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" opacity=".12"/>`});
+  [[-10,100,410,110,170],[-10,140,410,130,210]].forEach(([x1,y1,x2,y2,cy])=>{s+=`<path d="M${x1} ${y1} Q200 ${cy} ${x2} ${y2}" stroke="#7A2040" stroke-opacity=".3" stroke-width="1.5" fill="none"/>`;for(let i=1;i<12;i++){const t=i/12,x=(1-t)*(1-t)*x1+2*(1-t)*t*200+t*t*x2,y=(1-t)*(1-t)*y1+2*(1-t)*t*cy+t*t*y2+6;s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="13" fill="url(#el)"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.4" fill="${i%3?'#FFF2C4':'#FFD1DC'}"/>`}});
+  s+='<g fill="#fff" opacity=".94"><path d="M270 238h52v12a26 26 0 01-52 0z"/><path d="M196 248h40v9a20 20 0 01-40 0z" opacity=".85"/></g><path d="M322 243a9 9 0 010 18" stroke="#fff" stroke-width="4.5" fill="none" opacity=".94"/><g stroke="#fff" stroke-width="2.6" fill="none" opacity=".75" stroke-linecap="round"><path d="M288 226q-5-9 2-16M304 226q-5-9 2-16"/></g></svg>';
+  $('#event-art').insertAdjacentHTML('afterbegin',s)})();
+
+/* Countdown */
+function tick(){const ms=LAUNCH-Date.now();if(ms<=0){$('#cd-d').textContent='0';$('#cd-h').textContent='0';$('#cd-m').textContent='0';$('#cd-l').textContent='See you at the next Family Mixer';return}
+  const m=Math.floor(ms/60000);$('#cd-d').textContent=Math.floor(m/1440);$('#cd-h').textContent=Math.floor(m%1440/60);$('#cd-m').textContent=m%60}
+tick();setInterval(tick,30000);
+
+/* Header border on scroll */
+const hdr=$('header');addEventListener('scroll',()=>hdr.classList.toggle('scrolled',scrollY>8),{passive:true});
+
+/* Helpers */
+let toastT;function toast(t){clearTimeout(toastT);let el=$('.toast');if(!el){el=document.createElement('div');el.className='toast';el.setAttribute('role','status');document.body.appendChild(el)}el.textContent=t;toastT=setTimeout(()=>el.remove(),3600)}
+function setErr(wrapSel,msg){const w=$(wrapSel);if(!w)return;w.classList.toggle('bad',!!msg);let e=w.querySelector('.err');if(msg){if(!e){e=document.createElement('span');e.className='err';w.appendChild(e)}e.textContent=msg}else if(e)e.remove()}
+const EMAIL=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+function phoneOk(v){const d=v.replace(/\D/g,'');return d.length>=10&&d.length<=15}
+function code(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='RM-';for(let i=0;i<6;i++)s+=c[Math.floor(Math.random()*c.length)];return s}
+async function send(table,row){
+  if(!LIVE)return {ok:true,preview:true};
+  try{const r=await fetch(`${BACKEND.url}/rest/v1/${table}`,{method:'POST',headers:{'apikey':BACKEND.anonKey,'Authorization':`Bearer ${BACKEND.anonKey}`,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(row)});
+    if(r.status===409)return {ok:false,dup:true};return {ok:r.ok}}catch(e){return {ok:false}}}
+function remember(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function recall(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}}
+function doneHTML(title,body,ref){return `<div class="done" tabindex="-1"><span class="big"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><h3>${title}</h3><p>${body}</p>${ref?`<p>Your reference: <span class="code">${ref}</span></p>`:''}${LIVE?'':'<p class="note">Preview: this was not saved. Sign-ups go live with the launch.</p>'}</div>`}
+
+/* Waitlist form */
+const wait=$('#wait');
+function syncWho(){const parent=wait.who.value==='parent';$('#name-label').textContent=parent?'Your full name (parent or family)':'Your full name';
+  $('#gender-label').textContent=parent?'Signing up for my':'I am';$('#g-m').textContent=parent?'Son':'A man';$('#g-f').textContent=parent?'Daughter':'A woman';$('#age-label').textContent=parent?'Their age':'Age'}
+wait.addEventListener('change',e=>{if(e.target.name==='who')syncWho();clearOne(e.target)});
+wait.addEventListener('input',e=>clearOne(e.target));
+function clearOne(t){const w=t.closest('.fld,.check');if(w&&w.classList.contains('bad')){w.classList.remove('bad');const e=w.querySelector('.err');if(e)e.remove()}}
+wait.addEventListener('submit',async e=>{e.preventDefault();const f=wait;let first=null;const bad=(sel,msg)=>{setErr(sel,msg);if(msg&&!first)first=sel};
+  const parent=f.who.value==='parent';
+  bad('#f-name',f.name.value.trim().length<2?'Enter a full name':'');
+  bad('#f-email',!EMAIL.test(f.email.value.trim())?'Enter a valid email, like name@example.com':'');
+  bad('#f-phone',!phoneOk(f.phone.value)?'Enter a phone number with area code':'');
+  bad('#f-gender',!f.gender.value?'Choose one':'');
+  const age=+f.age.value;bad('#f-age',!f.age.value?'Enter an age':(age<18?'Members must be 18 or older':(age>70?'Check the age':'')));
+  bad('#f-city',!f.city.value?'Choose a city':'');
+  bad('#f-roots',f.roots.value.trim().length<2?'Choose the country you grew up in':'');
+  bad('#f-consent',!f.consent.checked?'Please agree so we can contact you':'');
+  if(first){const el=$(first).querySelector('input,select');if(el)el.focus();return}
+  const btn=f.querySelector('button[type=submit]');btn.disabled=true;btn.textContent='Joining…';
+  const ref=code();
+  const row={ref,signup_for:parent?'child':'self',name:f.name.value.trim(),email:f.email.value.trim().toLowerCase(),phone:f.phone.value.trim(),gender:f.gender.value,age,city:f.city.value,roots:f.roots.value.trim(),consent_at:new Date().toISOString()};
+  const r=await send('waitlist',row);
+  btn.disabled=false;btn.textContent='Join the waitlist';
+  if(!r.ok){toast(r.dup?'This email is already on the waitlist.':'Could not join right now. Check your connection and try again.');return}
+  remember('rm.wait',{ref,first:row.name.split(' ')[0]});
+  f.innerHTML=doneHTML(`You’re on the list, ${esc(row.name.split(' ')[0])}`,`We’ll email you the download link the day the app goes live, with first access to event seats.`,ref);
+  f.querySelector('.done').focus();
+});
+/* Work-with-us form */
+const pf=$('#partner');
+pf.addEventListener('input',e=>clearOne(e.target));pf.addEventListener('change',e=>{clearOne(e.target);if(e.target.name==='role'){$('#org-label').textContent=e.target.value==='host'?'Organisation (optional)':e.target.value==='restaurant'?'Restaurant name':'Bureau or group name'}});
+pf.addEventListener('submit',async e=>{e.preventDefault();const f=pf;let first=null;const bad=(sel,msg)=>{setErr(sel,msg);if(msg&&!first)first=sel};
+  const role=f.role.value;bad('#w-role',!role?'Choose one':'');bad('#w-name',f.name.value.trim().length<2?'Enter your name':'');
+  bad('#w-org',role&&role!=='host'&&f.org.value.trim().length<2?'Enter the name':'');
+  bad('#w-city',f.city.value.trim().length<2?'Enter a city':'');const c=f.contact.value.trim();bad('#w-contact',!(EMAIL.test(c)||phoneOk(c))?'Enter a phone number with area code, or an email':'');
+  bad('#w-consent',!f.consent.checked?'Please agree so we can contact you':'');
+  if(first){const el=$(first).querySelector('input');if(el)el.focus();return}
+  const btn=f.querySelector('button[type=submit]');btn.disabled=true;btn.textContent='Sending…';
+  const row={role,name:f.name.value.trim(),org:f.org.value.trim(),city:f.city.value.trim(),contact:c,note:f.note.value.trim(),consent_at:new Date().toISOString()};
+  const r=await send('partners',row);btn.disabled=false;btn.textContent='Send';
+  if(!r.ok){toast('Could not send right now. Check your connection and try again.');return}
+  f.innerHTML=doneHTML(`Thank you, ${esc(row.name.split(' ')[0])}`,'Our team will call you within 3 working days.');f.querySelector('.done').focus()});
+/* Legal summaries */
+const LEGAL={terms:['Terms of Service: key points',['You must be 18 or older and legally free to marry, and you join RootMate to find a marriage partner.','One account per person, in your real name, verified by phone, government ID and a live selfie.','RootMate verifies members, suggests matches and hosts events. We do not run criminal background checks. Decisions after an introduction, and any relationship or marriage, are the responsibility of the members and their families.','Never send money, gifts or visa help to anyone you meet, and report anyone who asks.','Gold renews until you cancel in your app store account. Event seats are free to reserve, paid only when the event is confirmed, and refundable up to 48 hours before.','The full Terms are in the app, under Me, then Legal and privacy.']],
+  privacy:['Privacy Policy: key points',['We collect what you share in your profile and verification, and how you use the app, to verify you, suggest matches, run events and keep members safe.','Your phone number, email and ID are never shown to other members. ID images are deleted after verification.','We never sell your data. Service providers process it only for us, under contract.','You can see, correct or delete your data at any time from the app.','The waitlist form on this page collects your name, contact details, age, city and roots, only to tell you about the launch and events.','Questions go to our Privacy and Grievance Officer, who replies within 30 days.']]};
+const ldlg=$('#legal');
+document.querySelectorAll('[data-legal]').forEach(b=>b.addEventListener('click',()=>{const L=LEGAL[b.dataset.legal];$('#legal-title').textContent=L[0];$('#legal-b').innerHTML='<ul>'+L[1].map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>';if(typeof ldlg.showModal==='function')ldlg.showModal();else ldlg.setAttribute('open','')}));
+$('#legal-close').addEventListener('click',()=>ldlg.close?ldlg.close():ldlg.removeAttribute('open'));
+ldlg.addEventListener('click',e=>{if(e.target===ldlg&&ldlg.close)ldlg.close()});
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+const prev=recall('rm.wait');if(prev&&prev.ref){wait.innerHTML=doneHTML(`You’re on the list, ${esc(prev.first||'')}`.replace(/, $/,''),'We’ll email you the download link the day the app goes live, with first access to event seats.',esc(prev.ref))}
+
+})();
+</script>
