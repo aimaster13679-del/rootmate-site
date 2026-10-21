@@ -1,7 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="NeuMarry: verified matrimony for people living away from home. Matches on roots, city and mindset, and hosted Family Mixers with dinner included."><meta property="og:title" content="NeuMarry"><meta property="og:description" content="Your person from back home might live ten minutes away."><meta property="og:url" content="https://neumarry.com/"><meta name="theme-color" content="#FFF8F6"><link rel="icon" href="icon-192.png"><title>NeuMarry · Matrimony for people living abroad</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,500&family=Nunito+Sans:wght@400;500;600;700;800&family=Great+Vibes&display=swap">
 <style>
 /* Layout: a warm single-theme landing page. Wide hero split (words left, portrait pair right), then proof, steps, the first event, the waitlist form and FAQ. Same rose system as the app. */
 :root{
@@ -11,8 +11,9 @@
   --grad-warm:linear-gradient(135deg,#FFC9AE 0%,#FF93A6 50%,#EE4D74 100%);
   --shadow:0 1px 2px rgba(120,30,60,.05),0 14px 34px -18px rgba(200,50,90,.32);
   --shadow-rose:0 12px 26px -10px rgba(232,67,107,.55);
-  --f-display:"Fraunces","Iowan Old Style",Georgia,serif;
-  --f-body:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-display:"Lora","Iowan Old Style",Georgia,serif;
+  --f-body:"Nunito Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-script:"Great Vibes","Snell Roundhand","Apple Chancery",cursive;
   color-scheme:light;
 }
 *,*::before,*::after{box-sizing:border-box}
@@ -65,7 +66,7 @@ header .btn{margin-left:auto}
 .pill i{width:8px;height:8px;border-radius:50%;background:var(--rose);box-shadow:0 0 0 0 rgba(232,67,107,.5);animation:dot 1.8s infinite}
 @keyframes dot{70%{box-shadow:0 0 0 8px rgba(232,67,107,0)}100%{box-shadow:0 0 0 0 rgba(232,67,107,0)}}
 .hero h1{font-family:var(--f-display);font-weight:500;font-size:clamp(40px,6vw,68px);line-height:1.02;letter-spacing:-.03em;margin-top:20px}
-.hero h1 em{font-style:italic;color:var(--rose)}
+.hero h1 em{font-family:var(--f-script);font-style:normal;font-weight:400;font-size:1.32em;line-height:.8;letter-spacing:0;color:var(--rose);white-space:nowrap}
 .hero .lede{font-size:18.5px;color:var(--muted);max-width:44ch;margin-top:20px}
 .hero .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
 .avail{margin-top:14px;font-size:13.5px;font-weight:600;color:var(--muted)}
@@ -93,7 +94,7 @@ header .btn{margin-left:auto}
 .proof .wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding-block:28px}
 .proof .wrap>*{min-width:0}
 @media (max-width:760px){.proof .wrap{grid-template-columns:1fr;gap:18px}}
-.proof b{display:block;font-family:var(--f-display);font-weight:500;font-size:34px;line-height:1.1;letter-spacing:-.02em;color:var(--rose-deep);font-variant-numeric:tabular-nums}
+.proof b{display:block;font-family:var(--f-display);font-weight:500;font-size:34px;line-height:1.1;letter-spacing:-.01em;color:var(--rose-deep);font-variant-numeric:tabular-nums}
 .proof span{font-size:14.5px;color:var(--muted)}
 .proof .src{grid-column:1/-1;font-size:12.5px;color:var(--muted)}
 
@@ -101,7 +102,7 @@ header .btn{margin-left:auto}
 section.sec{padding-block:72px}
 @media (max-width:760px){section.sec{padding-block:52px}}
 .eyebrow{font-size:12.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--rose)}
-.sec h2{font-family:var(--f-display);font-weight:500;font-size:clamp(30px,4vw,44px);line-height:1.08;letter-spacing:-.02em;margin-top:10px;max-width:22ch}
+.sec h2{font-family:var(--f-display);font-weight:500;font-size:clamp(30px,4vw,44px);line-height:1.08;letter-spacing:-.01em;margin-top:10px;max-width:22ch}
 .sec .sub{color:var(--muted);font-size:17px;max-width:56ch;margin-top:14px}
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:36px 0 0;padding:0;list-style:none;counter-reset:s}
 .steps>*{min-width:0}
@@ -135,7 +136,7 @@ section.sec{padding-block:72px}
 .event .tag{position:absolute;right:22px;top:22px;background:rgba(255,255,255,.94);color:var(--rose-deep);padding:7px 12px;border-radius:999px;font-size:13px;font-weight:800;display:flex;gap:6px;align-items:center}
 .event .tag .ic{width:15px;height:15px}
 .event .info{padding:30px;display:grid;gap:16px;align-content:start}
-.event h3{font-family:var(--f-display);font-weight:500;font-size:32px;letter-spacing:-.02em;line-height:1.1}
+.event h3{font-family:var(--f-display);font-weight:500;font-size:32px;letter-spacing:-.01em;line-height:1.1}
 .meta{display:flex;flex-wrap:wrap;gap:6px 16px;color:var(--muted);font-size:14.5px}
 .meta span{display:inline-flex;gap:6px;align-items:center}
 .meta .ic{width:17px;height:17px}
@@ -227,7 +228,7 @@ form.card{background:var(--surface);border:1px solid var(--line);border-radius:3
 /* CTA band + footer */
 .ctaband{background:var(--grad);color:#fff;border-radius:34px;padding:44px 36px;display:grid;gap:18px;justify-items:start;position:relative;overflow:hidden}
 .ctaband::after{content:"";position:absolute;right:-80px;top:-80px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.14)}
-.ctaband h2{font-family:var(--f-display);font-weight:500;font-size:clamp(28px,4vw,40px);letter-spacing:-.02em;max-width:20ch;line-height:1.1;position:relative}
+.ctaband h2{font-family:var(--f-display);font-weight:500;font-size:clamp(28px,4vw,40px);letter-spacing:-.01em;max-width:20ch;line-height:1.1;position:relative}
 .ctaband .btn{background:#fff;color:var(--rose-deep);position:relative}
 footer{border-top:1px solid var(--line);margin-top:72px}
 footer .wrap{padding-block:28px;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;font-size:13.5px;color:var(--muted)}
