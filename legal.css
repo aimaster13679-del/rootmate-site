@@ -22,3 +22,16 @@ ol,ul{padding-left:22px}li{margin:4px 0}
 footer{border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font-size:14px}
 footer .wrap{display:flex;flex-wrap:wrap;gap:8px 18px}
 @media (max-width:520px){h1{font-size:28px}nav a{margin-left:10px}}
+.lede{font-size:18px;line-height:1.6;color:var(--ink);margin:0 0 8px}
+.crumbs{font-size:13.5px;color:var(--muted);margin:0 0 14px}.crumbs a{text-decoration:none;font-weight:700}
+.faq{display:grid;gap:10px;margin:12px 0}
+.faq details{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:2px 16px}
+.faq summary{cursor:pointer;padding:12px 0;font-weight:700}
+.faq details p{margin:0 0 12px}
+.cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;background:var(--rose-soft);border:1px solid #F8C9D4;border-radius:20px;padding:18px 20px;margin:36px 0 8px}
+.cta div{flex:1 1 280px;min-width:0}.cta p{margin:4px 0 0;color:var(--muted);font-size:15px}
+.btn{display:inline-block;background:var(--rose);color:#fff;font-weight:800;text-decoration:none;border-radius:999px;padding:12px 20px;white-space:nowrap}
+.btn:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.rel{padding-left:20px}.rel a{font-weight:700}
+footer .fg{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px 16px;margin-bottom:8px}
+footer .fg a{color:var(--ink);font-weight:700;text-decoration:none}
