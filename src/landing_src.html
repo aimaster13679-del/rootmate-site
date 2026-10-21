@@ -463,8 +463,8 @@ const STORE={play:'',ios:''};
 if(LIVE){const s=$('#preview-strip');if(s)s.hidden=true}
 [['play','#st-play'],['ios','#st-ios']].forEach(([k,sel])=>{if(STORE[k]){const a=$(sel);a.href=STORE[k];a.target='_blank';a.rel='noopener';a.classList.add('live');$(sel+'-s').textContent=k==='play'?'Get it on':'Download on the'}});
 if(STORE.play||STORE.ios)$('#st-note').textContent=STORE.play&&STORE.ios?'Free to download.':(STORE.play?'Free to download on Android. iPhone coming soon: join the waitlist and we’ll email you.':'Free to download on iPhone. Android coming soon: join the waitlist and we’ll email you.');
-$('#p1').innerHTML=portrait(11,'F');
-$('#p2').innerHTML=portrait(42,'M');
+$('#p1').innerHTML=portrait(11,'F',{tone:0});
+$('#p2').innerHTML=portrait(42,'M',{tone:2});
 const dl=$('#countries');dl.innerHTML=COUNTRY_NAMES.map(n=>`<option value="${n.replace(/"/g,'&quot;')}">`).join('');
 
 /* Event art */

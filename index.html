@@ -448,70 +448,83 @@ dialog form.card{border:0;box-shadow:none;background:transparent;padding:16px 22
 
 
 <script>
-/* Procedural illustrated portraits (prototype stand-ins for real photos) */
+/* Editorial portraits: tonal head-and-shoulders silhouettes used as stand-ins where no
+   member photo exists (welcome screen, store images). No faces, skin tones or regional
+   dress, so they read as adults from anywhere. portrait(seed, g, {tone}) where tone picks one of P_TONES. */
 function rngP(seed){let a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function mixHex(a,b,t){const p=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));const A=p(a),B=p(b);return '#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('')}
-const P_SKIN=['#F3CDAE','#EBBE9A','#E0AA82','#D2976E','#C2845C','#AD6F4B','#93593A'];
-const P_HAIR=['#1C1312','#24170F','#2E1D16','#3B261C','#4A3022'];
-const P_CLOTH=[['#9B2F52','#E9BE67'],['#137370','#EFCB73'],['#C98B2A','#8A2E44'],['#33459A','#E7BD5F'],['#1F7350','#F2CF80'],['#E2826B','#FFF0D2'],['#6A3170','#EBC370'],['#F1E4D2','#BD8A3B'],['#2A385C','#DDB868'],['#BF3A55','#F7DBA3'],['#D9577A','#FFE0A8'],['#7B4A2F','#F0D39A']];
-const P_BG=[['#FFE1E6','#FFC3CF'],['#FFE7D8','#FFC6AE'],['#FBE1EE','#F0BCD7'],['#FFEFD9','#FFD3A3'],['#F3E6F7','#DFC5EE'],['#FFE4DC','#FBB9B2'],['#E9F1EC','#CBE4D6']];
-const P_TURBAN=['#1F2E66','#8E2440','#D9822B','#0E5F5C','#5B2C6F'];
+/* Each tone: background light, background deep, figure, clothing */
+const P_TONES=[
+  ['#F8E8EC','#EBC6D0','#9A4A62','#E9D2D8'],   // rose
+  ['#F1E8F4','#D9C6E3','#6A4A82','#EADFEF'],   // mauve
+  ['#E9EDF5','#C9D1E4','#3E4B74','#DCE2EE'],   // slate
+  ['#E8F0EC','#C8DCD1','#3D6656','#DCE8E1'],   // sage
+  ['#E6F0F1','#C3DCDF','#2F6670','#D7E7E9'],   // teal
+  ['#F5E7EE','#E3C2D3','#6E3558','#EEDBE5'],   // plum
+];
 const PCACHE=new Map();
 function portrait(seed,g,o){
-  o=o||{};const key=seed+g+(o.turban?'t':'');if(PCACHE.has(key))return PCACHE.get(key);
-  const r=rngP(seed*9301+49297);const pick=a=>a[Math.floor(r()*a.length)];
-  const skin=pick(P_SKIN),hair=pick(P_HAIR),cl=pick(P_CLOTH),bg=pick(P_BG);
-  const sh=mixHex(skin,'#5A2A1E',.18),sh2=mixHex(skin,'#5A2A1E',.32),id='g'+key.replace(/\W/g,'');
-  const F=g==='F';const style=F?pick(['long','wavy','bun','braid','long']):pick(['short','quiff','curly','short']);
-  const beard=!F&&(o.turban||r()<.45),glasses=r()<.18,saree=F&&r()<.55,neck=F&&r()<.5;
-  const bx=[0,1,2].map(()=>[Math.round(r()*200),Math.round(r()*120),Math.round(14+r()*26)]);
-  let s=`<svg viewBox="0 0 200 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="${id}b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${bg[0]}"/><stop offset="1" stop-color="${bg[1]}"/></linearGradient><radialGradient id="${id}f" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="${mixHex(skin,'#ffffff',.14)}"/><stop offset="1" stop-color="${skin}"/></radialGradient><linearGradient id="${id}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${mixHex(cl[0],'#ffffff',.12)}"/><stop offset="1" stop-color="${mixHex(cl[0],'#000000',.12)}"/></linearGradient></defs>`;
-  s+=`<rect width="200" height="220" fill="url(#${id}b)"/>`;
-  bx.forEach(b=>{s+=`<circle cx="${b[0]}" cy="${b[1]}" r="${b[2]}" fill="#fff" opacity=".22"/>`});
-  // back hair
+  o=o||{};const key=seed+g+(o.tone!=null?'t'+o.tone:'');if(PCACHE.has(key))return PCACHE.get(key);
+  const r=rngP(seed*9301+49297),pick=a=>a[Math.floor(r()*a.length)],F=g==='F';
+  const T=P_TONES[o.tone!=null?o.tone:pick([0,0,1,1,5,5,2,3,4])],id='p'+String(key).replace(/\W/g,'');
+  const fig=T[2],figL=mixHex(fig,'#ffffff',.3),figD=mixHex(fig,'#000000',.18),hair=mixHex(fig,'#000000',.38);
+  const cloth=pick([T[3],mixHex(fig,'#ffffff',.35),mixHex(fig,'#000000',.1),'#F4F1EC']),clothL=mixHex(cloth,'#ffffff',.18),clothD=mixHex(cloth,'#000000',.2);
+  const lean=Math.round((r()-.5)*6);           // slight head turn
+  const hx=100+lean, hy=84, hrx=F?24:25.5, hry=F?31:32;
+  const K=1.13, TR=`transform="translate(${hx} ${hy}) scale(${K}) translate(${-hx} ${-hy})"`;
+  let s=`<svg viewBox="0 0 200 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>`
+   +`<linearGradient id="${id}b" x1="0" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="${T[0]}"/><stop offset="1" stop-color="${T[1]}"/></linearGradient>`
+   +`<radialGradient id="${id}g" cx=".3" cy=".22" r=".75"><stop offset="0" stop-color="#ffffff" stop-opacity=".7"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>`
+   +`<linearGradient id="${id}f" x1="0" y1="0" x2="1" y2=".25"><stop offset="0" stop-color="${figL}"/><stop offset=".55" stop-color="${fig}"/><stop offset="1" stop-color="${figD}"/></linearGradient>`
+   +`<linearGradient id="${id}c" x1="0" y1="0" x2="1" y2=".3"><stop offset="0" stop-color="${clothL}"/><stop offset=".6" stop-color="${cloth}"/><stop offset="1" stop-color="${clothD}"/></linearGradient>`
+   +`<linearGradient id="${id}h" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${mixHex(hair,'#ffffff',.14)}"/><stop offset="1" stop-color="${hair}"/></linearGradient>`
+   +`</defs>`;
+  s+=`<rect width="200" height="220" fill="url(#${id}b)"/><rect width="200" height="220" fill="url(#${id}g)"/>`;
+  // soft shadow on the backdrop
+  s+=`<ellipse cx="${118+lean}" cy="196" rx="92" ry="40" fill="${T[1]}" opacity=".55"/>`;
+  const hairStyle=F?pick(['long','long','bob','wavy','updo','shoulder']):pick(['crop','side','textured','swept']);
+  // long hair falls behind the shoulders
+  s+=`<g ${TR}>`;
+  if(F&&(hairStyle==='long'||hairStyle==='wavy'))s+=`<path d="M${hx-30} ${hy-6}C${hx-36} ${hy-48} ${hx+36} ${hy-48} ${hx+30} ${hy-6}C${hx+34} ${hy+40} ${hx+40} ${hy+76} ${hx+44} ${hy+102}${hairStyle==='wavy'?`q-10 8-18 2q-8 8-18 2`:''}L${hx-44} ${hy+102}${hairStyle==='wavy'?`q-6 6-14 0`:''}C${hx-40} ${hy+76} ${hx-34} ${hy+40} ${hx-30} ${hy-6}z" fill="url(#${id}h)"/>`;
+  if(F&&hairStyle==='shoulder')s+=`<path d="M${hx-29} ${hy-6}C${hx-34} ${hy-46} ${hx+34} ${hy-46} ${hx+29} ${hy-6}C${hx+33} ${hy+28} ${hx+34} ${hy+46} ${hx+36} ${hy+60}L${hx-36} ${hy+60}C${hx-34} ${hy+46} ${hx-33} ${hy+28} ${hx-29} ${hy-6}z" fill="url(#${id}h)"/>`;
+  if(F&&hairStyle==='updo')s+=`<ellipse cx="${hx+16}" cy="${hy-30}" rx="14" ry="12" fill="url(#${id}h)"/>`;
+  s+=`</g>`;
+  // neck
+  const nw=F?12:15;
+  s+=`<path d="M${hx-nw} ${hy+20}C${hx-nw} ${hy+36} ${hx-nw-1} ${hy+50} ${hx-nw-3} ${hy+62}L${hx+nw+3} ${hy+62}C${hx+nw+1} ${hy+50} ${hx+nw} ${hy+36} ${hx+nw} ${hy+20}z" fill="${figD}"/>`;
+  // shoulders and torso
+  const sw=F?66:78, top=hy+50, L=100-sw, R=100+sw;
+  const torso=`M${hx-nw-2} ${top}C${hx-nw-16} ${top+7} ${L+12} ${top+9} ${L} ${top+24}C${L-8} ${top+32} ${L-12} ${top+52} ${L-13} 220L${R+13} 220C${R+12} ${top+52} ${R+8} ${top+32} ${R} ${top+24}C${R-12} ${top+9} ${hx+nw+16} ${top+7} ${hx+nw+2} ${top}z`;
+  s+=`<path d="${torso}" fill="url(#${id}c)"/>`;
+  const outfit=F?pick(['vneck','boat','blazer','crew','turtle']):pick(['blazer','blazer','shirt','crew','turtle']);
+  if(outfit==='vneck')s+=`<path d="M${hx-nw-6} ${top+4}L${hx} ${top+34}L${hx+nw+6} ${top+4}z" fill="${figD}"/>`;
+  if(outfit==='boat')s+=`<path d="M${hx-nw-8} ${top+4}Q${hx} ${top+14} ${hx+nw+8} ${top+4}z" fill="${figD}"/>`;
+  if(outfit==='crew')s+=`<path d="M${hx-nw-4} ${top+3}Q${hx} ${top+12} ${hx+nw+4} ${top+3}" stroke="${clothD}" stroke-width="3" fill="none"/>`;
+  if(outfit==='turtle')s+=`<path d="M${hx-nw-1} ${hy+40}Q${hx} ${hy+44} ${hx+nw+1} ${hy+40}L${hx+nw+6} ${top+6}Q${hx} ${top+12} ${hx-nw-6} ${top+6}z" fill="url(#${id}c)"/><path d="M${hx-nw-1} ${hy+40}Q${hx} ${hy+44} ${hx+nw+1} ${hy+40}" stroke="${clothD}" stroke-width="1" fill="none" opacity=".6"/>`;
+  if(outfit==='shirt'||outfit==='blazer'){
+    const inner=outfit==='blazer'?pick(['#F7F4F0',mixHex(T[0],'#ffffff',.5)]):clothL;
+    s+=`<path d="M${hx-nw-5} ${top+3}L${hx} ${top+40}L${hx+nw+5} ${top+3}z" fill="${outfit==='blazer'?inner:clothL}"/>`;
+    s+=`<path d="M${hx-nw-5} ${top+2}L${hx-3} ${top+16}L${hx-nw+1} ${top+22}zM${hx+nw+5} ${top+2}L${hx+3} ${top+16}L${hx+nw-1} ${top+22}z" fill="${mixHex(outfit==='blazer'?inner:clothL,'#ffffff',.5)}" stroke="${mixHex(cloth,'#000',.12)}" stroke-width=".6"/>`;
+    if(outfit==='blazer')s+=`<path d="M${hx-nw-7} ${top+4}L${hx-4} ${top+62}L${hx-18} ${top+30}L${hx-nw-14} ${top+18}zM${hx+nw+7} ${top+4}L${hx+4} ${top+62}L${hx+18} ${top+30}L${hx+nw+14} ${top+18}z" fill="${clothD}" opacity=".55"/>`;
+  }
+  // head
+  s+=`<g ${TR}>`;
+  s+=`<ellipse cx="${hx}" cy="${hy}" rx="${hrx}" ry="${hry}" fill="url(#${id}f)"/>`;
+  // ears
+  s+=`<ellipse cx="${hx-hrx+1}" cy="${hy+4}" rx="3.5" ry="7" fill="${fig}"/><ellipse cx="${hx+hrx-1}" cy="${hy+4}" rx="3.5" ry="7" fill="${figD}"/>`;
+  // front hair
   if(F){
-    if(style==='long')s+=`<path d="M57 92C52 46 78 30 100 30c24 0 50 14 46 66 2 34 10 64 14 100H40c4-36 12-66 17-104z" fill="${hair}"/>`;
-    if(style==='wavy')s+=`<path d="M57 92C52 46 78 30 100 30c24 0 50 14 46 66 4 30 12 46 6 62-6 12-18 8-24 14-20 6-36 6-56 0-6-6-18-2-24-14-6-16 2-32 9-58z" fill="${hair}"/>`;
-    if(style==='bun')s+=`<circle cx="100" cy="34" r="19" fill="${hair}"/>`;
-    if(style==='braid')s+=`<path d="M60 90C56 50 80 34 100 34s44 16 40 56c0 14-4 26-8 34H68c-4-8-8-20-8-34z" fill="${hair}"/>`;
-  }
-  // neck, torso, neckline
-  s+=`<path d="M85 118v34c5 10 25 10 30 0v-34z" fill="${sh}"/>`;
-  s+=`<path d="M16 220c2-42 34-64 84-66 50 2 82 24 84 66z" fill="url(#${id}c)"/>`;
-  if(F){s+=`<path d="M79 156c8 18 34 18 42 0-12 5-30 5-42 0z" fill="${sh}"/>`;
-    if(saree)s+=`<path d="M38 220c18-34 50-54 94-64l14 8c-36 12-64 30-78 56z" fill="${cl[1]}" opacity=".95"/><path d="M44 220c18-32 48-50 90-60" stroke="${mixHex(cl[1],'#000',.2)}" stroke-width="1.5" fill="none" opacity=".5"/>`;
-    if(neck)s+=`<path d="M84 160q16 14 32 0" stroke="${cl[1]==='#FFF0D2'?'#D9A74A':'#E9BE67'}" stroke-width="2.4" fill="none"/><circle cx="100" cy="168" r="3" fill="#E9BE67"/>`;
+    if(hairStyle==='bob')s+=`<path d="M${hx-29} ${hy+30}C${hx-36} ${hy-14} ${hx-20} ${hy-40} ${hx+2} ${hy-38}C${hx+26} ${hy-38} ${hx+38} ${hy-14} ${hx+29} ${hy+30}C${hx+24} ${hy+12} ${hx+22} ${hy-6} ${hx+12} ${hy-16}C${hx-2} ${hy-6} ${hx-16} ${hy-8} ${hx-22} ${hy-4}C${hx-24} ${hy+8} ${hx-24} ${hy+18} ${hx-29} ${hy+30}z" fill="url(#${id}h)"/>`;
+    else if(hairStyle==='updo')s+=`<path d="M${hx-25} ${hy+2}C${hx-28} ${hy-30} ${hx-8} ${hy-38} ${hx+4} ${hy-37}C${hx+24} ${hy-36} ${hx+30} ${hy-16} ${hx+25} ${hy+2}C${hx+18} ${hy-16} ${hx+6} ${hy-22} ${hx-6} ${hy-20}C${hx-14} ${hy-14} ${hx-20} ${hy-8} ${hx-25} ${hy+2}z" fill="url(#${id}h)"/>`;
+    else s+=`<path d="M${hx-27} ${hy+14}C${hx-32} ${hy-26} ${hx-14} ${hy-40} ${hx+4} ${hy-38}C${hx+26} ${hy-36} ${hx+34} ${hy-14} ${hx+27} ${hy+14}C${hx+24} ${hy-4} ${hx+18} ${hy-14} ${hx+8} ${hy-20}C${hx-4} ${hy-10} ${hx-14} ${hy-10} ${hx-22} ${hy-6}C${hx-24} ${hy} ${hx-25} ${hy+6} ${hx-27} ${hy+14}z" fill="url(#${id}h)"/>`;
   }else{
-    s+=`<path d="M87 155l13 22 13-22z" fill="${sh}"/><path d="M100 177v40" stroke="${cl[1]}" stroke-width="2" opacity=".8"/><circle cx="100" cy="188" r="1.8" fill="${cl[1]}"/><circle cx="100" cy="200" r="1.8" fill="${cl[1]}"/><path d="M84 152l10 12M116 152l-10 12" stroke="${mixHex(cl[0],'#000',.25)}" stroke-width="2.4" stroke-linecap="round"/>`;
+    if(hairStyle==='crop')s+=`<path d="M${hx-25} ${hy-2}C${hx-28} ${hy-30} ${hx-12} ${hy-36} ${hx+2} ${hy-35}C${hx+20} ${hy-35} ${hx+30} ${hy-24} ${hx+25} ${hy-2}C${hx+22} ${hy-14} ${hx+14} ${hy-20} ${hx} ${hy-20}C${hx-12} ${hy-20} ${hx-20} ${hy-14} ${hx-25} ${hy-2}z" fill="url(#${id}h)"/>`;
+    if(hairStyle==='side')s+=`<path d="M${hx-26} ${hy}C${hx-30} ${hy-32} ${hx-10} ${hy-38} ${hx+4} ${hy-37}C${hx+24} ${hy-36} ${hx+31} ${hy-22} ${hx+26} ${hy}C${hx+22} ${hy-12} ${hx+16} ${hy-18} ${hx+6} ${hy-22}C${hx-6} ${hy-16} ${hx-18} ${hy-14} ${hx-26} ${hy}z" fill="url(#${id}h)"/><path d="M${hx-8} ${hy-34}Q${hx-2} ${hy-26} ${hx-4} ${hy-21}" stroke="${mixHex(hair,'#fff',.2)}" stroke-width="1.2" fill="none"/>`;
+    if(hairStyle==='textured')s+=`<path d="M${hx-26} ${hy-2}C${hx-30} ${hy-24} ${hx-22} ${hy-36} ${hx-10} ${hy-38}C${hx-4} ${hy-42} ${hx+8} ${hy-42} ${hx+14} ${hy-38}C${hx+28} ${hy-34} ${hx+30} ${hy-18} ${hx+26} ${hy-2}C${hx+22} ${hy-14} ${hx+12} ${hy-20} ${hx} ${hy-19}C${hx-12} ${hy-19} ${hx-21} ${hy-13} ${hx-26} ${hy-2}z" fill="url(#${id}h)"/>`;
+    if(hairStyle==='swept')s+=`<path d="M${hx-26} ${hy}C${hx-30} ${hy-30} ${hx-14} ${hy-42} ${hx+6} ${hy-41}C${hx+26} ${hy-40} ${hx+32} ${hy-22} ${hx+26} ${hy}C${hx+22} ${hy-16} ${hx+12} ${hy-24} ${hx} ${hy-23}C${hx-12} ${hy-22} ${hx-20} ${hy-14} ${hx-26} ${hy}z" fill="url(#${id}h)"/>`;
+    if(r()<.4)s+=`<path d="M${hx-hrx+2} ${hy+6}C${hx-hrx+4} ${hy+30} ${hx-12} ${hy+hry+2} ${hx} ${hy+hry+2}C${hx+12} ${hy+hry+2} ${hx+hrx-4} ${hy+30} ${hx+hrx-2} ${hy+6}C${hx+hrx-6} ${hy+22} ${hx+12} ${hy+hry-6} ${hx} ${hy+hry-6}C${hx-12} ${hy+hry-6} ${hx-hrx+6} ${hy+22} ${hx-hrx+2} ${hy+6}z" fill="${hair}" opacity=".55"/>`;
   }
-  // ears + face
-  s+=`<ellipse cx="65" cy="96" rx="6.5" ry="9.5" fill="${sh}"/><ellipse cx="135" cy="96" rx="6.5" ry="9.5" fill="${sh}"/>`;
-  s+=`<path d="M65 86c0-30 17-43 35-43s35 13 35 43c0 31-16 51-35 51S65 117 65 86z" fill="url(#${id}f)"/>`;
-  s+=`<circle cx="81" cy="108" r="7" fill="#FF6F86" opacity=".16"/><circle cx="119" cy="108" r="7" fill="#FF6F86" opacity=".16"/>`;
-  // eyes, brows, nose, mouth
-  s+=`<ellipse cx="86" cy="96" rx="3.3" ry="3.9" fill="#24150F"/><ellipse cx="114" cy="96" rx="3.3" ry="3.9" fill="#24150F"/><circle cx="87.2" cy="94.6" r="1.1" fill="#fff"/><circle cx="115.2" cy="94.6" r="1.1" fill="#fff"/>`;
-  if(F)s+=`<path d="M81.5 92.5l-2.5-1.5M118.5 92.5l2.5-1.5" stroke="#24150F" stroke-width="1.4" stroke-linecap="round"/>`;
-  s+=`<path d="M78 86q8-${F?5:4} 15-1M107 85q7-${F?4:3} 15 1" stroke="${hair}" stroke-width="${F?2.3:3}" fill="none" stroke-linecap="round"/>`;
-  s+=`<path d="M100 99q-4 10 1 13" stroke="${sh2}" stroke-width="2" fill="none" stroke-linecap="round"/>`;
-  if(F)s+=`<path d="M90 119q10 9 20 0q-10 3-20 0z" fill="#C44A62"/>`;
-  else s+=`<path d="M90 119q10 8 20 0" stroke="#9E4250" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
-  if(F&&r()<.45)s+=`<circle cx="100" cy="80" r="1.8" fill="#C8324F"/>`;
-  // beard
-  if(beard)s+=`<path d="M66 98c0 26 16 42 34 42s34-16 34-42c-4 18-16 28-34 28s-30-10-34-28z" fill="${hair}" opacity=".92"/><path d="M88 116q12-6 24 0q-12 3-24 0z" fill="${hair}"/>`;
-  // front hair / turban
-  if(o.turban){const tc=pick(P_TURBAN);s+=`<path d="M60 88C53 46 78 24 102 24c26 0 50 20 39 64-8-20-24-30-41-30s-33 10-40 30z" fill="${tc}"/><path d="M66 70c18-22 52-28 72-10M70 56c16-14 40-18 60-6" stroke="${mixHex(tc,'#000',.3)}" stroke-width="2" fill="none" opacity=".55"/><path d="M100 26v30" stroke="${mixHex(tc,'#fff',.2)}" stroke-width="2" opacity=".4"/>`}
-  else if(F){
-    if(style==='bun')s+=`<path d="M65 84c0-30 18-42 35-42s35 12 35 42c-8-18-20-26-35-26s-27 8-35 26z" fill="${hair}"/><path d="M100 43v14" stroke="${mixHex(hair,'#fff',.15)}" stroke-width="1.5"/>`;
-    else s+=`<path d="M62 92C58 54 80 38 102 38c24 0 42 16 38 56-6-20-18-34-36-38-6 14-24 24-42 36z" fill="${hair}"/>`;
-    if(style==='braid')s+=`<g fill="${hair}"><ellipse cx="134" cy="138" rx="8" ry="10"/><ellipse cx="137" cy="155" rx="7.5" ry="9.5"/><ellipse cx="139" cy="171" rx="7" ry="9"/><ellipse cx="140" cy="186" rx="6" ry="8"/></g><circle cx="140" cy="196" r="3.5" fill="#E9BE67"/>`;
-  }else{
-    if(style==='short')s+=`<path d="M63 86C59 52 82 38 102 38c23 0 41 14 35 48-3-12-11-22-25-24-12 6-32 6-42 10-4 4-6 8-7 14z" fill="${hair}"/>`;
-    if(style==='quiff')s+=`<path d="M64 84C59 48 80 30 106 31c24 1 38 22 30 53-4-15-16-24-30-24-14 0-32 6-42 24z" fill="${hair}"/><path d="M84 40c10-10 30-12 42-2" stroke="${mixHex(hair,'#fff',.18)}" stroke-width="2" fill="none"/>`;
-    if(style==='curly'){s+=`<g fill="${hair}">`;[[70,70,11],[80,56,12],[96,49,13],[112,51,12],[126,60,12],[133,74,10],[66,84,8],[136,86,8]].forEach(c=>{s+=`<circle cx="${c[0]}" cy="${c[1]}" r="${c[2]}"/>`});s+=`</g>`}
-  }
-  if(glasses)s+=`<g fill="#fff" fill-opacity=".1" stroke="#3B2622" stroke-width="2"><rect x="75" y="88" width="21" height="15" rx="6"/><rect x="104" y="88" width="21" height="15" rx="6"/></g><path d="M96 94h8" stroke="#3B2622" stroke-width="2"/>`;
-  if(F)s+=`<circle cx="65" cy="109" r="3.2" fill="#E9BE67"/><circle cx="135" cy="109" r="3.2" fill="#E9BE67"/><circle cx="65" cy="115" r="2" fill="#E9BE67"/><circle cx="135" cy="115" r="2" fill="#E9BE67"/>`;
-  s+=`</svg>`;
+  s+=`</g></svg>`;
   PCACHE.set(key,s);return s;
 }
 
@@ -529,8 +542,8 @@ const STORE={play:'',ios:''};
 if(LIVE){const s=$('#preview-strip');if(s)s.hidden=true}
 [['play','#st-play'],['ios','#st-ios']].forEach(([k,sel])=>{if(STORE[k]){const a=$(sel);a.href=STORE[k];a.target='_blank';a.rel='noopener';a.classList.add('live');$(sel+'-s').textContent=k==='play'?'Get it on':'Download on the'}});
 if(STORE.play||STORE.ios)$('#st-note').textContent=STORE.play&&STORE.ios?'Free to download.':(STORE.play?'Free to download on Android. iPhone coming soon: join the waitlist and we’ll email you.':'Free to download on iPhone. Android coming soon: join the waitlist and we’ll email you.');
-$('#p1').innerHTML=portrait(11,'F');
-$('#p2').innerHTML=portrait(42,'M');
+$('#p1').innerHTML=portrait(11,'F',{tone:0});
+$('#p2').innerHTML=portrait(42,'M',{tone:2});
 const dl=$('#countries');dl.innerHTML=COUNTRY_NAMES.map(n=>`<option value="${n.replace(/"/g,'&quot;')}">`).join('');
 
 /* Event art */
