@@ -199,6 +199,8 @@
     'Gold is on for free during the test.': 'Gold est activé gratuitement pendant le test.', 'Switch back to Free to try it': 'Revenir au forfait gratuit pour l’essayer',
     'You are on Free now. You can switch Gold on again any time during the test.': 'Vous êtes maintenant au forfait gratuit. Vous pouvez réactiver Gold à tout moment pendant le test.',
     'testers can switch on Gold for free to try everything, or buy it with Google Play.': 'les testeurs peuvent activer Gold gratuitement pour tout essayer, ou l’acheter avec Google Play.',
+    'Add a Google account to this phone first, or use email.': 'Ajoutez d’abord un compte Google à ce téléphone, ou utilisez votre courriel.',
+    'Google sign-in could not start. Please try again, or use email.': 'La connexion avec Google n’a pas pu démarrer. Réessayez, ou utilisez votre courriel.',
     'Manage in Google Play': 'Gérer dans Google Play', 'Welcome to Gold.': 'Bienvenue dans Gold.', 'Welcome to Gold. Your chat is open.': 'Bienvenue dans Gold. Votre discussion est ouverte.',
     'Your payment is pending. Gold switches on as soon as Google Play confirms it.': 'Votre paiement est en attente. Gold s’activera dès que Google Play le confirmera.',
     'Google Play has not confirmed this payment yet. Gold switches on as soon as it does.': 'Google Play n’a pas encore confirmé ce paiement. Gold s’activera dès que ce sera fait.',

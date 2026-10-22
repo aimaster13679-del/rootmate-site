@@ -150,6 +150,13 @@ window.RM_API = (function () {
     updatePassword: function (password) {
       return raw('/auth/v1/user', { method: 'PUT', body: { password: password } });
     },
+    // Google ID token from Android's account sheet or Google's web button. The raw nonce
+    // proves the token was asked for by this app just now.
+    signInWithIdToken: async function (idToken, nonce) {
+      var d = await raw('/auth/v1/token?grant_type=id_token', { method: 'POST', auth: false, body: { provider: 'google', id_token: idToken, nonce: nonce } });
+      saveSes(withExpiry(d));
+      return d;
+    },
     googleUrl: function () {
       return C.url + '/auth/v1/authorize' + qs({ provider: 'google', redirect_to: C.redirect });
     },

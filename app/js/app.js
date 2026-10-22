@@ -668,7 +668,8 @@ function renderAuth(){
      <label class="ck"><input type="checkbox" data-auth="mkt"${a.mkt?' checked':''}><span>Optional: send me event invitations and offers by email and WhatsApp. I can stop them at any time.</span></label>
      ${authErr('consent')}</div>`:''}
     <div class="authlist">
-     <button class="authbtn" data-a="authGo" data-k="google"${busy?' disabled':''}><span class="ai g" aria-hidden="true">G</span><span>Continue with Google</span></button>
+     <button class="authbtn" id="g-own" data-a="authGo" data-k="google"${busy?' disabled':''}><span class="ai g" aria-hidden="true">${GLOGO}</span><span>Continue with Google</span></button>
+     ${CFG.web?`<div id="gsi-slot" class="gsi-slot notr" hidden></div>`:''}
      <button class="authbtn" data-a="authGo" data-k="email"${busy?' disabled':''}><span class="ai">${ic('mail')}</span><span>${su?'Email and password':'Email and password'}</span></button>
     </div>
     <p class="hint" style="text-align:center">Phone and WhatsApp login are coming soon.</p>
@@ -1051,6 +1052,8 @@ function renderAdmin(){
 function sheetShell(title,body,foot){return `<div class="sheet-wrap"><button class="backdrop" data-a="closeSheet" aria-label="Close"></button><div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="grip" aria-hidden="true"></div><div class="sheet-h pad"><h2>${esc(title)}</h2><button class="iconbtn" data-a="closeSheet" aria-label="Close">${ic('x')}</button></div><div class="sheet-b pad" id="sheet-b">${body}</div>${foot?`<div class="sheet-f pad">${foot}</div>`:''}</div></div>`}
 function chipGroup(name,opts,cur){return `<div class="chips" role="radiogroup">${opts.map(o=>{const v=typeof o==='string'?o:o.v,l=typeof o==='string'?o:o.l;return `<label class="opt"><input type="radio" name="${name}" value="${esc(v)}" data-sheet="${name}"${cur===v?' checked':''}><span>${esc(l)}</span></label>`}).join('')}</div>`}
 const MANAGE_SUB=()=>`<a class="btn ghost" href="https://play.google.com/store/account/subscriptions?sku=${GOLD_PRODUCT}&amp;package=${esc(CFG.appId)}" target="_blank" rel="noopener">${ic('crown')}Manage in Google Play</a>`;
+/* Google's multicolour "G", as Google's sign-in branding rules ask for. */
+const GLOGO='<svg viewBox="0 0 48 48" width="20" height="20"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>';
 function busyBtn(cls,act,label,attrs){return `<button class="btn ${cls}" data-a="${act}"${attrs||''}${busy?' disabled':''}>${busy===act?spinner(label):label}</button>`}
 function renderSheet(){
   const me=S.me,t=sheet.type;
@@ -1177,6 +1180,7 @@ function render(){
   }
   const t=document.querySelector('.toast');
   app.innerHTML=html;
+  if(S.screen==='auth'&&CFG.web)gsiAfterRender();
   if(t){t.classList.add('still');app.appendChild(t)}
   const sk=sheet?sheet.type+(sheet.id||''):'',vk=view?view.type+(view.id||''):'',pk=picker?picker.k:'';
   if(sk&&sk===prevSheet){const w=app.querySelector('.sheet-wrap:not(.picker-wrap)');if(w)w.classList.add('still')}
@@ -1462,7 +1466,44 @@ async function loadAdmin(){
   catch(e){S.admin={loading:false,queue:[],reports:[],urls:{}};render();fail(e)}}
 async function loadInvite(){if(!S.me||!isGold()||!S.me.v.id||S.invite)return;try{S.invite=await API.rpc('my_invite_code');render()}catch(e){}}
 function rateHint(){/* Store review prompt comes with the native review plugin after launch. */}
+/* ---------- Sign in with Google ----------
+   Android: the phone's own Google account sheet (GoogleAuth plugin), no browser.
+   Web: Google's button on neumarry.com. Both give an ID token that Supabase checks.
+   The old browser hand-off stays only as a fallback. */
+function hex(b){return Array.from(new Uint8Array(b),x=>x.toString(16).padStart(2,'0')).join('')}
+async function makeNonce(){const b=new Uint8Array(24);crypto.getRandomValues(b);const raw=hex(b);return {raw,hashed:hex(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(raw)))}}
+const gsi={state:'',raw:''};
+function gsiApi(){return window.google&&window.google.accounts&&window.google.accounts.id}
+async function gsiInit(){
+  if(!CFG.web||gsi.state==='ready'||gsi.state==='loading'||gsi.state==='failed')return;gsi.state='loading';
+  try{
+    if(!gsiApi())await new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://accounts.google.com/gsi/client';s.async=true;s.onload=ok;s.onerror=()=>no(new Error('script'));document.head.appendChild(s)});
+    if(!gsiApi())throw new Error('no api');
+    const n=await makeNonce();gsi.raw=n.raw;
+    gsiApi().initialize({client_id:CFG.googleClientId,callback:onGsi,nonce:n.hashed,ux_mode:'popup',auto_select:false,context:'signin'});
+    gsi.state='ready';syncGsi();
+  }catch(e){gsi.state='failed';console.warn('[gsi]',e&&e.message)}}
+function gsiAfterRender(){if(gsi.state==='ready')syncGsi();else gsiInit()}
+function syncGsi(){
+  const slot=document.getElementById('gsi-slot'),own=document.getElementById('g-own');if(!slot||!own)return;
+  const a=S.auth||{};const ok=gsi.state==='ready'&&!busy&&(a.mode!=='signup'||(a.c18&&a.terms));
+  if(ok&&!slot.dataset.done){const w=Math.round(own.getBoundingClientRect().width)||320;
+    gsiApi().renderButton(slot,{type:'standard',theme:'outline',size:'large',shape:'pill',text:a.mode==='signup'?'continue_with':'signin_with',logo_alignment:'left',width:Math.max(200,Math.min(400,w)),locale:RM_I18N.lang==='fr'?'fr_CA':'en'});slot.dataset.done='1'}
+  slot.hidden=!ok;own.hidden=ok}
+async function onGsi(resp){
+  const a=S.auth||{};if(a.mode==='signup'){if(!(a.c18&&a.terms)){S.errors={consent:'Tick both boxes to continue. The marketing box is optional.'};render();return}saveConsent(a)}
+  busy='auth';render();
+  try{await API.signInWithIdToken(resp&&resp.credential,gsi.raw);busy='';gsi.state='';await afterLogin()}
+  catch(e){busy='';gsi.state='';render();fail(e)}}
 async function googleSignIn(){
+  const G=isNative&&Plug().GoogleAuth;
+  if(G){busy='auth';render();
+    try{const n=await makeNonce();const r=await G.signIn({serverClientId:CFG.googleClientId,nonce:n.hashed});
+      await API.signInWithIdToken(r.idToken,n.raw);busy='';await afterLogin()}
+    catch(e){busy='';render();const c=String((e&&e.code)||'');if(c==='cancelled')return;
+      console.warn('[google]',c,e&&e.message);
+      toast(c==='no_account'?'Add a Google account to this phone first, or use email.':e instanceof API.ApiError?e.message:'Google sign-in could not start. Please try again, or use email.','info')}
+    return}
   const url=API.googleUrl();
   if(isNative&&Plug().Browser){try{await Plug().Browser.open({url,presentationStyle:'popover'})}catch(e){fail(e)}return}
   location.href=url;
@@ -1483,6 +1524,7 @@ function onBind(e){
   if(el.id==='pick-q'){if(picker){picker.q=el.value;const l=document.getElementById('pick-list');if(l){l.innerHTML=pickRows();l.scrollTop=0}}return}
   if(el.dataset.auth&&S.auth){const k=el.dataset.auth;S.auth[k]=el.type==='checkbox'?el.checked:el.value;
     if(S.errors[k]||(k!=='mkt'&&S.errors.consent&&el.type==='checkbox')){delete S.errors[k];if(el.type==='checkbox'&&S.auth.c18&&S.auth.terms)delete S.errors.consent;const w=el.closest('.fld,.consent');if(w&&!S.errors.consent){w.classList.remove('has-err');const er=w.querySelector('.err');if(er)er.remove()}}
+    if(el.type==='checkbox')syncGsi();
     if(k==='pw'||k==='email'){const r=document.getElementById('pw-rules');if(r)r.innerHTML=pwRulesHTML(S.auth.mode==='reset'?Object.assign({email:API.email()},S.auth):S.auth)}
     return}
   if(el.dataset.sheet&&sheet){const ek=({host:{city:'hcity',lang:'hlang',ok:'hok'},partner:{name:'pname',city:'pcity',contact:'pcontact'}}[sheet.type]||{})[el.dataset.sheet];

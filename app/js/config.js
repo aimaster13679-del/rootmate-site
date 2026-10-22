@@ -8,6 +8,8 @@ window.RM_CONFIG = (function () {
     redirect: 'com.neuconet.rootmate://auth-callback',
     site: 'https://neumarry.com/',
     support: 'aimaster13679@gmail.com',
+    // Google sign-in (public id of the "Web application" OAuth client; Supabase checks tokens against it).
+    googleClientId: '583611998053-skqaj33g8cl9cjhg6pmq139af9qa92bo.apps.googleusercontent.com',
     version: '0.1.0',
     betaUntil: '2026-11-15T00:00:00Z'
   };
@@ -28,6 +30,7 @@ window.RM_CONFIG = (function () {
       var saved = localStorage.getItem('rm.testApi');
       if (q) { localStorage.setItem('rm.testApi', q); }
       if (q || saved) { c.url = q || saved; c.redirect = location.origin + location.pathname; }
+      if (new URLSearchParams(location.search).get('web') === '1') c.web = true; // tests of the browser version
     }
   } catch (e) {}
   return c;
