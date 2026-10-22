@@ -231,11 +231,11 @@ p{margin:0}
 .sorts button,.kmchips button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 13px;font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap}
 .sorts button.on,.kmchips button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .kmchips{display:flex;gap:6px;flex-wrap:wrap}
-.empty{display:grid;gap:10px;justify-items:center;text-align:center;padding:30px 16px;background:var(--surface);border:1.5px dashed var(--line);border-radius:26px}
-.empty .eic{width:56px;height:56px;border-radius:50%;background:var(--rose-soft);color:var(--rose);display:grid;place-items:center}
-.empty h3{font-family:var(--f-display);font-weight:500;font-size:22px}
-.empty p{color:var(--muted);max-width:34ch}
-.empty .btns{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+div.empty{display:grid;gap:10px;justify-items:center;text-align:center;padding:30px 16px;background:var(--surface);border:1.5px dashed var(--line);border-radius:26px}
+div.empty .eic{width:56px;height:56px;border-radius:50%;background:var(--rose-soft);color:var(--rose);display:grid;place-items:center}
+div.empty h3{font-family:var(--f-display);font-weight:500;font-size:22px}
+div.empty p{color:var(--muted);max-width:34ch}
+div.empty .btns{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
 .quota{display:flex;align-items:center;gap:12px;font-size:13.5px;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:10px 14px}
 .quota .bar{flex:1;height:6px;background:var(--sunk);border-radius:6px;overflow:hidden;min-width:40px}
 .quota .bar i{display:block;height:100%;background:var(--grad)}
