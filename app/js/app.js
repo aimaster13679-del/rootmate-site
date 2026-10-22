@@ -134,7 +134,7 @@ const QS=[
 const API=window.RM_API, CFG=window.RM_CONFIG;
 /* Editorial portraits: tonal head-and-shoulders silhouettes used as stand-ins where no
    member photo exists (welcome screen, store images). No faces, skin tones or regional
-   dress, so they read as adults from anywhere. portrait(seed, g, {tone}) where tone picks one of P_TONES. */
+   dress (every head is the same soft white), so they read as adults from anywhere. portrait(seed, g, {tone}) where tone picks one of P_TONES. */
 function rngP(seed){let a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function mixHex(a,b,t){const p=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));const A=p(a),B=p(b);return '#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('')}
 /* Each tone: background light, background deep, figure, clothing */
@@ -151,15 +151,18 @@ function portrait(seed,g,o){
   o=o||{};const key=seed+g+(o.tone!=null?'t'+o.tone:'');if(PCACHE.has(key))return PCACHE.get(key);
   const r=rngP(seed*9301+49297),pick=a=>a[Math.floor(r()*a.length)],F=g==='F';
   const T=P_TONES[o.tone!=null?o.tone:pick([0,0,1,1,5,5,2,3,4])],id='p'+String(key).replace(/\W/g,'');
-  const fig=T[2],figL=mixHex(fig,'#ffffff',.3),figD=mixHex(fig,'#000000',.18),hair=mixHex(fig,'#000000',.38);
+  /* Head, neck and ears are the same soft white for every portrait, man or woman, so no
+     figure ever reads as a skin colour. The tone only colours hair, clothes and backdrop. */
+  const fig=T[2],head='#FBF9FA',headL='#FFFFFF',headD='#E9E2E6',hair=mixHex(fig,'#000000',.38);
+  const figL=headL,figD=headD;
   const cloth=pick([T[3],mixHex(fig,'#ffffff',.35),mixHex(fig,'#000000',.1),'#F4F1EC']),clothL=mixHex(cloth,'#ffffff',.18),clothD=mixHex(cloth,'#000000',.2);
   const lean=Math.round((r()-.5)*6);           // slight head turn
   const hx=100+lean, hy=84, hrx=F?24:25.5, hry=F?31:32;
   const K=1.13, TR=`transform="translate(${hx} ${hy}) scale(${K}) translate(${-hx} ${-hy})"`;
   let s=`<svg viewBox="0 0 200 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>`
-   +`<linearGradient id="${id}b" x1="0" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="${T[0]}"/><stop offset="1" stop-color="${T[1]}"/></linearGradient>`
+   +`<linearGradient id="${id}b" x1="0" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="${mixHex(T[0],T[1],.45)}"/><stop offset="1" stop-color="${mixHex(T[1],fig,.12)}"/></linearGradient>`
    +`<radialGradient id="${id}g" cx=".3" cy=".22" r=".75"><stop offset="0" stop-color="#ffffff" stop-opacity=".7"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>`
-   +`<linearGradient id="${id}f" x1="0" y1="0" x2="1" y2=".25"><stop offset="0" stop-color="${figL}"/><stop offset=".55" stop-color="${fig}"/><stop offset="1" stop-color="${figD}"/></linearGradient>`
+   +`<linearGradient id="${id}f" x1="0" y1="0" x2="1" y2=".25"><stop offset="0" stop-color="${figL}"/><stop offset=".55" stop-color="${head}"/><stop offset="1" stop-color="${figD}"/></linearGradient>`
    +`<linearGradient id="${id}c" x1="0" y1="0" x2="1" y2=".3"><stop offset="0" stop-color="${clothL}"/><stop offset=".6" stop-color="${cloth}"/><stop offset="1" stop-color="${clothD}"/></linearGradient>`
    +`<linearGradient id="${id}h" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${mixHex(hair,'#ffffff',.14)}"/><stop offset="1" stop-color="${hair}"/></linearGradient>`
    +`</defs>`;
@@ -195,7 +198,7 @@ function portrait(seed,g,o){
   s+=`<g ${TR}>`;
   s+=`<ellipse cx="${hx}" cy="${hy}" rx="${hrx}" ry="${hry}" fill="url(#${id}f)"/>`;
   // ears
-  s+=`<ellipse cx="${hx-hrx+1}" cy="${hy+4}" rx="3.5" ry="7" fill="${fig}"/><ellipse cx="${hx+hrx-1}" cy="${hy+4}" rx="3.5" ry="7" fill="${figD}"/>`;
+  s+=`<ellipse cx="${hx-hrx+1}" cy="${hy+4}" rx="3.5" ry="7" fill="${head}"/><ellipse cx="${hx+hrx-1}" cy="${hy+4}" rx="3.5" ry="7" fill="${figD}"/>`;
   // front hair
   if(F){
     if(hairStyle==='bob')s+=`<path d="M${hx-29} ${hy+30}C${hx-36} ${hy-14} ${hx-20} ${hy-40} ${hx+2} ${hy-38}C${hx+26} ${hy-38} ${hx+38} ${hy-14} ${hx+29} ${hy+30}C${hx+24} ${hy+12} ${hx+22} ${hy-6} ${hx+12} ${hy-16}C${hx-2} ${hy-6} ${hx-16} ${hy-8} ${hx-22} ${hy-4}C${hx-24} ${hy+8} ${hx-24} ${hy+18} ${hx-29} ${hy+30}z" fill="url(#${id}h)"/>`;
@@ -206,7 +209,7 @@ function portrait(seed,g,o){
     if(hairStyle==='side')s+=`<path d="M${hx-26} ${hy}C${hx-30} ${hy-32} ${hx-10} ${hy-38} ${hx+4} ${hy-37}C${hx+24} ${hy-36} ${hx+31} ${hy-22} ${hx+26} ${hy}C${hx+22} ${hy-12} ${hx+16} ${hy-18} ${hx+6} ${hy-22}C${hx-6} ${hy-16} ${hx-18} ${hy-14} ${hx-26} ${hy}z" fill="url(#${id}h)"/><path d="M${hx-8} ${hy-34}Q${hx-2} ${hy-26} ${hx-4} ${hy-21}" stroke="${mixHex(hair,'#fff',.2)}" stroke-width="1.2" fill="none"/>`;
     if(hairStyle==='textured')s+=`<path d="M${hx-26} ${hy-2}C${hx-30} ${hy-24} ${hx-22} ${hy-36} ${hx-10} ${hy-38}C${hx-4} ${hy-42} ${hx+8} ${hy-42} ${hx+14} ${hy-38}C${hx+28} ${hy-34} ${hx+30} ${hy-18} ${hx+26} ${hy-2}C${hx+22} ${hy-14} ${hx+12} ${hy-20} ${hx} ${hy-19}C${hx-12} ${hy-19} ${hx-21} ${hy-13} ${hx-26} ${hy-2}z" fill="url(#${id}h)"/>`;
     if(hairStyle==='swept')s+=`<path d="M${hx-26} ${hy}C${hx-30} ${hy-30} ${hx-14} ${hy-42} ${hx+6} ${hy-41}C${hx+26} ${hy-40} ${hx+32} ${hy-22} ${hx+26} ${hy}C${hx+22} ${hy-16} ${hx+12} ${hy-24} ${hx} ${hy-23}C${hx-12} ${hy-22} ${hx-20} ${hy-14} ${hx-26} ${hy}z" fill="url(#${id}h)"/>`;
-    if(r()<.4)s+=`<path d="M${hx-hrx+2} ${hy+6}C${hx-hrx+4} ${hy+30} ${hx-12} ${hy+hry+2} ${hx} ${hy+hry+2}C${hx+12} ${hy+hry+2} ${hx+hrx-4} ${hy+30} ${hx+hrx-2} ${hy+6}C${hx+hrx-6} ${hy+22} ${hx+12} ${hy+hry-6} ${hx} ${hy+hry-6}C${hx-12} ${hy+hry-6} ${hx-hrx+6} ${hy+22} ${hx-hrx+2} ${hy+6}z" fill="${hair}" opacity=".55"/>`;
+    if(r()<.4)r(); /* (no beard shading: it read as a darker face) keeps the same picks as before */
   }
   s+=`</g></svg>`;
   PCACHE.set(key,s);return s;
@@ -622,15 +625,16 @@ function renderWelcome(){
     </div>
     <h1>Your person from <em>back home</em> might live ten minutes away.</h1>
     <p class="lede">For everyone living away from the country they grew up in. Meet verified people who share your roots and your mindset, in your city, with your family by your side.</p>
+    <div class="cta"><button class="btn primary block" data-a="start">Create my profile</button>
+      <button class="btn ghost block" data-a="login">I already have an account</button></div>
+    <p class="note">By continuing you agree to our <button class="link" data-a="legal" data-k="terms">Terms</button> and <button class="link" data-a="legal" data-k="privacy">Privacy Policy</button>. 18+ only.</p>
     <ul class="usp">
       <li><span class="pi">${ic('users')}</span><span><b>Family Mixers</b><span>Hosted evenings in your city, dinner included. Bring your parents, meet in person.</span></span></li>
       <li><span class="pi">${ic('pin')}</span><span><b>Roots, city and mindset</b><span>Matched on where you come from, where you live and how you think.</span></span></li>
       <li><span class="pi">${ic('shield')}</span><span><b>Only real people</b><span>Every member is checked with a government ID and a live selfie.</span></span></li>
       <li><span class="pi">${ic('lock')}</span><span><b>Private by default</b><span>Photos stay hidden until you both say yes. Your number is never shown.</span></span></li>
     </ul>
-    <div class="cta"><button class="btn primary block" data-a="start">Create my profile</button>
-      <button class="btn ghost block" data-a="login">I already have an account</button></div>
-    <p class="note">By continuing you agree to our <button class="link" data-a="legal" data-k="terms">Terms</button> and <button class="link" data-a="legal" data-k="privacy">Privacy Policy</button>. 18+ only.</p>
+
   </div></div>`;
 }
 
