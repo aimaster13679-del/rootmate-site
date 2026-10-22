@@ -27,7 +27,7 @@ fix = [
  ('When you both say yes, a RootMate host sets up a family call for both sides.', 'When you both say yes, a RootMate host helps both families connect.'),
  ('.ctaband{', '.links a.hl{background:#FFF3DC;border:1px solid #E7C27A;color:#8A5A12;border-radius:999px;padding:6px 12px;font-weight:700}.ctaband{'),
  ('<a href="#partners">Work with us</a><a href="#faq">FAQ</a>', '<a class="hl" href="work-with-us.html">Work with us</a><a href="#faq">FAQ</a>'),
- ('<span class="pill"><i></i>Launching in Toronto · November 2026</span>', '<span class="pill"><i></i>NRI matrimony · Launching in Toronto, November 2026</span>'),
+ ('<span class="pill"><i></i>Launching in Toronto · November 2026</span>', '<span class="pill"><i></i>Matrimony for life abroad · Launching in Toronto, November 2026</span>'),
  ('RootMate is matrimony for people living abroad. Meet verified people', 'RootMate is a matrimony app for people living abroad. Meet verified people'),
  ('Hosted Family Mixers with parent tickets, and a Family Circle where parents can suggest profiles. They never chat as you.', 'Hosted Family Mixers with parent tickets, and soon a Family Circle where parents can suggest profiles. They never chat as you.'),
  ('Parents can sign up on your behalf, come to family events with their own ticket, and join a Family Circle to suggest profiles.', 'Parents can sign up on your behalf and come to family events with their own ticket. A Family Circle where they can suggest profiles is coming soon.'),
@@ -52,7 +52,7 @@ for a, b in fix:
     assert a in s, 'missing: ' + a[:60]
     s = s.replace(a, b)
 s = s.replace('RootMate', 'NeuMarry')
-s = s.replace('<title>NeuMarry Toronto</title>', '<title>NeuMarry: NRI Matrimony &amp; Shaadi App for Life Abroad</title>')
+s = s.replace('<title>NeuMarry Toronto</title>', '<title>NeuMarry: Matrimony &amp; Marriage App for People Living Abroad</title>')
 assert 'RootMate' not in s
 # Full document around the fragment
 i = s.index('</style>') + len('</style>')
@@ -84,9 +84,9 @@ def faq_from(html):
     return out
 ORG = {'@type': 'Organization', '@id': SITE + '#org', 'name': 'NeuMarry', 'url': SITE, 'logo': SITE + 'icon-512.png', 'email': EMAIL,
        'description': 'Verified matrimony app for people living away from the country they grew up in.'}
-HOME_TITLE = 'NeuMarry: NRI Matrimony & Shaadi App for Life Abroad'
-HOME_DESC = 'Verified NRI matrimony for Indians and South Asians in Canada, the USA and the UK. Match on roots, city and values. Meet families at events. Free to join.'
-KEYWORDS = 'matrimony, matrimonial, NRI matrimony, Indian matrimony Canada, shaadi, marriage, rishta, life partner, bride, groom, Toronto matrimony, Brampton matrimony, Gujarati matrimony, Punjabi matrimony, matrimony app'
+HOME_TITLE = 'NeuMarry: Matrimony & Marriage App for People Living Abroad'
+HOME_DESC = 'Verified matrimony for everyone living away from the country they grew up in, from every country and community. Match on roots, city and values. Meet families at events. Free to join.'
+KEYWORDS = 'matrimony, matrimonial, marriage app, matrimony abroad, expat marriage, immigrant matrimony, NRI matrimony, Indian matrimony Canada, shaadi, marriage, rishta, life partner, bride, groom, Toronto matrimony, Brampton matrimony, Gujarati matrimony, Punjabi matrimony, matrimony app'
 meta = ('<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
         f'<meta name="description" content="{esc(HOME_DESC)}"><meta name="keywords" content="{KEYWORDS}">' + social(HOME_TITLE, HOME_DESC, SITE))
 legal_links = '<a class="link" href="privacy.html">Privacy Policy</a><a class="link" href="terms.html">Terms of Service</a><a class="link" href="delete-account.html">Delete account</a>'
