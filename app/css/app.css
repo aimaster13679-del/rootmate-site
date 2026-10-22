@@ -23,7 +23,7 @@ h1,h2,h3,h4{text-wrap:balance;margin:0}
 p{margin:0}
 .ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .ic.fill{fill:currentColor;stroke:none}
-#app{max-width:480px;height:100%;margin:0 auto;background:radial-gradient(120% 50% at 50% -8%,#FFE4EA 0%,rgba(255,228,234,0) 70%),var(--bg);position:relative;display:flex;flex-direction:column;overflow:hidden;overflow:clip}
+#app{max-width:480px;height:var(--app-h,100%);margin:0 auto;background:radial-gradient(120% 50% at 50% -8%,#FFE4EA 0%,rgba(255,228,234,0) 70%),var(--bg);position:relative;display:flex;flex-direction:column;overflow:hidden;overflow:clip}
 @media (min-width:520px){#app{border-left:1px solid var(--line);border-right:1px solid var(--line);box-shadow:0 0 60px -30px rgba(160,30,70,.35)}}
 .pad{padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
 .scroll{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
@@ -715,3 +715,6 @@ body{background:var(--bg)}
 .wtop{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .lang-sw{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 12px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
 .lang-sw .ic{width:16px;height:16px}
+
+/* Keyboard open: give the screen to the field being typed in */
+.kb .navwrap{display:none}

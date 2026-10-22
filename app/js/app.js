@@ -1636,6 +1636,25 @@ if(isNative&&Plug().App){
 }
 /* A payment that was pending (for example cash at a store) and completes later. */
 if(Bill()){try{Bill().addListener('purchasesUpdated',()=>{if(S.screen==='app')restorePurchases(false)})}catch(e){}}
+/* ---------- Typing on phones ----------
+   When the keyboard opens, the app shrinks to the space above it and the field being
+   typed in is scrolled to the middle, so nobody has to close the keyboard to see their text. */
+(function(){
+  const vv=window.visualViewport;let tallest=window.innerHeight,raf=0;
+  const typing=el=>el&&(el.tagName==='TEXTAREA'||(el.tagName==='INPUT'&&!/^(checkbox|radio|button|submit|file|range|date)$/.test(el.type)));
+  const reveal=el=>{try{el.scrollIntoView({block:'center',behavior:'smooth'})}catch(e){}};
+  function fit(){raf=0;tallest=Math.max(tallest,window.innerHeight);
+    const visible=vv?Math.round(vv.height):window.innerHeight;
+    const open=tallest-visible>140;
+    document.documentElement.classList.toggle('kb',open);
+    document.documentElement.style.setProperty('--app-h',open&&vv&&window.innerHeight-visible>80?visible+'px':'100%');
+    if(open&&typing(document.activeElement))setTimeout(()=>reveal(document.activeElement),60)}
+  const later=()=>{if(!raf)raf=requestAnimationFrame(fit)};
+  if(vv)vv.addEventListener('resize',later);
+  window.addEventListener('resize',later);
+  window.addEventListener('orientationchange',()=>{tallest=0;setTimeout(later,300)});
+  document.addEventListener('focusin',e=>{if(typing(e.target))setTimeout(()=>reveal(e.target),320)});
+})();
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack}; /* used by automated tests */
 boot();
 })();
