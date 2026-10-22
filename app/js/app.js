@@ -237,6 +237,8 @@ function timeStr(ts){const d=new Date(ts),n=new Date();const same=d.toDateString
 function shown(p){return p.name||'Member'}
 function isBlurred(p){return !(p.photos&&p.photos.length)&&p.photoCount>0}
 function price(){const c=CMAP[S.me.country];const cur=c?c[3]:'USD';const pr=PRICE[cur]||PRICE.USD;const g=parseFloat(pr[1]);const fx=n=>(Math.round(g*n)-0.01).toFixed(2);return {sym:pr[0],gold:pr[1],conc:pr[2],m3:fx(2.4),m6:fx(3.6),pm3:(fx(2.4)/3).toFixed(2),pm6:(fx(3.6)/6).toFixed(2)}}
+/* Fork and knife, for partner restaurants. */
+IC.dish='<path d="M7 3v7a2 2 0 0 0 4 0V3M9 3v18M17 21V3c-2.2 0-3.5 2.8-3.5 6.5S14.8 14 17 14"/>';
 /* Google Play Billing: one subscription (neumarry_gold) with three base plans m1, m3, m6. */
 const GOLD_PRODUCT='neumarry_gold',GOLD_MONTHS={m1:1,m3:3,m6:6};
 const Bill=()=>isNative&&Plug().Billing?Plug().Billing:null;
@@ -634,6 +636,7 @@ function renderWelcome(){
       <li><span class="pi">${ic('shield')}</span><span><b>Only real people</b><span>Every member is checked with a government ID and a live selfie.</span></span></li>
       <li><span class="pi">${ic('lock')}</span><span><b>Private by default</b><span>Photos stay hidden until you both say yes. Your number is never shown.</span></span></li>
     </ul>
+    <a class="wwu-link" href="${esc(CFG.site)}work-with-us.html" target="_blank" rel="noopener">${ic('users')}<span><b>Work with NeuMarry</b><small>Hosts, partner restaurants and matrimonial bureaus</small></span>${ic('chev')}</a>
 
   </div></div>`;
 }
@@ -870,6 +873,9 @@ function renderEvents(){
    ${(()=>{const fk=evs.length>1?(S.evFilter||'for'):'all';const shownEv=evs.filter(e=>fk==='all'?true:forMe(e));
      return shownEv.length?shownEv.map(evCard).join(''):`<div class="empty"><span class="eic">${ic('cal')}</span><h3>${evs.length?'No events for your community yet':'New events are coming'}</h3><p>${evs.length?'Hosts add community events as more members join.':'The first Family Mixers are being planned. You will see them here.'}</p>${evs.length?`<div class="btns"><button class="btn sm ghost" data-a="evFilter" data-k="all">Every event</button></div>`:''}</div>`})()}
    <p class="note">Every event: separate tables in one shared room, ID-verified guests, a NeuMarry host.</p>
+   <div class="panel wwu"><div class="wwu-h"><h3>Bring Family Mixers to your city</h3></div>
+    <button class="rowi" data-a="hostAsk">${ic('users')}<span class="tx"><b>${S.hostSent?'Host application received':'Host events'}</b><span>${S.hostSent?'We reply within 3 working days':'CA$100 for every event · training included'}</span></span>${ic('chev','rchev')}</button>
+    <button class="rowi" data-a="restaurantAsk">${ic('dish')}<span class="tx"><b>${S.restSent?'Restaurant request received':'Own a restaurant?'}</b><span>${S.restSent?'Our team will call you':'We bring 30 to 60 paying guests for dinner'}</span></span>${ic('chev','rchev')}</button></div>
   </div></div>`;
 }
 function renderConnections(){
@@ -907,6 +913,7 @@ function renderMe(){
     <div class="complete"><div class="hint">Profile ${pct}% complete${pct<100?' · a complete profile builds more trust':''}</div><div class="bar"><i style="width:${pct}%"></i></div></div>
     <button class="btn ghost" data-a="edit">Edit profile</button></div>
    <div class="panel"><h3>Verification</h3><div>${vr(idS[0],'Government ID',idS[1])}${vr(sS[0],'Live selfie',sS[1])}<div class="vrow">${ic('info','no-ic')}<span class="tx"><b>Phone number</b><small>${me.phone?esc(me.phone)+' · code checks by SMS are coming soon':'Optional · add it in Edit profile'}</small></span></div></div></div>
+   ${workCard()}
    <div class="panel"><h3>Privacy</h3><div>
     ${toggle('privacy.blur','Hide my photos','Only people you have both accepted can see them',me.privacy.blur,'me')}
     ${toggle('privacy.showC','Show my community','Filters still work if this is off',me.privacy.showC,'me')}
@@ -919,9 +926,6 @@ function renderMe(){
    ${isGold()&&me.v.id?`<div class="panel"><h3>Invite people you trust</h3><p class="sub">Friends who join with your code get 10% off their first Gold purchase and an “Invited by” badge. You get a “Trusted member” badge and 10% off your next renewal, up to 6 times a year.</p>
     <div class="vrow">${ic('gift')}<span class="tx"><b>Your invite code</b><small><span class="code" id="inv-code">${S.invite?esc(S.invite):'…'}</span></small></span>${S.invite?`<button class="iconbtn" data-a="copyCode" data-k="${esc(S.invite)}" aria-label="Copy invite code">${ic('copy')}</button>`:''}</div>
     ${S.invite?`<button class="btn ghost" data-a="shareInvite">${ic('send')}Share invite</button>`:''}</div>`:''}
-   <div class="panel"><h3>Work with NeuMarry</h3>
-    <button class="rowi" data-a="hostAsk">${ic('users')}<span class="tx"><b>${S.hostSent?'Host application received':'Become a host'}</b><span>${S.hostSent?'We reply within 3 working days':'Run events in your city. CA$100 for every event you host'}</span></span></button>
-    <button class="rowi" data-a="partnerAsk">${ic('gift')}<span class="tx"><b>${S.partnerSent?'Partner request received':'Matrimonial bureaus'}</b><span>${S.partnerSent?'Our team will call you':'10% of a member’s first purchase, plus ₹1,500 when they get engaged'}</span></span></button></div>
    <div class="panel"><h3>Safety centre</h3><ul class="hint" style="margin:0;padding-left:18px;display:grid;gap:5px">
     <li>Report anyone who asks for money, gifts or visa help.</li><li>Keep chats in the app until you trust the person.</li><li>Do a video call before meeting, and meet in public.</li><li>Every report is reviewed by a person within 24 hours.</li></ul></div>
    <div class="panel"><h3>Help and legal</h3>
@@ -1042,13 +1046,18 @@ function renderAdmin(){
       <div class="adm-act"><select data-adm-reason="${x.row_id}" aria-label="Reason if rejected"><option value="">Reason if rejected…</option>${(x.kind==='photo'?['Face not clear','Not a real photo of you','Group photo','Inappropriate photo']:['Image not readable','Does not match the profile','Not a valid ID','Not a live selfie']).map(r=>`<option>${r}</option>`).join('')}</select>
       <button class="btn ghost sm" data-a="admReject" data-id="${x.row_id}" data-k="${x.kind}">Reject</button><button class="btn primary sm" data-a="admApprove" data-id="${x.row_id}" data-k="${x.kind}">Approve</button></div></div>`};
   return `<div class="view" role="dialog" aria-label="Team review">
-   <div class="vhead pad"><button class="iconbtn" data-a="closeView" aria-label="Back">${ic('back')}</button><div class="grow"><span><b>Team review</b><small>${c?`${c.members} members · ${c.verified} verified · ${c.women} women, ${c.men} men · ${c.waitlist} on waitlist`:'Loading…'}</small></span></div><button class="iconbtn" data-a="openAdmin" aria-label="Refresh">${ic('refresh')}</button></div>
+   <div class="vhead pad"><button class="iconbtn" data-a="closeView" aria-label="Back">${ic('back')}</button><div class="grow"><span><b>Team review</b><small>${c?`${c.members} member${c.members===1?'':'s'} · ${c.verified} verified · ${c.women} women, ${c.men} men · ${c.waitlist} on waitlist`:'Loading…'}</small></span></div><button class="iconbtn" data-a="openAdmin" aria-label="Refresh">${ic('refresh')}</button></div>
    <div class="scroll" id="view-scroll"><div class="pad" style="display:grid;gap:14px;padding-block:16px 26px">
     ${a.loading?`<div style="display:grid;place-items:center;padding:30px">${spinner('Loading')}</div>`:''}
     <div class="sec-h"><h2>To review (${q.length})</h2></div>
     ${q.length?q.map(item).join(''):a.loading?'':`<p class="hint">Nothing waiting. Well done.</p>`}
     <div class="sec-h"><h2>Reports (${reps.length})</h2></div>
     ${reps.length?reps.map(r=>`<div class="panel"><b>${esc(r.reported_name)}</b><p class="hint">${esc(r.reason)}${r.note?' · '+esc(r.note):''} · reported by ${esc(r.reporter_name)} · ${new Date(r.created_at).toLocaleString(RM_I18N.locale,{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})}</p><div class="adm-act"><button class="btn ghost sm" data-a="admDismiss" data-id="${r.id}">Dismiss</button><button class="btn danger sm" data-a="admBan" data-id="${r.id}">Ban member</button></div></div>`).join(''):`<p class="hint">No open reports.</p>`}
+    <div class="sec-h"><h2>Applications (${(a.apps||[]).filter(x=>x.status==='new').length} new)</h2></div>
+    ${(a.apps||[]).length?(a.apps||[]).map(x=>{const tel=(x.contact||'').match(/\+?[0-9][0-9 ()-]{6,}/),mail=(x.contact||'').match(/[^\s·]+@[^\s·]+/);
+      return `<div class="panel app-row${x.status==='new'?'':' done'}"><div class="adm-h"><b>${esc({host:'Event host',restaurant:'Partner restaurant',bureau:'Matrimonial bureau'}[x.role]||x.role)}${x.org?' · '+esc(x.org):''}</b><small>${esc(x.name||'')} · ${esc(x.city||'')} · ${new Date(x.created_at).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short'})}</small></div>
+      <p class="hint notr">${esc(x.contact||'')}${x.details?'<br>'+esc(x.details):''}</p>
+      <div class="adm-act">${tel?`<a class="btn ghost sm" href="tel:${esc(tel[0].replace(/[^0-9+]/g,''))}">${ic('phone')}Call</a>`:''}${mail?`<a class="btn ghost sm" href="mailto:${esc(mail[0])}">${ic('mail')}Email</a>`:''}${x.status==='new'?`<button class="btn primary sm" data-a="admContacted" data-id="${x.id}" data-k="${x.kind}">Mark contacted</button>`:`<span class="pill">Contacted</span>`}</div></div>`}).join(''):a.loading?'':`<p class="hint">No applications yet.</p>`}
    </div></div></div>`;
 }
 
@@ -1058,6 +1067,12 @@ function chipGroup(name,opts,cur){return `<div class="chips" role="radiogroup">$
 const MANAGE_SUB=()=>`<a class="btn ghost" href="https://play.google.com/store/account/subscriptions?sku=${GOLD_PRODUCT}&amp;package=${esc(CFG.appId)}" target="_blank" rel="noopener">${ic('crown')}Manage in Google Play</a>`;
 /* Google's multicolour "G", as Google's sign-in branding rules ask for. */
 const GLOGO='<svg viewBox="0 0 48 48" width="20" height="20"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>';
+/* Work with NeuMarry: highlighted so members see that we hire hosts and look for restaurants and bureaus. */
+function workCard(){return `<div class="panel wwu"><div class="wwu-h"><h3>Work with NeuMarry</h3><span class="pill gold">We’re hiring</span></div>
+    <p class="hint">Earn with us in your city. Apply in two minutes.</p>
+    <button class="rowi" data-a="hostAsk">${ic('users')}<span class="tx"><b>${S.hostSent?'Host application received':'Become an event host'}</b><span>${S.hostSent?'We reply within 3 working days':'CA$100 for every Family Mixer you host'}</span></span>${ic('chev','rchev')}</button>
+    <button class="rowi" data-a="restaurantAsk">${ic('dish')}<span class="tx"><b>${S.restSent?'Restaurant request received':'Partner restaurants'}</b><span>${S.restSent?'Our team will call you':'We bring 30 to 60 paying guests for dinner'}</span></span>${ic('chev','rchev')}</button>
+    <button class="rowi" data-a="partnerAsk">${ic('gift')}<span class="tx"><b>${S.partnerSent?'Partner request received':'Matrimonial bureaus'}</b><span>${S.partnerSent?'Our team will call you':'10% of a member’s first purchase, plus ₹1,500 when they get engaged'}</span></span>${ic('chev','rchev')}</button></div>`}
 function busyBtn(cls,act,label,attrs){return `<button class="btn ${cls}" data-a="${act}"${attrs||''}${busy?' disabled':''}>${busy===act?spinner(label):label}</button>`}
 function renderSheet(){
   const me=S.me,t=sheet.type;
@@ -1077,6 +1092,15 @@ function renderSheet(){
      <label class="fld"><span>Restaurants that could host (optional)</span><input type="text" maxlength="120" data-sheet="rest" value="${esc(sheet.rest||'')}" placeholder="Names of places you know well"></label>
      <label class="ck${S.errors.hok?' has-err':''}"><input type="checkbox" data-sheet="ok"${sheet.ok?' checked':''}><span>I agree to a background check, the host code of conduct, and to keep every guest’s details private.</span></label>${errOf('hok')}`,
      `<button class="btn ghost" data-a="closeSheet">Cancel</button>${busyBtn('primary','hostSend','Send application')}`);
+  if(t==='restaurant')return sheetShell('Partner restaurants',`<div class="callout gold">${ic('dish')}<span>Host a NeuMarry Family Mixer on a quiet evening. We bring <b>30 to 60 confirmed guests who have already paid</b>, and the meal is sold by you, at your price. We seat everyone, run the evening and leave your room as we found it.</span></div>
+     <label class="fld${S.errors.rorg?' has-err':''}"><span>Restaurant name</span><input type="text" maxlength="60" data-sheet="org" value="${esc(sheet.org||'')}">${errOf('rorg')}</label>
+     <label class="fld${S.errors.rcity?' has-err':''}"><span>City</span><input type="text" maxlength="60" data-sheet="city" value="${esc(sheet.city||'')}" placeholder="e.g. Brampton">${errOf('rcity')}</label>
+     <label class="fld${S.errors.rname?' has-err':''}"><span>Your name</span><input type="text" maxlength="60" data-sheet="name" value="${esc(sheet.name||'')}">${errOf('rname')}</label>
+     <label class="fld${S.errors.rcontact?' has-err':''}"><span>Phone or email</span><input type="text" maxlength="80" data-sheet="contact" value="${esc(sheet.contact||'')}">${errOf('rcontact')}</label>
+     <div class="fld"><span>Seats for one private evening</span>${chipGroup('seats',['Up to 30','30 to 50','More than 50'],sheet.seats||'30 to 50')}</div>
+     <div class="fld"><span>Food</span>${chipGroup('food',['Vegetarian only','Vegetarian and non-vegetarian','Jain options too'],sheet.food||'Vegetarian and non-vegetarian')}</div>
+     <p class="hint">We use these details only to contact you about NeuMarry events.</p>`,
+     `<button class="btn ghost" data-a="closeSheet">Cancel</button>${busyBtn('primary','restaurantSend','Send')}`);
   if(t==='partner')return sheetShell('Partner with NeuMarry',`<div class="callout gold">${ic('gift')}<span>For matrimonial bureaus. You earn <b>10% of a member’s first purchase</b>, plus <b>₹1,500 when that member gets engaged</b>, once per member. Members always sign up themselves: we never accept lists of other people’s details.</span></div>
      <label class="fld${S.errors.pname?' has-err':''}"><span>Bureau name</span><input type="text" maxlength="60" data-sheet="name" value="${esc(sheet.name||'')}">${errOf('pname')}</label>
      <label class="fld${S.errors.pcity?' has-err':''}"><span>City and country</span><input type="text" maxlength="60" data-sheet="city" value="${esc(sheet.city||'')}" placeholder="e.g. Ahmedabad, India">${errOf('pcity')}</label>
@@ -1403,6 +1427,13 @@ const A={
     try{await API.insert('host_applications',{user_id:S.me.id,name:S.me.name,city:sheet.city.trim(),languages:sheet.lang.trim(),communities:(sheet.comm||'').trim()||null,experience:sheet.exp||null,restaurants:(sheet.rest||'').trim()||null,consent:true},{returning:false});
       busy='';S.hostSent=true;sheet=null;S.errors={};render();toast('Application sent. We reply within 3 working days.','check')}
     catch(x){busy='';render();fail(x)}},
+  restaurantAsk(){sheet={type:'restaurant',org:'',city:S.me?myPlace():'',name:S.me?S.me.name:'',contact:'',seats:'30 to 50',food:'Vegetarian and non-vegetarian'};S.errors={};render()},
+  async restaurantSend(){const e={};if((sheet.org||'').trim().length<2)e.rorg='Add the restaurant name';if((sheet.city||'').trim().length<2)e.rcity='Add a city';if((sheet.name||'').trim().length<2)e.rname='Add your name';if((sheet.contact||'').trim().length<5)e.rcontact='Add a phone number or email';S.errors=e;if(Object.keys(e).length){render();return}
+    busy='restaurantSend';render();
+    try{await API.insert('work_with_us',{role:'restaurant',name:sheet.name.trim(),org:sheet.org.trim(),city:sheet.city.trim(),contact:sheet.contact.trim(),note:`Seats: ${sheet.seats} · Food: ${sheet.food} · From the app`,consent_at:new Date().toISOString()},{returning:false});
+      busy='';S.restSent=true;sheet=null;S.errors={};render();toast('Thank you. Our team will call you within 3 working days.','check')}
+    catch(x){busy='';render();fail(x)}},
+  async admContacted(el){try{await API.rpc('admin_mark_application',{k:el.dataset.k,aid:el.dataset.id});const x=(S.admin.apps||[]).find(a=>a.id===el.dataset.id);if(x)x.status='contacted';render()}catch(e){fail(e)}},
   partnerAsk(){sheet={type:'partner',name:'',city:'',contact:''};S.errors={};render()},
   async partnerSend(){const e={};if((sheet.name||'').trim().length<2)e.pname='Add the bureau name';if((sheet.city||'').trim().length<2)e.pcity='Add a city';if((sheet.contact||'').trim().length<5)e.pcontact='Add a phone number or email';S.errors=e;if(Object.keys(e).length){render();return}
     busy='partnerSend';render();
@@ -1460,9 +1491,9 @@ const A={
 async function adminReview(el,ok,reason){const id=el.dataset.id,k=el.dataset.k;
   try{await API.rpc('admin_review',{row_kind:k==='photo'?'photo':'verification',rid:id,approve:ok,reason:reason||null});S.admin.queue=S.admin.queue.filter(x=>x.row_id!==id);if(S.admin.counts)S.admin.counts.pending--;render();toast(ok?'Approved.':'Rejected. The member sees the reason.',ok?'check':'x')}catch(e){fail(e)}}
 async function loadAdmin(){
-  try{const [q,r,c]=await Promise.all([API.rpc('admin_queue'),API.rpc('admin_reports'),API.rpc('admin_counts')]);
+  try{const [q,r,c,ap]=await Promise.all([API.rpc('admin_queue'),API.rpc('admin_reports'),API.rpc('admin_counts'),API.rpc('admin_applications').catch(()=>[])]);
     const queue=(q||[]).map(x=>Object.assign(x,{bucket:x.kind==='photo'?'photos':'verification'}));
-    S.admin={loading:false,queue,reports:r||[],counts:c,urls:{}};render();
+    S.admin={loading:false,queue,reports:r||[],counts:c,apps:ap||[],urls:{}};render();
     const ph=[...new Set(queue.filter(x=>x.bucket==='photos').map(x=>x.path).concat(queue.map(x=>x.profile_photo).filter(Boolean)))];
     const vf=queue.filter(x=>x.bucket==='verification').map(x=>x.path);
     const [a,b]=await Promise.all([API.signMany('photos',ph,1800),API.signMany('verification',vf,600)]);

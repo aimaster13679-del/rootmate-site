@@ -130,7 +130,7 @@ p{margin:0}
 .steps-nav button.on{background:var(--rose);color:var(--on-rose);border-color:var(--rose)}
 
 /* Toggle */
-.tgl{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.tgl{position:relative;display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);cursor:pointer}
 .tgl:last-child{border-bottom:0}
 .tgl .tx{flex:1;min-width:0}
 .tgl .tx b{display:block;font-weight:700;font-size:15px}
@@ -718,3 +718,13 @@ body{background:var(--bg)}
 
 /* Keyboard open: give the screen to the field being typed in */
 .kb .navwrap{display:none}
+
+/* Work with NeuMarry */
+.panel.wwu{border:1.5px solid #E7C27A;background:linear-gradient(160deg,#FFF8E8,var(--surface) 60%);box-shadow:0 12px 30px -20px rgba(176,120,30,.65)}
+.wwu-h{display:flex;align-items:center;justify-content:space-between;gap:8px}.wwu-h h3{margin:0}
+.panel.wwu>.hint{margin:-4px 0 2px}
+.rowi .rchev{margin-left:auto;color:var(--muted);width:18px;height:18px;flex:none;transform:rotate(-90deg)}
+.wwu-link{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:18px;border:1.5px solid #E7C27A;background:linear-gradient(160deg,#FFF8E8,var(--surface) 70%);color:var(--ink);text-decoration:none}
+.wwu-link>svg:first-child{color:var(--gold);width:22px;height:22px;flex:none}.wwu-link span{display:grid;gap:2px;flex:1}.wwu-link small{color:var(--muted);font-size:13px}.wwu-link>svg:last-child{color:var(--muted);width:18px;height:18px;transform:rotate(-90deg)}
+a.btn{text-decoration:none}
+.app-row.done{opacity:.6}
