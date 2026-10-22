@@ -1,0 +1,23 @@
+{
+ "name": "NeuMarry",
+ "short_name": "NeuMarry",
+ "id": "/app/",
+ "start_url": "/app/",
+ "scope": "/app/",
+ "display": "standalone",
+ "background_color": "#FFF8F6",
+ "theme_color": "#FFF8F6",
+ "description": "Matrimony for people living abroad: verified members, matches on roots, city and mindset, and hosted family events.",
+ "icons": [
+  {
+   "src": "img/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "img/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  }
+ ]
+}

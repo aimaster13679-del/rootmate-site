@@ -1,0 +1,576 @@
+/* NeuMarry French. The app is written in English; when French is on, every text the
+   app shows is swapped for its French version as it appears on screen (exact phrases
+   first, then patterns for sentences with names, numbers and dates). Member content
+   (names, about text, chat messages) is never translated. */
+(function () {
+  'use strict';
+  var KEY = 'rm.lang';
+  function stored() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+  var nav = ((navigator.languages && navigator.languages[0]) || navigator.language || 'en').toLowerCase();
+  var lang = stored() || (nav.indexOf('fr') === 0 ? 'fr' : 'en');
+
+  /* ---------- Exact phrases ---------- */
+  var FR = {
+    // Start, sign-in
+    'Opening NeuMarry': 'Ouverture de NeuMarry',
+    'Loading': 'Chargement', 'Loading…': 'Chargement…', 'Loading image…': 'Chargement de l’image…', 'Please wait': 'Veuillez patienter',
+    'For everyone living away from the country they grew up in. Meet verified people who share your roots and your mindset, in your city, with your family by your side.': 'Pour toutes les personnes qui vivent loin du pays où elles ont grandi. Rencontrez des personnes vérifiées qui partagent vos racines et votre état d’esprit, dans votre ville, avec votre famille à vos côtés.',
+    'Family Mixers': 'Soirées Family Mixer', 'Family Mixer': 'Family Mixer',
+    'Hosted evenings in your city, dinner included. Bring your parents, meet in person.': 'Des soirées animées dans votre ville, souper compris. Venez avec vos parents et rencontrez-vous en personne.',
+    'Roots, city and mindset': 'Racines, ville et état d’esprit',
+    'Matched on where you come from, where you live and how you think.': 'Des affinités selon vos origines, votre lieu de vie et votre façon de penser.',
+    'Only real people': 'Seulement de vraies personnes',
+    'Every member is checked with a government ID and a live selfie.': 'Chaque membre est vérifié avec une pièce d’identité officielle et un égoportrait en direct.',
+    'Create my profile': 'Créer mon profil', 'I already have an account': 'J’ai déjà un compte',
+    'Lives · Toronto, 8 km': 'Vit à Toronto, à 8 km', 'Roots · Gujarat, India': 'Racines · Gujarat, Inde',
+    'Choose how you want to sign in. Next you build your profile and upload an ID and a selfie, so everyone here is real.': 'Choisissez comment vous connecter. Ensuite, vous créez votre profil et envoyez une pièce d’identité et un égoportrait, pour que tout le monde ici soit réel.',
+    'Continue with Google': 'Continuer avec Google', 'Email and password': 'Courriel et mot de passe',
+    'Phone and WhatsApp login are coming soon.': 'La connexion par téléphone et WhatsApp arrive bientôt.',
+    'Already have an account?': 'Vous avez déjà un compte ?', 'New to NeuMarry?': 'Nouveau sur NeuMarry ?', 'Create an account': 'Créer un compte', 'Log in': 'Se connecter',
+    'Log in the same way you signed up.': 'Connectez-vous de la même façon que lors de votre inscription.',
+    'Email': 'Courriel', 'Password': 'Mot de passe', 'Confirm password': 'Confirmer le mot de passe', 'New password': 'Nouveau mot de passe',
+    'Show password': 'Afficher le mot de passe', 'Hide password': 'Masquer le mot de passe', 'Forgot password?': 'Mot de passe oublié ?',
+    'Create account': 'Créer le compte', 'Continue': 'Continuer', 'Back': 'Retour', 'Back to log in': 'Retour à la connexion', 'Back to start': 'Retour au début',
+    'At least 10 characters': 'Au moins 10 caractères', 'Upper and lower case letters': 'Majuscules et minuscules', 'At least one number': 'Au moins un chiffre',
+    'At least one symbol, like ! ? # @': 'Au moins un symbole, comme ! ? # @', 'Does not contain your email name': 'Ne contient pas le nom de votre courriel',
+    'Weak': 'Faible', 'Strong': 'Fort', 'Your password needs to meet every rule above': 'Votre mot de passe doit respecter toutes les règles ci-dessus',
+    'The passwords do not match': 'Les mots de passe ne correspondent pas', 'Enter a valid email, like name@example.com': 'Entrez un courriel valide, comme nom@exemple.com',
+    'Passwords are stored only as a secure hash. We will never ask for your password by email, phone or WhatsApp.': 'Les mots de passe sont conservés uniquement sous forme chiffrée. Nous ne vous demanderons jamais votre mot de passe par courriel, téléphone ou WhatsApp.',
+    'I am 18 or older, and I am joining NeuMarry to find a marriage partner.': 'J’ai 18 ans ou plus et je m’inscris sur NeuMarry pour trouver un partenaire de mariage.',
+    'I have read and agree to the': 'J’ai lu et j’accepte les', 'and the': 'et la', 'and': 'et',
+    ', including how NeuMarry verifies members and uses my details to suggest matches.': ', y compris la façon dont NeuMarry vérifie les membres et utilise mes informations pour suggérer des profils.',
+    'Optional: send me event invitations and offers by email and WhatsApp. I can stop them at any time.': 'Facultatif : envoyez-moi des invitations aux événements et des offres par courriel et WhatsApp. Je peux arrêter à tout moment.',
+    'Tick both boxes to continue. The marketing box is optional.': 'Cochez les deux cases pour continuer. La case marketing est facultative.',
+    'By continuing you agree to our': 'En continuant, vous acceptez nos', '. 18+ only.': '. 18 ans et plus seulement.',
+    'Terms': 'Conditions', 'Terms of Service': 'Conditions d’utilisation', 'Privacy Policy': 'Politique de confidentialité',
+    'Email sent': 'Courriel envoyé', 'Account created. Now your profile.': 'Compte créé. Passons à votre profil.', 'Password changed.': 'Mot de passe modifié.',
+    'That email and password do not match. Check them and try again.': 'Ce courriel et ce mot de passe ne correspondent pas. Vérifiez-les et réessayez.',
+    'An account with this email already exists. Log in instead.': 'Un compte existe déjà avec ce courriel. Connectez-vous plutôt.',
+    'Check the email address.': 'Vérifiez l’adresse courriel.', 'Choose a stronger password.': 'Choisissez un mot de passe plus solide.',
+    'Confirm your email first: open the link we sent you.': 'Confirmez d’abord votre courriel : ouvrez le lien que nous vous avons envoyé.',
+    'Too many emails were sent just now. Wait a few minutes and try again.': 'Trop de courriels viennent d’être envoyés. Attendez quelques minutes et réessayez.',
+    'Too many tries. Wait a minute and try again.': 'Trop d’essais. Attendez une minute et réessayez.',
+    'No internet connection. Check your connection and try again.': 'Pas de connexion Internet. Vérifiez votre connexion et réessayez.',
+    'Something went wrong. Please try again.': 'Un problème est survenu. Veuillez réessayer.', 'Please log in again.': 'Veuillez vous reconnecter.',
+    'The server is busy. Please try again in a moment.': 'Le serveur est occupé. Réessayez dans un instant.',
+    'Sign-in did not finish. Please try again.': 'La connexion n’a pas abouti. Veuillez réessayer.',
+    'NeuMarry could not load. Please try again.': 'NeuMarry n’a pas pu se charger. Veuillez réessayer.', 'Try again': 'Réessayer',
+    'This account has been suspended. Write to us if you think this is a mistake.': 'Ce compte a été suspendu. Écrivez-nous si vous pensez qu’il s’agit d’une erreur.',
+    'Only the NeuMarry team can do this.': 'Seule l’équipe NeuMarry peut faire cela.', 'You cannot do this yet.': 'Vous ne pouvez pas encore faire cela.',
+
+    // Sign-up wizard
+    'About': 'À propos', 'Roots': 'Racines', 'Location': 'Lieu', 'Values': 'Valeurs', 'Verify': 'Vérification', 'Privacy': 'Confidentialité',
+    'Previous step': 'Étape précédente', 'Do this later': 'Plus tard', 'Finish and see matches': 'Terminer et voir les profils', 'Save changes': 'Enregistrer',
+    'Discard': 'Annuler les modifications', 'Saving your profile': 'Enregistrement de votre profil', 'Saving': 'Enregistrement', 'Updating': 'Mise à jour',
+    'Profile created by': 'Profil créé par', 'Self': 'Moi-même', 'Parent': 'Parent', 'Sibling': 'Frère ou sœur', 'Relative': 'Membre de la famille', 'Friend': 'Ami ou amie',
+    'Father': 'Père', 'Mother': 'Mère', 'Guardian': 'Tuteur',
+    'Full name': 'Nom complet', 'Enter your name': 'Entrez votre nom', 'I am': 'Je suis', 'A man': 'Un homme', 'A woman': 'Une femme', 'Man': 'Homme', 'Woman': 'Femme',
+    'Looking for': 'Je cherche', 'Date of birth': 'Date de naissance', 'Enter your date of birth': 'Entrez votre date de naissance', 'Check the year': 'Vérifiez l’année',
+    'You must be 18 or older': 'Vous devez avoir 18 ans ou plus', 'Height': 'Taille', 'Your height': 'Votre taille', 'Choose your height': 'Choisissez votre taille',
+    'Search height, e.g. 5\'8': 'Chercher une taille, ex. 5\'8', 'Marital status': 'État civil', 'Never married': 'Jamais marié(e)', 'Divorced': 'Divorcé(e)', 'Widowed': 'Veuf ou veuve', 'Awaiting divorce': 'En instance de divorce',
+    'Already married or in a relationship': 'Déjà marié(e) ou en couple',
+    'Profile photo': 'Photo de profil', 'Your photo': 'Votre photo', 'Add a photo': 'Ajouter une photo', 'Change photo': 'Changer la photo', 'No photo yet': 'Pas encore de photo',
+    'A clear, recent photo of your face. Hidden from others until you both accept.': 'Une photo récente et nette de votre visage. Cachée aux autres jusqu’à ce que vous acceptiez tous les deux.',
+    'Add a clear photo of your face. It stays hidden until you both accept.': 'Ajoutez une photo nette de votre visage. Elle reste cachée jusqu’à ce que vous acceptiez tous les deux.',
+    'Please choose a photo (JPG or PNG).': 'Veuillez choisir une photo (JPG ou PNG).', 'That file is over 15 MB. Try a smaller one.': 'Ce fichier dépasse 15 Mo. Essayez-en un plus petit.',
+    'Could not open that image. Try another.': 'Impossible d’ouvrir cette image. Essayez-en une autre.', 'Could not read that file. Try another.': 'Impossible de lire ce fichier. Essayez-en un autre.',
+    'This photo is already used on another NeuMarry account. Choose a different photo.': 'Cette photo est déjà utilisée sur un autre compte NeuMarry. Choisissez une autre photo.',
+    'About me': 'À propos de moi', 'About you': 'À propos de vous',
+    'Where you grew up, what you love, what you are looking for.': 'Où vous avez grandi, ce que vous aimez, ce que vous cherchez.',
+    'At least 40 characters. Do not add phone numbers or social handles here.': 'Au moins 40 caractères. N’ajoutez pas de numéro de téléphone ni de réseaux sociaux ici.',
+    'Remove phone numbers, links and social handles. You can share them after you match.': 'Retirez les numéros de téléphone, les liens et les réseaux sociaux. Vous pourrez les partager après un match.',
+    'Profession': 'Profession', 'Education': 'Études', 'Highest education': 'Plus haut diplôme', 'e.g. Software engineer': 'ex. Ingénieur logiciel', 'e.g. MSc, University of Toronto': 'ex. Maîtrise, Université de Toronto',
+    'Add your profession': 'Ajoutez votre profession', 'Add your education': 'Ajoutez vos études',
+    'Where were you born and brought up? We use this to find people from your roots.': 'Où êtes-vous né(e) et où avez-vous grandi ? Nous l’utilisons pour trouver des personnes qui partagent vos racines.',
+    'Country of origin': 'Pays d’origine', 'Choose your country of origin': 'Choisissez votre pays d’origine', 'State / region': 'État / région', 'State / province': 'Province / État',
+    'Choose your state or region': 'Choisissez votre État ou région', 'Choose a state or region': 'Choisissez un État ou une région', 'Type your region': 'Tapez votre région',
+    'Mother tongue': 'Langue maternelle', 'Choose your mother tongue': 'Choisissez votre langue maternelle', 'Languages you speak': 'Langues parlées',
+    'Religion': 'Religion', 'Choose your religion': 'Choisissez votre religion', 'Choose a religion': 'Choisissez une religion', 'Search religions': 'Chercher une religion',
+    'Community': 'Communauté', 'Community (optional)': 'Communauté (facultatif)', 'Choose a religion first': 'Choisissez d’abord une religion',
+    'Choose a religion first. Communities change with religion.': 'Choisissez d’abord une religion. Les communautés dépendent de la religion.',
+    'Choose a religion to pick a community.': 'Choisissez une religion pour choisir une communauté.', 'Choose or type your community': 'Choisissez ou tapez votre communauté',
+    'Search or type your community': 'Cherchez ou tapez votre communauté', 'Search communities': 'Chercher une communauté', 'Includes every Brahmin sub-community': 'Comprend toutes les sous-communautés brahmanes',
+    'Show my community': 'Afficher ma communauté', 'Show my community on my profile': 'Afficher ma communauté sur mon profil', 'Turn off to keep it private. Filters still work.': 'Désactivez pour la garder privée. Les filtres fonctionnent quand même.',
+    'Filters still work if this is off': 'Les filtres fonctionnent même si c’est désactivé', 'Only used when you or a match filter by it.': 'Utilisé seulement quand vous ou un profil filtrez avec.',
+    'Where you live now': 'Où vous vivez maintenant', 'Country you live in': 'Pays de résidence', 'Choose the country you live in': 'Choisissez votre pays de résidence',
+    'City': 'Ville', 'Search or type your city': 'Cherchez ou tapez votre ville', 'Residency': 'Statut de résidence', 'Residency status': 'Statut de résidence', 'Choose your residency status': 'Choisissez votre statut de résidence',
+    'Open to relocating?': 'Prêt(e) à déménager ?', 'Open to relocating for the right person?': 'Prêt(e) à déménager pour la bonne personne ?',
+    'No, I want to stay here': 'Non, je veux rester ici', 'Yes, within Canada': 'Oui, au Canada', 'Yes, anywhere, including back home': 'Oui, n’importe où, y compris au pays d’origine',
+    'Mobile number': 'Numéro de mobile', 'Phone number': 'Numéro de téléphone', 'Country code': 'Indicatif du pays', 'Optional · add it in Edit profile': 'Facultatif · à ajouter dans Modifier le profil',
+    'For event reminders from your host. Never shown to other members. Code checks by SMS are coming soon.': 'Pour les rappels d’événement de votre hôte. Jamais montré aux autres membres. La vérification par SMS arrive bientôt.',
+    'There are no right answers. We use these to show how your mindsets match.': 'Il n’y a pas de bonne réponse. Nous les utilisons pour montrer à quel point vos états d’esprit concordent.',
+    'Pick one answer': 'Choisissez une réponse', 'Lifestyle': 'Mode de vie', 'Diet': 'Alimentation', 'Choose your diet': 'Choisissez votre alimentation', 'Smoking': 'Tabac', 'Drinking': 'Alcool',
+    'Vegetarian': 'Végétarien', 'Eggetarian': 'Végétarien (avec œufs)', 'Non-vegetarian': 'Non végétarien', 'Vegan': 'Végétalien', 'Jain vegetarian': 'Végétarien jaïn',
+    'No': 'Non', 'Yes': 'Oui', 'Occasionally': 'Occasionnellement', 'Socially': 'En société', 'Regularly': 'Régulièrement',
+    'Verify you’re real': 'Prouvez que vous êtes réel', 'Government ID': 'Pièce d’identité officielle', 'Upload government ID': 'Envoyer une pièce d’identité', 'Upload ID': 'Envoyer la pièce d’identité',
+    'Passport, residence card or driving licence. Only our team sees it, and it is deleted within 30 days of the check. Never shown on your profile.': 'Passeport, carte de résident ou permis de conduire. Seule notre équipe la voit, et elle est supprimée dans les 30 jours suivant la vérification. Jamais affichée sur votre profil.',
+    'Live selfie': 'Égoportrait en direct', 'Your selfie': 'Votre égoportrait', 'Take selfie': 'Prendre un égoportrait', 'Retake selfie': 'Reprendre l’égoportrait', 'Retake': 'Reprendre', 'Choose another': 'En choisir une autre',
+    'Take a selfie now. We match it to your ID and photos so nobody can use someone else\'s pictures.': 'Prenez un égoportrait maintenant. Nous le comparons à votre pièce d’identité et à vos photos pour que personne ne puisse utiliser les photos de quelqu’un d’autre.',
+    'Every member passes these checks. Members without an approved ID and selfie cannot send interests, chat or book events, so fake profiles have nowhere to go.': 'Chaque membre passe ces vérifications. Sans pièce d’identité et égoportrait approuvés, impossible d’envoyer des intérêts, de discuter ou de réserver un événement : les faux profils n’ont aucune place ici.',
+    'ID ready. It is sent when you save.': 'Pièce d’identité prête. Elle sera envoyée à l’enregistrement.', 'Selfie ready. It is sent when you save.': 'Égoportrait prêt. Il sera envoyé à l’enregistrement.',
+    'Sending your ID': 'Envoi de votre pièce d’identité', 'Sending your selfie': 'Envoi de votre égoportrait', 'Uploading your photo': 'Envoi de votre photo',
+    'Verified': 'Vérifié', 'ID verified': 'Identité vérifiée', 'Not verified yet': 'Pas encore vérifié', 'Not uploaded yet': 'Pas encore envoyé', 'Waiting': 'En attente', 'Not approved': 'Non approuvé', 'Approved': 'Approuvé',
+    'With our team, usually within 24 hours': 'Chez notre équipe, en général sous 24 heures', 'Open PDF': 'Ouvrir le PDF', 'Upload': 'Envoyer', 'Upload again': 'Envoyer à nouveau',
+    'Hide my photos': 'Masquer mes photos', 'Only people you have both accepted can see them': 'Seules les personnes que vous avez acceptées mutuellement peuvent les voir',
+    'We strongly recommend keeping this on': 'Nous recommandons vivement de garder cette option activée', 'Who can see my profile': 'Qui peut voir mon profil',
+    'Verified members only': 'Membres vérifiés seulement', 'Only people who fit my preferences': 'Seulement les personnes qui correspondent à mes préférences', 'Nobody for now (paused)': 'Personne pour l’instant (en pause)',
+    'Browse privately': 'Navigation privée', 'Others do not see that you viewed them · Gold': 'Les autres ne voient pas que vous avez consulté leur profil · Gold',
+    'Others see only your first name and last initial until you match.': 'Les autres ne voient que votre prénom et l’initiale de votre nom jusqu’au match.',
+    'Fix the highlighted fields first.': 'Corrigez d’abord les champs en surbrillance.', 'Profile saved.': 'Profil enregistré.',
+    'Your profile is saved. Our team checks your photo, ID and selfie within 24 hours.': 'Votre profil est enregistré. Notre équipe vérifie votre photo, votre pièce d’identité et votre égoportrait sous 24 heures.',
+    'Your profile is saved. Upload your ID and selfie from Me to start sending interests.': 'Votre profil est enregistré. Envoyez votre pièce d’identité et votre égoportrait depuis Moi pour commencer à envoyer des intérêts.',
+    'Enter': 'Entrer', 'Choose': 'Choisir', 'Choose one': 'Choisissez', 'Choose or type': 'Choisissez ou tapez', 'Select': 'Sélectionner', 'Search': 'Rechercher', 'Done': 'Terminé',
+    'Search all countries': 'Chercher tous les pays', 'Search all languages': 'Chercher toutes les langues', 'Search states and provinces': 'Chercher les provinces et États', 'Search states and regions': 'Chercher les États et régions',
+    'Choose a country': 'Choisissez un pays', 'Choose a language': 'Choisissez une langue', 'Common': 'Fréquents', 'Popular': 'Populaires', 'Type to add yours.': 'Tapez pour ajouter le vôtre.', 'Nothing to choose here yet.': 'Rien à choisir ici pour l’instant.',
+    'State / province in Canada': 'Province au Canada', 'State / region in India': 'État / région en Inde', 'Residency in Canada': 'Statut au Canada',
+
+    // Tabs and matches
+    'Matches': 'Profils', 'Events': 'Événements', 'Chats': 'Discussions', 'Me': 'Moi', 'Main': 'Principal',
+    'Good morning,': 'Bonjour,', 'Good afternoon,': 'Bon après-midi,', 'Good evening,': 'Bonsoir,',
+    'All matches': 'Tous les profils', 'Best match': 'Meilleure affinité', 'Nearest': 'Les plus proches', 'Newest': 'Les plus récents', 'Sort': 'Trier',
+    'Filters': 'Filtres', 'Filters and preferences': 'Filtres et préférences', 'Open filters': 'Ouvrir les filtres', 'Reset': 'Réinitialiser', 'Filters reset to your defaults.': 'Filtres réinitialisés.',
+    'Today’s picks for you': 'Vos suggestions du jour', 'New picks in': 'Nouvelles suggestions dans', 'Tap to reveal': 'Toucher pour voir', 'Gold pick': 'Suggestion Gold',
+    'Hand-chosen for you every day. Gold reveals all of them.': 'Choisis pour vous chaque jour. Gold les dévoile tous.',
+    'New members are joining': 'De nouveaux membres arrivent', 'No one fits every filter yet': 'Personne ne correspond encore à tous les filtres',
+    'NeuMarry is just opening. Verified members appear here as they join. Widening a preference shows more people.': 'NeuMarry vient d’ouvrir. Les membres vérifiés apparaissent ici au fur et à mesure. Élargir une préférence montre plus de personnes.',
+    'Try widening one preference.': 'Essayez d’élargir une préférence.', 'Your profile is paused, so nobody new can find you.': 'Votre profil est en pause : personne de nouveau ne peut vous trouver.',
+    'Show my profile again': 'Rendre mon profil visible', 'Your profile is paused. Nobody new can find you.': 'Votre profil est en pause. Personne de nouveau ne peut vous trouver.',
+    'Your profile is visible again.': 'Votre profil est de nouveau visible.', 'See who likes you': 'Voir qui vous aime', 'See who, and say yes to start chatting': 'Voyez qui, et dites oui pour commencer à discuter',
+    'Accept and chat with the people who already chose you.': 'Acceptez et discutez avec les personnes qui vous ont déjà choisi.',
+    'already like you': 'vous aiment déjà', 'are 80%+ matches': 'sont compatibles à plus de 80 %', 'New': 'Nouveau', 'Undo pass': 'Annuler le refus',
+    'Age': 'Âge', 'Age from': 'Âge de', 'Age to': 'Âge jusqu’à', 'Height from': 'Taille de', 'Height to': 'Taille jusqu’à', 'Distance': 'Distance',
+    'Who you are looking for': 'Qui vous cherchez', 'Their roots: country': 'Leurs racines : pays', 'Their roots: state / region': 'Leurs racines : État / région', 'Where they live': 'Où ils vivent',
+    'Any': 'Tous', 'Any country': 'Tous les pays', 'Any state or region': 'Tous les États ou régions', 'Any religion': 'Toutes les religions', 'Any community': 'Toutes les communautés', 'Any diet': 'Toute alimentation', 'Any language': 'Toutes les langues',
+    'All countries': 'Tous les pays', 'All languages': 'Toutes les langues', 'All communities': 'Toutes les communautés', 'Also open to': 'Aussi ouvert(e) à', 'Also open to these communities': 'Aussi ouvert(e) à ces communautés',
+    'Close to your roots': 'Proche de vos racines', 'Vegetarian, vegan or Jain only': 'Végétarien, végétalien ou jaïn seulement', 'ID-verified profiles only': 'Profils vérifiés seulement',
+    'Hide people on temporary visas or permits': 'Masquer les personnes avec visa ou permis temporaire', 'Citizens and permanent residents only': 'Citoyens et résidents permanents seulement',
+    'Distance from Toronto': 'Distance de Toronto', 'Anywhere in Canada': 'Partout au Canada', 'my country': 'mon pays', 'from any country': 'de tous les pays', 'from every community': 'de toutes les communautés',
+    'Widens your matches and who you meet at events.': 'Élargit vos profils et les personnes que vous rencontrez aux événements.', 'Same': 'Pareil', 'Different': 'Différent',
+    'same city': 'même ville',
+
+    // Profile view
+    'Match': 'Match', 'Send interest': 'Envoyer un intérêt', 'Interest sent': 'Intérêt envoyé', 'Accept': 'Accepter', 'Decline': 'Refuser', 'Matched': 'Match', 'Likes you': 'Vous aime',
+    'Chat': 'Discuter', 'Message': 'Message', 'Pass': 'Passer', 'Save for later': 'Garder pour plus tard', 'Saved': 'Gardé', 'More options': 'Plus d’options', 'Close': 'Fermer',
+    'Lives': 'Vit à', 'Lives in': 'Vit à', 'Mindset, side by side': 'États d’esprit, côte à côte', 'Good to know': 'Bon à savoir',
+    'Photos unlock when you both accept': 'Les photos se débloquent quand vous acceptez tous les deux', 'Unlock': 'Débloquer', 'See her profile': 'Voir son profil', 'See his profile': 'Voir son profil', 'See her full profile': 'Voir son profil complet', 'See his full profile': 'Voir son profil complet',
+    'See who they are': 'Voir qui c’est', 'Name, photos and profile with Gold': 'Nom, photos et profil avec Gold', 'Name, photos, mindset side by side and every reason you match.': 'Nom, photos, états d’esprit côte à côte et toutes les raisons de votre affinité.',
+    'Do a video call before meeting, and meet in public.': 'Faites un appel vidéo avant de vous rencontrer, et rencontrez-vous dans un lieu public.',
+    'Keep chats in the app until you trust the person.': 'Gardez les discussions dans l’application jusqu’à ce que vous ayez confiance.',
+    'Report anyone who asks for money, gifts or visa help.': 'Signalez toute personne qui demande de l’argent, des cadeaux ou de l’aide pour un visa.',
+    'Never send money, gifts or visa help to anyone you meet here, and report anyone who asks.': 'N’envoyez jamais d’argent, de cadeaux ni d’aide pour un visa à quelqu’un rencontré ici, et signalez toute personne qui en demande.',
+    'Report': 'Signaler', 'Block': 'Bloquer', 'Send report': 'Envoyer le signalement', 'What happened?': 'Que s’est-il passé ?', 'Choose a reason': 'Choisissez une raison', 'Details (optional)': 'Détails (facultatif)',
+    'Fake profile or photos': 'Faux profil ou fausses photos', 'Asked for money or gifts': 'A demandé de l’argent ou des cadeaux', 'Asked for visa or immigration help': 'A demandé de l’aide pour un visa ou l’immigration',
+    'Rude or inappropriate messages': 'Messages grossiers ou déplacés', 'Something else': 'Autre chose', 'Does not match the profile': 'Ne correspond pas au profil',
+    'Report sent. Our safety team reviews every report within 24 hours. You will not see this person again.': 'Signalement envoyé. Notre équipe de sécurité examine chaque signalement sous 24 heures. Vous ne verrez plus cette personne.',
+    'They will not see you or contact you again': 'Cette personne ne pourra plus vous voir ni vous contacter',
+    'This is how other members see your profile once they can open it.': 'Voici comment les autres membres voient votre profil quand ils peuvent l’ouvrir.',
+    'See my profile as others do': 'Voir mon profil comme les autres', 'Her': 'Elle', 'Him': 'Lui', 'They': 'Cette personne', 'this profile': 'ce profil', 'this member': 'ce membre', 'your match': 'votre match',
+    'It’s a match!': 'C’est un match !', 'It’s a match': 'C’est un match', 'You both said yes. Say hello! Phone numbers stay hidden.': 'Vous avez dit oui tous les deux. Dites bonjour ! Les numéros restent cachés.',
+    'Keep looking': 'Continuer à chercher', 'Start talking': 'Commencer à discuter',
+
+    // Chats
+'Sent': 'Envoyés', 'No chats yet': 'Pas encore de discussions', 'No likes yet': 'Pas encore de « j’aime »', 'Nothing saved yet': 'Rien de gardé pour l’instant',
+    'Your matches, likes and saved profiles': 'Vos matchs, vos « j’aime » et vos profils gardés', 'When someone sends you an interest, it shows up here.': 'Quand quelqu’un vous envoie un intérêt, il apparaît ici.',
+    'Chat opens when you and someone both say yes.': 'La discussion s’ouvre quand vous dites oui tous les deux.', 'Send an interest from Matches. If they accept, photos unlock and chat opens.': 'Envoyez un intérêt depuis Profils. Si la personne accepte, les photos se débloquent et la discussion s’ouvre.',
+    'You have not sent any interests': 'Vous n’avez encore envoyé aucun intérêt', 'Tap the star on any profile to save it for later.': 'Touchez l’étoile sur un profil pour le garder pour plus tard.',
+    'Send': 'Envoyer', 'Sending…': 'Envoi…', 'Chat opens when either of you has Gold': 'La discussion s’ouvre si l’un de vous a Gold', 'Chat opens when either of you has Gold.': 'La discussion s’ouvre si l’un de vous a Gold.',
+    'This message mentions money or visas. Never send money or pay for visa help, and report anyone who asks.': 'Ce message parle d’argent ou de visa. N’envoyez jamais d’argent et ne payez jamais pour de l’aide au visa ; signalez toute personne qui en demande.',
+    'Your number stays hidden. Never send money to someone you have not met, and meet first in a public place.': 'Votre numéro reste caché. N’envoyez jamais d’argent à quelqu’un que vous n’avez pas rencontré, et rencontrez-vous d’abord dans un lieu public.',
+    'You reached today’s message limit. Try again tomorrow.': 'Vous avez atteint la limite de messages du jour. Réessayez demain.', 'You reached today’s limit of interests. Try again tomorrow.': 'Vous avez atteint la limite d’intérêts du jour. Réessayez demain.',
+    'Your ID and selfie need to be approved first.': 'Votre pièce d’identité et votre égoportrait doivent d’abord être approuvés.', 'Verify to continue': 'Vérifiez-vous pour continuer', 'Verify now': 'Me vérifier maintenant',
+    'To keep fake profiles out, only members with an approved ID and selfie can send interests, chat and book events. It takes about two minutes.': 'Pour éviter les faux profils, seuls les membres dont la pièce d’identité et l’égoportrait sont approuvés peuvent envoyer des intérêts, discuter et réserver des événements. Cela prend environ deux minutes.',
+    'Your ID and selfie are with our team. Once they are approved, usually within 24 hours, you can send interests, chat and book events.': 'Votre pièce d’identité et votre égoportrait sont chez notre équipe. Une fois approuvés, en général sous 24 heures, vous pourrez envoyer des intérêts, discuter et réserver des événements.',
+    'Your ID and selfie are with our team. You can send interests and chat once they are approved, usually within 24 hours.': 'Votre pièce d’identité et votre égoportrait sont chez notre équipe. Vous pourrez envoyer des intérêts et discuter une fois approuvés, en général sous 24 heures.',
+    'Your photo is waiting for a quick check by our team.': 'Votre photo attend une vérification rapide par notre équipe.', 'Got it': 'Compris', 'Not now': 'Pas maintenant', 'Dismiss': 'Fermer',
+
+    // Gold
+    'Gold': 'Gold', 'NeuMarry Gold': 'NeuMarry Gold', 'Get Gold': 'Obtenir Gold', 'Try Gold free': 'Essayer Gold gratuitement', 'Gold member': 'Membre Gold', 'Free member': 'Membre gratuit', 'Concierge member': 'Membre Concierge',
+    'Gold plans': 'Forfaits Gold', 'Your plan': 'Votre forfait', 'Most popular': 'Le plus populaire', 'Best value': 'Meilleur prix', '1 month': '1 mois', '3 months': '3 mois', '6 months': '6 mois', '/month': '/mois',
+    'Full profiles, names and photos': 'Profils complets, noms et photos', 'Send interests and chat': 'Envoyer des intérêts et discuter', 'All 5 daily picks, and see who likes you': 'Les 5 suggestions du jour, et voir qui vous aime',
+    'Hide from everyone while you talk to someone': 'Restez invisible pendant que vous discutez avec quelqu’un', 'See full profiles': 'Voir les profils complets', 'See today’s 5 picks': 'Voir les 5 suggestions du jour', 'Send interests with Gold': 'Envoyer des intérêts avec Gold',
+    'Every name, photo and profile, plus interests, chat and daily picks.': 'Tous les noms, photos et profils, plus les intérêts, la discussion et les suggestions du jour.', 'Everything you need to find your person faster.': 'Tout pour trouver votre personne plus vite.',
+    'With Gold, people do not see that you viewed them.': 'Avec Gold, les autres ne voient pas que vous avez consulté leur profil.',
+    'Free shows how many people fit you and your match % with each. Names, photos and everything else come with Gold.': 'Le forfait gratuit montre combien de personnes vous correspondent et votre affinité avec chacune. Les noms, les photos et tout le reste viennent avec Gold.',
+    'Free shows how many people fit you and your match % with each, and you can chat when a Gold member matches with you. Names, photos, interests, chat, daily picks and event guest lists are part of Gold.': 'Le forfait gratuit montre combien de personnes vous correspondent et votre affinité avec chacune, et vous pouvez discuter quand un membre Gold fait un match avec vous. Les noms, photos, intérêts, discussions, suggestions du jour et listes d’invités font partie de Gold.',
+    'Free shows who fits you and how well. Gold lets you reach out to them.': 'Le forfait gratuit montre qui vous correspond et à quel point. Gold vous permet de les contacter.',
+    'Cancel anytime in your Google Play account. Safety features, verification and reporting are always free.': 'Annulez quand vous voulez dans votre compte Google Play. La sécurité, la vérification et les signalements sont toujours gratuits.',
+    'Manage or cancel Gold in your Google Play account.': 'Gérez ou annulez Gold dans votre compte Google Play.', 'You have Gold. Everything is unlocked.': 'Vous avez Gold. Tout est débloqué.',
+    'Test version:': 'Version de test :', 'buying opens when NeuMarry launches. Until then, testers can switch on Gold for free to try everything.': 'l’achat ouvre au lancement de NeuMarry. D’ici là, les testeurs peuvent activer Gold gratuitement pour tout essayer.',
+    'Gold is on for free during the test.': 'Gold est activé gratuitement pendant le test.', 'Switch back to Free to try it': 'Revenir au forfait gratuit pour l’essayer',
+    'You are on Free now. You can switch Gold on again any time during the test.': 'Vous êtes maintenant au forfait gratuit. Vous pouvez réactiver Gold à tout moment pendant le test.',
+    'testers can switch on Gold for free to try everything, or buy it with Google Play.': 'les testeurs peuvent activer Gold gratuitement pour tout essayer, ou l’acheter avec Google Play.',
+    'Manage in Google Play': 'Gérer dans Google Play', 'Welcome to Gold.': 'Bienvenue dans Gold.', 'Welcome to Gold. Your chat is open.': 'Bienvenue dans Gold. Votre discussion est ouverte.',
+    'Your payment is pending. Gold switches on as soon as Google Play confirms it.': 'Votre paiement est en attente. Gold s’activera dès que Google Play le confirmera.',
+    'Google Play has not confirmed this payment yet. Gold switches on as soon as it does.': 'Google Play n’a pas encore confirmé ce paiement. Gold s’activera dès que ce sera fait.',
+    'Payment received. Gold will switch on the next time you open NeuMarry. If it does not, contact us.': 'Paiement reçu. Gold s’activera la prochaine fois que vous ouvrirez NeuMarry. Sinon, écrivez-nous.',
+    'Google Play billing is not available on this phone. Update the Google Play Store app and try again.': 'La facturation Google Play n’est pas disponible sur ce téléphone. Mettez à jour l’application Google Play Store et réessayez.',
+    'No connection to Google Play. Check your internet connection and try again.': 'Aucune connexion à Google Play. Vérifiez votre connexion Internet et réessayez.',
+    'Google Play could not complete the purchase. Please try again.': 'Google Play n’a pas pu finaliser l’achat. Veuillez réessayer.',
+    'No Gold purchase found on this Google account.': 'Aucun achat Gold trouvé sur ce compte Google.', 'Your Gold is active.': 'Votre Gold est actif.',
+    'Google Play could not find this purchase. If you were charged, contact us and we will fix it.': 'Google Play ne trouve pas cet achat. Si vous avez été facturé, écrivez-nous et nous corrigerons la situation.',
+    'This Google Play purchase belongs to a different NeuMarry account. Log in with that account, or contact us.': 'Cet achat Google Play appartient à un autre compte NeuMarry. Connectez-vous avec ce compte ou écrivez-nous.',
+    'Google Play is not answering right now. Your purchase is safe; it will switch on Gold the next time you open NeuMarry.': 'Google Play ne répond pas pour le moment. Votre achat est en sécurité ; Gold s’activera la prochaine fois que vous ouvrirez NeuMarry.',
+    'Gold can be bought in the NeuMarry app for Android. It opens on Google Play very soon.': 'Gold s’achète dans l’application NeuMarry pour Android, bientôt sur Google Play.',
+    'Gold purchases open in the app very soon.': 'Les achats Gold ouvrent très bientôt dans l’application.', 'The free test period has ended. Gold purchases open in the app soon.': 'La période d’essai gratuite est terminée. Les achats Gold ouvrent bientôt dans l’application.',
+    'Welcome offer: the first 500 verified women in Canada get 3 months of Gold free. It switches on when your ID is approved.': 'Offre de bienvenue : les 500 premières femmes vérifiées au Canada reçoivent 3 mois de Gold gratuits. Elle s’active dès que votre pièce d’identité est approuvée.',
+
+    // Events
+    'Upcoming events': 'Événements à venir', 'Your reservations': 'Vos réservations', 'New events are coming': 'De nouveaux événements arrivent',
+    'The first Family Mixers are being planned. You will see them here.': 'Les premières soirées Family Mixer sont en préparation. Vous les verrez ici.', 'Hosts add community events as more members join.': 'Les hôtes ajoutent des événements communautaires à mesure que les membres arrivent.',
+    'Community events': 'Événements communautaires', 'Every event': 'Chaque événement', 'Parents welcome': 'Parents bienvenus', 'Members only': 'Membres seulement', 'Members only.': 'Membres seulement.',
+    'Every event: separate tables in one shared room, ID-verified guests, a NeuMarry host.': 'À chaque événement : des tables séparées dans une même salle, des invités vérifiés et un hôte NeuMarry.',
+    'Hosted evenings with dinner included': 'Soirées animées, souper compris', 'Reserve free': 'Réserver gratuitement', 'Reserve free seat': 'Réserver une place gratuite', 'Reserve your seat': 'Réservez votre place',
+    'Reserved': 'Réservé', 'Reserved free': 'Réservé gratuitement', 'Booked': 'Réservé', 'Confirmed': 'Confirmé', 'Tickets': 'Billets', 'Who you’ll meet': 'Qui vous rencontrerez', 'What’s included': 'Ce qui est compris',
+    'How the evening goes': 'Déroulement de la soirée', 'How booking works': 'Comment réserver', 'Total if confirmed': 'Total si confirmé', 'Your dish': 'Votre plat', 'Dish': 'Plat', 'Choose a dish': 'Choisissez un plat', 'Choose your dish': 'Choisissez votre plat',
+    'Halal': 'Halal', 'Jain': 'Jaïn', 'Member': 'Membre', 'Parents': 'Parents', 'Name for the guest list': 'Nom pour la liste d’invités', 'Add a name for the guest list': 'Ajoutez un nom pour la liste d’invités',
+    'Member, dinner included': 'Membre, souper compris', 'Parent, dinner included (up to 2)': 'Parent, souper compris (2 maximum)', 'One more parent': 'Un parent de plus', 'One fewer parent': 'Un parent de moins',
+    'Reserve a seat for free and choose your dish.': 'Réservez une place gratuitement et choisissez votre plat.',
+    'Reserve free. An event is confirmed when enough people reserve; then you pay in the app. Dinner is included, and nothing is paid at the restaurant. If it is not confirmed, nobody pays.': 'Réservez gratuitement. Un événement est confirmé quand assez de personnes réservent ; vous payez alors dans l’application. Le souper est compris et rien n’est payé au restaurant. S’il n’est pas confirmé, personne ne paie.',
+    'Nothing is charged now. When the event is confirmed you pay in the app; dinner is included and nothing is paid at the restaurant. Prices before tax.': 'Rien n’est facturé maintenant. Quand l’événement est confirmé, vous payez dans l’application ; le souper est compris et rien n’est payé au restaurant. Prix avant taxes.',
+    'Early price while the event is filling. The price goes up once it is confirmed, and again in the last 3 days. Men and women pay the same.': 'Prix réduit pendant que l’événement se remplit. Le prix augmente une fois l’événement confirmé, puis encore dans les 3 derniers jours. Hommes et femmes paient le même prix.',
+    'Not confirmed in time? It is cancelled and nobody pays.': 'Pas confirmé à temps ? Il est annulé et personne ne paie.', 'Cancel your reservation any time before you pay.': 'Annulez votre réservation à tout moment avant de payer.',
+    'You pay in the app. Dinner is included; nothing is paid at the restaurant.': 'Vous payez dans l’application. Le souper est compris ; rien n’est payé au restaurant.', 'Every guest is ID-verified before the event.': 'Chaque invité est vérifié avant l’événement.',
+    'Conversations happen at separate tables in one shared room, never in a private room.': 'Les conversations ont lieu à des tables séparées dans une même salle, jamais dans une pièce privée.',
+    'Arrive, ID and QR check-in, name card and table number': 'Arrivée, vérification d’identité et code QR, carte nominative et numéro de table', 'Host welcome and rules': 'Accueil par l’hôte et règles',
+    'Rounds 1 to 3 with your must-meet matches, at separate tables': 'Rondes 1 à 3 avec vos profils incontournables, à des tables séparées', 'Dinner at family tables': 'Souper aux tables familiales',
+    'Rounds 4 to 6 with other good matches': 'Rondes 4 à 6 avec d’autres bons profils', 'Dessert, tea and open mingling': 'Dessert, thé et échanges libres', 'Pick who you liked, privately, in the app': 'Choisissez, en privé dans l’application, les personnes qui vous ont plu',
+    'Dinner and one drink are included in the ticket, served at a fixed food time': 'Le souper et une boisson sont compris dans le billet, servis à heure fixe',
+    'Six 10-minute conversations at separate tables, starting with your must-meet matches': 'Six conversations de 10 minutes à des tables séparées, en commençant par vos profils incontournables',
+    'Family tables where parents meet other parents': 'Des tables familiales où les parents rencontrent d’autres parents', 'A NeuMarry host who welcomes every family and keeps time': 'Un hôte NeuMarry qui accueille chaque famille et veille à l’horaire',
+    'Mutual picks revealed the next morning': 'Les choix réciproques révélés le lendemain matin', 'Your picks stay private. Only mutual picks become matches.': 'Vos choix restent privés. Seuls les choix réciproques deviennent des matchs.',
+    'Cancel reservation': 'Annuler la réservation', 'Cancel your reservation?': 'Annuler votre réservation ?', 'Keep my seat': 'Garder ma place', 'Reservation cancelled. Nothing was charged.': 'Réservation annulée. Rien n’a été facturé.',
+    'Seat reserved free. We’ll ask for payment once the event is confirmed.': 'Place réservée gratuitement. Nous demanderons le paiement une fois l’événement confirmé.',
+    'The event is confirmed and your seat is held.': 'L’événement est confirmé et votre place est retenue.', 'Confirmed · we will message you when payment opens': 'Confirmé · nous vous écrirons quand le paiement ouvrira',
+    'All seats are taken. Try another event.': 'Toutes les places sont prises. Essayez un autre événement.', 'Parents cannot join this event.': 'Les parents ne peuvent pas participer à cet événement.',
+    'Reservations closed 48 hours before the event.': 'Les réservations ont fermé 48 heures avant l’événement.', 'This event is for a different age group.': 'Cet événement est pour un autre groupe d’âge.',
+    'This event is for a different community.': 'Cet événement est pour une autre communauté.', 'This event is no longer taking reservations.': 'Cet événement ne prend plus de réservations.',
+    'Women book first. Reservations for men open soon.': 'Les femmes réservent en premier. Les réservations pour les hommes ouvrent bientôt.', 'You already have a seat.': 'Vous avez déjà une place.',
+    'per member, dinner included · parents CA$40': 'par membre, souper compris · parents 40 $ CA', 'per person': 'par personne', 'Central Toronto': 'Centre de Toronto',
+
+    // Me
+    'My profile': 'Mon profil', 'Edit profile': 'Modifier le profil', 'Profile': 'Profil', 'Preferences': 'Préférences', 'Privacy & preferences': 'Confidentialité et préférences', 'Values & lifestyle': 'Valeurs et mode de vie',
+    'Verification': 'Vérification', 'Trust': 'Confiance', 'Invite people you trust': 'Invitez des personnes de confiance', 'Your invite code': 'Votre code d’invitation', 'Share invite': 'Partager l’invitation', 'Copy invite code': 'Copier le code d’invitation', 'Copied.': 'Copié.',
+    'Friends who join with your code get 10% off their first Gold purchase and an “Invited by” badge. You get a “Trusted member” badge and 10% off your next renewal, up to 6 times a year.': 'Les personnes qui s’inscrivent avec votre code obtiennent 10 % de rabais sur leur premier achat Gold et un badge « Invité par ». Vous obtenez un badge « Membre de confiance » et 10 % de rabais sur votre prochain renouvellement, jusqu’à 6 fois par année.',
+    'Pause my profile': 'Mettre mon profil en pause', 'We’re getting married!': 'Nous allons nous marier !', 'Pause your profile and share your story': 'Mettez votre profil en pause et partagez votre histoire', 'Congratulations!': 'Félicitations !',
+    'Congratulations to you both!': 'Félicitations à vous deux !', 'Your story (optional)': 'Votre histoire (facultatif)', 'Share news': 'Partager la nouvelle', 'Thank you for sharing': 'Merci de nous l’avoir dit',
+    'NeuMarry may share our story with our first names. We ask again before using any photo.': 'NeuMarry peut partager notre histoire avec nos prénoms. Nous redemandons avant d’utiliser une photo.',
+    'Help and legal': 'Aide et informations légales', 'Help and contact': 'Aide et contact', 'Safety centre': 'Centre de sécurité', 'Work with NeuMarry': 'Travailler avec NeuMarry',
+    'Questions, complaints and our Grievance Officer': 'Questions, plaintes et notre responsable des plaintes', 'What we collect, why, and your rights': 'Ce que nous recueillons, pourquoi, et vos droits',
+    'What you agree to, and what we are responsible for': 'Ce que vous acceptez, et ce dont nous sommes responsables', 'Fake profile, money requests, rude messages': 'Faux profils, demandes d’argent, messages grossiers',
+    'Every report is reviewed by a person within 24 hours.': 'Chaque signalement est examiné par une personne sous 24 heures.', 'To report a member, open their profile, tap the three dots, then Report.': 'Pour signaler un membre, ouvrez son profil, touchez les trois points, puis Signaler.',
+    'Write to us any time. We reply within 2 working days.': 'Écrivez-nous à tout moment. Nous répondons sous 2 jours ouvrables.', 'Grievance Officer': 'Responsable des plaintes',
+    'Privacy Policy: the key points': 'Politique de confidentialité : l’essentiel', 'Terms of Service: the key points': 'Conditions d’utilisation : l’essentiel', 'Summary only.': 'Résumé seulement.',
+    'Read the full Privacy Policy': 'Lire la Politique de confidentialité complète', 'Read the full Terms of Service': 'Lire les Conditions d’utilisation complètes',
+    'Log out': 'Se déconnecter', 'Log out?': 'Se déconnecter ?', 'Delete my account': 'Supprimer mon compte', 'Delete your account?': 'Supprimer votre compte ?', 'Delete permanently': 'Supprimer définitivement', 'Keep my account': 'Garder mon compte',
+    'Permanently remove your profile and data': 'Supprimer définitivement votre profil et vos données',
+    'This permanently deletes your profile, photos, matches, chats and verification uploads. It cannot be undone.': 'Cela supprime définitivement votre profil, vos photos, vos matchs, vos discussions et vos documents de vérification. C’est irréversible.',
+    'If you bought Gold, cancel it in your Google Play account so it does not renew. We keep only what the law requires, such as payment records.': 'Si vous avez acheté Gold, annulez-le dans votre compte Google Play pour qu’il ne se renouvelle pas. Nous gardons seulement ce que la loi exige, comme les dossiers de paiement.',
+    'Your account and data have been deleted.': 'Votre compte et vos données ont été supprimés.', 'Profile 100% complete': 'Profil complet à 100 %',
+    'Become a host': 'Devenir hôte', 'Become a NeuMarry host': 'Devenir hôte NeuMarry', 'Run events in your city. CA$100 for every event you host': 'Organisez des événements dans votre ville. 100 $ CA par événement animé',
+    'Matrimonial bureaus': 'Agences matrimoniales', 'Partner with NeuMarry': 'Devenir partenaire de NeuMarry', 'Send application': 'Envoyer la candidature', 'Phone or email': 'Téléphone ou courriel', 'City and country': 'Ville et pays',
+    'Bureau name': 'Nom de l’agence', 'Experience': 'Expérience', 'Hospitality or events work': 'Travail en hôtellerie ou en événementiel', 'Matchmaking or a bureau': 'Agence matrimoniale ou de rencontres',
+    'Restaurants that could host (optional)': 'Restaurants qui pourraient accueillir (facultatif)', 'Communities you can bring together': 'Communautés que vous pouvez rassembler',
+    'Host application received': 'Candidature d’hôte reçue', 'Partner request received': 'Demande de partenariat reçue', 'We reply within 3 working days': 'Nous répondons sous 3 jours ouvrables', 'Our team will call you': 'Notre équipe vous appellera',
+    'Application sent. We reply within 3 working days.': 'Candidature envoyée. Nous répondons sous 3 jours ouvrables.', 'Thank you. Our team will call you within 3 working days.': 'Merci. Notre équipe vous appellera sous 3 jours ouvrables.',
+    'I agree to a background check, the host code of conduct, and to keep every guest’s details private.': 'J’accepte une vérification des antécédents, le code de conduite des hôtes et de garder confidentielles les informations de chaque invité.',
+    'Website': 'Site Web', 'From the app': 'Depuis l’application', 'For you': 'Pour vous', 'Language': 'Langue',
+    'One account per person, in your real name. You verify a government ID and a live selfie.': 'Un compte par personne, à votre vrai nom. Vous vérifiez une pièce d’identité officielle et un égoportrait en direct.',
+    'You must be 18 or older and legally free to marry, and you join to find a marriage partner, not for dating or business.': 'Vous devez avoir 18 ans ou plus et être légalement libre de vous marier, et vous vous inscrivez pour trouver un partenaire de mariage, pas pour des rencontres ou des affaires.',
+    'We can suspend accounts that break these rules, including fake profiles, harassment and asking for money.': 'Nous pouvons suspendre les comptes qui enfreignent ces règles, notamment les faux profils, le harcèlement et les demandes d’argent.',
+    'NeuMarry suggests matches and hosts events. We do not run criminal background checks and cannot promise who anyone is or how they will behave. Meetings, decisions, relationships and any marriage after an introduction are your own responsibility.': 'NeuMarry suggère des profils et organise des événements. Nous ne faisons pas de vérification des antécédents judiciaires et ne pouvons garantir l’identité ni le comportement de quiconque. Les rencontres, décisions, relations et tout mariage après une présentation relèvent de votre propre responsabilité.',
+    'Gold renews automatically until you cancel in your Google Play or App Store account. Event seats are free to reserve and paid only when the event is confirmed. The ticket includes your meal; nothing is paid at the restaurant.': 'Gold se renouvelle automatiquement jusqu’à ce que vous l’annuliez dans votre compte Google Play ou App Store. Les places aux événements se réservent gratuitement et se paient seulement quand l’événement est confirmé. Le billet comprend votre repas ; rien n’est payé au restaurant.',
+    'How you met, the first family call, what made you sure...': 'Comment vous vous êtes rencontrés, le premier appel en famille, ce qui vous a convaincus...',
+    'Names of places you know well': 'Noms d’endroits que vous connaissez bien', 'e.g. Ahmedabad, India': 'ex. Ahmedabad, Inde', 'e.g. English, Gujarati, Hindi': 'ex. anglais, gujarati, hindi',
+    'e.g. Gujarati Samaj, temple youth group': 'ex. Gujarati Samaj, groupe de jeunes du temple',
+    'We collect what you put in your profile, your ID and selfie checks, your activity in the app and basic device data, and use it to verify you, suggest matches, run events and keep members safe.': 'Nous recueillons ce que vous mettez dans votre profil, vos vérifications d’identité et d’égoportrait, votre activité dans l’application et des données de base sur l’appareil, pour vous vérifier, suggérer des profils, organiser des événements et protéger les membres.',
+    'Your phone number, email and ID are never shown to other members. ID and selfie images are deleted within 30 days of the check.': 'Votre numéro, votre courriel et votre pièce d’identité ne sont jamais montrés aux autres membres. Les images de pièce d’identité et d’égoportrait sont supprimées dans les 30 jours suivant la vérification.',
+    'Your photos stay hidden until you both accept, unless you turn blurring off. Religion and community are optional to show.': 'Vos photos restent cachées jusqu’à ce que vous acceptiez tous les deux, sauf si vous désactivez le flou. Afficher la religion et la communauté est facultatif.',
+    'We never sell your data. Service providers (hosting, payments, video) process it only for us, under contract.': 'Nous ne vendons jamais vos données. Nos fournisseurs (hébergement, paiements, vidéo) les traitent seulement pour nous, sous contrat.',
+    'You can correct or delete your data at any time: Me, then Delete my account.': 'Vous pouvez corriger ou supprimer vos données à tout moment : Moi, puis Supprimer mon compte.',
+    'Questions or complaints go to our Grievance Officer, Swapnil Dinesh Bhagat, who replies within 30 days.': 'Les questions ou plaintes vont à notre responsable des plaintes, Swapnil Dinesh Bhagat, qui répond sous 30 jours.',
+    'Photos stay hidden until you both say yes. Your number is never shown.': 'Les photos restent cachées jusqu’à ce que vous disiez oui tous les deux. Votre numéro n’est jamais montré.',
+    'Private by default': 'Privé par défaut', 'Checked against your ID. Write to us to change it.': 'Vérifié avec votre pièce d’identité. Écrivez-nous pour le modifier.',
+    'Name and date of birth must match the profile. Photo must match the selfie.': 'Le nom et la date de naissance doivent correspondre au profil. La photo doit correspondre à l’égoportrait.',
+    'Must be a live photo of the same person as the ID and profile photos.': 'Doit être une photo en direct de la même personne que sur la pièce d’identité et les photos de profil.',
+    'A clear photo of the member’s own face. No group photos, children, nudity or text.': 'Une photo nette du visage du membre. Pas de photo de groupe, d’enfants, de nudité ni de texte.',
+    'Face not clear': 'Visage pas net', 'Group photo': 'Photo de groupe', 'Inappropriate photo': 'Photo inappropriée', 'Not a real photo of you': 'Pas une vraie photo de vous',
+    'Not a live selfie': 'Pas un égoportrait en direct', 'Not a valid ID': 'Pièce d’identité non valide', 'Image not readable': 'Image illisible',
+    'You can log back in any time with the same email.': 'Vous pouvez vous reconnecter à tout moment avec le même courriel.',
+    'You can log back in any time with the same Google account or email.': 'Vous pouvez vous reconnecter à tout moment avec le même compte Google ou courriel.',
+    'Refresh': 'Actualiser', 'Show': 'Afficher', 'Hide': 'Masquer', 'Copy': 'Copier', 'optional': 'facultatif', 'You': 'Vous', 'You:': 'Vous :', 'Stay': 'Rester',
+    '10% of a member’s first purchase, plus ₹1,500 when they get engaged': '10 % du premier achat d’un membre, plus 1 500 ₹ à ses fiançailles',
+    'NeuMarry needs JavaScript to run.': 'NeuMarry a besoin de JavaScript pour fonctionner.',
+    'Cancel': 'Annuler', 'See matches': 'Voir les profils', 'New account': 'Nouveau compte', 'New profile': 'Nouveau profil', 'Your roots': 'Vos racines', 'Smoke': 'Tabac', 'Drink': 'Alcool',
+    'Welcome': 'Bienvenue', 'Code': 'Code', 'Approve': 'Approuver', 'Reject': 'Refuser', 'Approved.': 'Approuvé.', 'Rejected. The member sees the reason.': 'Refusé. Le membre voit la raison.',
+    'Choose a reason first, so the member knows what to fix.': 'Choisissez d’abord une raison, pour que le membre sache quoi corriger.', 'Nothing waiting. Well done.': 'Rien en attente. Bravo.',
+    'No open reports.': 'Aucun signalement ouvert.', 'Ban member': 'Bannir le membre', 'Member banned.': 'Membre banni.', 'Report dismissed.': 'Signalement classé.',
+    'Team review': 'Vérification par l’équipe', 'Team: review queue': 'Équipe : file de vérification', 'Approve photos, IDs and selfies, and handle reports': 'Approuver les photos, pièces d’identité et égoportraits, et traiter les signalements',
+    'Reason if rejected…': 'Raison du refus…', 'Reason if rejected': 'Raison du refus',
+    'Hosts welcome families, keep time and seat members with their best matches at partner restaurants. You earn': 'Les hôtes accueillent les familles, veillent à l’horaire et placent les membres avec leurs meilleurs profils dans des restaurants partenaires. Vous gagnez',
+    'CA$100 for every event': '100 $ CA par événement', 'you host, paid weekly. We give you training, the guest list and everything else.': 'animé, payés chaque semaine. Nous vous fournissons la formation, la liste d’invités et tout le reste.',
+    'For matrimonial bureaus. You earn': 'Pour les agences matrimoniales. Vous gagnez', '10% of a member’s first purchase': '10 % du premier achat d’un membre', ', plus': ', plus',
+    '₹1,500 when that member gets engaged': '1 500 ₹ quand ce membre se fiance',
+    ', once per member. Members always sign up themselves: we never accept lists of other people’s details.': ', une fois par membre. Les membres s’inscrivent toujours eux-mêmes : nous n’acceptons jamais de listes de coordonnées d’autres personnes.',
+    '. Version of October 2026.': '. Version d’octobre 2026.', 'Not yet': 'Pas encore', 'Photos': 'Photos', 'ID photo': 'Photo de la pièce d’identité',
+    'More communities means more matches and more people to meet at events.': 'Plus de communautés, c’est plus de profils et plus de personnes à rencontrer aux événements.',
+    '“Age to” must be the same or higher than “Age from”': 'L’« âge jusqu’à » doit être égal ou supérieur à l’« âge de »',
+    '“Height to” must be the same or taller than “Height from”': 'La « taille jusqu’à » doit être égale ou supérieure à la « taille de »',
+    'Good morning': 'Bonjour', 'Good afternoon': 'Bon après-midi', 'Good evening': 'Bonsoir'
+  };
+
+  /* Values questions (also used as reasons you match) */
+  [['After marriage, where do you want to settle?', 'Après le mariage, où voulez-vous vivre ?'], ['Stay in the city I live in now', 'Rester dans ma ville actuelle'], ['Open to moving within this country', 'Prêt(e) à déménager dans ce pays'], ['Open to another country, or back home', 'Prêt(e) à aller dans un autre pays, ou au pays d’origine'],
+   ['Both want to stay in their city', 'Tous deux veulent rester dans leur ville'], ['Both open to moving within the country', 'Tous deux prêts à déménager dans le pays'], ['Both open to any country', 'Tous deux ouverts à tout pays'],
+   ['Careers after marriage?', 'Les carrières après le mariage ?'], ['Both of us build full careers', 'Nous avons tous deux une carrière à temps plein'], ['Flexible, we decide together', 'Flexible, on décide ensemble'], ['One of us focuses on home', 'L’un de nous se consacre au foyer'],
+   ['Both want two full careers', 'Tous deux veulent deux carrières'], ['Both flexible on careers', 'Tous deux flexibles sur la carrière'], ['Same view on home and career', 'Même vision du foyer et de la carrière'],
+   ['Living with family?', 'Vivre avec la famille ?'], ['Live with parents', 'Vivre avec les parents'], ['Close to parents, own home', 'Près des parents, dans notre propre maison'], ['Independent, visit often', 'Indépendants, avec des visites fréquentes'],
+   ['Both want to live with parents', 'Tous deux veulent vivre avec les parents'], ['Both want a home near parents', 'Tous deux veulent vivre près des parents'], ['Both prefer living independently', 'Tous deux préfèrent vivre de façon indépendante'],
+   ['Children?', 'Des enfants ?'], ['In the first 2–3 years', 'Dans les 2 ou 3 premières années'], ['After we settle, no rush', 'Une fois installés, sans se presser'], ['Not sure yet', 'Pas encore sûr(e)'],
+   ['Both want kids early', 'Tous deux veulent des enfants tôt'], ['Same pace on kids', 'Même rythme pour les enfants'], ['Both unsure about kids', 'Tous deux incertains pour les enfants'],
+   ['Role of faith in daily life?', 'La place de la foi au quotidien ?'], ['Daily prayer and rituals', 'Prière et rituels quotidiens'], ['Festivals and traditions', 'Fêtes et traditions'], ['Personal, not a big part', 'Personnelle, pas très présente'],
+   ['Both practise daily', 'Tous deux pratiquent chaque jour'], ['Both keep festivals and traditions', 'Tous deux tiennent aux fêtes et traditions'], ['Faith is personal for both', 'La foi est personnelle pour tous les deux'],
+   ['A good weekend looks like…', 'Une belle fin de semaine, c’est…'], ['Home and family time', 'Du temps à la maison en famille'], ['Friends and going out', 'Des amis et des sorties'], ['Travel and the outdoors', 'Les voyages et le plein air'],
+   ['Both love family weekends', 'Tous deux aiment les fins de semaine en famille'], ['Both social on weekends', 'Tous deux sociables la fin de semaine'], ['Both love to travel', 'Tous deux aiment voyager'],
+   ['Money habits?', 'Vos habitudes avec l’argent ?'], ['Save and plan ahead', 'Épargner et planifier'], ['Balance saving and spending', 'Équilibrer épargne et dépenses'], ['Enjoy now, sort it later', 'Profiter maintenant, voir plus tard'],
+   ['Both savers', 'Tous deux épargnants'], ['Both balance saving and spending', 'Tous deux équilibrent épargne et dépenses'], ['Both live in the moment', 'Tous deux vivent le moment présent'],
+   ['When you disagree, you…', 'Quand vous n’êtes pas d’accord, vous…'], ['Talk it through right away', 'En parlez tout de suite'], ['Take some space, then talk', 'Prenez du recul, puis en parlez'], ['Let it pass quietly', 'Laissez passer calmement'],
+   ['Both talk things out', 'Tous deux en parlent'], ['Both need space, then talk', 'Tous deux ont besoin de recul, puis en parlent'], ['Both let things pass', 'Tous deux laissent passer'],
+   ['How soon do you want to marry?', 'Dans combien de temps voulez-vous vous marier ?'], ['Within a year', 'D’ici un an'], ['In 1–2 years', 'Dans 1 ou 2 ans'], ['When it feels right', 'Quand ce sera le bon moment'],
+   ['Both ready within a year', 'Tous deux prêts d’ici un an'], ['Same timeline: 1–2 years', 'Même horizon : 1 ou 2 ans'], ['Both in no rush', 'Tous deux sans se presser'],
+   ['Both vegetarian', 'Tous deux végétariens'], ['Settling', 'Installation'], ['Careers', 'Carrières'], ['Family home', 'Vie familiale'], ['Children', 'Enfants'], ['Faith', 'Foi'], ['Weekends', 'Fins de semaine'], ['Money', 'Argent'], ['Disagreements', 'Désaccords'], ['Timeline', 'Échéance'],
+   ['Citizen', 'Citoyen(ne)'], ['Permanent resident', 'Résident(e) permanent(e)'], ['Work permit', 'Permis de travail'], ['Study permit', 'Permis d’études'], ['Visitor visa', 'Visa de visiteur'], ['Work visa', 'Visa de travail'], ['Student visa', 'Visa d’études'], ['Dependent visa', 'Visa de personne à charge'], ['Other', 'Autre'],
+   ['Hindu', 'Hindou'], ['Muslim', 'Musulman'], ['Christian', 'Chrétien'], ['Sikh', 'Sikh'], ['Buddhist', 'Bouddhiste'], ['Parsi (Zoroastrian)', 'Parsi (zoroastrien)'], ['Jewish', 'Juif'], ['Spiritual, not religious', 'Spirituel, pas religieux'], ['Traditional / Indigenous', 'Traditionnel / autochtone'], ['Agnostic', 'Agnostique'], ['Atheist', 'Athée'], ['No religion', 'Sans religion'], ['Prefer not to say', 'Je préfère ne pas le dire'],
+   ['English', 'Anglais'], ['Hindi', 'Hindi'], ['Gujarati', 'Gujarati'], ['Punjabi', 'Pendjabi'], ['Bengali', 'Bengali'], ['Marathi', 'Marathi'], ['Tamil', 'Tamoul'], ['Telugu', 'Télougou'], ['Urdu', 'Ourdou'], ['Malayalam', 'Malayalam'], ['Kannada', 'Kannada'], ['Nepali', 'Népalais'], ['Sindhi', 'Sindhi'], ['Arabic', 'Arabe'], ['French', 'Français'], ['Spanish', 'Espagnol'], ['Persian', 'Persan'], ['Chinese', 'Chinois'],
+   ['Ontario', 'Ontario'], ['Quebec', 'Québec'], ['British Columbia', 'Colombie-Britannique'], ['Alberta', 'Alberta'], ['Manitoba', 'Manitoba'], ['Saskatchewan', 'Saskatchewan'], ['Nova Scotia', 'Nouvelle-Écosse'], ['New Brunswick', 'Nouveau-Brunswick'], ['Newfoundland and Labrador', 'Terre-Neuve-et-Labrador'], ['Prince Edward Island', 'Île-du-Prince-Édouard'],
+   ['Montreal', 'Montréal'], ['Quebec City', 'Québec (ville)']
+  ].forEach(function (p) { FR[p[0]] = p[1]; });
+
+  /* Countries: French names from the browser, by ISO code */
+  var CFR = {};
+  try {
+    var dn = new Intl.DisplayNames(['fr'], { type: 'region' });
+    ((typeof COUNTRIES !== 'undefined' && COUNTRIES) || window.COUNTRIES || []).forEach(function (c) { var n = dn.of(c[1]); if (n && n !== c[1]) CFR[c[0]] = n; });
+  } catch (e) {}
+  function country(n) { return CFR[n] || FR[n] || n; }
+  var IN = { 'Canada': 'au Canada', 'India': 'en Inde', 'United States': 'aux États-Unis', 'United Kingdom': 'au Royaume-Uni', 'Pakistan': 'au Pakistan', 'Bangladesh': 'au Bangladesh', 'Nepal': 'au Népal', 'Sri Lanka': 'au Sri Lanka', 'Australia': 'en Australie', 'United Arab Emirates': 'aux Émirats arabes unis', 'Germany': 'en Allemagne', 'Philippines': 'aux Philippines', 'Nigeria': 'au Nigeria', 'Mexico': 'au Mexique', 'China': 'en Chine', 'New Zealand': 'en Nouvelle-Zélande', 'Singapore': 'à Singapour', 'Ireland': 'en Irlande' };
+  function inCountry(n) { return IN[n] || ('en ' + country(n)); }
+  function fromCountry(n) { var c = country(n); return /^[AEIOUÉÈÊÂÎ]/.test(c) ? 'd’' + c : 'de ' + c; }
+
+  function pct(n) { return n + ' %'; }
+  function tr(s) { return FR[s] || CFR[s] || s; }
+  function plural(n, one, many) { return +n === 1 || +n === 0 ? one : many; }
+
+  /* ---------- Sentences with names, numbers and dates ---------- */
+  var RX = [
+    [/^(\d+) of (\d+) reserved · confirms when (\d+) more reserve by (.+)$/, function (m) { return m[1] + ' sur ' + m[2] + ' réservés · confirmé quand ' + m[3] + ' de plus réservent d’ici le ' + m[4]; }],
+    [/^(\d+) of (\d+) people reserved · needs (\d+) more by (.+)$/, function (m) { return m[1] + ' sur ' + m[2] + ' personnes ont réservé · il en faut ' + m[3] + ' de plus d’ici le ' + m[4]; }],
+    [/^(\d+) (?:person|people) from any country, anywhere$/, function (m) { return m[1] + ' ' + plural(m[1], 'personne', 'personnes') + ' de tous les pays, partout'; }],
+    [/^(\d+) (?:person|people) from (.+), in (.+)$/, function (m) { return m[1] + ' ' + plural(m[1], 'personne originaire', 'personnes originaires') + ' ' + fromCountry(m[2]) + ', ' + inCountry(m[3]); }],
+    [/^(\d+) (?:person|people) from (.+), anywhere$/, function (m) { return m[1] + ' ' + plural(m[1], 'personne originaire', 'personnes originaires') + ' ' + fromCountry(m[2]) + ', partout'; }],
+    [/^(\d+) (?:person|people) from any country, in (.+)$/, function (m) { return m[1] + ' ' + plural(m[1], 'personne', 'personnes') + ' de tous les pays, ' + inCountry(m[2]); }],
+    [/^(women|men|people) fit what you are looking for, (.+)$/, function (m) { var w = { women: 'femmes', men: 'hommes', people: 'personnes' }[m[1]]; var where = m[2] === 'anywhere' ? 'partout' : /^in (.+)$/.test(m[2]) ? inCountry(m[2].slice(3)) : m[2]; return w + ' correspondent à ce que vous cherchez, ' + where; }],
+    [/^(\d+) (?:person likes|people like) you$/, function (m) { return m[1] + ' ' + plural(m[1], 'personne vous aime', 'personnes vous aiment'); }],
+    [/^Someone new likes you\.$/, function () { return 'Une nouvelle personne vous aime.'; }],
+    [/^(\d+) new people like you\.$/, function (m) { return m[1] + ' nouvelles personnes vous aiment.'; }],
+    [/^(\d+)% match$/, function (m) { return pct(m[1]) + ' d’affinité'; }],
+    [/^(\d+)% match · (.+)$/, function (m) { return pct(m[1]) + ' d’affinité · ' + m[2]; }],
+    [/^(\d+)% compatible$/, function (m) { return pct(m[1]) + ' compatible'; }],
+    [/^Why (\d+)%$/, function (m) { return 'Pourquoi ' + pct(m[1]); }],
+    [/^See this (\d+)% match with Gold$/, function (m) { return 'Voir ce profil à ' + pct(m[1]) + ' avec Gold'; }],
+    [/^Say hello to (.+)$/, function (m) { return 'Dites bonjour à ' + m[1]; }],
+    [/^Say hello$/, function () { return 'Dites bonjour'; }],
+    [/^Chat with (.+)$/, function (m) { return 'Discuter avec ' + m[1]; }],
+    [/^Message (.+)$/, function (m) { return 'Écrire à ' + m[1]; }, 'A'],
+    [/^Open (.+)'s profile$/, function (m) { return 'Ouvrir le profil de ' + m[1]; }],
+    [/^Profile photo of (.+)$/, function (m) { return 'Photo de profil de ' + m[1]; }],
+    [/^photo of (.+)$/, function (m) { return 'photo de ' + m[1]; }],
+    [/^selfie of (.+)$/, function (m) { return 'égoportrait de ' + m[1]; }],
+    [/^id of (.+)$/, function (m) { return 'pièce d’identité de ' + m[1]; }],
+    [/^(.+) profile$/, function (m) { return 'Profil de ' + m[1]; }, 'A'],
+    [/^Report (.+)$/, function (m) { return 'Signaler ' + m[1]; }],
+    [/^Interest sent to (.+)\. You’ll hear back here\.$/, function (m) { return 'Intérêt envoyé à ' + m[1] + '. Vous aurez la réponse ici.'; }],
+    [/^You and (.+) both said yes\. Photos are unlocked and chat is open\.$/, function (m) { return m[1] + ' et vous avez dit oui. Les photos sont débloquées et la discussion est ouverte.'; }],
+    [/^You and (.+) both said yes\. Photos are unlocked\.$/, function (m) { return m[1] + ' et vous avez dit oui. Les photos sont débloquées.'; }],
+    [/^(.+) has Gold, so you can chat for free$/, function (m) { return m[1] + ' a Gold, vous pouvez donc discuter gratuitement'; }],
+    [/^(.+) sent you an interest\. Accept to unlock photos and chat\.$/, function (m) { return m[1] + ' vous a envoyé un intérêt. Acceptez pour débloquer les photos et la discussion.'; }],
+    [/^(.+) has paused (?:her|his) profile for now\.$/, function (m) { return m[1] + ' a mis son profil en pause pour l’instant.'; }],
+    [/^Reports are private\. (.+) will not know who reported them\.$/, function (m) { return 'Les signalements sont confidentiels. ' + m[1] + ' ne saura pas qui l’a signalé(e).'; }],
+    [/^Read and reply to (.+)$/, function (m) { return 'Lire et répondre à ' + m[1]; }],
+    [/^(.+) sent you a message$/, function (m) { return m[1] + ' vous a envoyé un message'; }],
+    [/^(.+) saved for later\.$/, function (m) { return m[1] + ' gardé pour plus tard.'; }],
+    [/^Removed (.+) from saved\.$/, function (m) { return m[1] + ' retiré des profils gardés.'; }],
+    [/^Passed on (.+)\. You can undo from the bottom of Matches\.$/, function (m) { return 'Vous avez passé ' + m[1] + '. Vous pouvez annuler en bas de Profils.'; }],
+    [/^Declined\. (.+) will not be told\.$/, function (m) { return 'Refusé. ' + m[1] + ' n’en sera pas informé(e).'; }],
+    [/^(.+) (?:is|are) blocked\.$/, function (m) { return m[1] + ' est bloqué(e).'; }],
+    [/^(Hide|Show) (\d+) passed (?:profile|profiles)$/, function (m) { return (m[1] === 'Hide' ? 'Masquer ' : 'Afficher ') + m[2] + ' ' + plural(m[2], 'profil passé', 'profils passés'); }],
+    [/^Step (\d) of (\d)$/, function (m) { return 'Étape ' + m[1] + ' sur ' + m[2]; }],
+    [/^(\d)\. (.+)$/, function (m) { return m[1] + '. ' + tr(m[2]); }],
+    [/^Profile (\d+)% complete · a complete profile builds more trust$/, function (m) { return 'Profil complet à ' + pct(m[1]) + ' · un profil complet inspire plus confiance'; }],
+    [/^Profile (\d+)% complete$/, function (m) { return 'Profil complet à ' + pct(m[1]); }],
+    [/^Show (\d+) match(?:es)?$/, function (m) { return 'Afficher ' + m[1] + ' ' + plural(m[1], 'profil', 'profils'); }],
+    [/^(Men|Women): (\d+) of (\d+) seats left$/, function (m) { return (m[1] === 'Men' ? 'Hommes' : 'Femmes') + ' : ' + m[2] + ' places sur ' + m[3]; }],
+    [/^Member × (\d+)$/, function (m) { return 'Membre × ' + m[1]; }],
+    [/^Parents × (\d+)$/, function (m) { return 'Parents × ' + m[1]; }],
+    [/^Parent (\d)$/, function (m) { return 'Parent ' + m[1]; }],
+    [/^You’re reserved with (\d+) parents?\.$/, function (m) { return 'Votre place est réservée avec ' + m[1] + ' ' + plural(m[1], 'parent', 'parents') + '.'; }],
+    [/^Nothing to pay until (\d+) more people reserve\. If the event isn’t confirmed by (.+), it is cancelled and nobody pays\.$/, function (m) { return 'Rien à payer tant que ' + m[1] + ' personnes de plus n’ont pas réservé. Si l’événement n’est pas confirmé d’ici le ' + m[2] + ', il est annulé et personne ne paie.'; }],
+    [/^When (\d+) people reserve, the event is confirmed\.$/, function (m) { return 'Quand ' + m[1] + ' personnes ont réservé, l’événement est confirmé.'; }],
+    [/^(.+) · waiting for (\d+) more to confirm$/, function (m) { return m[1] + ' · en attente de ' + m[2] + ' de plus pour confirmer'; }],
+    [/^Gold is on for free during the test, until (.+)\.$/, function (m) { return 'Gold est activé gratuitement pendant le test, jusqu’au ' + m[1] + '.'; }],
+    [/^Gold is on for free during the test\. Your chat is open\.$/, function () { return 'Gold est activé gratuitement pendant le test. Votre discussion est ouverte.'; }],
+    [/^Your free Gold \(welcome offer for women in Canada\) runs until (.+)\.$/, function (m) { return 'Votre Gold gratuit (offre de bienvenue pour les femmes au Canada) dure jusqu’au ' + m[1] + '.'; }],
+    [/^Start talking to (.+)$/, function (m) { return 'Commencer à discuter avec ' + m[1]; }],
+    [/^Gold through Google Play, paid until (.+)\.$/, function (m) { return 'Gold par Google Play, payé jusqu’au ' + m[1] + '.'; }],
+    [/^Gold is active until (.+)\.$/, function (m) { return 'Gold est actif jusqu’au ' + m[1] + '.'; }],
+    [/^See Gold, from (.+)\/month$/, function (m) { return 'Voir Gold, à partir de ' + m[1] + '/mois'; }],
+    [/^(.+) billed every (\d+) months$/, function (m) { return m[1] + ' facturés tous les ' + m[2] + ' mois'; }],
+    [/^Signed in as (.+)\. Please confirm these to build your profile\.$/, function (m) { return 'Connecté en tant que ' + m[1] + '. Confirmez ces points pour créer votre profil.'; }],
+    [/^If (.+) has a NeuMarry account, we have sent a link to choose a new password\. Open it on this phone\.$/, function (m) { return 'Si ' + m[1] + ' a un compte NeuMarry, nous avons envoyé un lien pour choisir un nouveau mot de passe. Ouvrez-le sur ce téléphone.'; }],
+    [/^NeuMarry (\S+) · test version · (.+)$/, function (m) { return 'NeuMarry ' + m[1] + ' · version de test · ' + m[2]; }],
+    [/^Ages? (\d+–\d+)$/, function (m) { return 'De ' + m[1].replace('–', ' à ') + ' ans'; }],
+    [/^For ages (\d+–\d+)$/, function (m) { return 'Pour les ' + m[1].replace('–', ' à ') + ' ans'; }],
+    [/^(.+) · Come with up to 2 parents · ages (\d+–\d+)$/, function (m) { return tr(m[1]) + ' · Venez avec 2 parents maximum · ' + m[2].replace('–', ' à ') + ' ans'; }],
+    [/^(.+) · (\d+) km away$/, function (m) { return m[1] + ' · à ' + m[2] + ' km'; }],
+    [/^(.+) · same city$/, function (m) { return m[1] + ' · même ville'; }],
+    [/^You: (.*)$/, function (m) { return 'Vous : ' + m[1]; }, 'T', true],
+    [/^(\d+) new$/, function (m) { return m[1] + ' ' + plural(m[1], 'nouveau', 'nouveaux'); }],
+    [/^(\d+) unread$/, function (m) { return m[1] + ' non ' + plural(m[1], 'lu', 'lus'); }],
+    [/^Use “(.+)”$/, function (m) { return 'Utiliser « ' + m[1] + ' »'; }],
+    [/^Anyone from (.+)$/, function (m) { return 'Toute personne originaire ' + fromCountry(m[1]); }],
+    [/^Anywhere in (.+)$/, function (m) { return 'Partout ' + inCountry(m[1]); }],
+    [/^Your last photo was not approved: (.+)\.$/, function (m) { return 'Votre dernière photo n’a pas été approuvée : ' + tr(m[1]) + '.'; }],
+    [/^Your last photo was not approved\.$/, function () { return 'Votre dernière photo n’a pas été approuvée.'; }],
+    [/^Your seat at the (.+) goes back to other members\. Nothing was charged\.$/, function (m) { return 'Votre place au ' + m[1] + ' est remise aux autres membres. Rien n’a été facturé.'; }],
+    [/^We’re so happy for you and (.+)\. Tell us, and we’ll pause your profile so you can focus on each other\.$/, function (m) { return 'Nous sommes si heureux pour ' + m[1] + ' et vous. Dites-le-nous, et nous mettrons votre profil en pause pour que vous puissiez vous consacrer l’un à l’autre.'; }],
+    [/^Payment opens in the app soon; we will message you\. Total (.+), dinner included\.$/, function (m) { return 'Le paiement ouvre bientôt dans l’application ; nous vous écrirons. Total ' + m[1] + ', souper compris.'; }],
+    [/^The (.+) is confirmed! Your seat is held(.*)$/, function (m) { return 'Le ' + m[1] + ' est confirmé ! Votre place est retenue' + m[2]; }],
+    [/^(.+) each, dinner included · up to 2$/, function (m) { return m[1] + ' chacun, souper compris · 2 maximum'; }],
+    [/^((?:[A-Z]{0,2}\$|£|€|AED |CHF )[\d.,]+) each$/, function (m) { return m[1] + ' chacun'; }],
+    [/^\+ (.+) per parent$/, function (m) { return '+ ' + m[1] + ' par parent'; }],
+    [/^(.+) · code checks by SMS are coming soon$/, function (m) { return m[1] + ' · la vérification par SMS arrive bientôt'; }],
+    [/^Member · (.+)$/, function (m) { return 'Membre · ' + m[1]; }],
+    [/^Code: (.+) \(long-press to copy\)$/, function (m) { return 'Code : ' + m[1] + ' (appui long pour copier)'; }],
+    [/^For (.+) only$/, function (m) { return 'Pour ' + tr(m[1]).toLowerCase() + ' seulement'; }],
+    [/^(Roots|Lives) · (.+)$/, function (m) { return (m[1] === 'Roots' ? 'Racines' : 'Vit à') + ' · ' + m[2]; }],
+    [/^(Hindu|Muslim|Christian|Sikh|Jain|Buddhist|Jewish) · (.+)$/, function (m) { return tr(m[1]) + ' · ' + m[2]; }],
+    [/^(.+) · (\d+) hours?$/, function (m) { return m[1] + ' · ' + m[2] + ' h'; }],
+    [/^(.+) · replies within (\d+) days$/, function (m) { return m[1] + ' · répond sous ' + m[2] + ' jours'; }],
+    [/^Both from (.+)$/, function (m) { return 'Origine commune : ' + country(m[1]); }],
+    [/^(\d{1,2}):(\d{2}) ?(am|pm|AM|PM)$/, function (m) { var h = +m[1] % 12 + (/p/i.test(m[3]) ? 12 : 0); return h + ' h ' + m[2]; }],
+    [/^Community · (.+)$/, function (m) { return 'Communauté · ' + tr(m[1]); }],
+    [/^A partner restaurant in (.+)\. The exact address is on your ticket after payment\.$/, function (m) { return 'Un restaurant partenaire à ' + tr(m[1]) + '. L’adresse exacte figure sur votre billet après le paiement.'; }],
+    [/^ID-verified members (?:from every community|(.+)), ages (\d+–\d+)\. Your host seats you first with your best matches at the event\.$/, function (m) { return 'Des membres vérifiés ' + (m[1] ? tr(m[1]).toLowerCase() : 'de toutes les communautés') + ', de ' + m[2].replace('–', ' à ') + ' ans. Votre hôte vous place d’abord avec vos meilleurs profils pendant l’événement.'; }],
+    [/^To review \((\d+)\)$/, function (m) { return 'À vérifier (' + m[1] + ')'; }],
+    [/^Reports \((\d+)\)$/, function (m) { return 'Signalements (' + m[1] + ')'; }],
+    [/^Your (ID|selfie) did not upload\. ?(.*)$/, function (m) { return (m[1] === 'ID' ? 'Votre pièce d’identité n’a pas été envoyée.' : 'Votre égoportrait n’a pas été envoyé.') + (m[2] ? ' ' + tr(m[2]) : ''); }],
+    [/^(.+) ready to send$/, function (m) { return m[1] + ' prêt à envoyer'; }],
+    [/^(.+) not approved: (.+)\.$/, function (m) { return tr(m[1]) + ' non approuvé : ' + tr(m[2]) + '.'; }],
+    [/^(.+) not approved\.$/, function (m) { return tr(m[1]) + ' non approuvé.'; }]
+  ];
+
+  /* Headings with a highlighted word, translated as a whole */
+  var EM = [
+    [/^Your person from <em>back home<\/em> might live ten minutes away\.$/, 'Votre âme sœur <em>de chez vous</em> vit peut-être à dix minutes.'],
+    [/^Before you <em>start<\/em>$/, 'Avant de <em>commencer</em>'],
+    [/^Choose a new <em>password<\/em>$/, 'Choisissez un nouveau <em>mot de passe</em>'],
+    [/^Check your <em>email<\/em>$/, 'Vérifiez vos <em>courriels</em>'],
+    [/^Create your <em>account<\/em>$/, 'Créez votre <em>compte</em>'],
+    [/^Welcome <em>back<\/em>$/, 'Bon <em>retour</em>'],
+    [/^Set up your <em>login<\/em>$/, 'Configurez votre <em>connexion</em>'],
+    [/^Log <em>in<\/em>$/, 'Se <em>connecter</em>'],
+    [/^Good morning, <em>(.*)<\/em>$/, 'Bonjour, <em>$1</em>'],
+    [/^Good afternoon, <em>(.*)<\/em>$/, 'Bon après-midi, <em>$1</em>'],
+    [/^Good evening, <em>(.*)<\/em>$/, 'Bonsoir, <em>$1</em>']
+  ];
+
+  /* Punctuation spacing in French: a no-break space before ! ? : ; */
+  function typo(s) { return s.replace(/ ([!?:;»])/g, ' $1').replace(/« /g, '« '); }
+  Object.keys(FR).forEach(function (k) { FR[k] = typo(FR[k]); });
+
+  function norm(s) { return s.replace(/\s+/g, ' ').trim(); }
+  function translate(s, scope) {
+    var n = norm(s); if (!n || !/[A-Za-z]/.test(n)) return null;
+    if (FR[n] !== undefined) return FR[n];
+    if (CFR[n]) return CFR[n];
+    var m = /^(\S+) (.+)$/.exec(n); // flag + country
+    if (m && /\p{Extended_Pictographic}|[\u{1F1E6}-\u{1F1FF}]/u.test(m[1]) && CFR[m[2]]) return m[1] + ' ' + CFR[m[2]];
+    for (var i = 0; i < RX.length; i++) {
+      var r = RX[i]; if (r[2] && r[2] !== scope) continue;
+      var x = r[0].exec(n); if (x) return typo(r[1](x));
+    }
+    if (n.length < 90 && /( · | → |, )/.test(n)) {
+      var changed = false;
+      var out = n.split(/( · | → )/).map(function (part) {
+        if (/^( · | → )$/.test(part)) return part;
+        var whole = FR[part] || CFR[part];
+        if (whole) { changed = true; return whole; }
+        return part.split(', ').map(function (q) { var w = FR[q] || CFR[q]; if (w) { changed = true; return w; } return q; }).join(', ');
+      }).join('');
+      if (changed) return typo(out);
+    }
+    return null;
+  }
+  var SKIP = /^(SCRIPT|STYLE|TEXTAREA|INPUT|SELECT|CODE)$/;
+  function userContent(el) {
+    for (var e = el; e && e.nodeType === 1; e = e.parentNode) {
+      if (e.getAttribute('translate') === 'no' || (e.classList.contains('msg') && !e.classList.contains('sys')) || e.classList.contains('notr') || e.isContentEditable) return true;
+    }
+    return false;
+  }
+  function doText(t) {
+    var p = t.parentNode; if (!p || SKIP.test(p.nodeName) || userContent(p)) return;
+    var v = translate(t.nodeValue, 'T'); if (v === null || v === norm(t.nodeValue)) return;
+    var lead = /^\s/.test(t.nodeValue) ? ' ' : '', tail = /\s$/.test(t.nodeValue) ? ' ' : '';
+    t.nodeValue = lead + v + tail;
+  }
+  var ATTRS = ['placeholder', 'aria-label', 'title', 'alt'];
+  function doEl(el) {
+    if (SKIP.test(el.nodeName) && el.nodeName !== 'INPUT' && el.nodeName !== 'TEXTAREA') return;
+    for (var i = 0; i < ATTRS.length; i++) {
+      var a = el.getAttribute(ATTRS[i]); if (!a) continue;
+      var v = translate(a, 'A'); if (v !== null && v !== a) el.setAttribute(ATTRS[i], v);
+    }
+    if (el.children && Array.prototype.some.call(el.children, function (c) { return c.nodeName === 'EM'; })) {
+      var h = norm(el.innerHTML);
+      for (var j = 0; j < EM.length; j++) { if (EM[j][0].test(h)) { el.innerHTML = typo(h.replace(EM[j][0], EM[j][1])); break; } }
+    }
+  }
+  function walk(root) {
+    if (!root) return;
+    if (root.nodeType === 3) { doText(root); return; }
+    if (root.nodeType !== 1 || SKIP.test(root.nodeName) && root.nodeName !== 'INPUT' && root.nodeName !== 'TEXTAREA') { if (root.nodeType === 1 && root.nodeName !== 'SCRIPT' && root.nodeName !== 'STYLE') doEl(root); return; }
+    if (userContent(root)) return;
+    doEl(root);
+    var all = root.querySelectorAll('*');
+    for (var i = 0; i < all.length; i++) { if (!userContent(all[i])) doEl(all[i]); }
+    var tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), n, list = [];
+    while ((n = tw.nextNode())) list.push(n);
+    list.forEach(doText);
+  }
+
+  var obs = null;
+  function start() {
+    if (lang !== 'fr' || obs) return;
+    document.documentElement.lang = 'fr';
+    walk(document.body);
+    obs = new MutationObserver(function (ms) {
+      for (var i = 0; i < ms.length; i++) {
+        var m = ms[i];
+        if (m.type === 'characterData') doText(m.target);
+        else if (m.type === 'attributes') doEl(m.target);
+        else for (var j = 0; j < m.addedNodes.length; j++) walk(m.addedNodes[j]);
+      }
+    });
+    obs.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ATTRS });
+  }
+  function stop() { if (obs) { obs.disconnect(); obs = null; } document.documentElement.lang = 'en'; }
+
+  window.RM_I18N = {
+    get lang() { return lang; },
+    get locale() { return lang === 'fr' ? 'fr-CA' : 'en-GB'; },
+    set: function (l) { lang = l === 'fr' ? 'fr' : 'en'; try { localStorage.setItem(KEY, lang); } catch (e) {} if (lang === 'fr') start(); else stop(); },
+    t: function (s) { return lang === 'fr' ? (translate(s, 'T') || s) : s; },
+    start: start
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();

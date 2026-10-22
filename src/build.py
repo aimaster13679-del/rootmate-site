@@ -29,6 +29,22 @@ fix = [
  ('RootMate is matrimony for people living abroad. Meet verified people', 'RootMate is a matrimony app for people living abroad. Meet verified people'),
  ('Hosted Family Mixers with parent tickets, and a Family Circle where parents can suggest profiles. They never chat as you.', 'Hosted Family Mixers with parent tickets, and soon a Family Circle where parents can suggest profiles. They never chat as you.'),
  ('Parents can sign up on your behalf, come to family events with their own ticket, and join a Family Circle to suggest profiles.', 'Parents can sign up on your behalf and come to family events with their own ticket. A Family Circle where they can suggest profiles is coming soon.'),
+
+ # The web app is live at /app/: point the calls to action there.
+ ('<a class="btn primary sm" href="#app">Get the app</a>', '<a class="btn primary sm" href="app/">Open the app</a>'),
+ ('<div class="ctas"><a class="btn primary" href="#app">Get the app</a><a class="btn ghost" href="#join">Join the waitlist</a></div>',
+  '<div class="ctas"><a class="btn primary" href="app/">Create your free profile</a><a class="btn ghost" href="#app">Get the app</a></div>'),
+ ('<p class="avail">For Android and iPhone · Google Play first, App Store soon after</p>',
+  '<p class="avail">Works now in your web browser · Android on Google Play soon, iPhone after</p>'),
+ ('<a class="btn primary" href="#app" id="reserve-open">Reserve free in the app</a>', '<a class="btn primary" href="app/" id="reserve-open">Reserve free in the app</a>'),
+ ('<h2>Your story could start at the first Family Mixer.</h2><a class="btn" href="#app">Get the app</a>',
+  '<h2>Your story could start at the first Family Mixer.</h2><a class="btn" href="app/">Create your free profile</a>'),
+ ('Your profile, verification, daily matches, chats and event seats all live in the RootMate app. This website is only here to tell you about it.',
+  'Your profile, verification, daily matches, chats and event seats all live in the RootMate app. Use it now in any web browser, on your phone or computer. The Android and iPhone apps use the same account.'),
+ ('<div class="stores">\n      <a class="store" id="st-play"',
+  '<div class="stores">\n      <a class="store" id="st-web" href="app/"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z" fill="none" stroke="currentColor" stroke-width="2"/></svg><span><small>Use it now in your</small><b>Web browser</b></span></a>\n      <a class="store" id="st-play"'),
+ ('<p class="note" id="st-note">Not live yet. Join the waitlist below and we’ll email you the download link the day it goes live.</p>',
+  '<p class="note" id="st-note">The phone apps are not live yet. Join the waitlist below and we’ll email you the download link the day they go live.</p>'),
 ]
 for a, b in fix:
     assert a in s, 'missing: ' + a[:60]
@@ -84,6 +100,8 @@ home_ld = {'@context': 'https://schema.org', '@graph': [
     {'@type': 'WebSite', '@id': SITE + '#site', 'url': SITE, 'name': 'NeuMarry', 'publisher': {'@id': SITE + '#org'}, 'inLanguage': 'en'},
     {'@type': 'MobileApplication', 'name': 'NeuMarry', 'operatingSystem': 'ANDROID', 'applicationCategory': 'LifestyleApplication',
      'description': HOME_DESC, 'url': SITE, 'publisher': {'@id': SITE + '#org'}, 'offers': {'@type': 'Offer', 'price': '0', 'priceCurrency': 'CAD'}},
+    {'@type': 'WebApplication', 'name': 'NeuMarry', 'operatingSystem': 'Any web browser', 'applicationCategory': 'LifestyleApplication', 'browserRequirements': 'Requires JavaScript',
+     'description': HOME_DESC, 'url': SITE + 'app/', 'publisher': {'@id': SITE + '#org'}, 'offers': {'@type': 'Offer', 'price': '0', 'priceCurrency': 'CAD'}},
     {'@type': 'Event', 'name': 'NeuMarry Family Mixer, Toronto', 'startDate': '2026-11-28T17:30:00-05:00', 'endDate': '2026-11-28T21:30:00-05:00',
      'eventStatus': 'https://schema.org/EventScheduled', 'eventAttendanceMode': 'https://schema.org/OfflineEventAttendanceMode',
      'description': 'An evening of conversation and dinner for verified singles aged 24 to 32 looking for marriage. Parents welcome.',
@@ -102,7 +120,7 @@ def shell(name, title_tag, desc, main, extra_head='', kind='website'):
 <title>{title_tag}</title><meta name="description" content="{esc(desc)}">{social(title_tag, desc, url, kind)}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Nunito+Sans:wght@400;600;700;800&display=swap">
 <link rel="stylesheet" href="legal.css">{extra_head}</head><body>
-<header><div class="wrap"><a class="brand" href="./"><svg viewBox="0 0 32 22" aria-hidden="true"><path class="c1" d="M11.60 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/><path class="c2" d="M20.40 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/></svg>NeuMarry</a><nav><a href="matrimony-events-toronto.html">Events</a><a href="./#join">Join</a></nav></div></header>
+<header><div class="wrap"><a class="brand" href="./"><svg viewBox="0 0 32 22" aria-hidden="true"><path class="c1" d="M11.60 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/><path class="c2" d="M20.40 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/></svg>NeuMarry</a><nav><a href="matrimony-events-toronto.html">Events</a><a href="app/">Open the app</a></nav></div></header>
 <main><div class="wrap">{main}</div></main>
 <footer><div class="wrap"><div class="fg">{FOOT_GUIDES}</div><span>NeuMarry · © 2026</span><span>Members must be 18 or older</span>{legal_links}<a class="link" href="mailto:{EMAIL}">{EMAIL}</a></div></footer>
 </body></html>'''
@@ -117,8 +135,8 @@ page('privacy', 'Privacy Policy', 'How NeuMarry collects, uses and protects your
 page('terms', 'Terms of Service', 'The NeuMarry Terms of Service.')
 page('delete-account', 'Delete your account', 'How to delete your NeuMarry account and data.')
 
-CTA = ('<div class="cta"><div><b>NeuMarry launches in Toronto in November 2026.</b><p>Join the waitlist and get the download link on day one. '
-       'The first 500 verified women in Canada get 3 months of Gold free.</p></div><a class="btn" href="./#join">Join the waitlist</a></div>')
+CTA = ('<div class="cta"><div><b>Create your free NeuMarry profile today.</b><p>It works in your web browser now, and the Android app uses the same account. '
+       'The first 500 verified women in Canada get 3 months of Gold free.</p></div><a class="btn" href="app/">Create your profile</a></div>')
 for g in G:
     others = [o for o in G if o['slug'] != g['slug']][:4]
     related = '<h2>Read next</h2><ul class="rel">' + ''.join(f'<li><a href="{o["slug"]}.html">{o["short"]}</a></li>' for o in others) + '</ul>'
