@@ -1184,7 +1184,7 @@ function render(){
   }
   const t=document.querySelector('.toast');
   app.innerHTML=html;
-  if(S.screen==='auth'&&CFG.web)gsiAfterRender();
+  if(CFG.web&&S.screen==='auth')gsiAfterRender();else if(CFG.web&&S.screen==='welcome')gsiInit(); /* load Google's button early */
   if(t){t.classList.add('still');app.appendChild(t)}
   const sk=sheet?sheet.type+(sheet.id||''):'',vk=view?view.type+(view.id||''):'',pk=picker?picker.k:'';
   if(sk&&sk===prevSheet){const w=app.querySelector('.sheet-wrap:not(.picker-wrap)');if(w)w.classList.add('still')}
@@ -1478,15 +1478,18 @@ function hex(b){return Array.from(new Uint8Array(b),x=>x.toString(16).padStart(2
 async function makeNonce(){const b=new Uint8Array(24);crypto.getRandomValues(b);const raw=hex(b);return {raw,hashed:hex(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(raw)))}}
 const gsi={state:'',raw:''};
 function gsiApi(){return window.google&&window.google.accounts&&window.google.accounts.id}
-async function gsiInit(){
-  if(!CFG.web||gsi.state==='ready'||gsi.state==='loading'||gsi.state==='failed')return;gsi.state='loading';
+function gsiInit(){
+  if(!CFG.web)return Promise.resolve();
+  if(gsi.state==='loading'||gsi.state==='ready'||gsi.state==='failed')return gsi.p||Promise.resolve();
+  gsi.state='loading';gsi.err='';gsi.p=gsiLoad();return gsi.p}
+async function gsiLoad(){
   try{
     if(!gsiApi())await new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://accounts.google.com/gsi/client';s.async=true;s.onload=ok;s.onerror=()=>no(new Error('script'));document.head.appendChild(s)});
     if(!gsiApi())throw new Error('no api');
     const n=await makeNonce();gsi.raw=n.raw;
     gsiApi().initialize({client_id:CFG.googleClientId,callback:onGsi,nonce:n.hashed,ux_mode:'popup',auto_select:false,context:'signin'});
     gsi.state='ready';syncGsi();
-  }catch(e){gsi.state='failed';console.warn('[gsi]',e&&e.message)}}
+  }catch(e){gsi.state='failed';gsi.err=(e&&e.message)||'error';console.warn('[gsi]',gsi.err)}}
 function gsiAfterRender(){if(gsi.state==='ready')syncGsi();else gsiInit()}
 function syncGsi(){
   const slot=document.getElementById('gsi-slot'),own=document.getElementById('g-own');if(!slot||!own)return;
@@ -1508,6 +1511,11 @@ async function googleSignIn(){
       console.warn('[google]',c,e&&e.message);
       toast(c==='no_account'?'Add a Google account to this phone first, or use email.':e instanceof API.ApiError?e.message:'Google sign-in could not start. Please try again, or use email.','info')}
     return}
+  /* Web: Google's own button does the sign-in. If it is still loading, wait for it and show it. */
+  if(CFG.web){
+    if(gsi.state!=='ready')await gsiInit();
+    if(gsi.state==='ready'){syncGsi();toast('Tap the Google button to continue.','info');return}
+    toast(`Google sign-in could not load (${gsi.err||'error'}). Check your connection, or use email.`,'info');gsi.state='';return}
   const url=API.googleUrl();
   if(isNative&&Plug().Browser){try{await Plug().Browser.open({url,presentationStyle:'popover'})}catch(e){fail(e)}return}
   location.href=url;
