@@ -402,4 +402,50 @@ open(os.path.join(OUT, 'robots.txt'), 'w').write(f'User-agent: *\nAllow: /\n\nSi
 urls = [(SITE, '1.0', 'weekly')] + [(SITE + p['slug'] + '.html', '0.8', 'monthly') for p in P] + [(SITE + g['slug'] + '.html', '0.8', 'monthly') for g in G] + [(SITE + 'work-with-us.html', '0.7', 'monthly'), (SITE + 'event-host-toronto.html', '0.7', 'weekly')] + [(SITE + n + '.html', '0.3', 'yearly') for n in ('privacy', 'terms', 'delete-account')] + ([(SITE + 'fr/', '0.8', 'weekly')] if FR_SLUGS else []) + [(SITE + 'fr/' + x + '.html', '0.6', 'monthly') for x in FR_SLUGS]
 open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
     ''.join(f'  <url><loc>{u}</loc><lastmod>{TODAY}</lastmod><changefreq>{c}</changefreq><priority>{pr}</priority></url>\n' for u, pr, c in urls) + '</urlset>\n')
+# ---------- Google Analytics (website only, not /app/) with Consent Mode v2 ----------
+GA_ID = 'G-N3V0JG9X0D'
+EU = ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']
+GA_HEAD = ('<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}'
+           "gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',region:" + json.dumps(EU) + "});"
+           "gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'granted'});"
+           "try{var nmC=localStorage.getItem('nm.analytics');if(nmC==='granted'||nmC==='denied')gtag('consent','update',{analytics_storage:nmC})}catch(e){}"
+           "gtag('js',new Date());gtag('config','" + GA_ID + "',{allow_google_signals:false,allow_ad_personalization_signals:false});</script>"
+           '<script async src="https://www.googletagmanager.com/gtag/js?id=' + GA_ID + '"></script>')
+BANNER_TXT = {
+ 'en': dict(t='This website counts visits with Google Analytics so we can improve it. No ads, and we never sell your data.', ok='Accept', no='Decline', more='Privacy Policy', link='Analytics settings', href='privacy.html'),
+ 'fr': dict(t='Ce site compte les visites avec Google Analytics pour s’améliorer. Aucune publicité, et nous ne vendons jamais vos données.', ok='Accepter', no='Refuser', more='Politique de confidentialité', link='Paramètres d’analyse', href='../privacy.html'),
+}
+def banner(lang):
+    b = BANNER_TXT[lang]
+    return ('<div id="nm-consent" role="dialog" aria-live="polite" aria-label="' + b['link'] + '" hidden>'
+            '<style>#nm-consent{position:fixed;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));z-index:60;max-width:560px;margin:0 auto;'
+            'background:#fff;color:#3B1F2A;border:1px solid #F3E0E1;border-radius:18px;box-shadow:0 10px 30px rgba(59,31,42,.16);padding:14px 16px;'
+            'font:14px/1.5 "Nunito Sans",system-ui,-apple-system,"Segoe UI",sans-serif}'
+            '#nm-consent p{margin:0 0 10px}#nm-consent a{color:#C8325A;font-weight:700}'
+            '#nm-consent .b{display:flex;gap:10px}#nm-consent button{flex:1;min-height:42px;border-radius:999px;font:700 14px/1 "Nunito Sans",system-ui,sans-serif;cursor:pointer}'
+            '#nm-consent .y{background:#E8436B;color:#fff;border:1px solid #E8436B}#nm-consent .n{background:#fff;color:#3B1F2A;border:1px solid #E7CFD2}'
+            '.nm-alink{background:none;border:0;padding:0;font:inherit;color:inherit;text-decoration:underline;cursor:pointer}</style>'
+            '<p>' + b['t'] + ' <a href="' + b['href'] + '">' + b['more'] + '</a></p>'
+            '<div class="b"><button type="button" class="n" data-c="denied">' + b['no'] + '</button><button type="button" class="y" data-c="granted">' + b['ok'] + '</button></div></div>'
+            "<script>(function(){var tz='';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||''}catch(e){}"
+            "if(!/^(Europe\\/|Atlantic\\/(Reykjavik|Canary|Madeira|Faroe|Azores))/.test(tz))return;"
+            "var d=document.getElementById('nm-consent'),c=null;try{c=localStorage.getItem('nm.analytics')}catch(e){}"
+            "function set(v){try{localStorage.setItem('nm.analytics',v)}catch(e){}gtag('consent','update',{analytics_storage:v});d.hidden=true}"
+            "d.addEventListener('click',function(e){var v=e.target&&e.target.getAttribute('data-c');if(v)set(v)});"
+            "if(c!=='granted'&&c!=='denied')d.hidden=false;"
+            "var f=document.querySelector('footer .wrap');if(f){var a=document.createElement('button');a.type='button';a.className='nm-alink link';a.textContent='" + b['link'].replace("'", "\\'") + "';"
+            "a.addEventListener('click',function(){d.hidden=false});f.appendChild(a)}})();</script>")
+for root, dirs, files in os.walk(OUT):
+    rel = os.path.relpath(root, OUT)
+    if rel.split(os.sep)[0] in ('app', 'src', '.git'): continue
+    for fn in files:
+        if not fn.endswith('.html'): continue
+        fp = os.path.join(root, fn); h = open(fp, encoding='utf-8').read()
+        if GA_ID in h: continue
+        lang = 'fr' if '<html lang="fr' in h else 'en'
+        assert '</head>' in h and '</body>' in h, fp
+        h = h.replace('</head>', GA_HEAD + '</head>', 1)
+        i = h.rindex('</body>'); h = h[:i] + banner(lang) + h[i:]
+        open(fp, 'w', encoding='utf-8').write(h)
+
 print('site built')
