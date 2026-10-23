@@ -521,7 +521,7 @@ function applyChange(t,key,v){
 function toast(msg,icon){clearTimeout(toastT);const old=document.querySelector('.toast');if(old)old.remove();
   const el=document.createElement('div');el.className='toast';el.setAttribute('role','status');el.innerHTML=(icon?ic(icon):'')+`<span>${esc(msg)}</span>`;
   document.getElementById('app').appendChild(el);toastT=setTimeout(()=>el.remove(),3800)}
-function fail(e,field){if(e&&e.code==='rude_words')API.rpc('log_rude',{field:field||'app'}).catch(()=>{});toast((e&&e.message)||'Something went wrong. Please try again.','info')}
+function fail(e,field){if(e&&(e.code==='rude_words'||e.code==='money_request'))API.rpc('log_rude',{field:(e.code==='money_request'?'money-':'')+(field||'app')}).catch(()=>{});toast((e&&e.message)||'Something went wrong. Please try again.','info')}
 
 /* ---------- Components ---------- */
 const LOCKCHIP=()=>`<span class="lockchip glass">${ic('lock')}Photos unlock when you both accept</span>`;
@@ -1042,7 +1042,7 @@ function renderAdmin(){
     const isPdf=/\.pdf$/i.test(x.path||'');
     return `<div class="panel adm" id="adm-${x.row_id}"><div class="adm-h"><b>${esc(x.kind==='photo'?'Profile photo':x.kind==='id'?'Government ID':'Live selfie')}</b><small>${esc(x.full_name)} · ${x.gender==='F'?'Woman':'Man'}, ${x.age} · ${esc(x.city)}, ${esc(x.country)}</small></div>
       <div class="adm-imgs">${img?(isPdf?`<a class="btn ghost sm" href="${esc(img)}" target="_blank" rel="noopener">Open PDF</a>`:`<img src="${esc(img)}" alt="${esc(x.kind)} of ${esc(x.full_name)}">`):`<span class="hint">Loading image…</span>`}${x.kind!=='photo'&&prof?`<img src="${esc(prof)}" alt="Profile photo of ${esc(x.full_name)}">`:''}</div>
-      <p class="hint">${x.kind==='id'?'Name and date of birth must match the profile. Photo must match the selfie.':x.kind==='selfie'?'Must be a live photo of the same person as the ID and profile photos.':'A clear photo of the member’s own face. No group photos, children, nudity or text.'}</p>
+      <p class="hint">${x.kind==='id'?'Name and date of birth must match the profile. Photo must match the selfie.':x.kind==='selfie'?'Must be a live photo of the same person as the ID and profile photos.':'A clear photo of the member’s own face. No group photos, children, nudity or text.'}</p>${x.kind==='photo'&&x.ai_check?`<p class="hint">${x.ai_check==='doubtful'?`${ic('shield')} <b>Automatic check: may be revealing or violent.</b> Look carefully.`:'Automatic check: nothing inappropriate found.'}</p>`:''}
       <div class="adm-act"><select data-adm-reason="${x.row_id}" aria-label="Reason if rejected"><option value="">Reason if rejected…</option>${(x.kind==='photo'?['Face not clear','Not a real photo of you','Group photo','Inappropriate photo']:['Image not readable','Does not match the profile','Not a valid ID','Not a live selfie']).map(r=>`<option>${r}</option>`).join('')}</select>
       <button class="btn ghost sm" data-a="admReject" data-id="${x.row_id}" data-k="${x.kind}">Reject</button><button class="btn primary sm" data-a="admApprove" data-id="${x.row_id}" data-k="${x.kind}">Approve</button></div></div>`};
   return `<div class="view" role="dialog" aria-label="Team review">
@@ -1053,8 +1053,8 @@ function renderAdmin(){
     ${q.length?q.map(item).join(''):a.loading?'':`<p class="hint">Nothing waiting. Well done.</p>`}
     <div class="sec-h"><h2>Reports (${reps.length})</h2></div>
     ${reps.length?reps.map(r=>`<div class="panel"><b>${esc(r.reported_name)}</b><p class="hint">${esc(r.reason)}${r.note?' · '+esc(r.note):''} · reported by ${esc(r.reporter_name)} · ${new Date(r.created_at).toLocaleString(RM_I18N.locale,{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})}</p><div class="adm-act"><button class="btn ghost sm" data-a="admDismiss" data-id="${r.id}">Dismiss</button><button class="btn danger sm" data-a="admBan" data-id="${r.id}">Ban member</button></div></div>`).join(''):`<p class="hint">No open reports.</p>`}
-    <div class="sec-h"><h2>Rude words tried (${(a.rude||[]).length})</h2></div>
-    ${(a.rude||[]).length?`<p class="hint">These members tried to send or save abusive words in the last 30 days. The words were stopped and nobody saw them.</p>`+(a.rude||[]).map(x=>`<div class="panel"><div class="adm-h"><b class="notr">${esc(x.full_name||'')}</b><small>${esc(x.city||'')} · ${x.tries} ${x.tries===1?'try':'tries'} · last ${new Date(x.last_at).toLocaleString(RM_I18N.locale,{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})}</small></div><div class="adm-act">${x.banned?`<span class="pill">Banned</span>`:`<button class="btn danger sm" data-a="admBanRude" data-id="${esc(x.user_id)}">Ban member</button>`}</div></div>`).join(''):a.loading?'':`<p class="hint">Nobody tried rude words in the last 30 days.</p>`}
+    <div class="sec-h"><h2>Rude words or money requests (${(a.rude||[]).length})</h2></div>
+    ${(a.rude||[]).length?`<p class="hint">These members tried to send or save abusive words, or to ask for money or share payment details, in the last 30 days. It was stopped and nobody saw it.</p>`+(a.rude||[]).map(x=>`<div class="panel"><div class="adm-h"><b class="notr">${esc(x.full_name||'')}</b><small>${esc(x.city||'')} · ${x.tries} ${x.tries===1?'try':'tries'}${x.money_tries?` (${x.money_tries} for money)`:''} · last ${new Date(x.last_at).toLocaleString(RM_I18N.locale,{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})}</small></div><div class="adm-act">${x.banned?`<span class="pill">Banned</span>`:`<button class="btn danger sm" data-a="admBanRude" data-id="${esc(x.user_id)}">Ban member</button>`}</div></div>`).join(''):a.loading?'':`<p class="hint">Nobody tried rude words or money requests in the last 30 days.</p>`}
     <div class="sec-h"><h2>Applications (${(a.apps||[]).filter(x=>x.status==='new').length} new)</h2></div>
     ${(a.apps||[]).length?(a.apps||[]).map(x=>{const tel=(x.contact||'').match(/\+?[0-9][0-9 ()-]{6,}/),mail=(x.contact||'').match(/[^\s·]+@[^\s·]+/);
       return `<div class="panel app-row${x.status==='new'?'':' done'}"><div class="adm-h"><b>${esc({host:'Event host',restaurant:'Partner restaurant',bureau:'Matrimonial bureau'}[x.role]||x.role)}${x.org?' · '+esc(x.org):''}</b><small>${esc(x.name||'')} · ${esc(x.city||'')} · ${new Date(x.created_at).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short'})}</small></div>
@@ -1242,8 +1242,12 @@ async function sha256(blob){try{const buf=await blob.arrayBuffer();const h=await
 async function uploadPhoto(blob){const uid=API.userId();const path=`${uid}/${uuid()}.jpg`;const sum=await sha256(blob);
   if(sum){const dup=(S.me&&S.me.photos||[]).find(x=>x.sha===sum);if(dup)return}
   await API.upload('photos',path,blob);
-  try{await API.insert('photos',{user_id:uid,path,position:0,sha256:sum},{returning:false})}
+  let row=null;
+  try{const rows=await API.insert('photos',{user_id:uid,path,position:0,sha256:sum});row=rows&&rows[0]}
   catch(e){try{await API.removeFile('photos',path)}catch(x){}if(e.status===409||/23505|duplicate/.test(e.code||''))throw new API.ApiError('dup_photo','This photo is already used on another NeuMarry account. Choose a different photo.');throw e}
+  // Automatic check (Google SafeSearch). If it cannot answer, the team still reviews every photo.
+  if(row&&row.id){let r=null;try{r=await Promise.race([API.fn('photo-check',{photoId:row.id}),new Promise(ok=>setTimeout(()=>ok(null),12000))])}catch(e){r=null}
+    if(r&&r.status==='rejected')throw new API.ApiError('photo_rejected','This photo was not accepted because it looks inappropriate. Choose a clear, decent photo of your own face.')}
   // The new photo replaces the old ones.
   const old=(S.me&&S.me.photos||[]).filter(x=>x.path!==path);
   for(const o of old){try{await API.remove('photos',{id:'eq.'+o.id});await API.removeFile('photos',o.path)}catch(x){}}

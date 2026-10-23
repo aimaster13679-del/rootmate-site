@@ -139,6 +139,8 @@ def home_lang(href, code, label):
 OPEN_BTN = '<a class="btn primary sm" href="app/">Open the app</a>'
 assert body.count(OPEN_BTN) == 1
 HOME_HEAD = head.replace('<meta name="claude:viewport-fit-sides" content="cover">', '')
+# Consent error goes on its own line under the checkbox text (it was squeezed beside it)
+HOME_HEAD = HOME_HEAD.replace('</style>', '.check{flex-wrap:wrap}.check>span:not(.err){flex:1 1 0;min-width:0}.check .err{flex-basis:100%;padding-left:30px}</style>', 1)
 HOME_BODY = body
 HOME_ALT = (f'<link rel="alternate" hreflang="en" href="{SITE}"><link rel="alternate" hreflang="fr" href="{SITE}fr/">'
             f'<link rel="alternate" hreflang="x-default" href="{SITE}">')
