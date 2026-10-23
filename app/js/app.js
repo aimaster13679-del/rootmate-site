@@ -1138,7 +1138,7 @@ function renderSheet(){
      ${sheet.chat?`<button class="rowi" data-a="engaged" data-id="${p.id}">${ic('heart')}<span class="tx"><b>${S.storyFor[p.id]?'Thank you for sharing':'We’re getting married!'}</b><span>Pause your profile and share your story</span></span></button>`:''}
      <button class="rowi" data-a="report" data-id="${p.id}">${ic('flag')}<span class="tx"><b>Report</b><span>Fake profile, money requests, rude messages</span></span></button>
      <button class="rowi" data-a="block" data-id="${p.id}">${ic('x')}<span class="tx"><b>Block</b><span>They will not see you or contact you again</span></span></button></div>`);}
-  if(t==='report'){const p=byId(sheet.id);const reasons=['Fake profile or photos','Asked for money or gifts','Asked for visa or immigration help','Rude or inappropriate messages','Already married or in a relationship','Something else'];
+  if(t==='report'){const p=byId(sheet.id);const reasons=['Fake profile or photos','Asked for money or gifts','Asked for visa or immigration help','Rude or inappropriate messages','Already married or in a relationship','Under 18 or a child safety concern','Something else'];
     return sheetShell('Report '+(p.first||'this member'),`<p class="hint">Reports are private. ${esc(p.first||'They')} will not know who reported them.</p>
      <fieldset class="q${S.errors.reason?' has-err':''}"><legend>What happened?</legend><div class="opts">${reasons.map((r,i)=>`<label class="opt"><input type="radio" name="reason" value="${i}" data-sheet="reason"${sheet.reason===i?' checked':''}><span>${r}</span></label>`).join('')}</div>${errOf('reason')}</fieldset>
      <label class="fld"><span>Details (optional)</span><textarea id="rep-note" maxlength="500" data-sheet="note">${esc(sheet.note||'')}</textarea></label>`,
@@ -1461,7 +1461,7 @@ const A={
   more(el){sheet={type:'more',id:el.dataset.id,chat:!!el.dataset.chat};render()},
   report(el){sheet={type:'report',id:el.dataset.id,reason:null,note:''};S.errors={};render()},
   async submitReport(el){if(sheet.reason===null||sheet.reason===undefined){S.errors={reason:'Choose a reason'};render();return}const id=el.dataset.id;
-    const reasons=['Fake profile or photos','Asked for money or gifts','Asked for visa or immigration help','Rude or inappropriate messages','Already married or in a relationship','Something else'];
+    const reasons=['Fake profile or photos','Asked for money or gifts','Asked for visa or immigration help','Rude or inappropriate messages','Already married or in a relationship','Under 18 or a child safety concern','Something else'];
     busy='submitReport';render();
     try{await API.insert('reports',{reporter:S.me.id,reported:id,reason:reasons[sheet.reason],note:(sheet.note||'').trim()||null},{returning:false});
       try{await API.insert('blocks',{blocker:S.me.id,blocked:id},{returning:false})}catch(e){}

@@ -68,7 +68,7 @@
     'Looking for': 'Je cherche', 'Date of birth': 'Date de naissance', 'Enter your date of birth': 'Entrez votre date de naissance', 'Check the year': 'Vérifiez l’année',
     'You must be 18 or older': 'Vous devez avoir 18 ans ou plus', 'Height': 'Taille', 'Your height': 'Votre taille', 'Choose your height': 'Choisissez votre taille',
     'Search height, e.g. 5\'8': 'Chercher une taille, ex. 5\'8', 'Marital status': 'État civil', 'Never married': 'Jamais marié(e)', 'Divorced': 'Divorcé(e)', 'Widowed': 'Veuf ou veuve', 'Awaiting divorce': 'En instance de divorce',
-    'Already married or in a relationship': 'Déjà marié(e) ou en couple',
+    'Under 18 or a child safety concern': 'Moins de 18 ans ou problème de sécurité d’un enfant', 'Already married or in a relationship': 'Déjà marié(e) ou en couple',
     'Profile photo': 'Photo de profil', 'Your photo': 'Votre photo', 'Add a photo': 'Ajouter une photo', 'Change photo': 'Changer la photo', 'No photo yet': 'Pas encore de photo',
     'A clear, recent photo of your face. Hidden from others until you both accept.': 'Une photo récente et nette de votre visage. Cachée aux autres jusqu’à ce que vous acceptiez tous les deux.',
     'Add a clear photo of your face. It stays hidden until you both accept.': 'Ajoutez une photo nette de votre visage. Elle reste cachée jusqu’à ce que vous acceptiez tous les deux.',
