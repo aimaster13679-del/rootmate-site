@@ -102,7 +102,7 @@ HOME_DESC = 'Verified matrimony for everyone living away from the country they g
 KEYWORDS = 'matrimony, matrimonial, marriage app, matrimony abroad, expat marriage, immigrant matrimony, NRI matrimony, Indian matrimony Canada, shaadi, marriage, rishta, life partner, bride, groom, Toronto matrimony, Brampton matrimony, Gujarati matrimony, Punjabi matrimony, matrimony app'
 meta = ('<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
         f'<meta name="description" content="{esc(HOME_DESC)}"><meta name="keywords" content="{KEYWORDS}">' + social(HOME_TITLE, HOME_DESC, SITE))
-legal_links = '<a class="link" href="privacy.html">Privacy Policy</a><a class="link" href="terms.html">Terms of Service</a><a class="link" href="delete-account.html">Delete account</a>'
+legal_links = '<a class="link" href="privacy.html">Privacy Policy</a><a class="link" href="terms.html">Terms of Service</a><a class="link" href="delete-account.html">Delete account</a><a class="link" href="child-safety.html">Child safety</a>'
 body = body.replace('<a class="link" href="#delete-account">Delete account</a>', '<a class="link" href="delete-account.html">Delete account</a><a class="link" href="privacy.html">Full Privacy Policy</a><a class="link" href="terms.html">Full Terms</a>')
 guide_links = ''.join(f'<a href="{g["slug"]}.html">{g["short"]}</a>' for g in G)
 guides_sec = ('<section class="sec" id="guides" style="padding-top:0"><div class="wrap"><p class="eyebrow">Guides</p>'
@@ -184,6 +184,7 @@ def page(name, title, desc):
 page('privacy', 'Privacy Policy', 'How NeuMarry collects, uses and protects your data.')
 page('terms', 'Terms of Service', 'The NeuMarry Terms of Service.')
 page('delete-account', 'Delete your account', 'How to delete your NeuMarry account and data.')
+page('child-safety', 'Child safety standards', 'NeuMarry is for adults only. Our standards against child sexual abuse and exploitation, how to report a concern, and our child safety contact.')
 
 CTA = ('<div class="cta"><div><b>Create your free NeuMarry profile today.</b><p>It works in your web browser now, and the Android app uses the same account. '
        'The first 500 verified women in Canada get 3 months of Gold free.</p></div><a class="btn" href="app/">Create your profile</a></div>')
@@ -399,7 +400,7 @@ open(os.path.join(OUT, 'llms.txt'), 'w', encoding='utf-8').write('\n'.join(llms)
 
 # robots.txt and sitemap.xml
 open(os.path.join(OUT, 'robots.txt'), 'w').write(f'User-agent: *\nAllow: /\n\nSitemap: {SITE}sitemap.xml\n')
-urls = [(SITE, '1.0', 'weekly')] + [(SITE + p['slug'] + '.html', '0.8', 'monthly') for p in P] + [(SITE + g['slug'] + '.html', '0.8', 'monthly') for g in G] + [(SITE + 'work-with-us.html', '0.7', 'monthly'), (SITE + 'event-host-toronto.html', '0.7', 'weekly')] + [(SITE + n + '.html', '0.3', 'yearly') for n in ('privacy', 'terms', 'delete-account')] + ([(SITE + 'fr/', '0.8', 'weekly')] if FR_SLUGS else []) + [(SITE + 'fr/' + x + '.html', '0.6', 'monthly') for x in FR_SLUGS]
+urls = [(SITE, '1.0', 'weekly')] + [(SITE + p['slug'] + '.html', '0.8', 'monthly') for p in P] + [(SITE + g['slug'] + '.html', '0.8', 'monthly') for g in G] + [(SITE + 'work-with-us.html', '0.7', 'monthly'), (SITE + 'event-host-toronto.html', '0.7', 'weekly')] + [(SITE + n + '.html', '0.3', 'yearly') for n in ('privacy', 'terms', 'delete-account', 'child-safety')] + ([(SITE + 'fr/', '0.8', 'weekly')] if FR_SLUGS else []) + [(SITE + 'fr/' + x + '.html', '0.6', 'monthly') for x in FR_SLUGS]
 open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
     ''.join(f'  <url><loc>{u}</loc><lastmod>{TODAY}</lastmod><changefreq>{c}</changefreq><priority>{pr}</priority></url>\n' for u, pr, c in urls) + '</urlset>\n')
 print('site built')
