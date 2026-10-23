@@ -129,14 +129,26 @@ head = head.replace('</style>', '.guides{margin-top:22px;display:grid;grid-templ
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write('<!doctype html><html lang="en"><head>' + meta + head.replace('<meta name="claude:viewport-fit-sides" content="cover">', '') + '</head><body>' + body + '</body></html>')
 
 FOOT_GUIDES = ''.join(f'<a class="link" href="{g["slug"]}.html">{g["short"]}</a>' for g in P + G)
+FR_DIR = os.path.join(H, 'fr', 'pages')
+FR_SLUGS = sorted(f[:-5] for f in os.listdir(FR_DIR) if f.endswith('.html')) if os.path.isdir(FR_DIR) else []
+def alternates(name):
+    if name not in FR_SLUGS: return ''
+    return (f'<link rel="alternate" hreflang="en" href="{SITE}{name}.html"><link rel="alternate" hreflang="fr" href="{SITE}fr/{name}.html">'
+            f'<link rel="alternate" hreflang="x-default" href="{SITE}{name}.html">')
+LANG_CSS = ('<style>.langsw{float:right;margin:0 0 0 12px;font-size:14px;font-weight:700}.langsw a{color:var(--rose);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:3px 10px}'
+            '.langsw a:hover{border-color:var(--rose)}nav .sh{display:none}@media (max-width:520px){nav a.ev{display:none}nav .lg{display:none}nav .sh{display:inline}}</style>')
+def lang_link(href, code, label, text):
+    return (f'<p class="langsw"><a href="{href}" hreflang="{code}" lang="{code}" aria-label="{label}" '
+            f'onclick="try{{localStorage.setItem(\'rm.lang\',\'{code}\')}}catch(e){{}}">{text}</a></p>')
 def shell(name, title_tag, desc, main, extra_head='', kind='website'):
     url = SITE + ('' if name == 'index' else name + '.html')
+    if name in FR_SLUGS: extra_head += alternates(name) + LANG_CSS
     html = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title_tag}</title><meta name="description" content="{esc(desc)}">{social(title_tag, desc, url, kind)}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Nunito+Sans:wght@400;600;700;800&display=swap">
 <link rel="stylesheet" href="legal.css">{extra_head}</head><body>
 <header><div class="wrap"><a class="brand" href="./"><svg viewBox="0 0 32 22" aria-hidden="true"><path class="c1" d="M11.60 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/><path class="c2" d="M20.40 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/></svg>NeuMarry</a><nav><a href="matrimony-events-toronto.html">Events</a><a class="hl" href="work-with-us.html">Work with us</a><a href="app/">Open the app</a></nav></div></header>
-<main><div class="wrap">{main}</div></main>
+<main><div class="wrap">{lang_link("fr/" + name + ".html", "fr", "Lire cette page en français", "Français") if name in FR_SLUGS else ""}{main}</div></main>
 <footer><div class="wrap"><div class="fg">{FOOT_GUIDES}</div><span>NeuMarry · © 2026</span><span>Members must be 18 or older</span>{legal_links}<a class="link" href="mailto:{EMAIL}">{EMAIL}</a></div></footer>
 </body></html>'''
     open(os.path.join(OUT, name + '.html'), 'w', encoding='utf-8').write(html)
@@ -255,6 +267,54 @@ for p in P:
     elif faq: graph.append({'@type': 'FAQPage', 'mainEntity': faq})
     shell(p['slug'], p['title'], p['desc'], main, ld({'@context': 'https://schema.org', '@graph': graph}))
 
+# ---------- French (fr/): same pages for visitors who choose French ----------
+def fr_fix_links(html):
+    def fix(m):
+        h = m.group(1)
+        if h.startswith(('http', 'mailto', '#', '/', '../')): return m.group(0)
+        if h == 'app/' or h.startswith('app/'): return 'href="../' + h + '"'
+        if h in ('./', ''): return 'href="../"'
+        slug = h.split('#')[0][:-5] if h.split('#')[0].endswith('.html') else None
+        if slug and slug in FR_SLUGS: return m.group(0)
+        return 'href="../' + h + '"'
+    return re.sub(r'href="([^"]*)"', fix, html)
+FR_CTA = ('<div class="cta"><div><b>Créez votre profil NeuMarry gratuit dès aujourd’hui.</b><p>L’application fonctionne déjà dans votre navigateur Web, et l’application Android utilise le même compte. '
+          'Les 500 premières femmes vérifiées au Canada reçoivent 3 mois de Gold gratuits.</p></div><a class="btn" href="app/">Créer mon profil</a></div>')
+if FR_SLUGS:
+    os.makedirs(os.path.join(OUT, 'fr'), exist_ok=True)
+    def fr_meta(slug):
+        t = open(os.path.join(FR_DIR, slug + '.html'), encoding='utf-8').read()
+        get = lambda k: re.search(r'<!--%s: (.*?)-->' % k, t).group(1)
+        return dict(slug=slug, title=get('title'), desc=get('desc'), short=get('short'), kind=get('kind'), body=re.sub(r'<!--.*?-->\n?', '', t))
+    FR = [fr_meta(x) for x in FR_SLUGS]
+    fr_foot = ''.join(f'<a class="link" href="{f["slug"]}.html">{f["short"]}</a>' for f in FR)
+    fr_legal = ('<a class="link" href="../privacy.html" hreflang="en">Politique de confidentialité (en anglais)</a>'
+                '<a class="link" href="../terms.html" hreflang="en">Conditions d’utilisation (en anglais)</a>'
+                '<a class="link" href="../delete-account.html" hreflang="en">Supprimer mon compte (en anglais)</a>')
+    for f in FR:
+        url = SITE + 'fr/' + f['slug'] + '.html'
+        others = [o for o in FR if o['slug'] != f['slug']]
+        related = ('<h2>À lire aussi</h2><ul class="rel">' + ''.join(f'<li><a href="{o["slug"]}.html">{o["short"]}</a></li>' for o in others[:5]) + '</ul>') if others else ''
+        main = fr_fix_links(f'<p class="crumbs"><a href="./">NeuMarry</a> › {f["short"]}</p>' + f['body'] + FR_CTA + related)
+        kind = 'FAQPage' if f['slug'] == 'faq' else 'WebPage'
+        node = {'@type': kind, '@id': url, 'url': url, 'name': f['title'], 'description': f['desc'], 'inLanguage': 'fr-CA',
+                'isPartOf': {'@id': SITE + '#site'}, 'publisher': ORG, 'dateModified': TODAY}
+        faq = faq_from(f['body'])
+        graph = [node, {'@type': 'BreadcrumbList', 'itemListElement': [{'@type': 'ListItem', 'position': 1, 'name': 'NeuMarry', 'item': SITE},
+                                                                      {'@type': 'ListItem', 'position': 2, 'name': f['short'], 'item': url}]}]
+        if faq and kind == 'FAQPage': node['mainEntity'] = faq
+        elif faq: graph.append({'@type': 'FAQPage', 'mainEntity': faq})
+        head = social(f['title'], f['desc'], url).replace('content="en_CA"', 'content="fr_CA"').replace('href="icon-192.png"', 'href="../icon-192.png"').replace('href="apple-touch-icon.png"', 'href="../apple-touch-icon.png"')
+        html = f"""<!doctype html><html lang="fr-CA"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{f['title']}</title><meta name="description" content="{esc(f['desc'])}">{head}{alternates(f['slug'])}
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Nunito+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="../legal.css">{LANG_CSS}{ld({'@context': 'https://schema.org', '@graph': graph})}</head><body>
+<header><div class="wrap"><a class="brand" href="../"><svg viewBox="0 0 32 22" aria-hidden="true"><path class="c1" d="M11.60 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/><path class="c2" d="M20.40 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/></svg>NeuMarry</a><nav><a class="ev" href="../matrimony-events-toronto.html">Événements</a><a class="hl" href="../work-with-us.html"><span class="lg">Travailler avec nous</span><span class="sh">Collaborer</span></a><a href="../app/" onclick="try{{localStorage.setItem('rm.lang','fr')}}catch(e){{}}">Ouvrir l’app</a></nav></div></header>
+<main><div class="wrap">{lang_link('../' + f['slug'] + '.html', 'en', 'Read this page in English', 'English')}{main}</div></main>
+<footer><div class="wrap"><div class="fg">{fr_foot}</div><span>NeuMarry · © 2026</span><span>Les membres doivent avoir 18 ans ou plus</span>{fr_legal}<a class="link" href="mailto:{EMAIL}">{EMAIL}</a></div></footer>
+</body></html>"""
+        open(os.path.join(OUT, 'fr', f['slug'] + '.html'), 'w', encoding='utf-8').write(html)
+
 # llms.txt: a plain summary for AI assistants (llmstxt.org format)
 llms = ['# NeuMarry', '',
         '> NeuMarry is a verified matrimony app for people living away from the country they grew up in, from every country and community. '
@@ -272,7 +332,7 @@ open(os.path.join(OUT, 'llms.txt'), 'w', encoding='utf-8').write('\n'.join(llms)
 
 # robots.txt and sitemap.xml
 open(os.path.join(OUT, 'robots.txt'), 'w').write(f'User-agent: *\nAllow: /\n\nSitemap: {SITE}sitemap.xml\n')
-urls = [(SITE, '1.0', 'weekly')] + [(SITE + p['slug'] + '.html', '0.8', 'monthly') for p in P] + [(SITE + g['slug'] + '.html', '0.8', 'monthly') for g in G] + [(SITE + 'work-with-us.html', '0.7', 'monthly'), (SITE + 'event-host-toronto.html', '0.7', 'weekly')] + [(SITE + n + '.html', '0.3', 'yearly') for n in ('privacy', 'terms', 'delete-account')]
+urls = [(SITE, '1.0', 'weekly')] + [(SITE + p['slug'] + '.html', '0.8', 'monthly') for p in P] + [(SITE + g['slug'] + '.html', '0.8', 'monthly') for g in G] + [(SITE + 'work-with-us.html', '0.7', 'monthly'), (SITE + 'event-host-toronto.html', '0.7', 'weekly')] + [(SITE + n + '.html', '0.3', 'yearly') for n in ('privacy', 'terms', 'delete-account')] + [(SITE + 'fr/' + x + '.html', '0.6', 'monthly') for x in FR_SLUGS]
 open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
     ''.join(f'  <url><loc>{u}</loc><lastmod>{TODAY}</lastmod><changefreq>{c}</changefreq><priority>{pr}</priority></url>\n' for u, pr, c in urls) + '</urlset>\n')
 print('site built')
