@@ -70,7 +70,8 @@ def guide_meta(slug):
     get = lambda k: re.search(r'<!--%s: (.*?)-->' % k, t).group(1)
     return dict(slug=slug, title=get('title'), desc=get('desc'), short=get('short'), body=re.sub(r'<!--.*?-->\n?', '', t))
 G = [guide_meta(g) for g in GUIDES]
-PAGES = ['about', 'how-matching-works', 'pricing', 'brampton-matrimony']
+PAGES = ['about', 'how-matching-works', 'pricing', 'privacy-and-safety', 'faq', 'brampton-matrimony', 'mississauga-matrimony',
+         'uk-matrimony', 'usa-matrimony', 'australia-matrimony', 'uae-matrimony']
 def page_meta(slug):
     t = rd('pages/%s.html' % slug)
     get = lambda k: re.search(r'<!--%s: (.*?)-->' % k, t).group(1)
@@ -233,18 +234,25 @@ shell('event-host-toronto', 'Event host jobs in Toronto: CA$100 per event · Neu
 # ---------- About, feature and city pages (src/pages) ----------
 for p in P:
     url = SITE + p['slug'] + '.html'
-    others = [o for o in P if o['slug'] != p['slug']] + [g for g in G if g['slug'] in ('verified-matrimony', 'matrimony-events-toronto', 'toronto-matrimony')]
+    loc = ('city', 'country')
+    near = [o for o in P if o['slug'] != p['slug'] and (o['kind'] in loc) == (p['kind'] in loc)]
+    others = near + [o for o in P if o['slug'] != p['slug'] and o not in near] + [g for g in G if g['slug'] in ('verified-matrimony', 'matrimony-events-toronto', 'toronto-matrimony')]
+    if p['kind'] in loc: others = near[:3] + [o for o in P if o['slug'] in ('how-matching-works', 'privacy-and-safety')]
     related = '<h2>Read next</h2><ul class="rel">' + ''.join(f'<li><a href="{o["slug"]}.html">{o["short"]}</a></li>' for o in others[:5]) + '</ul>'
     main = f'<p class="crumbs"><a href="./">NeuMarry</a> › {p["short"]}</p>' + p['body'] + CTA + related
-    kind = {'about': 'AboutPage', 'feature': 'WebPage', 'city': 'WebPage'}[p['kind']]
+    kind = {'about': 'AboutPage', 'feature': 'WebPage', 'city': 'WebPage', 'country': 'WebPage'}[p['kind']]
+    if p['slug'] == 'faq': kind = 'FAQPage'
     node = {'@type': kind, '@id': url, 'url': url, 'name': p['title'], 'description': p['desc'], 'inLanguage': 'en',
             'isPartOf': {'@id': SITE + '#site'}, 'publisher': ORG, 'dateModified': TODAY}
     if p['kind'] == 'city':
         node['about'] = {'@type': 'City', 'name': p['short'].replace('Matrimony in ', '')}
+    if p['kind'] == 'country':
+        node['about'] = {'@type': 'Country', 'name': p['short'].replace('Matrimony in the ', '').replace('Matrimony in ', '')}
     graph = [node, {'@type': 'BreadcrumbList', 'itemListElement': [{'@type': 'ListItem', 'position': 1, 'name': 'NeuMarry', 'item': SITE},
                                                                   {'@type': 'ListItem', 'position': 2, 'name': p['short'], 'item': url}]}]
     faq = faq_from(p['body'])
-    if faq: graph.append({'@type': 'FAQPage', 'mainEntity': faq})
+    if faq and kind == 'FAQPage': node['mainEntity'] = faq
+    elif faq: graph.append({'@type': 'FAQPage', 'mainEntity': faq})
     shell(p['slug'], p['title'], p['desc'], main, ld({'@context': 'https://schema.org', '@graph': graph}))
 
 # llms.txt: a plain summary for AI assistants (llmstxt.org format)
