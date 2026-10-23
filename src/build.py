@@ -32,6 +32,12 @@ fix = [
  ('Hosted Family Mixers with parent tickets, and a Family Circle where parents can suggest profiles. They never chat as you.', 'Hosted Family Mixers with parent tickets, and soon a Family Circle where parents can suggest profiles. They never chat as you.'),
  ('Parents can sign up on your behalf, come to family events with their own ticket, and join a Family Circle to suggest profiles.', 'Parents can sign up on your behalf and come to family events with their own ticket. A Family Circle where they can suggest profiles is coming soon.'),
 
+ # No video calls in the app yet; the web app is live.
+ ('<b>Quick Match<em>December</em></b><p>Both say yes, then a 5-minute video intro the same day. No phone numbers shared.</p>',
+  '<b>Family video calls<em>Coming soon</em></b><p>When you both say yes, parents join a call from any country with a link. No phone numbers shared.</p>'),
+ ('<p>No. The website tells you about RootMate and lets you join the waitlist. Signing up, matching, chats and event bookings all happen in the app for Android and iPhone, so every member is verified on their own phone.</p>',
+  '<p>Yes. Open neumarry.com/app in any web browser, on your phone or computer, to create your profile, get verified, see your matches and chat. The Android app uses the same account.</p>'),
+
  # The web app is live at /app/: point the calls to action there.
  ('<a class="btn primary sm" href="#app">Get the app</a>', '<a class="btn primary sm" href="app/">Open the app</a>'),
  ('<div class="ctas"><a class="btn primary" href="#app">Get the app</a><a class="btn ghost" href="#join">Join the waitlist</a></div>',
