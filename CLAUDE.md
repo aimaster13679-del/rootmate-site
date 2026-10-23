@@ -7,4 +7,4 @@ before changing anything here. One lock covers both repos. Never touch the Neuta
 - Pages are built by `python3 src/build.py` (sources in `src/`: landing, guides, pages, legal). Never edit the built
   `.html` files by hand; edit `src/` and rebuild.
 - `app/` is the web app copied from rootmate by `scripts/publish_web.py`; do not edit it here.
-- Website text is English only.
+- Website text is English by default, with a French option: French copies live in `fr/` (sources in `src/fr/`), linked by a "Français" switch. Legal pages stay English.

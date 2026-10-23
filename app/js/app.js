@@ -521,7 +521,7 @@ function applyChange(t,key,v){
 function toast(msg,icon){clearTimeout(toastT);const old=document.querySelector('.toast');if(old)old.remove();
   const el=document.createElement('div');el.className='toast';el.setAttribute('role','status');el.innerHTML=(icon?ic(icon):'')+`<span>${esc(msg)}</span>`;
   document.getElementById('app').appendChild(el);toastT=setTimeout(()=>el.remove(),3800)}
-function fail(e){toast((e&&e.message)||'Something went wrong. Please try again.','info')}
+function fail(e,field){if(e&&e.code==='rude_words')API.rpc('log_rude',{field:field||'app'}).catch(()=>{});toast((e&&e.message)||'Something went wrong. Please try again.','info')}
 
 /* ---------- Components ---------- */
 const LOCKCHIP=()=>`<span class="lockchip glass">${ic('lock')}Photos unlock when you both accept</span>`;
@@ -1053,6 +1053,8 @@ function renderAdmin(){
     ${q.length?q.map(item).join(''):a.loading?'':`<p class="hint">Nothing waiting. Well done.</p>`}
     <div class="sec-h"><h2>Reports (${reps.length})</h2></div>
     ${reps.length?reps.map(r=>`<div class="panel"><b>${esc(r.reported_name)}</b><p class="hint">${esc(r.reason)}${r.note?' · '+esc(r.note):''} · reported by ${esc(r.reporter_name)} · ${new Date(r.created_at).toLocaleString(RM_I18N.locale,{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})}</p><div class="adm-act"><button class="btn ghost sm" data-a="admDismiss" data-id="${r.id}">Dismiss</button><button class="btn danger sm" data-a="admBan" data-id="${r.id}">Ban member</button></div></div>`).join(''):`<p class="hint">No open reports.</p>`}
+    <div class="sec-h"><h2>Rude words tried (${(a.rude||[]).length})</h2></div>
+    ${(a.rude||[]).length?`<p class="hint">These members tried to send or save abusive words in the last 30 days. The words were stopped and nobody saw them.</p>`+(a.rude||[]).map(x=>`<div class="panel"><div class="adm-h"><b class="notr">${esc(x.full_name||'')}</b><small>${esc(x.city||'')} · ${x.tries} ${x.tries===1?'try':'tries'} · last ${new Date(x.last_at).toLocaleString(RM_I18N.locale,{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})}</small></div><div class="adm-act">${x.banned?`<span class="pill">Banned</span>`:`<button class="btn danger sm" data-a="admBanRude" data-id="${esc(x.user_id)}">Ban member</button>`}</div></div>`).join(''):a.loading?'':`<p class="hint">Nobody tried rude words in the last 30 days.</p>`}
     <div class="sec-h"><h2>Applications (${(a.apps||[]).filter(x=>x.status==='new').length} new)</h2></div>
     ${(a.apps||[]).length?(a.apps||[]).map(x=>{const tel=(x.contact||'').match(/\+?[0-9][0-9 ()-]{6,}/),mail=(x.contact||'').match(/[^\s·]+@[^\s·]+/);
       return `<div class="panel app-row${x.status==='new'?'':' done'}"><div class="adm-h"><b>${esc({host:'Event host',restaurant:'Partner restaurant',bureau:'Matrimonial bureau'}[x.role]||x.role)}${x.org?' · '+esc(x.org):''}</b><small>${esc(x.name||'')} · ${esc(x.city||'')} · ${new Date(x.created_at).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short'})}</small></div>
@@ -1345,7 +1347,7 @@ const A={
     try{
       await API.insert('profiles',Object.assign({id:uid},profileRow(d)),{upsert:true,returning:false});
       await API.insert('preferences',prefsRow(d.prefs||defaultPrefs(d),uid),{upsert:true,returning:false});
-    }catch(err){busy='';render();fail(err);return}
+    }catch(err){busy='';render();fail(err,'signup');return}
     const errs=await uploadAll(d);
     try{await loadMe()}catch(err){}
     busy='';S.saveMsg='';clearDraft();S.draft=null;S.screen='app';S.tab='matches';S.errors={};render();
@@ -1357,7 +1359,7 @@ const A={
     try{const row=profileRow(d);delete row.terms_version;delete row.terms_at;delete row.marketing_ok;
       await API.update('profiles',{id:'eq.'+S.me.id},row);
       await API.insert('preferences',prefsRow(d.prefs,S.me.id),{upsert:true,returning:false});
-    }catch(err){busy='';render();fail(err);return}
+    }catch(err){busy='';render();fail(err,'profile');return}
     const errs=await uploadAll(d);
     try{await loadMe();await loadCards()}catch(err){}
     busy='';S.draft=null;S.editMode=false;S.screen='app';S.tab='me';S.errors={};render();toast(errs.length?errs[0]:'Profile saved.',errs.length?'info':'check')},
@@ -1398,7 +1400,7 @@ const A={
     if(needVerified())return;const ci=document.getElementById('chat-in'),x=(ci&&ci.value||'').trim();if(!x)return;
     const tmp={f:'me',x,ts:Date.now(),pending:true};S.chats[id]=(S.chats[id]||[]).concat(tmp);ci.value='';render();
     try{const rows=await API.insert('messages',{sender:S.me.id,recipient:id,body:x});const m=rows&&rows[0];tmp.pending=false;if(m){tmp.id=m.id;tmp.ts=Date.parse(m.created_at);tmp.flag=m.flagged;lastMsg=Math.max(lastMsg,m.id)}render()}
-    catch(e){S.chats[id]=S.chats[id].filter(m=>m!==tmp);render();const c2=document.getElementById('chat-in');if(c2&&!c2.value)c2.value=x;fail(e)}},
+    catch(e){S.chats[id]=S.chats[id].filter(m=>m!==tmp);render();const c2=document.getElementById('chat-in');if(c2&&!c2.value)c2.value=x;fail(e,'chat')}},
   celChat(el){const id=el.dataset.id;celebrate=null;S.tab='connections';S.seg='chats';save();A.openchat({dataset:{id}})},
   celClose(){celebrate=null;render()},
   openEvent(el){view={type:'event',id:el.dataset.id};render();const v=document.getElementById('view-scroll');if(v)v.scrollTop=0},
@@ -1420,7 +1422,7 @@ const A={
   async storySend(el){const id=el.dataset.id;busy='storySend';render();
     try{await API.insert('stories',{user_id:S.me.id,partner:id,body:(sheet.text||'').trim()||null,may_publish:!!sheet.pub},{returning:false});
       if(sheet.pause!==false){S.me.privacy.vis='hidden';await savePrivacy()}S.storyFor[id]=true;save();busy='';sheet=null;render();toast('Congratulations to you both!','heart')}
-    catch(e){busy='';render();fail(e)}},
+    catch(e){busy='';render();fail(e,'story')}},
   hostAsk(){sheet={type:'host',city:myPlace(),lang:'',comm:'',exp:'Community events',rest:'',ok:false};S.errors={};render()},
   async hostSend(){const e={};if((sheet.city||'').trim().length<2)e.hcity='Add your city';if((sheet.lang||'').trim().length<2)e.hlang='Add at least one language';if(!sheet.ok)e.hok='Please agree to continue';S.errors=e;if(Object.keys(e).length){render();return}
     busy='hostSend';render();
@@ -1486,14 +1488,15 @@ const A={
   async admApprove(el){await adminReview(el,true)},
   async admReject(el){const sel=document.querySelector(`[data-adm-reason="${el.dataset.id}"]`);const reason=sel&&sel.value;if(!reason){toast('Choose a reason first, so the member knows what to fix.','info');if(sel)sel.focus();return}await adminReview(el,false,reason)},
   async admBan(el){try{await API.rpc('admin_handle_report',{rid:el.dataset.id,ban:true});S.admin.reports=S.admin.reports.filter(r=>r.id!==el.dataset.id);render();toast('Member banned.','shield')}catch(e){fail(e)}},
+  async admBanRude(el){const id=el.dataset.id;try{await API.rpc('admin_ban_member',{uid:id});(S.admin.rude||[]).forEach(x=>{if(x.user_id===id)x.banned=true});render();toast('Member banned.','shield')}catch(e){fail(e)}},
   async admDismiss(el){try{await API.rpc('admin_handle_report',{rid:el.dataset.id,ban:false});S.admin.reports=S.admin.reports.filter(r=>r.id!==el.dataset.id);render();toast('Report dismissed.','check')}catch(e){fail(e)}}
 };
 async function adminReview(el,ok,reason){const id=el.dataset.id,k=el.dataset.k;
   try{await API.rpc('admin_review',{row_kind:k==='photo'?'photo':'verification',rid:id,approve:ok,reason:reason||null});S.admin.queue=S.admin.queue.filter(x=>x.row_id!==id);if(S.admin.counts)S.admin.counts.pending--;render();toast(ok?'Approved.':'Rejected. The member sees the reason.',ok?'check':'x')}catch(e){fail(e)}}
 async function loadAdmin(){
-  try{const [q,r,c,ap]=await Promise.all([API.rpc('admin_queue'),API.rpc('admin_reports'),API.rpc('admin_counts'),API.rpc('admin_applications').catch(()=>[])]);
+  try{const [q,r,c,ap,ru]=await Promise.all([API.rpc('admin_queue'),API.rpc('admin_reports'),API.rpc('admin_counts'),API.rpc('admin_applications').catch(()=>[]),API.rpc('admin_rude').catch(()=>[])]);
     const queue=(q||[]).map(x=>Object.assign(x,{bucket:x.kind==='photo'?'photos':'verification'}));
-    S.admin={loading:false,queue,reports:r||[],counts:c,apps:ap||[],urls:{}};render();
+    S.admin={loading:false,queue,reports:r||[],counts:c,apps:ap||[],rude:ru||[],urls:{}};render();
     const ph=[...new Set(queue.filter(x=>x.bucket==='photos').map(x=>x.path).concat(queue.map(x=>x.profile_photo).filter(Boolean)))];
     const vf=queue.filter(x=>x.bucket==='verification').map(x=>x.path);
     const [a,b]=await Promise.all([API.signMany('photos',ph,1800),API.signMany('verification',vf,600)]);

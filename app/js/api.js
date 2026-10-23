@@ -40,6 +40,7 @@ window.RM_API = (function () {
     full: 'All seats are taken. Try another event.',
     daily_interest_limit: 'You reached today’s limit of interests. Try again tomorrow.',
     daily_message_limit: 'You reached today’s message limit. Try again tomorrow.',
+    rude_words: 'Please keep it respectful. Remove the rude words and try again.',
     admins_only: 'Only the NeuMarry team can do this.',
     purchase_not_found: 'Google Play could not find this purchase. If you were charged, contact us and we will fix it.',
     purchase_other_account: 'This Google Play purchase belongs to a different NeuMarry account. Log in with that account, or contact us.',
