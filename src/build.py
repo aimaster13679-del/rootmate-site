@@ -126,11 +126,32 @@ home_ld = {'@context': 'https://schema.org', '@graph': [
      'offers': {'@type': 'Offer', 'price': '54', 'priceCurrency': 'CAD', 'availability': 'https://schema.org/InStock', 'validFrom': '2026-10-22T00:00:00-04:00', 'url': SITE + 'matrimony-events-toronto.html'}},
 ] + ([{'@type': 'FAQPage', 'mainEntity': faq}] if faq else [])}
 head = head.replace('</style>', '.guides{margin-top:22px;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}.guides a{display:block;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;font-weight:700;color:var(--ink);text-decoration:none;box-shadow:var(--shadow)}.guides a:hover{border-color:var(--rose);color:var(--rose-deep)}</style>', 1) + ld(home_ld)
-open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write('<!doctype html><html lang="en"><head>' + meta + head.replace('<meta name="claude:viewport-fit-sides" content="cover">', '') + '</head><body>' + body + '</body></html>')
+# Language switch in the home header (French copy in fr/)
+HOME_LANG_CSS = ('<style>header .langh{margin-left:auto;font-weight:700;font-size:14px;color:var(--rose-deep);text-decoration:none;'
+                 'border:1px solid var(--line);border-radius:999px;padding:7px 11px;line-height:1;white-space:nowrap}header .langh:hover{border-color:var(--rose)}'
+                 'header .langh~.btn{margin-left:0}@media (min-width:761px){header .langh{margin-left:0}}'
+                 '.langhero{display:none}@media (max-width:420px){header .langh{display:none}header .langh~.btn{margin-left:auto}'
+                 '.langhero{display:flex;justify-content:flex-end;margin:0 0 12px}.langhero .langh{margin:0;font-weight:700;font-size:14px;color:var(--rose-deep);text-decoration:none;'
+                 'border:1px solid var(--line);border-radius:999px;padding:7px 12px;line-height:1;background:var(--surface)}}</style>')
+def home_lang(href, code, label):
+    return (f'<a class="langh" href="{href}" hreflang="{code}" lang="{code}" aria-label="{label}" '
+            f'onclick="try{{localStorage.setItem(\'rm.lang\',\'{code}\')}}catch(e){{}}">{code.upper()}</a>')
+OPEN_BTN = '<a class="btn primary sm" href="app/">Open the app</a>'
+assert body.count(OPEN_BTN) == 1
+HOME_HEAD = head.replace('<meta name="claude:viewport-fit-sides" content="cover">', '')
+HOME_BODY = body
+HOME_ALT = (f'<link rel="alternate" hreflang="en" href="{SITE}"><link rel="alternate" hreflang="fr" href="{SITE}fr/">'
+            f'<link rel="alternate" hreflang="x-default" href="{SITE}">')
+body = body.replace(OPEN_BTN, home_lang('fr/', 'fr', 'Lire en français') + OPEN_BTN)
+HERO_START = '<section class="hero" id="hero"><div class="wrap">\n  <div>'
+assert body.count(HERO_START) == 1
+body = body.replace(HERO_START, HERO_START + '<p class="langhero">' + home_lang('fr/', 'fr', 'Lire en français').replace('>FR<', '>Français<') + '</p>')
+open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write('<!doctype html><html lang="en"><head>' + meta + HOME_ALT + HOME_HEAD + HOME_LANG_CSS + '</head><body>' + body + '</body></html>')
 
 FOOT_GUIDES = ''.join(f'<a class="link" href="{g["slug"]}.html">{g["short"]}</a>' for g in P + G)
 FR_DIR = os.path.join(H, 'fr', 'pages')
-FR_SLUGS = sorted(f[:-5] for f in os.listdir(FR_DIR) if f.endswith('.html')) if os.path.isdir(FR_DIR) else []
+FR_FILES = sorted(f[:-5] for f in os.listdir(FR_DIR) if f.endswith('.html')) if os.path.isdir(FR_DIR) else []
+FR_SLUGS = FR_FILES + (['work-with-us', 'event-host-toronto'] if FR_FILES else [])
 def alternates(name):
     if name not in FR_SLUGS: return ''
     return (f'<link rel="alternate" hreflang="en" href="{SITE}{name}.html"><link rel="alternate" hreflang="fr" href="{SITE}fr/{name}.html">'
@@ -286,11 +307,46 @@ if FR_SLUGS:
         t = open(os.path.join(FR_DIR, slug + '.html'), encoding='utf-8').read()
         get = lambda k: re.search(r'<!--%s: (.*?)-->' % k, t).group(1)
         return dict(slug=slug, title=get('title'), desc=get('desc'), short=get('short'), kind=get('kind'), body=re.sub(r'<!--.*?-->\n?', '', t))
-    FR = [fr_meta(x) for x in FR_SLUGS]
+    FR = [fr_meta(x) for x in FR_FILES]
     fr_foot = ''.join(f'<a class="link" href="{f["slug"]}.html">{f["short"]}</a>' for f in FR)
     fr_legal = ('<a class="link" href="../privacy.html" hreflang="en">Politique de confidentialité (en anglais)</a>'
                 '<a class="link" href="../terms.html" hreflang="en">Conditions d’utilisation (en anglais)</a>'
                 '<a class="link" href="../delete-account.html" hreflang="en">Supprimer mon compte (en anglais)</a>')
+    # French home page: the English home with every piece of text swapped (src/fr/home_fr.py)
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('home_fr', os.path.join(H, 'fr', 'home_fr.py')); hf = importlib.util.module_from_spec(spec); spec.loader.exec_module(hf)
+    fb = HOME_BODY
+    fr_guides = ''.join(f'<a href="{g["slug"]}.html">{next((x["short"] for x in FR if x["slug"] == g["slug"]), g["short"])}</a>' for g in G)
+    fb = fb.replace(guide_links, fr_guides)
+    for en_, fr_ in sorted(hf.PAIRS, key=lambda x: -len(x[0])):
+        assert en_ in fb, 'French home: English text not found: ' + en_[:70]
+        fb = fb.replace(en_, fr_)
+    fb = fb.replace('<a class="btn primary sm" href="app/">Ouvrir l’app</a>', home_lang('../', 'en', 'Read in English') + '<a class="btn primary sm" href="app/">Ouvrir l’app</a>')
+    fb = fb.replace(HERO_START, HERO_START + '<p class="langhero">' + home_lang('../', 'en', 'Read in English').replace('>EN<', '>English<') + '</p>')
+    fb = fr_fix_links(fb).replace('href="../app/"', 'href="../app/" onclick="try{localStorage.setItem(\'rm.lang\',\'fr\')}catch(e){}"')
+    FR_HOME_TITLE = 'NeuMarry : application matrimoniale pour les personnes qui vivent à l’étranger'
+    FR_HOME_DESC = 'Mariage avec membres vérifiés pour toutes les personnes qui vivent loin du pays où elles ont grandi, de tous les pays et de toutes les communautés. Suggestions selon les origines, la ville et les valeurs. Rencontrez les familles aux événements. Inscription gratuite.'
+    fh = re.sub(r'<script type="application/ld\+json">.*?</script>', '', HOME_HEAD, flags=re.S)
+    fh = re.sub(r'<title>.*?</title>', '<title>' + FR_HOME_TITLE + '</title>', fh, flags=re.S)
+    fmeta = ('<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
+             f'<meta name="description" content="{esc(FR_HOME_DESC)}">' + social(FR_HOME_TITLE, FR_HOME_DESC, SITE + 'fr/').replace('content="en_CA"', 'content="fr_CA"')
+             .replace('href="icon-192.png"', 'href="../icon-192.png"').replace('href="apple-touch-icon.png"', 'href="../apple-touch-icon.png"'))
+    fld = ld({'@context': 'https://schema.org', '@type': 'WebPage', '@id': SITE + 'fr/', 'url': SITE + 'fr/', 'name': FR_HOME_TITLE, 'description': FR_HOME_DESC,
+              'inLanguage': 'fr-CA', 'isPartOf': {'@id': SITE + '#site'}, 'publisher': ORG})
+    fhtml = '<!doctype html><html lang="fr-CA"><head>' + fmeta + HOME_ALT + fh + HOME_LANG_CSS + '<style>.legal-links{flex-wrap:wrap;gap:8px 16px}</style>' + fld + '</head><body>' + fb + '</body></html>'
+    fhtml = re.sub(r'(src|href)="(icon-\d+\.png|apple-touch-icon\.png|og-image\.png)"', r'\1="../\2"', fhtml)
+    open(os.path.join(OUT, 'fr', 'index.html'), 'w', encoding='utf-8').write(fhtml)
+    def fr_write(f, url, main, graph):
+        head = social(f['title'], f['desc'], url).replace('content="en_CA"', 'content="fr_CA"').replace('href="icon-192.png"', 'href="../icon-192.png"').replace('href="apple-touch-icon.png"', 'href="../apple-touch-icon.png"')
+        html = f"""<!doctype html><html lang="fr-CA"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{f['title']}</title><meta name="description" content="{esc(f['desc'])}">{head}{alternates(f['slug'])}
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Nunito+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="../legal.css">{LANG_CSS}{ld({'@context': 'https://schema.org', '@graph': graph})}</head><body>
+<header><div class="wrap"><a class="brand" href="../"><svg viewBox="0 0 32 22" aria-hidden="true"><path class="c1" d="M11.60 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/><path class="c2" d="M20.40 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/></svg>NeuMarry</a><nav><a class="ev" href="matrimony-events-toronto.html">Événements</a><a class="hl" href="work-with-us.html"><span class="lg">Travailler avec nous</span><span class="sh">Collaborer</span></a><a href="../app/" onclick="try{{localStorage.setItem('rm.lang','fr')}}catch(e){{}}">Ouvrir l’app</a></nav></div></header>
+<main><div class="wrap">{lang_link('../' + f['slug'] + '.html', 'en', 'Read this page in English', 'English')}{main}</div></main>
+<footer><div class="wrap"><div class="fg">{fr_foot}</div><span>NeuMarry · © 2026</span><span>Les membres doivent avoir 18 ans ou plus</span>{fr_legal}<a class="link" href="mailto:{EMAIL}">{EMAIL}</a></div></footer>
+</body></html>"""
+        open(os.path.join(OUT, 'fr', f['slug'] + '.html'), 'w', encoding='utf-8').write(html)
     for f in FR:
         url = SITE + 'fr/' + f['slug'] + '.html'
         others = [o for o in FR if o['slug'] != f['slug']]
@@ -304,16 +360,25 @@ if FR_SLUGS:
                                                                       {'@type': 'ListItem', 'position': 2, 'name': f['short'], 'item': url}]}]
         if faq and kind == 'FAQPage': node['mainEntity'] = faq
         elif faq: graph.append({'@type': 'FAQPage', 'mainEntity': faq})
-        head = social(f['title'], f['desc'], url).replace('content="en_CA"', 'content="fr_CA"').replace('href="icon-192.png"', 'href="../icon-192.png"').replace('href="apple-touch-icon.png"', 'href="../apple-touch-icon.png"')
-        html = f"""<!doctype html><html lang="fr-CA"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{f['title']}</title><meta name="description" content="{esc(f['desc'])}">{head}{alternates(f['slug'])}
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Nunito+Sans:wght@400;600;700;800&display=swap">
-<link rel="stylesheet" href="../legal.css">{LANG_CSS}{ld({'@context': 'https://schema.org', '@graph': graph})}</head><body>
-<header><div class="wrap"><a class="brand" href="../"><svg viewBox="0 0 32 22" aria-hidden="true"><path class="c1" d="M11.60 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/><path class="c2" d="M20.40 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/></svg>NeuMarry</a><nav><a class="ev" href="../matrimony-events-toronto.html">Événements</a><a class="hl" href="../work-with-us.html"><span class="lg">Travailler avec nous</span><span class="sh">Collaborer</span></a><a href="../app/" onclick="try{{localStorage.setItem('rm.lang','fr')}}catch(e){{}}">Ouvrir l’app</a></nav></div></header>
-<main><div class="wrap">{lang_link('../' + f['slug'] + '.html', 'en', 'Read this page in English', 'English')}{main}</div></main>
-<footer><div class="wrap"><div class="fg">{fr_foot}</div><span>NeuMarry · © 2026</span><span>Les membres doivent avoir 18 ans ou plus</span>{fr_legal}<a class="link" href="mailto:{EMAIL}">{EMAIL}</a></div></footer>
-</body></html>"""
-        open(os.path.join(OUT, 'fr', f['slug'] + '.html'), 'w', encoding='utf-8').write(html)
+        fr_write(f, url, main, graph)
+
+    # French "Work with us" and "Event host" pages
+    spec = importlib.util.spec_from_file_location('work_fr', os.path.join(H, 'fr', 'work_fr.py')); wf = importlib.util.module_from_spec(spec); spec.loader.exec_module(wf)
+    OPTIONAL_ON_HOST = {'<legend>I am</legend>', '<span>An event host</span>', '<span>A restaurant</span>', '<span>A bureau or community group</span>',
+                        '<label>Restaurant, bureau or group (optional)<input'}
+    def fr_tr(html, pairs):
+        for en_, fr_ in pairs:
+            assert en_ in html or en_ in OPTIONAL_ON_HOST, 'French work pages: English text not found: ' + en_[:70]
+            html = html.replace(en_, fr_)
+        return html
+    for slug, title, desc, short, src, pairs in [('work-with-us', wf.WWU_TITLE, wf.WWU_DESC, 'Travailler avec nous', wwu_main, wf.WWU),
+                                                 ('event-host-toronto', wf.HOST_TITLE, wf.HOST_DESC, 'Animateur d’événements, Toronto', host_main, wf.HOST)]:
+        url = SITE + 'fr/' + slug + '.html'
+        main = fr_fix_links(fr_tr(fr_tr(src, pairs), wf.FORM))
+        graph = [{'@type': 'WebPage', '@id': url, 'url': url, 'name': title, 'description': desc, 'inLanguage': 'fr-CA', 'isPartOf': {'@id': SITE + '#site'}, 'publisher': ORG, 'dateModified': TODAY},
+                 {'@type': 'BreadcrumbList', 'itemListElement': [{'@type': 'ListItem', 'position': 1, 'name': 'NeuMarry', 'item': SITE},
+                                                                {'@type': 'ListItem', 'position': 2, 'name': short, 'item': url}]}]
+        fr_write({'slug': slug, 'title': title, 'desc': desc}, url, main, graph)
 
 # llms.txt: a plain summary for AI assistants (llmstxt.org format)
 llms = ['# NeuMarry', '',
@@ -332,7 +397,7 @@ open(os.path.join(OUT, 'llms.txt'), 'w', encoding='utf-8').write('\n'.join(llms)
 
 # robots.txt and sitemap.xml
 open(os.path.join(OUT, 'robots.txt'), 'w').write(f'User-agent: *\nAllow: /\n\nSitemap: {SITE}sitemap.xml\n')
-urls = [(SITE, '1.0', 'weekly')] + [(SITE + p['slug'] + '.html', '0.8', 'monthly') for p in P] + [(SITE + g['slug'] + '.html', '0.8', 'monthly') for g in G] + [(SITE + 'work-with-us.html', '0.7', 'monthly'), (SITE + 'event-host-toronto.html', '0.7', 'weekly')] + [(SITE + n + '.html', '0.3', 'yearly') for n in ('privacy', 'terms', 'delete-account')] + [(SITE + 'fr/' + x + '.html', '0.6', 'monthly') for x in FR_SLUGS]
+urls = [(SITE, '1.0', 'weekly')] + [(SITE + p['slug'] + '.html', '0.8', 'monthly') for p in P] + [(SITE + g['slug'] + '.html', '0.8', 'monthly') for g in G] + [(SITE + 'work-with-us.html', '0.7', 'monthly'), (SITE + 'event-host-toronto.html', '0.7', 'weekly')] + [(SITE + n + '.html', '0.3', 'yearly') for n in ('privacy', 'terms', 'delete-account')] + ([(SITE + 'fr/', '0.8', 'weekly')] if FR_SLUGS else []) + [(SITE + 'fr/' + x + '.html', '0.6', 'monthly') for x in FR_SLUGS]
 open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
     ''.join(f'  <url><loc>{u}</loc><lastmod>{TODAY}</lastmod><changefreq>{c}</changefreq><priority>{pr}</priority></url>\n' for u, pr, c in urls) + '</urlset>\n')
 print('site built')
