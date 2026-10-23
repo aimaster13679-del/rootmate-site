@@ -51,3 +51,10 @@ nav a{white-space:nowrap}
 @media (max-width:520px){nav a[href="matrimony-events-toronto.html"]{display:none}}
 @media (max-width:420px){nav a{margin-left:8px;font-size:13px}nav a.hl{padding:5px 9px}.brand{font-size:19px}}
 @media (max-width:400px){header .wrap{flex-wrap:wrap;row-gap:8px}nav{margin-left:auto}}
+.ticks{list-style:none;padding:0;margin:12px 0;display:grid;gap:10px}
+.ticks li{position:relative;padding-left:28px}
+.ticks li::before{content:"";position:absolute;left:4px;top:.55em;width:11px;height:6px;border-left:2.4px solid var(--rose);border-bottom:2.4px solid var(--rose);transform:rotate(-45deg)}
+.tbl{overflow-x:auto;margin:12px 0}
+.tbl table{margin:0}
+.box.legal{font-size:14.5px;color:var(--muted)}
+.box.legal b{color:var(--ink)}

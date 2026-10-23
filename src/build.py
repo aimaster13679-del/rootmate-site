@@ -64,6 +64,12 @@ def guide_meta(slug):
     get = lambda k: re.search(r'<!--%s: (.*?)-->' % k, t).group(1)
     return dict(slug=slug, title=get('title'), desc=get('desc'), short=get('short'), body=re.sub(r'<!--.*?-->\n?', '', t))
 G = [guide_meta(g) for g in GUIDES]
+PAGES = ['about', 'how-matching-works', 'pricing', 'brampton-matrimony']
+def page_meta(slug):
+    t = rd('pages/%s.html' % slug)
+    get = lambda k: re.search(r'<!--%s: (.*?)-->' % k, t).group(1)
+    return dict(slug=slug, title=get('title'), desc=get('desc'), short=get('short'), kind=get('kind'), body=re.sub(r'<!--.*?-->\n?', '', t))
+P = [page_meta(p) for p in PAGES]
 TODAY = '2026-10-22'
 OG = SITE + 'og-image.png'
 def esc(x): return x.replace('&', '&amp;').replace('"', '&quot;').replace('<', '&lt;')
@@ -115,7 +121,7 @@ home_ld = {'@context': 'https://schema.org', '@graph': [
 head = head.replace('</style>', '.guides{margin-top:22px;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}.guides a{display:block;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;font-weight:700;color:var(--ink);text-decoration:none;box-shadow:var(--shadow)}.guides a:hover{border-color:var(--rose);color:var(--rose-deep)}</style>', 1) + ld(home_ld)
 open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write('<!doctype html><html lang="en"><head>' + meta + head.replace('<meta name="claude:viewport-fit-sides" content="cover">', '') + '</head><body>' + body + '</body></html>')
 
-FOOT_GUIDES = ''.join(f'<a class="link" href="{g["slug"]}.html">{g["short"]}</a>' for g in G)
+FOOT_GUIDES = ''.join(f'<a class="link" href="{g["slug"]}.html">{g["short"]}</a>' for g in P + G)
 def shell(name, title_tag, desc, main, extra_head='', kind='website'):
     url = SITE + ('' if name == 'index' else name + '.html')
     html = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -218,9 +224,41 @@ host_main = f"""<p class="crumbs"><a href="./">NeuMarry</a> › <a href="work-wi
 {wwu_form('host')}"""
 shell('event-host-toronto', 'Event host jobs in Toronto: CA$100 per event · NeuMarry', 'Part-time event host in Toronto, Brampton and Mississauga. Host NeuMarry Family Mixer dinners and earn CA$100 per event, paid weekly. Apply in two minutes.', host_main, ld(job_ld))
 
+# ---------- About, feature and city pages (src/pages) ----------
+for p in P:
+    url = SITE + p['slug'] + '.html'
+    others = [o for o in P if o['slug'] != p['slug']] + [g for g in G if g['slug'] in ('verified-matrimony', 'matrimony-events-toronto', 'toronto-matrimony')]
+    related = '<h2>Read next</h2><ul class="rel">' + ''.join(f'<li><a href="{o["slug"]}.html">{o["short"]}</a></li>' for o in others[:5]) + '</ul>'
+    main = f'<p class="crumbs"><a href="./">NeuMarry</a> › {p["short"]}</p>' + p['body'] + CTA + related
+    kind = {'about': 'AboutPage', 'feature': 'WebPage', 'city': 'WebPage'}[p['kind']]
+    node = {'@type': kind, '@id': url, 'url': url, 'name': p['title'], 'description': p['desc'], 'inLanguage': 'en',
+            'isPartOf': {'@id': SITE + '#site'}, 'publisher': ORG, 'dateModified': TODAY}
+    if p['kind'] == 'city':
+        node['about'] = {'@type': 'City', 'name': p['short'].replace('Matrimony in ', '')}
+    graph = [node, {'@type': 'BreadcrumbList', 'itemListElement': [{'@type': 'ListItem', 'position': 1, 'name': 'NeuMarry', 'item': SITE},
+                                                                  {'@type': 'ListItem', 'position': 2, 'name': p['short'], 'item': url}]}]
+    faq = faq_from(p['body'])
+    if faq: graph.append({'@type': 'FAQPage', 'mainEntity': faq})
+    shell(p['slug'], p['title'], p['desc'], main, ld({'@context': 'https://schema.org', '@graph': graph}))
+
+# llms.txt: a plain summary for AI assistants (llmstxt.org format)
+llms = ['# NeuMarry', '',
+        '> NeuMarry is a verified matrimony app for people living away from the country they grew up in, from every country and community. '
+        'Members match on values, lifestyle, roots and distance, and meet with their families at hosted Family Mixer evenings. Launching in Toronto, Canada in November 2026; the app works in every country.', '',
+        'Key facts:',
+        '- Every member verifies a government ID and a live selfie before sending interests or messages.',
+        '- Free: profile, verification, number of people who fit you and your match % with each. Gold (from CA$49.99 a month) adds names, photos, interests and chat.',
+        '- Web app: https://neumarry.com/app/ . Android app on Google Play; iPhone later. App languages: English and French.',
+        '- For adults 18 and over looking for marriage. Not a casual dating app.', '',
+        '## About', ''] + [f'- [{p["short"]}]({SITE}{p["slug"]}.html): {p["desc"]}' for p in P] + \
+       ['', '## Guides', ''] + [f'- [{g["short"]}]({SITE}{g["slug"]}.html): {g["desc"]}' for g in G] + \
+       ['', '## Work with us', '', f'- [Work with NeuMarry]({SITE}work-with-us.html): {WWU_DESC}', '',
+        '## Optional', '', f'- [Privacy Policy]({SITE}privacy.html)', f'- [Terms of Service]({SITE}terms.html)', '']
+open(os.path.join(OUT, 'llms.txt'), 'w', encoding='utf-8').write('\n'.join(llms))
+
 # robots.txt and sitemap.xml
 open(os.path.join(OUT, 'robots.txt'), 'w').write(f'User-agent: *\nAllow: /\n\nSitemap: {SITE}sitemap.xml\n')
-urls = [(SITE, '1.0', 'weekly')] + [(SITE + g['slug'] + '.html', '0.8', 'monthly') for g in G] + [(SITE + 'work-with-us.html', '0.7', 'monthly'), (SITE + 'event-host-toronto.html', '0.7', 'weekly')] + [(SITE + n + '.html', '0.3', 'yearly') for n in ('privacy', 'terms', 'delete-account')]
+urls = [(SITE, '1.0', 'weekly')] + [(SITE + p['slug'] + '.html', '0.8', 'monthly') for p in P] + [(SITE + g['slug'] + '.html', '0.8', 'monthly') for g in G] + [(SITE + 'work-with-us.html', '0.7', 'monthly'), (SITE + 'event-host-toronto.html', '0.7', 'weekly')] + [(SITE + n + '.html', '0.3', 'yearly') for n in ('privacy', 'terms', 'delete-account')]
 open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
     ''.join(f'  <url><loc>{u}</loc><lastmod>{TODAY}</lastmod><changefreq>{c}</changefreq><priority>{pr}</priority></url>\n' for u, pr, c in urls) + '</urlset>\n')
 print('site built')
