@@ -95,7 +95,7 @@ def faq_from(html):
         q = re.sub(r'<[^>]+>', '', q).strip(); a = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', '', a)).strip()
         if q and a: out.append({'@type': 'Question', 'name': q, 'acceptedAnswer': {'@type': 'Answer', 'text': a}})
     return out
-SOCIAL = [('Instagram', 'https://www.instagram.com/neumarry_match'), ('Facebook', 'https://www.facebook.com/profile.php?id=61595614954211')]
+SOCIAL = [('Instagram', 'https://www.instagram.com/neumarry_match'), ('Facebook', 'https://www.facebook.com/profile.php?id=61595614954211'), ('LinkedIn', 'https://www.linkedin.com/company/144030892/')]
 SOCIAL_LINKS = ''.join(f'<a class="link" href="{u}" target="_blank" rel="noopener me">{n}</a>' for n, u in SOCIAL)
 ORG = {'@type': 'Organization', '@id': SITE + '#org', 'name': 'NeuMarry', 'url': SITE, 'logo': SITE + 'icon-512.png', 'email': EMAIL,
        'description': 'Verified matrimony app for people living away from the country they grew up in.', 'sameAs': [u for n, u in SOCIAL]}
