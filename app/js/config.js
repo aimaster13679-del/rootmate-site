@@ -7,7 +7,7 @@ window.RM_CONFIG = (function () {
     appId: 'com.neuconet.rootmate',
     redirect: 'com.neuconet.rootmate://auth-callback',
     site: 'https://neumarry.com/',
-    support: 'aimaster13679@gmail.com',
+    support: 'support@neumarry.com',
     // Google sign-in (public id of the "Web application" OAuth client; Supabase checks tokens against it).
     googleClientId: '583611998053-skqaj33g8cl9cjhg6pmq139af9qa92bo.apps.googleusercontent.com',
     version: '0.1.0',

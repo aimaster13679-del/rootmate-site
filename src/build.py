@@ -5,7 +5,7 @@ H = os.path.dirname(os.path.abspath(__file__)); OUT = os.path.join(H, '..')
 SUPA_URL = 'https://ndxlguuywifovqdzdvtq.supabase.co'
 SUPA_KEY = 'sb_publishable_oBR1e77Tx1mNysmxcZ2cgw_qDOpS4gt'
 SITE = 'https://neumarry.com/'
-EMAIL = 'aimaster13679@gmail.com'
+EMAIL = 'support@neumarry.com'
 
 def rd(n): return open(os.path.join(H, n), encoding='utf-8').read()
 s = rd('landing_src.html').replace('/*__PORTRAIT__*/', rd('portrait.js')).replace('/*__COUNTRIES__*/', rd('countries_names.js'))
