@@ -155,7 +155,9 @@ open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write('<!doctype ht
 FOOT_GUIDES = ''.join(f'<a class="link" href="{g["slug"]}.html">{g["short"]}</a>' for g in P + G)
 FR_DIR = os.path.join(H, 'fr', 'pages')
 FR_FILES = sorted(f[:-5] for f in os.listdir(FR_DIR) if f.endswith('.html')) if os.path.isdir(FR_DIR) else []
-FR_SLUGS = FR_FILES + (['work-with-us', 'event-host-toronto'] if FR_FILES else [])
+FR_LEGAL_DIR = os.path.join(H, 'fr', 'legal')
+FR_LEGAL = [x for x in ('privacy', 'terms') if os.path.exists(os.path.join(FR_LEGAL_DIR, x + '.body.html'))] if FR_FILES else []
+FR_SLUGS = FR_FILES + (['work-with-us', 'event-host-toronto'] if FR_FILES else []) + FR_LEGAL
 def alternates(name):
     if name not in FR_SLUGS: return ''
     return (f'<link rel="alternate" hreflang="en" href="{SITE}{name}.html"><link rel="alternate" hreflang="fr" href="{SITE}fr/{name}.html">'
@@ -314,9 +316,10 @@ if FR_SLUGS:
         return dict(slug=slug, title=get('title'), desc=get('desc'), short=get('short'), kind=get('kind'), body=re.sub(r'<!--.*?-->\n?', '', t))
     FR = [fr_meta(x) for x in FR_FILES]
     fr_foot = ''.join(f'<a class="link" href="{f["slug"]}.html">{f["short"]}</a>' for f in FR)
-    fr_legal = ('<a class="link" href="../privacy.html" hreflang="en">Politique de confidentialité (en anglais)</a>'
-                '<a class="link" href="../terms.html" hreflang="en">Conditions d’utilisation (en anglais)</a>'
-                '<a class="link" href="../delete-account.html" hreflang="en">Supprimer mon compte (en anglais)</a>')
+    fr_legal = ('<a class="link" href="privacy.html">Politique de confidentialité</a>'
+                '<a class="link" href="terms.html">Conditions d’utilisation</a>'
+                '<a class="link" href="../delete-account.html" hreflang="en">Supprimer mon compte (en anglais)</a>'
+                '<a class="link" href="../child-safety.html" hreflang="en">Sécurité des enfants (en anglais)</a>')
     # French home page: the English home with every piece of text swapped (src/fr/home_fr.py)
     import importlib.util
     spec = importlib.util.spec_from_file_location('home_fr', os.path.join(H, 'fr', 'home_fr.py')); hf = importlib.util.module_from_spec(spec); spec.loader.exec_module(hf)
@@ -366,6 +369,17 @@ if FR_SLUGS:
         if faq and kind == 'FAQPage': node['mainEntity'] = faq
         elif faq: graph.append({'@type': 'FAQPage', 'mainEntity': faq})
         fr_write(f, url, main, graph)
+
+    # French Terms of Service and Privacy Policy (same value as the English ones)
+    for slug, title, desc in [('privacy', 'Politique de confidentialité', 'Comment NeuMarry recueille, utilise et protège vos renseignements personnels.'),
+                              ('terms', 'Conditions d’utilisation', 'Les conditions d’utilisation de NeuMarry.')]:
+        if slug not in FR_LEGAL: continue
+        url = SITE + 'fr/' + slug + '.html'
+        main = fr_fix_links(open(os.path.join(FR_LEGAL_DIR, slug + '.body.html'), encoding='utf-8').read())
+        graph = [{'@type': 'WebPage', '@id': url, 'url': url, 'name': title, 'description': desc, 'inLanguage': 'fr-CA', 'isPartOf': {'@id': SITE + '#site'}, 'publisher': ORG, 'dateModified': TODAY},
+                 {'@type': 'BreadcrumbList', 'itemListElement': [{'@type': 'ListItem', 'position': 1, 'name': 'NeuMarry', 'item': SITE},
+                                                                {'@type': 'ListItem', 'position': 2, 'name': title, 'item': url}]}]
+        fr_write({'slug': slug, 'title': title + ' · NeuMarry', 'desc': desc}, url, main, graph)
 
     # French "Work with us" and "Event host" pages
     spec = importlib.util.spec_from_file_location('work_fr', os.path.join(H, 'fr', 'work_fr.py')); wf = importlib.util.module_from_spec(spec); spec.loader.exec_module(wf)
