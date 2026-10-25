@@ -275,13 +275,14 @@ const LKEY='rm.local.v1';
 function localKey(){return LKEY+'.'+(API.userId()||'anon')}
 function loadLocal(){try{const o=JSON.parse(localStorage.getItem(localKey())||'null');if(o&&typeof o==='object'){['passed','shortlist','reported','sort','showPassed','evFilter','picks','tab','seg','storyFor'].forEach(k=>{if(o[k]!==undefined)S[k]=o[k]})}}catch(e){}}
 function save(){try{const o={};['passed','shortlist','reported','sort','showPassed','evFilter','picks','tab','seg','storyFor'].forEach(k=>o[k]=S[k]);localStorage.setItem(localKey(),JSON.stringify(o))}catch(e){}
-  if(S.screen==='signup'&&S.draft&&!S.editMode){try{const d=Object.assign({},S.draft);d.photo=null;d.selfie=null;d.idPreview=null;localStorage.setItem('rm.draft.'+(API.userId()||'anon'),JSON.stringify({d,step:S.step}))}catch(e){}}}
+  if(S.screen==='signup'&&S.draft&&!S.editMode){try{const d=Object.assign({},S.draft);d.photo=null;d.selfie=null;d.idPreview=null;d.loc=null;localStorage.setItem('rm.draft.'+(API.userId()||'anon'),JSON.stringify({d,step:S.step}))}catch(e){}}}
 function loadDraft(){try{const o=JSON.parse(localStorage.getItem('rm.draft.'+(API.userId()||'anon'))||'null');if(o&&o.d){return o}}catch(e){}return null}
 function clearDraft(){try{localStorage.removeItem('rm.draft.'+(API.userId()||'anon'))}catch(e){}}
 const byId=id=>PROFILES.find(p=>p.id===id);
 function isGold(){return S.me&&S.me.plan!=='free'}
 function locked(p){return !isGold()&&!p.mutual}
-function verified(){return S.me&&S.me.v.id&&S.me.v.selfie}
+function fullyV(p){return !!p.v.id&&!!p.v.selfie&&!!p.v.roots&&!!p.v.lives}
+function verified(){const v=S.me&&S.me.v;return !!v&&v.id&&v.selfie&&v.roots&&v.lives}
 function canChat(id){const p=byId(id);return !!p&&p.mutual&&(isGold()||p.gold)}
 function chatWhy(id){const p=byId(id);if(isGold()||!p)return '';if(p.gold)return `${p.first||'They'} ${p.first?'has':'have'} Gold, so you can chat for free`;return ''}
 const BETA=Date.now()<Date.parse(CFG.betaUntil);
@@ -296,11 +297,12 @@ function meFromServer(m){
   return {id:p.id,name:p.full_name,g:p.gender,lookingFor:p.looking_for,dob:p.dob,age:ageFrom(p.dob),h:p.height_cm,marital:p.marital,createdBy:p.created_by,
     oc:p.origin_country,os:p.origin_state,t:p.mother_tongue,r:p.religion,c:p.community||'',country:p.country,state:p.state||'',city:p.city,res:p.residency,reloc:p.relocate,
     job:p.job,edu:p.education,about:p.about,diet:p.diet,sm:p.smoke,dr:p.drink,ans:(p.answers||[]).map(Number),phone:p.phone||'',
-    v:{phone:!!p.phone_verified,id:!!p.id_verified,selfie:!!p.selfie_verified},
+    v:{phone:!!p.phone_verified,id:!!p.id_verified,selfie:!!p.selfie_verified,roots:!!p.roots_verified,lives:!!p.lives_verified&&(!p.lives_until||Date.parse(p.lives_until)>Date.now())},
+    rootsAt:p.roots_checked_at,livesAt:p.lives_checked_at,livesUntil:p.lives_until,livesRound:p.lives_round_at,locOk:!!p.loc_ok,locAt:p.loc_checked_at,
     privacy:{blur:p.blur_photos,vis:p.hidden?'hidden':'verified',showC:p.show_community,incognito:p.incognito},
     prefs:pr,plan:m.plan||'free',goldUntil:m.gold_until,goldSource:m.gold_source,isAdmin:!!p.is_admin,womenOffer:p.women_offer_until,womenLeft:m.women_offer_left,
     photos,photoPaths:photos.map(x=>x.path),photoPending:photos.some(x=>x.status==='pending'),rejectedPhoto:rejectedPhoto&&!photos.length?rejectedPhoto:null,
-    idCheck:ver('id'),selfieCheck:ver('selfie'),checks:m.verifications||[],photo:S.me&&S.me.photoPaths&&S.me.photoPaths[0]===(photos[0]||{}).path?S.me.photo:null,
+    idCheck:ver('id'),selfieCheck:ver('selfie'),rootsCheck:ver('roots'),statusCheck:ver('status'),addrCheck:ver('address'),checks:m.verifications||[],photo:S.me&&S.me.photoPaths&&S.me.photoPaths[0]===(photos[0]||{}).path?S.me.photo:null,
     lat:p.city_lat,lng:p.city_lng,banned:p.banned,createdAt:p.created_at}
 }
 function cardFromServer(c){
@@ -308,7 +310,7 @@ function cardFromServer(c){
   return {id:c.id,name:c.display_name,first:c.first_name||'',last:parts.slice(1).join(' '),g:c.gender,age:c.age,h:c.height_cm,marital:c.marital,createdBy:c.created_by,
     oc:c.origin_country,os:c.origin_state,t:c.mother_tongue,r:c.religion,c:c.community||'',cityName:c.city,country:c.country,state:c.state||'',lat:c.city_lat,lng:c.city_lng,
     res:c.residency,reloc:c.relocate,job:c.job||'',edu:c.education||'',about:c.about||'',diet:c.diet,sm:c.smoke,dr:c.drink,ans:(c.answers||[]).map(Number),
-    v:{id:!!c.id_verified,selfie:!!c.selfie_verified,phone:false,work:false},days:c.joined_days||0,photoPaths:c.photo_paths||[],photos:[],photoCount:c.photo_count||0,
+    v:{id:!!c.id_verified,selfie:!!c.selfie_verified,roots:!!c.roots_verified,lives:!!c.lives_verified,phone:false,work:false},rootsAt:c.roots_checked_at,livesAt:c.lives_checked_at,locOk:!!c.loc_ok,locAt:c.loc_checked_at,days:c.joined_days||0,photoPaths:c.photo_paths||[],photos:[],photoCount:c.photo_count||0,
     mutual:!!c.mutual,locked:!!c.locked,gold:!!c.gold,fits:!!c.fits,paused:!!c.paused,turban:c.gender==='M'&&c.religion==='Sikh'}
 }
 const URLS={};   // storage path → signed URL
@@ -397,7 +399,7 @@ function passFilters(p,o){
   if(pr.tongue!=='Any'&&p.t!==pr.tongue)return false;
   if(pr.diet==='veg'&&dietGroup(p.diet)!==0)return false;
   if(pr.settled&&!SETTLED.includes(p.res))return false;
-  if(pr.verifiedOnly&&!(p.v.id&&p.v.selfie))return false;
+  if(pr.verifiedOnly&&!fullyV(p))return false;
   return true;
 }
 function matchList(){return PROFILES.filter(p=>p.fits&&!p.paused&&baseEligible(p)&&passFilters(p)&&S.interests[p.id]!=='declined'&&(S.showPassed||!S.passed.includes(p.id)))}
@@ -413,7 +415,8 @@ function activeFilterCount(){const pr=S.me.prefs,d=defaultPrefs(S.me);let n=0;['
 /* ---------- Defaults ---------- */
 function blankDraft(){return {name:'',createdBy:'Self',g:'',lookingFor:'',dob:'',h:'',marital:'Never married',photo:null,photoBlob:null,
   oc:'India',os:'',t:'',r:'',c:'',country:'',state:'',city:'',res:'',reloc:'',job:'',edu:'',about:'',diet:'',sm:'No',dr:'No',ans:QS.map(()=>null),
-  v:{phone:false,id:false,selfie:false},phone:'',idName:'',idBlob:null,idPreview:null,selfie:null,selfieBlob:null,
+  v:{phone:false,id:false,selfie:false,roots:false,lives:false},phone:'',idName:'',idBlob:null,idPreview:null,selfie:null,selfieBlob:null,
+  rootsType:'',rootsBlob:null,rootsName:'',statusType:'',statusBlob:null,statusName:'',addrType:'',addrBlob:null,addrName:'',tzAck:'',vs:0,
   privacy:{blur:true,vis:'verified',showC:true,incognito:false},prefs:null}}
 function defaultPrefs(d){const a=ageFrom(d.dob)||27;const male=d.g==='M';
   return {ageMin:Math.max(18,male?a-5:a-1),ageMax:male?a+1:a+6,hMin:male?HEIGHTS[0].cm:(+d.h||HEIGHTS[0].cm),hMax:HEIGHTS[HEIGHTS.length-1].cm,
@@ -537,8 +540,10 @@ function avatar(p,size,isMe){
 function ring(n){const r=23,c=2*Math.PI*r,col=n>=80?'var(--rose)':n>=65?'var(--gold)':'var(--muted)';
   return `<span class="ring" aria-label="${n}% compatible"><svg viewBox="0 0 56 56"><circle class="tr" cx="28" cy="28" r="${r}"/><circle cx="28" cy="28" r="${r}" style="stroke:${col}" stroke-dasharray="${(c*n/100).toFixed(1)} ${c.toFixed(1)}"/></svg><b>${n}%</b></span>`}
 function vtick(p){return p.v.id&&p.v.selfie?`<span class="vtick" title="ID verified">${ic('badge')}<span class="sr">ID verified</span></span>`:''}
-function rootsLine(p){return `<span class="roots"><span class="rg"><span class="k">Roots</span> ${esc(p.os)}, ${esc(p.oc)}</span> <span class="rg"><span class="arr" aria-hidden="true">→</span> <span class="k">Lives</span> ${esc(p.cityName)} · ${esc(distLabel(p))}</span></span>`}
+function rootsLine(p){const v=k=>p.v&&p.v[k]?`<span class="pv" title="Proven with a document">${ic('check')}<span class="sr">proven</span></span>`:'';return `<span class="roots"><span class="rg"><span class="k">Roots</span> ${esc(p.os)}, ${esc(p.oc)}${v('roots')}</span> <span class="rg"><span class="arr" aria-hidden="true">→</span> <span class="k">Lives</span> ${esc(p.cityName)}${v('lives')} · ${esc(distLabel(p))}</span></span>`}
 function trustBadges(p){const out=[];
+  if(p.v&&p.v.roots)out.push(`<span class="pill ver">${ic('check')}Roots proven</span>`);
+  if(p.v&&p.v.lives)out.push(`<span class="pill ver">${ic('check')}Lives in ${esc(p.country)}: proven</span>`);
   if(p.gold)out.push(`<span class="pill gold">${ic('crown')}Gold member</span>`);
   return out.length?`<div class="badges">${out.join('')}</div>`:''}
 function actionBar(p){
@@ -695,14 +700,14 @@ function renderAuth(){
 }
 const LEGAL={terms:['Terms of Service: the key points',[
   'You must be 18 or older and legally free to marry, and you join to find a marriage partner, not for dating or business.',
-  'One account per person, in your real name. You verify a government ID and a live selfie.',
+  'One account per person, in your real name. You verify a government ID and a live selfie, and prove your roots and the city you live in with documents.',
   'NeuMarry suggests matches and hosts events. We do not run criminal background checks and cannot promise who anyone is or how they will behave. Meetings, decisions, relationships and any marriage after an introduction are your own responsibility.',
   'Never send money, gifts or visa help to anyone you meet here, and report anyone who asks.',
   'Gold renews automatically until you cancel in your Google Play or App Store account. Event seats are free to reserve and paid only when the event is confirmed. The ticket includes your meal; nothing is paid at the restaurant.',
   'We can suspend accounts that break these rules, including fake profiles, harassment and asking for money.']],
  privacy:['Privacy Policy: the key points',[
-  'We collect what you put in your profile, your ID and selfie checks, your activity in the app and basic device data, and use it to verify you, suggest matches, run events and keep members safe.',
-  'Your phone number, email and ID are never shown to other members. ID and selfie images are deleted within 30 days of the check.',
+  'We collect what you put in your profile, your ID, selfie and document checks, your activity in the app and basic device data, and use it to verify you, suggest matches, run events and keep members safe.',
+  'Your phone number, email, ID and documents are never shown to other members. ID, selfie and document images are deleted within 30 days of the check. A location check is optional and only its result is kept.',
   'Your photos stay hidden until you both accept, unless you turn blurring off. Religion and community are optional to show.',
   'We never sell your data. Service providers (hosting, payments, video) process it only for us, under contract.',
   'You can correct or delete your data at any time: Me, then Delete my account.',
@@ -712,6 +717,110 @@ const LEGAL={terms:['Terms of Service: the key points',[
 const SHORT=['About','Roots','Location','Values','Verify','Privacy'];
 const STEPS=['About you','Your roots','Where you live now','Values & lifestyle','Verify you’re real','Privacy & preferences'];
 function checkLine(c,label){if(!c)return '';const st=c.status;return `<p class="hint">${st==='approved'?`${ic('check')} ${label} approved`:st==='rejected'?`<b style="color:var(--bad)">${label} not approved${c.note?': '+esc(c.note):''}.</b> Upload a new one.`:`${label} received. Our team checks it within 24 hours.`}</p>`}
+/* ---------- Verify: ID and selfie, roots, where you live now, location (owner's ok 25 Oct 2026) ---------- */
+const WHY_LINE='Why we check all this: to keep you safe, and so that every profile you see is truly verified, just like yours. It is all for your own good.';
+const VS_T=['','ID and live selfie','Prove your roots','Where you live now','Your address today','Quick location check'];
+function rootsDocs(oc){const o=[{v:'id',l:`Same as my ID: a passport of ${oc}`,s:'Then there is nothing more to upload.'}];
+  if(oc==='India')o.push({v:'OCI card',l:'OCI card',s:'For people of Indian origin who now hold another passport.'});
+  else o.push({v:'National ID card',l:'National ID card',s:'Issued by your country of origin.'});
+  o.push({v:'Birth certificate',l:'Birth certificate',s:'Shows the place of birth.'});
+  o.push({v:'Parent’s document',l:'Born outside your country of origin?',s:'A parent’s passport or OCI card, together with your birth certificate that names that parent, in one PDF or photo.'});
+  return o}
+function statusDocs(){return [{v:'Permanent residence',l:'PR card or permanent residence permit',s:'Both sides.'},{v:'Citizenship',l:'Passport or citizenship certificate',s:'Of the country you live in.'},{v:'Permit or visa',l:'Work permit, study permit or visa',s:'Must still be valid.'}]}
+function addrDocs(){return [{v:'Photo ID with address',l:'Driver’s licence or photo ID card',s:'With your current address.'},{v:'Bill or statement',l:'Bank statement, utility bill or lease',s:'Dated in the last 3 months, in your name.'}]}
+function vOpts(key,list,cur){return `<div class="vopts" role="radiogroup">${list.map(o=>`<button type="button" class="vopt${cur===o.v?' on':''}" role="radio" aria-checked="${cur===o.v}" data-a="vPick" data-k="${key}" data-v="${esc(o.v)}"><span class="rd" aria-hidden="true"></span><span class="tx"><b>${esc(o.l)}</b>${o.s?`<small>${esc(o.s)}</small>`:''}</span></button>`).join('')}</div>`}
+function vFile(kind,label,ready,name){return ready?`<p class="hint">${ic('check')} ${esc(name||'File')} ready to send</p><span class="btn ghost sm file">${ic('refresh')}Choose another<input type="file" accept="image/*,application/pdf" data-file="${kind}" aria-label="${esc(label)}"></span>`
+  :`<span class="btn primary file">${ic('plus')}${esc(label)}<input type="file" accept="image/*,application/pdf" data-file="${kind}" aria-label="${esc(label)}"></span>`}
+/* state of each part: ok, wait, rej, ready, todo (location: ok, ready, opt) */
+function vState(n,d,me){const st=c=>c&&c.status;
+  if(n===1){if(me&&me.v.id&&me.v.selfie)return 'ok';const ic_=me&&me.idCheck,sc=me&&me.selfieCheck;
+    const idR=(me&&me.v.id)||d.idBlob||st(ic_)==='pending',sR=(me&&me.v.selfie)||d.selfieBlob||st(sc)==='pending';
+    if((st(ic_)==='rejected'&&!me.v.id&&!d.idBlob)||(st(sc)==='rejected'&&!me.v.selfie&&!d.selfieBlob))return 'rej';
+    if(idR&&sR)return (d.idBlob||d.selfieBlob)?'ready':'wait';return 'todo'}
+  if(n===2){if(me&&me.v.roots)return 'ok';const c=me&&me.rootsCheck;if(d.rootsType&&(d.rootsType==='id'||d.rootsBlob))return 'ready';
+    if(st(c)==='pending')return 'wait';if(st(c)==='rejected')return 'rej';return 'todo'}
+  if(n===3){if(me&&me.v.lives&&!d.addrBlob)return 'ok';const round=me&&me.livesRound?Date.parse(me.livesRound):0;
+    const cur=c=>c&&Date.parse(c.created_at)>=round-1000?c:null;const s=cur(me&&me.statusCheck),a=cur(me&&me.addrCheck);
+    const sOk=d.statusBlob||(s&&s.status!=='rejected'),aOk=d.addrBlob||(a&&a.status!=='rejected')||(me&&me.v.lives);
+    if((s&&s.status==='rejected'&&!d.statusBlob)||(a&&a.status==='rejected'&&!d.addrBlob))return 'rej';
+    if(sOk&&aOk)return (d.statusBlob||d.addrBlob)?'ready':'wait';return 'todo'}
+  if(n===4){if(me&&me.locOk)return 'ok';if(d.loc)return 'ready';return 'opt'}
+}
+const V_ST={ok:['ok','Done'],wait:['wait','Checking'],rej:['rej','Not approved'],ready:['ready','Ready to send'],todo:['todo','To do'],opt:['todo','Optional']};
+function vStep(n,state,title,sub,act){const [cls,lab]=V_ST[state];return `<button type="button" class="vstep" data-a="${act||'vGo'}" data-n="${n===4?5:n}"><span class="n ${cls}">${cls==='ok'?ic('check'):n}</span><span class="tx"><b>${esc(title)}</b><small>${esc(sub)}</small></span><span class="vst ${cls}">${lab}</span></button>`}
+function verifyAllReady(d,me){return [1,2,3].every(n=>['ok','wait','ready'].includes(vState(n,d,me)))}
+function renderVerifyBody(d,edit){const me=edit?S.me:null,vs=d.vs||0;const place=[d.city,d.country].filter(Boolean).join(', '),roots=[d.os,d.oc].filter(Boolean).join(', ');
+  if(vs===0){const code=dial(d.country)||'';
+    return `<div class="callout">${ic('shield')}<span>On NeuMarry, roots and city are proven with documents, not just typed in. When a profile says where someone comes from and where they live, it is true.</span></div>
+    <div class="callout gold">${ic('heart')}<span>${WHY_LINE}</span></div>
+    <div class="vsteps">
+     ${vStep(1,vState(1,d,me),'ID and live selfie','Passport or national ID, and a selfie.')}
+     ${vStep(2,vState(2,d,me),'Your roots',`A document from where you grew up: ${roots||'your country of origin'}.`)}
+     ${vStep(3,vState(3,d,me),'Where you live now',`Your status and your current address in ${d.city||'your city'}.`)}
+     ${vStep(4,vState(4,d,me),'Quick location check','One tap. Country and city only, never your exact spot.')}
+    </div>
+    <p class="hint">${ic('lock')} Documents are deleted within 30 days of the check and never shown to members.</p>
+    <div class="vcard"><h4>${ic('phone')}Mobile number <small class="hint" style="font-weight:500">optional</small></h4>
+      <p class="hint">For event reminders from your host. Never shown to other members. Code checks by SMS are coming soon.</p>
+      <div class="row2" style="grid-template-columns:96px 1fr"><label class="fld"><span>Code</span><input value="${esc(code||'+')}" disabled aria-label="Country code"></label>${inF('phone','Mobile number','tel',d.phone,'inputmode="numeric" maxlength="14" autocomplete="tel-national"')}</div>
+    </div>`}
+  if(vs===1){const idOk=me&&me.v.id,selfOk=me&&me.v.selfie,idC=me&&me.idCheck,sC=me&&me.selfieCheck;
+    const needId=!idOk&&!(idC&&idC.status==='pending'),needSelf=!selfOk&&!(sC&&sC.status==='pending');
+    return `<div class="vcard"><h4>${ic('id')}Government ID ${idOk?`<span class="ok">${ic('check')}Verified</span>`:''}</h4>
+      <p class="hint">Passport, national ID card, or a residence card with a photo. Only our team sees it.</p>
+      ${idOk?'':idC&&!d.idBlob?checkLine(idC,'ID'):''}
+      ${needId||(idC&&idC.status==='rejected')?(d.idBlob?`<p class="hint">${ic('check')} ${esc(d.idName)} ready to send</p><span class="btn ghost sm file">${ic('refresh')}Choose another<input type="file" accept="image/*,application/pdf" data-file="id" aria-label="Upload government ID"></span>`:`<span class="btn ghost sm file">${ic('plus')}Upload ID<input type="file" accept="image/*,application/pdf" data-file="id" aria-label="Upload government ID"></span>`):''}
+    </div>
+    <div class="vcard"><h4>${ic('camera')}Live selfie ${selfOk?`<span class="ok">${ic('check')}Verified</span>`:''}</h4>
+      <p class="hint">Take a selfie now. We match it to your ID and photos so nobody can use someone else's pictures.</p>
+      ${selfOk?'':sC&&!d.selfieBlob?checkLine(sC,'Selfie'):''}
+      ${needSelf||(sC&&sC.status==='rejected')?(d.selfie?`<img src="${d.selfie}" alt="Your selfie" style="width:72px;height:72px;border-radius:18px;object-fit:cover"><span class="btn ghost sm file">${ic('refresh')}Retake<input type="file" accept="image/*" capture="user" data-file="selfie" aria-label="Retake selfie"></span>`:`<span class="btn ghost sm file">${ic('camera')}Take selfie<input type="file" accept="image/*" capture="user" data-file="selfie" aria-label="Take selfie"></span>`):''}
+    </div>`}
+  if(vs===2){const c=me&&me.rootsCheck,ok=me&&me.v.roots;
+    return `<div class="vfact">${ic('globe')}<span class="tx"><small>Your roots on your profile</small><b>${esc(roots)}</b></span></div>
+    ${ok&&!d.rootsType?`<p class="hint">${ic('check')} Roots approved</p>`:c&&!d.rootsType?checkLine(c,'Roots document'):''}
+    ${ok&&!d.rootsType?'':`<h3 class="section-t">Choose one document</h3>${vOpts('rootsType',rootsDocs(d.oc||''),d.rootsType)}
+    ${d.rootsType&&d.rootsType!=='id'?vFile('roots','Upload document',!!d.rootsBlob,d.rootsName):''}
+    <p class="hint">The country and the state on the document must match your profile. We never ask for caste or religion documents.</p>`}`}
+  if(vs===3){const ok=me&&me.v.lives;
+    return `<div class="vfact">${ic('pin')}<span class="tx"><small>Where you live on your profile</small><b>${esc(place)}</b>${d.res?`<small>${esc(d.res)}</small>`:''}</span></div>
+    ${ok&&!d.statusType?`<p class="hint">${ic('check')} Status approved</p>`:me&&me.statusCheck&&!d.statusType&&vState(3,d,me)!=='todo'?checkLine(me.statusCheck,'Status document'):''}
+    ${ok&&!d.statusType?'':`<h3 class="section-t">Part 1 · Your status in ${esc(d.country||'your country')}</h3>${vOpts('statusType',statusDocs(),d.statusType)}
+    ${d.statusType?vFile('status','Upload document',!!d.statusBlob,d.statusName):''}`}`}
+  if(vs===4){
+    return `<div class="callout">${ic('info')}<span>A passport or PR card shows where you may live. This shows where you live now.</span></div>
+    ${me&&me.addrCheck&&!d.addrType&&vState(3,d,me)!=='todo'?checkLine(me.addrCheck,'Address document'):''}
+    <h3 class="section-t">Part 2 · One of these</h3>${vOpts('addrType',addrDocs(),d.addrType)}
+    ${d.addrType?vFile('address','Upload document',!!d.addrBlob,d.addrName):''}
+    <p class="hint">Your name must match, and the city must be ${esc(d.city||'your city')} or within 50 km. We keep only the city, the country and the date, never your street address.</p>`}
+  if(vs===5){const done=me&&me.locOk;
+    return `<div class="vill">${ic('pin')}</div>
+    ${done?`<div class="callout">${ic('check')}<span>Location confirmed${me.locAt?' on '+new Date(me.locAt).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'}):''}.</span></div>`:d.loc?`<div class="callout">${ic('check')}<span>Location ready. It is checked when you save.</span></div>`:''}
+    <div class="panel"><h3>Why we ask</h3>
+     <p>We check your phone’s approximate location once, now, to confirm you live where your profile says.</p>
+     <div class="vtrow">${ic('check','ok-ic')}<span class="tx"><b>Only now, only once a year</b><small>Never in the background. Never tracked.</small></span></div>
+     <div class="vtrow">${ic('check','ok-ic')}<span class="tx"><b>Only country and city</b><small>Your exact location is not stored or shown to anyone.</small></span></div>
+     <div class="vtrow">${ic('check','ok-ic')}<span class="tx"><b>Travelling right now?</b><small>Skip it. Your documents are enough; try again when you are home.</small></span></div>
+    </div>`}
+  return ''}
+function verifyHead(d){const vs=d.vs,n=vs<=2?vs:vs<=4?3:4;
+  return `<div class="su-head pad"><button class="iconbtn" data-a="vBack" aria-label="Back to the checks">${ic('back')}</button>
+    <div class="t"><small>Verify · ${n} of 4</small><h2>${VS_T[vs]}</h2><div class="progress p4" aria-hidden="true">${[1,2,3,4].map(i=>`<i class="${i<=n?'on':''}"></i>`).join('')}</div></div></div>`}
+function verifyFoot(d){const vs=d.vs;
+  if(vs===5)return `<div class="su-foot pad"><button class="btn ghost" data-a="vGo" data-n="0">${d.loc||(S.editMode&&S.me&&S.me.locOk)?'Done':'Skip'}</button>${busy==='loc'?`<button class="btn primary" disabled>${spinner('Checking')} Checking</button>`:`<button class="btn primary" data-a="vLocate">Check now</button>`}</div>`;
+  return `<div class="su-foot pad"><button class="btn primary" data-a="vGo" data-n="${vs===4?5:vs+1}">Next</button></div>`}
+/* Time zone of the phone → country, to catch a wrong "country you live in" (no permission needed). */
+const TZ2C={'Asia/Kolkata':'India','Asia/Calcutta':'India','Asia/Karachi':'Pakistan','Asia/Dhaka':'Bangladesh','Asia/Kathmandu':'Nepal','Asia/Katmandu':'Nepal','Asia/Colombo':'Sri Lanka','Asia/Manila':'Philippines',
+  'Europe/London':'United Kingdom','Asia/Dubai':'United Arab Emirates','Australia/Sydney':'Australia','Australia/Melbourne':'Australia','Australia/Brisbane':'Australia','Australia/Perth':'Australia','Australia/Adelaide':'Australia','Australia/Hobart':'Australia','Australia/Darwin':'Australia',
+  'Asia/Singapore':'Singapore','Pacific/Auckland':'New Zealand','Europe/Berlin':'Germany','Europe/Dublin':'Ireland','Asia/Riyadh':'Saudi Arabia','Asia/Qatar':'Qatar','Asia/Kuwait':'Kuwait','Asia/Bahrain':'Bahrain','Asia/Muscat':'Oman',
+  'America/Toronto':'Canada','America/Vancouver':'Canada','America/Edmonton':'Canada','America/Winnipeg':'Canada','America/Halifax':'Canada','America/Regina':'Canada','America/St_Johns':'Canada','America/Moncton':'Canada','America/Montreal':'Canada','America/Whitehorse':'Canada','America/Yellowknife':'Canada',
+  'America/New_York':'United States','America/Chicago':'United States','America/Denver':'United States','America/Los_Angeles':'United States','America/Phoenix':'United States','America/Anchorage':'United States','America/Detroit':'United States','Pacific/Honolulu':'United States','America/Boise':'United States','America/Indiana/Indianapolis':'United States'};
+function tzCountry(){try{return TZ2C[Intl.DateTimeFormat().resolvedOptions().timeZone]||null}catch(e){return null}}
+function tzWarn(d){const t=tzCountry();if(!t||!d.country||t===d.country||d.tzAck===d.country)return '';
+  return `<div class="callout gold">${ic('globe')}<span><b>You seem to be in ${esc(t)} right now.</b> Members who choose a country must prove they live there, and the check fails if they don’t.</span></div>
+  <div class="vopts"><button type="button" class="vopt" data-a="tzSwitch" data-v="${esc(t)}"><span class="rd" aria-hidden="true"></span><span class="tx"><b>I live in ${esc(t)}</b><small>Change my country to ${esc(t)}</small></span></button>
+  <button type="button" class="vopt" data-a="tzKeep"><span class="rd" aria-hidden="true"></span><span class="tx"><b>I live in ${esc(d.country)}, I’m only visiting ${esc(t)}</b><small>Keep ${esc(d.country)}. You prove it with documents in step 5.</small></span></button></div>
+  <p class="hint">We use only your phone’s time zone. No permission is needed.</p>`}
 function renderSignup(){
   const d=S.draft,st=S.step,edit=S.editMode;let body='';const lockedId=edit&&S.me&&S.me.v.id;
   if(st===1){
@@ -735,6 +844,7 @@ function renderSignup(){
     <div class="panel" style="padding:4px 16px">${toggle('privacy.showC','Show my community on my profile','Turn off to keep it private. Filters still work.',d.privacy.showC)}</div>`;
   }else if(st===3){
     body=`${pickF('country','Country you live in','draft',{ph:'Choose a country'})}
+    ${tzWarn(d)}
     <div class="row2">${pickF('state','State / province','draft',{ph:'Choose',disabled:!d.country})}${pickF('city','City','draft',{ph:'Choose or type',disabled:!d.country})}</div>
     ${pickF('res','Residency status','draft',{ph:'Choose',disabled:!d.country})}
     ${pickF('reloc','Open to relocating for the right person?','draft',{ph:'Choose',disabled:!d.country})}
@@ -748,24 +858,7 @@ function renderSignup(){
     ${pickF('diet','Diet','draft',{ph:'Choose'})}
     <div class="row2">${pickF('sm','Smoking','draft')}${pickF('dr','Drinking','draft')}</div>`;
   }else if(st===5){
-    const code=dial(d.country)||'';const me=edit?S.me:null;
-    const idOk=me&&me.v.id,selfOk=me&&me.v.selfie,idC=me&&me.idCheck,sC=me&&me.selfieCheck;
-    const needId=!idOk&&!(idC&&idC.status==='pending'),needSelf=!selfOk&&!(sC&&sC.status==='pending');
-    body=`<div class="callout">${ic('shield')}<span>Every member passes these checks. Members without an approved ID and selfie cannot send interests, chat or book events, so fake profiles have nowhere to go.</span></div>
-    <div class="vcard"><h4>${ic('id')}Government ID ${idOk?`<span class="ok">${ic('check')}Verified</span>`:''}</h4>
-      <p class="hint">Passport, residence card or driving licence. Only our team sees it, and it is deleted within 30 days of the check. Never shown on your profile.</p>
-      ${idOk?'':idC&&!d.idBlob?checkLine(idC,'ID'):''}
-      ${needId||(idC&&idC.status==='rejected')?(d.idBlob?`<p class="hint">${ic('check')} ${esc(d.idName)} ready to send</p><span class="btn ghost sm file">${ic('refresh')}Choose another<input type="file" accept="image/*,application/pdf" data-file="id" aria-label="Upload government ID"></span>`:`<span class="btn ghost sm file">${ic('plus')}Upload ID<input type="file" accept="image/*,application/pdf" data-file="id" aria-label="Upload government ID"></span>`):''}
-    </div>
-    <div class="vcard"><h4>${ic('camera')}Live selfie ${selfOk?`<span class="ok">${ic('check')}Verified</span>`:''}</h4>
-      <p class="hint">Take a selfie now. We match it to your ID and photos so nobody can use someone else's pictures.</p>
-      ${selfOk?'':sC&&!d.selfieBlob?checkLine(sC,'Selfie'):''}
-      ${needSelf||(sC&&sC.status==='rejected')?(d.selfie?`<img src="${d.selfie}" alt="Your selfie" style="width:72px;height:72px;border-radius:18px;object-fit:cover"><span class="btn ghost sm file">${ic('refresh')}Retake<input type="file" accept="image/*" capture="user" data-file="selfie" aria-label="Retake selfie"></span>`:`<span class="btn ghost sm file">${ic('camera')}Take selfie<input type="file" accept="image/*" capture="user" data-file="selfie" aria-label="Take selfie"></span>`):''}
-    </div>
-    <div class="vcard"><h4>${ic('phone')}Mobile number <small class="hint" style="font-weight:500">optional</small></h4>
-      <p class="hint">For event reminders from your host. Never shown to other members. Code checks by SMS are coming soon.</p>
-      <div class="row2" style="grid-template-columns:96px 1fr"><label class="fld"><span>Code</span><input value="${esc(code||'+')}" disabled aria-label="Country code"></label>${inF('phone','Mobile number','tel',d.phone,'inputmode="numeric" maxlength="14" autocomplete="tel-national"')}</div>
-    </div>`;
+    body=renderVerifyBody(d,edit);
   }else if(st===6){
     if(!d.prefs)d.prefs=defaultPrefs(d);
     const pr=d.prefs;
@@ -782,13 +875,15 @@ function renderSignup(){
     ${pickF('prefs.community','Community','draft',{disabled:pr.religion==='Any'||!commOf(pr.religion).length,hint:pr.religion==='Any'?'Choose a religion to pick a community.':''})}
     ${pr.community!=='Any'?pickF('prefs.alsoComm','Also open to these communities','draft',{hint:'More communities means more matches and more people to meet at events.'}):''}`;
   }
-  const hasV=d.idBlob&&d.selfieBlob;
+  if(st===5&&d.vs)return verifyHead(d)+`<div class="scroll" id="su-scroll"><div class="form pad">${body}</div></div>`+verifyFoot(d);
+  const vReady=st===5&&verifyAllReady(d,edit?S.me:null),vFirst=st===5?([1,2,3].find(n=>!['ok','wait','ready'].includes(vState(n,d,edit?S.me:null)))||1):1;
+  const vAny=st===5&&[1,2,3].some(n=>vState(n,d,edit?S.me:null)!=='todo');
   return `<div class="su-head pad"><button class="iconbtn" data-a="suBack" aria-label="${st===1&&!edit?'Back to start':'Previous step'}">${ic('back')}</button>
     <div class="t"><small>${edit?'Edit profile':'Step '+st+' of 6'}</small><h2>${STEPS[st-1]}</h2>
     ${edit?`<div class="steps-nav" role="tablist">${STEPS.map((s,i)=>`<button data-a="suJump" data-n="${i+1}" class="${i+1===st?'on':''}" role="tab" aria-selected="${i+1===st}">${i+1}. ${SHORT[i]}</button>`).join('')}</div>`:`<div class="progress" aria-hidden="true">${STEPS.map((_,i)=>`<i class="${i<st?'on':''}"></i>`).join('')}</div>`}</div></div>
   <div class="scroll" id="su-scroll"><div class="form pad">${body}</div></div>
   <div class="su-foot pad">${edit?`<button class="btn ghost" data-a="suCancel"${busy?' disabled':''}>Discard</button><button class="btn primary" data-a="suSave"${busy?' disabled':''}>${busy==='save'?spinner('Saving')+' Saving':'Save changes'}</button>`:
-    st===5&&!hasV?`<button class="btn ghost" data-a="suNext">Do this later</button><button class="btn primary" data-a="suNext" disabled>Continue</button>`:
+    st===5&&!vReady?`<button class="btn ghost" data-a="suNext">Do this later</button><button class="btn primary" data-a="vGo" data-n="${vFirst}">${vAny?'Next check':'Start'}</button>`:
     `<button class="btn primary" data-a="suNext"${busy?' disabled':''}>${busy==='save'?spinner('Saving')+' '+esc(S.saveMsg||'Saving'):st===6?'Finish and see matches':'Continue'}</button>`}</div>`;
 }
 function validateStep(st,d){
@@ -816,10 +911,17 @@ function scopeText(){const me=S.me,pr=me.prefs;
 function ensurePicks(){const ids=new Set(PROFILES.map(p=>p.id));if(!S.picks||S.picks.date!==today()||!S.picks.ids.every(id=>ids.has(id))){const list=sortList(matchList().filter(p=>S.interests[p.id]!=='mutual'),'best').slice(0,5).map(p=>p.id);S.picks={date:today(),ids:list,revealed:[]};save()}
   return S.picks.ids.map(byId).filter(p=>p&&baseEligible(p))}
 let justRevealed=null;
-function verifyBanner(){const me=S.me;if(verified())return '';
-  const pend=(me.idCheck&&me.idCheck.status==='pending')||(me.selfieCheck&&me.selfieCheck.status==='pending');
-  const rej=(me.idCheck&&me.idCheck.status==='rejected')||(me.selfieCheck&&me.selfieCheck.status==='rejected');
-  return `<div class="callout gold">${ic('shield')}<span>${rej?'Your ID or selfie was not approved. <button class="link" data-a="goVerify">Upload again</button>':pend?'Your ID and selfie are with our team. You can send interests and chat once they are approved, usually within 24 hours.':'Upload your ID and a selfie to send interests, chat and book events. <button class="link" data-a="goVerify">Verify now</button>'}</span></div>`}
+function verifyBanner(){const me=S.me;if(verified())return '';const all=[1,2,3].map(n=>vState(n,{},me));
+  if(me.v.id&&me.v.selfie&&me.v.roots&&!me.v.lives&&me.livesAt)return recheckCall(me);
+  const rej=all.includes('rej'),pend=all.every(x=>x==='ok'||x==='wait');
+  return `<div class="callout gold">${ic('shield')}<span>${rej?'One of your documents was not approved. <button class="link" data-a="goVerify">Upload again</button>':pend?'Your documents are with our team. You can send interests and chat once they are approved, usually within 24 hours.':'Prove your ID, your roots and your city to send interests and chat. <button class="link" data-a="goVerify">Verify now</button>'}</span></div>`}
+/* The city check lasts a year: remind 30 days before it ends, and after. */
+function recheckCall(me){if(!me.livesAt)return '';const until=me.livesUntil?Date.parse(me.livesUntil):0;if(!until||until-Date.now()>30*864e5)return '';
+  const st=vState(3,{},me);if(st==='wait')return `<div class="callout">${ic('pin')}<span>Your new address document is with our team, usually within 24 hours.</span></div>`;
+  return `<div class="callout gold">${ic('pin')}<span><b>Still in ${esc(myPlace())}?</b> Once a year we ask every member to confirm their city, so “Lives in” stays true. It takes a minute. <button class="link" data-a="goVerify" data-n="4">Confirm now</button></span></div>`}
+function livesState(me){if(me.v.lives)return ['ok',`Status and current address proven${me.livesAt?' · '+new Date(me.livesAt).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'}):''}`];
+  const st=vState(3,{},me);if(st==='wait')return ['wait','With our team, usually within 24 hours'];if(st==='rej')return ['no','Not approved. Upload a new one.'];
+  if(me.livesAt)return ['no','Confirm your city again: upload a new address document.'];return ['no','Not uploaded yet']}
 function renderMatches(){
   const me=S.me,pr=me.prefs,list=sortList(matchList(),S.sort);
   const t=scopeText(),n=activeFilterCount();
@@ -902,8 +1004,9 @@ function completeness(me){const checks=[me.photoPaths.length>0,!!me.about&&me.ab
 function checkState(c,ok){if(ok)return ['ok','Approved'];if(!c)return ['no','Not uploaded yet'];if(c.status==='pending')return ['wait','With our team, usually within 24 hours'];if(c.status==='rejected')return ['no','Not approved'+(c.note?': '+c.note:'')+'. Upload a new one.'];return ['ok','Approved']}
 function renderMe(){
   const me=S.me,L=price(),pct=completeness(me),parts=me.name.trim().split(/\s+/);
-  const vr=(state,t,s)=>`<div class="vrow">${state==='ok'?ic('check','ok-ic'):ic('info','no-ic')}<span class="tx"><b>${t}</b><small>${esc(s)}</small></span>${state==='no'?`<button class="btn sm primary" data-a="goVerify">Upload</button>`:''}</div>`;
-  const idS=checkState(me.idCheck,me.v.id),sS=checkState(me.selfieCheck,me.v.selfie);
+  const vr=(state,t,s,n)=>`<div class="vrow">${state==='ok'?ic('check','ok-ic'):ic('info','no-ic')}<span class="tx"><b>${esc(t)}</b><small>${esc(s)}</small></span>${state==='no'?`<button class="btn sm primary" data-a="goVerify" data-n="${n||1}">Upload</button>`:''}</div>`;
+  const idS=checkState(me.idCheck,me.v.id),sS=checkState(me.selfieCheck,me.v.selfie),rS=checkState(me.rootsCheck,me.v.roots),lS=livesState(me);
+  const dt=x=>x?new Date(x).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'}):'';
   const goldLine=me.plan==='free'?'':me.goldSource==='admin'?`Gold is on for free during the test, until ${new Date(me.goldUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short'})}.`:me.goldSource==='women_offer'?`Your free Gold (welcome offer for women in Canada) runs until ${new Date(me.goldUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'})}.`:me.goldSource==='google'?`Gold through Google Play, paid until ${new Date(me.goldUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'})}.`:`Gold is active until ${new Date(me.goldUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'})}.`;
   return topbar('My profile',me.plan==='gold'?'Gold member':me.plan==='concierge'?'Concierge member':'Free member',`<button class="iconbtn soft" data-a="previewMe" aria-label="See my profile as others do">${ic('eye')}</button>`)+
   `<div class="scroll" id="main"><div class="main-inner pad">
@@ -912,7 +1015,7 @@ function renderMe(){
     ${me.photoPending?`<p class="hint">${ic('info')} Your photo is waiting for a quick check by our team.</p>`:''}
     <div class="complete"><div class="hint">Profile ${pct}% complete${pct<100?' · a complete profile builds more trust':''}</div><div class="bar"><i style="width:${pct}%"></i></div></div>
     <button class="btn ghost" data-a="edit">Edit profile</button></div>
-   <div class="panel"><h3>Verification</h3><div>${vr(idS[0],'Government ID',idS[1])}${vr(sS[0],'Live selfie',sS[1])}<div class="vrow">${ic('info','no-ic')}<span class="tx"><b>Phone number</b><small>${me.phone?esc(me.phone)+' · code checks by SMS are coming soon':'Optional · add it in Edit profile'}</small></span></div></div></div>
+   ${recheckCall(me)}<div class="panel"><h3>Verification</h3><div>${vr(idS[0],'Government ID',idS[1],1)}${vr(sS[0],'Live selfie',sS[1],1)}${vr(rS[0],`Roots: ${me.os}, ${me.oc}`,rS[0]==='ok'&&me.rootsAt?`Proven with a document · ${dt(me.rootsAt)}`:rS[1],2)}${vr(lS[0],`Lives in: ${myPlace()}, ${me.country}`,lS[1],3)}${me.locOk?vr('ok','Location check',`Confirmed · ${dt(me.locAt)}`):''}<div class="vrow">${ic('info','no-ic')}<span class="tx"><b>Phone number</b><small>${me.phone?esc(me.phone)+' · code checks by SMS are coming soon':'Optional · add it in Edit profile'}</small></span></div></div></div>
    ${workCard()}
    <div class="panel"><h3>Privacy</h3><div>
     ${toggle('privacy.blur','Hide my photos','Only people you have both accepted can see them',me.privacy.blur,'me')}
@@ -940,6 +1043,12 @@ function renderMe(){
 }
 
 /* ---------- Overlay views ---------- */
+function trustRows(p){const my=x=>x?new Date(x).toLocaleDateString(RM_I18N.locale,{month:'short',year:'numeric'}):'';
+  const row=(ok,t,sub)=>`<div class="vtrow">${ok?ic('check','ok-ic'):ic('info','no-ic')}<span class="tx"><b>${esc(t)}</b><small>${esc(sub)}</small></span></div>`;
+  return row(p.v.id&&p.v.selfie,'ID and live selfie',p.v.id&&p.v.selfie?'Approved by our team':'Not verified yet')
+   +row(p.v.roots,`Roots: ${p.os}, ${p.oc}`,p.v.roots?`Proven with a document${p.rootsAt?' · '+my(p.rootsAt):''}`:'Not proven yet')
+   +row(p.v.lives,`Lives in: ${p.cityName}, ${p.country}`,p.v.lives?`Status and current address proven${p.livesAt?' · '+my(p.livesAt):''}`:'Not proven yet')
+   +(p.locOk?row(true,'Location check',`Confirmed${p.locAt?' · '+my(p.locAt):''}`):'')}
 function renderProfileView(id,isMe){
   let p;
   if(isMe){const me=S.me,parts=me.name.trim().split(/\s+/);p=Object.assign({},me,{id:'me',first:parts[0],last:parts.slice(1).join(' '),cityName:me.city||me.state,v:Object.assign({work:false},me.v),photos:me.photo?[me.photo]:[],photoCount:me.photoPaths.length})}
@@ -947,7 +1056,6 @@ function renderProfileView(id,isMe){
   if(!p)return '';
   const c=isMe?null:compat(p);const showC=isMe?p.privacy.showC:true;
   const kv=[['Age',p.age],['Height',ftIn(p.h)],['Lives in',`${p.cityName}, ${p.country}`],['Roots',`${p.os}, ${p.oc}`],['Mother tongue',p.t],['Religion',p.r+(showC&&p.c?` · ${p.c}`:'')],['Residency',p.res],['Marital status',p.marital],['Profession',p.job],['Education',p.edu],['Diet',p.diet],['Smoke · Drink',`${p.sm} · ${p.dr}`],['Profile created by',p.createdBy]];
-  const badges=[p.v.id&&'Government ID',p.v.selfie&&'Live selfie'].filter(Boolean);
   const nm=isMe?`${p.first}${p.last?' '+p.last[0]+'.':''}`:shown(p);
   const valsHtml=isMe?'':QS.map((q,i)=>{const d=Math.abs(S.me.ans[i]-p.ans[i]);const cls=d===0?'s':d===1?'c':'f';return `<div class="val"><span class="mk ${cls}" aria-label="${d===0?'Same':d===1?'Close':'Different'}">${d===0?'✓':d===1?'≈':'–'}</span><div><div class="q2">${esc(q.k)}</div><div class="a"><i>You</i><span>${esc(q.o[S.me.ans[i]])}</span><i>${p.g==='F'?'Her':'Him'}</i><span>${esc(q.o[p.ans[i]])}</span></div></div></div>`}).join('');
   const more=!isMe&&p.photos&&p.photos.length>1?`<div class="panel"><h3>Photos</h3><div class="pgrid">${p.photos.slice(1).map(u=>`<span class="ptile"><span class="av av-tile"><img src="${esc(u)}" alt="" loading="lazy"></span></span>`).join('')}</div></div>`:'';
@@ -966,7 +1074,7 @@ function renderProfileView(id,isMe){
      <div class="panel"><dl class="kv">${kv.map(([k,v])=>`<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl></div>
      ${c?`<div class="panel"><h3>Why ${c.total}%</h3><div class="meter">${[['Values',c.values],['Lifestyle',c.life],['Preferences',c.pref],['Distance',c.loc],['Roots',c.roots]].map(([k,v])=>`<div class="m"><span>${k}</span><span class="t"><i style="width:${Math.round(v*100)}%"></i></span><b>${Math.round(v*100)}</b></div>`).join('')}</div></div>
      <div class="panel"><h3>Mindset, side by side</h3><div>${valsHtml}</div></div>`:''}
-     <div class="panel"><h3>Trust</h3><div class="badges">${badges.map(b=>`<span class="pill good">${ic('check')}${b}</span>`).join('')||'<span class="pill">Not verified yet</span>'}</div></div>
+     <div class="panel"><h3>Trust</h3><div>${trustRows(p)}</div><p class="hint">Documents are never shown to members.</p></div>
     </div>
    </div>
    ${isMe?'':`<div class="pv-act pad">${actionBar(p)}</div>`}
@@ -1036,14 +1144,19 @@ function renderCelebrate(){
 }
 
 /* ---------- Team review ---------- */
+const ADM_KIND={photo:'Profile photo',id:'Government ID',selfie:'Live selfie',roots:'Roots document',status:'Status in the country',address:'Current address'};
+const ADM_HINT={id:'Name and date of birth must match the profile. Photo must match the selfie.',selfie:'Must be a live photo of the same person as the ID and profile photos.',photo:'A clear photo of the member’s own face. No group photos, children, nudity or text.',
+  roots:'The country and state of birth or origin on the document must match the roots on the profile. For “Same as my ID”, the ID shown must be a passport of that country.',
+  status:'Must show the member may live in the country on the profile (PR, citizenship, or a valid permit or visa), in the same name as the ID.',
+  address:'Same name as the ID, an address in the city on the profile (or within 50 km), dated in the last 3 months or a valid photo ID with the address.'};
 function renderAdmin(){
   const a=S.admin||{};const q=a.queue||[];const reps=a.reports||[];const c=a.counts;
   const item=x=>{const img=a.urls&&a.urls[x.bucket+':'+x.path];const prof=a.urls&&x.profile_photo&&a.urls['photos:'+x.profile_photo];
     const isPdf=/\.pdf$/i.test(x.path||'');
-    return `<div class="panel adm" id="adm-${x.row_id}"><div class="adm-h"><b>${esc(x.kind==='photo'?'Profile photo':x.kind==='id'?'Government ID':'Live selfie')}</b><small>${esc(x.full_name)} · ${x.gender==='F'?'Woman':'Man'}, ${x.age} · ${esc(x.city)}, ${esc(x.country)}</small></div>
+    return `<div class="panel adm" id="adm-${x.row_id}"><div class="adm-h"><b>${esc(ADM_KIND[x.kind]||x.kind)}</b><small>${esc(x.full_name)} · ${x.gender==='F'?'Woman':'Man'}, ${x.age} · ${esc(x.city)}, ${esc(x.country)}</small>${['roots','status','address'].includes(x.kind)?`<small>${x.kind==='roots'?`Roots on profile: ${esc(x.origin_state||'')}, ${esc(x.origin_country||'')}`:`Residency on profile: ${esc(x.residency||'')}`}${x.id_type?` · Document: ${esc(x.id_type)}`:''}</small>`:''}</div>
       <div class="adm-imgs">${img?(isPdf?`<a class="btn ghost sm" href="${esc(img)}" target="_blank" rel="noopener">Open PDF</a>`:`<img src="${esc(img)}" alt="${esc(x.kind)} of ${esc(x.full_name)}">`):`<span class="hint">Loading image…</span>`}${x.kind!=='photo'&&prof?`<img src="${esc(prof)}" alt="Profile photo of ${esc(x.full_name)}">`:''}</div>
-      <p class="hint">${x.kind==='id'?'Name and date of birth must match the profile. Photo must match the selfie.':x.kind==='selfie'?'Must be a live photo of the same person as the ID and profile photos.':'A clear photo of the member’s own face. No group photos, children, nudity or text.'}</p>${x.kind==='photo'&&x.ai_check?`<p class="hint">${x.ai_check==='doubtful'?`${ic('shield')} <b>Automatic check: may be revealing or violent.</b> Look carefully.`:'Automatic check: nothing inappropriate found.'}</p>`:''}
-      <div class="adm-act"><select data-adm-reason="${x.row_id}" aria-label="Reason if rejected"><option value="">Reason if rejected…</option>${(x.kind==='photo'?['Face not clear','Not a real photo of you','Group photo','Inappropriate photo']:['Image not readable','Does not match the profile','Not a valid ID','Not a live selfie']).map(r=>`<option>${r}</option>`).join('')}</select>
+      <p class="hint">${ADM_HINT[x.kind]||''}</p>${x.kind==='photo'&&x.ai_check?`<p class="hint">${x.ai_check==='doubtful'?`${ic('shield')} <b>Automatic check: may be revealing or violent.</b> Look carefully.`:'Automatic check: nothing inappropriate found.'}</p>`:''}
+      <div class="adm-act"><select data-adm-reason="${x.row_id}" aria-label="Reason if rejected"><option value="">Reason if rejected…</option>${(x.kind==='photo'?['Face not clear','Not a real photo of you','Group photo','Inappropriate photo']:['roots','status','address'].includes(x.kind)?['Image not readable','Does not match the profile','Not an accepted document','Older than 3 months','Name does not match the ID']:['Image not readable','Does not match the profile','Not a valid ID','Not a live selfie']).map(r=>`<option>${r}</option>`).join('')}</select>
       <button class="btn ghost sm" data-a="admReject" data-id="${x.row_id}" data-k="${x.kind}">Reject</button><button class="btn primary sm" data-a="admApprove" data-id="${x.row_id}" data-k="${x.kind}">Approve</button></div></div>`};
   return `<div class="view" role="dialog" aria-label="Team review">
    <div class="vhead pad"><button class="iconbtn" data-a="closeView" aria-label="Back">${ic('back')}</button><div class="grow"><span><b>Team review</b><small>${c?`${c.members} member${c.members===1?'':'s'} · ${c.verified} verified · ${c.women} women, ${c.men} men · ${c.waitlist} on waitlist`:'Loading…'}</small></span></div><button class="iconbtn" data-a="openAdmin" aria-label="Refresh">${ic('refresh')}</button></div>
@@ -1127,9 +1240,10 @@ function renderSheet(){
      ${pr.community!=='Any'?pickF('prefs.alsoComm','Also open to these communities','me',{hint:'Widens your matches and who you meet at events.'}):''}
      ${pickF('prefs.tongue','Mother tongue','me')}
      ${pickF('prefs.diet','Diet','me')}
+     <h3 class="section-t">Trust</h3>
      <div class="panel" style="padding:4px 16px">
+      ${toggle('prefs.verifiedOnly','Fully verified only','ID, roots and city all proven with documents',pr.verifiedOnly,'me')}
       ${toggle('prefs.settled','Citizens and permanent residents only','Hide people on temporary visas or permits',pr.settled,'me')}
-      ${toggle('prefs.verifiedOnly','ID-verified profiles only','We strongly recommend keeping this on',pr.verifiedOnly,'me')}
      </div>`,
      `<button class="btn ghost" data-a="resetFilters">Reset</button><button class="btn primary" data-a="closeSheet">${S.prefsSaving?spinner('Updating'):`Show ${n} ${n===1?'match':'matches'}`}</button>`);
   }
@@ -1160,7 +1274,12 @@ function renderSheet(){
      <p class="note">Cancel anytime in your Google Play account. Safety features, verification and reporting are always free.</p>`,
      canBuy?`${BETA?busyBtn('ghost','betaGold','Try Gold free'):`<button class="btn ghost" data-a="closeSheet">Not now</button>`}${busyBtn('gold','buyGold',ic('crown')+'Get Gold')}`:
      `<button class="btn ghost" data-a="closeSheet">Not now</button>${BETA?busyBtn('gold','betaGold',ic('crown')+'Try Gold free'):`<button class="btn gold" data-a="buySoon">${ic('crown')}Get Gold</button>`}`);}
-  if(t==='verifyGate')return sheetShell('Verify to continue',`<div class="callout">${ic('shield')}<span>${(me.idCheck&&me.idCheck.status==='pending')||(me.selfieCheck&&me.selfieCheck.status==='pending')?'Your ID and selfie are with our team. Once they are approved, usually within 24 hours, you can send interests, chat and book events.':'To keep fake profiles out, only members with an approved ID and selfie can send interests, chat and book events. It takes about two minutes.'}</span></div>`,`<button class="btn ghost" data-a="closeSheet">Not now</button>${(me.idCheck&&me.idCheck.status==='pending')||(me.selfieCheck&&me.selfieCheck.status==='pending')?'':`<button class="btn primary" data-a="goVerify">Verify now</button>`}`);
+  if(t==='verifyGate'){const pendIS=(me.idCheck&&me.idCheck.status==='pending')||(me.selfieCheck&&me.selfieCheck.status==='pending');
+    if(sheet.ev)return sheetShell('Verify to continue',`<div class="callout">${ic('shield')}<span>${pendIS?'Your ID and selfie are with our team. Once they are approved, usually within 24 hours, you can book events.':'To keep fake profiles out, only members with an approved ID and selfie can book events. It takes about two minutes.'}</span></div>`,`<button class="btn ghost" data-a="closeSheet">Not now</button>${pendIS?'':`<button class="btn primary" data-a="goVerify" data-n="1">Verify now</button>`}`);
+    const all=[1,2,3].map(n=>vState(n,{},me)),wait=all.every(x=>x==='ok'||x==='wait'),first=[1,2,3].find(n=>!['ok','wait'].includes(all[n-1]))||1;
+    return sheetShell('Finish verification to send interests',`<div class="callout">${ic('shield')}<span>Everyone you write to has proven their roots and their city. They expect the same from you.</span></div>
+     <div class="vsteps">${vStep(1,all[0],'ID and live selfie','Passport or national ID, and a selfie.','goVerify')}${vStep(2,all[1],'Your roots','A document from where you grew up.','goVerify')}${vStep(3,all[2],'Where you live now','Your status and your current address.','goVerify')}</div>
+     ${wait?'<p class="hint">Your documents are with our team, usually within 24 hours.</p>':`<p class="hint">${WHY_LINE}</p>`}`,`<button class="btn ghost" data-a="closeSheet">Not now</button>${wait?'':`<button class="btn primary" data-a="goVerify" data-n="${first}">Continue</button>`}`)}
   if(t==='book'){const e=evById(sheet.id);const n=sheet.parents;const total=e.priceM+(e.parents?n*(e.priceP||0):0);
     const mealOpts=(e.meals||[]).map(k=>({v:k,l:MEALS[k]||k}));
     return sheetShell('Reserve your seat',`
@@ -1252,25 +1371,30 @@ async function uploadPhoto(blob){const uid=API.userId();const path=`${uid}/${uui
   const old=(S.me&&S.me.photos||[]).filter(x=>x.path!==path);
   for(const o of old){try{await API.remove('photos',{id:'eq.'+o.id});await API.removeFile('photos',o.path)}catch(x){}}
 }
-async function uploadCheck(kind,blob,name){const uid=API.userId();const ext=kind==='id'&&/pdf$/i.test(blob.type||name||'')?'pdf':'jpg';const path=`${uid}/${kind}-${uuid()}.${ext}`;
-  await API.upload('verification',path,blob);
-  await API.insert('verifications',{user_id:uid,kind,path,id_type:kind==='id'?(name||'').slice(0,60):null},{returning:false});
+async function uploadCheck(kind,blob,name,type){const uid=API.userId();let path=null;
+  if(blob){const ext=kind!=='selfie'&&/pdf$/i.test(blob.type||name||'')?'pdf':'jpg';path=`${uid}/${kind}-${uuid()}.${ext}`;await API.upload('verification',path,blob)}
+  await API.insert('verifications',{user_id:uid,kind,path,id_type:(type||(kind==='id'?name:'')||'').slice(0,60)||null},{returning:false});
 }
 async function uploadAll(d){const errs=[];
   if(d.photoBlob){S.saveMsg='Uploading your photo';render();try{await uploadPhoto(d.photoBlob);d.photoBlob=null}catch(e){errs.push(e.message)}}
   if(d.idBlob){S.saveMsg='Sending your ID';render();try{await uploadCheck('id',d.idBlob,d.idName);d.idBlob=null}catch(e){errs.push('Your ID did not upload. '+e.message)}}
   if(d.selfieBlob){S.saveMsg='Sending your selfie';render();try{await uploadCheck('selfie',d.selfieBlob,'selfie');d.selfieBlob=null}catch(e){errs.push('Your selfie did not upload. '+e.message)}}
+  if(d.rootsType&&(d.rootsType==='id'||d.rootsBlob)){S.saveMsg='Sending your roots document';render();try{await uploadCheck('roots',d.rootsType==='id'?null:d.rootsBlob,d.rootsName,d.rootsType==='id'?'Same as my ID':d.rootsType);d.rootsBlob=null;d.rootsType=''}catch(e){errs.push('Your roots document did not upload. '+e.message)}}
+  if(d.statusType&&d.statusBlob){S.saveMsg='Sending your status document';render();try{await uploadCheck('status',d.statusBlob,d.statusName,d.statusType);d.statusBlob=null;d.statusType=''}catch(e){errs.push('Your status document did not upload. '+e.message)}}
+  if(d.addrType&&d.addrBlob){S.saveMsg='Sending your address document';render();try{await uploadCheck('address',d.addrBlob,d.addrName,d.addrType);d.addrBlob=null;d.addrType=''}catch(e){errs.push('Your address document did not upload. '+e.message)}}
+  if(d.loc){try{await API.rpc('check_location',{lat:d.loc.lat,lng:d.loc.lng})}catch(e){}d.loc=null}
   return errs}
 let prefsT=null;
 function queuePrefsSave(){clearTimeout(prefsT);S.prefsSaving=true;prefsT=setTimeout(async()=>{try{await API.insert('preferences',prefsRow(S.me.prefs,S.me.id),{upsert:true,returning:false});await loadCards()}catch(e){fail(e)}S.prefsSaving=false;render()},500)}
 async function savePrivacy(){const me=S.me;try{await API.update('profiles',{id:'eq.'+me.id},{blur_photos:!!me.privacy.blur,show_community:!!me.privacy.showC,incognito:!!me.privacy.incognito,hidden:me.privacy.vis==='hidden'})}catch(e){fail(e);await loadMe();render()}}
 
 /* ---------- Flow helpers ---------- */
-function needVerified(){if(!verified()){sheet={type:'verifyGate'};render();return true}return false}
-function startSignup(){if(!readConsent().at){S.auth={mode:'consent'};S.errors={};S.screen='auth';render();return}const saved=loadDraft();S.draft=saved?Object.assign(blankDraft(),saved.d,{photo:null,photoBlob:null,idBlob:null,selfieBlob:null,selfie:null,idName:''}):blankDraft();
+function needVerified(ev){const ok=ev?!!(S.me&&S.me.v.id&&S.me.v.selfie):verified();if(!ok){sheet={type:'verifyGate',ev:!!ev};render();return true}return false}
+function startSignup(){if(!readConsent().at){S.auth={mode:'consent'};S.errors={};S.screen='auth';render();return}const saved=loadDraft();S.draft=saved?Object.assign(blankDraft(),saved.d,{photo:null,photoBlob:null,idBlob:null,selfieBlob:null,selfie:null,idName:'',rootsBlob:null,rootsName:'',statusBlob:null,statusName:'',addrBlob:null,addrName:'',loc:null,vs:0}):blankDraft();
   S.step=saved?Math.min(saved.step||1,6):1;S.editMode=false;S.errors={};S.screen='signup';render()}
 function openEdit(step){const me=S.me;const d=clone(Object.assign({},me,{photo:me.photo}));d.phone=me.phone?digitsOnly(me.phone).replace(new RegExp('^'+digitsOnly(dial(me.country))),''):'';
   d.photoBlob=null;d.idBlob=null;d.selfieBlob=null;d.selfie=null;d.idName='';
+  Object.assign(d,{rootsType:'',rootsBlob:null,rootsName:'',statusType:'',statusBlob:null,statusName:'',addrType:'',addrBlob:null,addrName:'',loc:null,vs:0,tzAck:me.country});
   S.draft=d;S.editMode=true;S.step=step||1;S.errors={};view=null;sheet=null;picker=null;S.screen='signup';render();const sc=document.getElementById('su-scroll');if(sc)sc.scrollTop=0}
 function goStep(n){S.step=n;S.errors={};save();render();const sc=document.getElementById('su-scroll');if(sc)sc.scrollTop=0}
 function showErrors(){render();const first=document.querySelector('.has-err');if(first){const sc=first.closest('.scroll,.sheet-b');if(sc){const r=first.getBoundingClientRect(),cr=sc.getBoundingClientRect();sc.scrollTop+=r.top-cr.top-cr.height/3}const f=first.querySelector('input,textarea,.pick');if(f)try{f.focus({preventScroll:true})}catch(e){}}}
@@ -1357,7 +1481,7 @@ const A={
     busy='';S.saveMsg='';clearDraft();S.draft=null;S.screen='app';S.tab='matches';S.errors={};render();
     try{await loadAll()}catch(err){}
     render();
-    if(errs.length){toast(errs[0],'info')}else toast(S.me&&S.me.idCheck&&S.me.selfieCheck?'Your profile is saved. Our team checks your photo, ID and selfie within 24 hours.':'Your profile is saved. Upload your ID and selfie from Me to start sending interests.','heart')},
+    if(errs.length){toast(errs[0],'info')}else toast(S.me&&S.me.idCheck&&S.me.selfieCheck&&S.me.rootsCheck&&S.me.statusCheck&&S.me.addrCheck?'Your profile is saved. Our team checks your photo and documents within 24 hours.':'Your profile is saved. Finish your checks from Me to start sending interests.','heart')},
   async suSave(){if(busy)return;for(let s=1;s<=6;s++){const e=validateStep(s,S.draft);if(Object.keys(e).length){S.errors=e;S.step=s;showErrors();toast('Fix the highlighted fields first.','info');return}}
     busy='save';render();const d=S.draft;
     try{const row=profileRow(d);delete row.terms_version;delete row.terms_at;delete row.marketing_ok;
@@ -1408,7 +1532,7 @@ const A={
   celChat(el){const id=el.dataset.id;celebrate=null;S.tab='connections';S.seg='chats';save();A.openchat({dataset:{id}})},
   celClose(){celebrate=null;render()},
   openEvent(el){view={type:'event',id:el.dataset.id};render();const v=document.getElementById('view-scroll');if(v)v.scrollTop=0},
-  book(el){if(needVerified())return;const id=el.dataset.id,e=evById(id);const dm={Vegetarian:'veg',Vegan:'veg',Eggetarian:'veg','Jain vegetarian':'jain','Non-vegetarian':'nonveg'}[S.me.diet]||'';
+  book(el){if(needVerified(true))return;const id=el.dataset.id,e=evById(id);const dm={Vegetarian:'veg',Vegan:'veg',Eggetarian:'veg','Jain vegetarian':'jain','Non-vegetarian':'nonveg'}[S.me.diet]||'';
     sheet={type:'book',id,parents:0,meal:e.meals.includes(dm)?dm:'',p:[{name:'',rel:'Mother',meal:''},{name:'',rel:'Father',meal:''}]};S.errors={};render()},
   bookPlus(){if(sheet.parents<2)sheet.parents++;render()},
   bookMinus(){if(sheet.parents>0){sheet.parents--;delete S.errors['p'+sheet.parents+'name'];delete S.errors['p'+sheet.parents+'meal']}render()},
@@ -1469,7 +1593,24 @@ const A={
     catch(e){busy='';render();fail(e)}},
   async block(el){const id=el.dataset.id;const p=byId(id);try{await API.insert('blocks',{blocker:S.me.id,blocked:id},{returning:false});S.blocked.push(id);sheet=null;view=null;render();toast(`${p&&p.first?p.first:'They'} ${p&&p.first?'is':'are'} blocked.`,'x')}catch(e){fail(e)}},
   closeSheet(){sheet=null;S.errors={};render()},
-  goVerify(){sheet=null;if(S.screen==='signup')return;openEdit(5)},
+  goVerify(el){sheet=null;if(S.screen==='signup')return;openEdit(5);const n=el&&el.dataset&&+el.dataset.n;if(n&&S.draft){S.draft.vs=n;render()}},
+  vGo(el){const d=S.draft;if(!d)return;d.vs=+el.dataset.n||0;save();render();const sc=document.getElementById('su-scroll');if(sc)sc.scrollTop=0},
+  vBack(){const d=S.draft;if(!d)return;d.vs=d.vs===1?0:d.vs-1;render();const sc=document.getElementById('su-scroll');if(sc)sc.scrollTop=0},
+  vPick(el){const d=S.draft;if(!d)return;const k=el.dataset.k;if(d[k]!==el.dataset.v){d[k]=el.dataset.v;if(k==='rootsType'){d.rootsBlob=null;d.rootsName=''}}save();render()},
+  tzSwitch(el){const d=S.draft;if(!d)return;d.country=el.dataset.v;d.state='';d.city='';d.res='';d.reloc='';d.tzAck='';save();render()},
+  tzKeep(){const d=S.draft;if(!d)return;d.tzAck=d.country;save();render()},
+  vLocate(){const d=S.draft;if(!d||busy)return;
+    if(!navigator.geolocation){toast('Location is not available here. Skip this step; your documents are enough.','info');return}
+    busy='loc';render();
+    navigator.geolocation.getCurrentPosition(async pos=>{const lat=pos.coords.latitude,lng=pos.coords.longitude;
+      if(!S.editMode){busy='';d.loc={lat,lng};d.vs=0;render();toast('Location ready. It is checked when you save.','check');return}
+      try{const r=await API.rpc('check_location',{lat,lng});busy='';
+        if(r&&r.ok===true){await loadMe();d.vs=0;render();toast('Location confirmed.','check')}
+        else if(r&&r.ok===false){render();toast(`You seem to be about ${r.km} km from ${S.me.city}. Your documents are enough; try again when you are home.`,'info')}
+        else{render();toast('We could not check this city. Your documents are enough.','info')}}
+      catch(e){busy='';render();fail(e)}},
+    err=>{busy='';render();toast(err&&err.code===1?'Location is off for NeuMarry. You can skip this step; your documents are enough.':'Your location could not be found. Try again outside, or skip this step.','info')},
+    {enableHighAccuracy:false,timeout:20000,maximumAge:600000})},
   edit(){openEdit(1)},
   evFilter(el){S.evFilter=el.dataset.k;save();render()},
   upgrade(el){sheet={type:'upgrade',reason:el&&el.dataset?el.dataset.r||'':'',id:el&&el.dataset?el.dataset.id||'':'',pick:'m3'};render()},
@@ -1609,10 +1750,12 @@ app.addEventListener('change',e=>{
   if(el.dataset.file){const f=el.files&&el.files[0];if(!f||!S.draft)return;const d=S.draft,kind=el.dataset.file;el.value='';
     if(f.size>15*1024*1024){toast('That file is over 15 MB. Try a smaller one.','info');return}
     if(kind==='id'&&/pdf$/i.test(f.type||f.name)){d.idBlob=f;d.idName=f.name||'ID.pdf';render();toast('ID ready. It is sent when you save.','check');return}
+    const DOC={roots:['rootsBlob','rootsName'],status:['statusBlob','statusName'],address:['addrBlob','addrName']}[kind];
+    if(DOC&&/pdf$/i.test(f.type||f.name)){d[DOC[0]]=f;d[DOC[1]]=f.name||'Document.pdf';render();toast('Document ready. It is sent when you save.','check');return}
     if(!/^image\//.test(f.type)){toast('Please choose a photo (JPG or PNG).','info');return}
-    const r=new FileReader();r.onload=()=>{shrink(r.result,kind==='id'?1800:kind==='photo'?1280:900,(url,blob)=>{if(!S.draft)return;
-      if(kind==='photo'){d.photo=url;d.photoBlob=blob;delete S.errors.photo}else if(kind==='selfie'){d.selfie=url;d.selfieBlob=blob}else{d.idBlob=blob;d.idName=f.name||'ID photo'}
-      render();if(kind==='selfie')toast('Selfie ready. It is sent when you save.','check');if(kind==='id')toast('ID ready. It is sent when you save.','check')})};
+    const r=new FileReader();r.onload=()=>{shrink(r.result,kind==='id'||DOC?1800:kind==='photo'?1280:900,(url,blob)=>{if(!S.draft)return;
+      if(kind==='photo'){d.photo=url;d.photoBlob=blob;delete S.errors.photo}else if(kind==='selfie'){d.selfie=url;d.selfieBlob=blob}else if(DOC){d[DOC[0]]=blob;d[DOC[1]]=f.name||'Photo'}else{d.idBlob=blob;d.idName=f.name||'ID photo'}
+      render();if(kind==='selfie')toast('Selfie ready. It is sent when you save.','check');if(kind==='id')toast('ID ready. It is sent when you save.','check');if(DOC)toast('Document ready. It is sent when you save.','check')})};
     r.onerror=()=>toast('Could not read that file. Try another.','info');r.readAsDataURL(f);return}
   if(el.id==='pick-q'||el.dataset.admReason!==undefined)return;
   onBind(e);
