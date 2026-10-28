@@ -1307,6 +1307,15 @@ const ADM_HINT={id:'Name and date of birth must match the profile. Photo must ma
   roots:'The country and state of birth or origin on the document must match the roots on the profile. For “Same as my ID”, the ID shown must be a passport of that country.',
   status:'Must show the member may live in the country on the profile (PR, citizenship, or a valid permit or visa), in the same name as the ID.',
   address:'Same name as the ID, an address in the city on the profile (or within 50 km), dated in the last 3 months or a valid photo ID with the address.'};
+/* New sign-ups (28 Oct, his ok): who joined in the last 30 days and where they stopped, so the team can help. */
+const STEP_CLS={'Fully verified and live':'good','Waiting for our team':'gold'};
+function signupsBlock(list){const today=list.filter(x=>Date.now()-Date.parse(x.created_at)<864e5).length;
+  return `<div class="sec-h"><h2>New sign-ups (${list.length})</h2><small>${today} today · last 30 days</small></div>
+  ${list.length?`<div class="panel glist su-list">${list.map(x=>{const d=new Date(x.created_at);
+    return `<div class="rowi"><span class="tx"><b>${esc(x.full_name||'No name yet')}</b><span class="notr">${esc(x.email||'')}</span>
+     <span>${esc(d.toLocaleString(RM_I18N.locale,{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}))} · ${esc(x.provider==='google'?'Google':x.provider==='email'?'Email and password':x.provider)}${x.city?` · ${esc(x.city)}, ${esc(x.country||'')}`:''}</span>
+     <span class="pill ${STEP_CLS[x.step]||''}">${esc(x.step)}</span></span>
+     ${x.email&&x.step!=='Fully verified and live'?`<a class="btn ghost sm" href="mailto:${esc(x.email)}?subject=${encodeURIComponent('Your NeuMarry profile')}">${ic('mail')}Email</a>`:''}</div>`}).join('')}</div>`:`<p class="hint">No new sign-ups in the last 30 days.</p>`}`}
 function renderAdmin(){
   const a=S.admin||{};const q=a.queue||[];const reps=a.reports||[];const c=a.counts;
   const item=x=>{const img=a.urls&&a.urls[x.bucket+':'+x.path];const prof=a.urls&&x.profile_photo&&a.urls['photos:'+x.profile_photo];
@@ -1320,6 +1329,7 @@ function renderAdmin(){
    <div class="vhead pad"><button class="iconbtn" data-a="closeView" aria-label="Back">${ic('back')}</button><div class="grow"><span><b>Team review</b><small>${c?`${c.members} member${c.members===1?'':'s'} · ${c.verified} verified · ${c.women} women, ${c.men} men · ${c.waitlist} on waitlist`:'Loading…'}</small></span></div><button class="iconbtn" data-a="openAdmin" aria-label="Refresh">${ic('refresh')}</button></div>
    <div class="scroll" id="view-scroll"><div class="pad" style="display:grid;gap:14px;padding-block:16px 26px">
     ${a.loading?`<div style="display:grid;place-items:center;padding:30px">${spinner('Loading')}</div>`:''}
+    ${signupsBlock(a.signups||[])}
     <div class="sec-h"><h2>To review (${q.length})</h2></div>
     ${q.length?q.map(item).join(''):a.loading?'':`<p class="hint">Nothing waiting. Well done.</p>`}
     <div class="sec-h"><h2>Reports (${reps.length})</h2></div>
@@ -1812,9 +1822,9 @@ const A={
 async function adminReview(el,ok,reason){const id=el.dataset.id,k=el.dataset.k;
   try{await API.rpc('admin_review',{row_kind:k==='photo'?'photo':'verification',rid:id,approve:ok,reason:reason||null});S.admin.queue=S.admin.queue.filter(x=>x.row_id!==id);if(S.admin.counts)S.admin.counts.pending--;render();toast(ok?'Approved.':'Rejected. The member sees the reason.',ok?'check':'x')}catch(e){fail(e)}}
 async function loadAdmin(){
-  try{const [q,r,c,ap,ru]=await Promise.all([API.rpc('admin_queue'),API.rpc('admin_reports'),API.rpc('admin_counts'),API.rpc('admin_applications').catch(()=>[]),API.rpc('admin_rude').catch(()=>[])]);
+  try{const [q,r,c,ap,ru,su]=await Promise.all([API.rpc('admin_queue'),API.rpc('admin_reports'),API.rpc('admin_counts'),API.rpc('admin_applications').catch(()=>[]),API.rpc('admin_rude').catch(()=>[]),API.rpc('admin_signups',{days:30}).catch(()=>[])]);
     const queue=(q||[]).map(x=>Object.assign(x,{bucket:x.kind==='photo'?'photos':'verification'}));
-    S.admin={loading:false,queue,reports:r||[],counts:c,apps:ap||[],rude:ru||[],urls:{}};render();
+    S.admin={loading:false,queue,reports:r||[],counts:c,apps:ap||[],rude:ru||[],signups:su||[],urls:{}};render();
     const ph=[...new Set(queue.filter(x=>x.bucket==='photos').map(x=>x.path).concat(queue.map(x=>x.profile_photo).filter(Boolean)))];
     const vf=queue.filter(x=>x.bucket==='verification').map(x=>x.path);
     const [a,b]=await Promise.all([API.signMany('photos',ph,1800),API.signMany('verification',vf,600)]);
