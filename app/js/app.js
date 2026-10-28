@@ -1002,7 +1002,7 @@ function renderEvents(){
   const evs=events();const mine=evs.filter(e=>e.my);
   return topbar('Events','Hosted evenings with dinner included')+
   `<div class="scroll" id="main"><div class="main-inner pad">
-   ${mine.length?`<div class="sec-h"><h2>Your reservations</h2></div>${mine.map(e=>{const r=e.my,f=fmtDay(e.date,e.tz);return `<button class="tkrow" data-a="openEvent" data-id="${e.id}"><span class="tki" style="${r.status==='pay_due'?'':'background:var(--gold-soft);color:var(--gold)'}">${ic(r.status==='pay_due'?'ticket':'cal')}</span><span class="tx"><b>${esc(e.title)}</b><small>${r.status==='paid'?'Paid · your QR ticket opens on the event day':r.status==='pay_due'?'Confirmed · we will message you when payment opens':`${esc(f.long)} · waiting for ${evStat(e).left} more to confirm`}</small></span>${ic('back','flipx')}</button>`}).join('')}`:''}
+   ${mine.length?`<div class="sec-h"><h2>Your reservations</h2></div>${mine.map(e=>{const r=e.my,f=fmtDay(e.date,e.tz);return `<button class="tkrow" data-a="openEvent" data-id="${e.id}"><span class="tki" style="${r.status==='pay_due'?'':'background:var(--gold-soft);color:var(--gold)'}">${ic(r.status==='pay_due'?'ticket':'cal')}</span><span class="tx"><b>${esc(e.title)}</b><small>${r.status==='paid'?'Paid · your QR ticket opens on the event day':r.status==='pay_due'?`Confirmed · pay${r.due?' by '+esc(fmtDay(r.due,e.tz).long):''} to keep your seat`:`${esc(f.long)} · waiting for ${evStat(e).left} more to confirm`}</small></span>${ic('back','flipx')}</button>`}).join('')}`:''}
    <div class="callout">${ic('users')}<span>Reserve free. An event is confirmed when enough people reserve; then you pay in the app. Dinner is included, and nothing is paid at the restaurant. If it is not confirmed, nobody pays.</span></div>
    <div class="sec-h"><h2>Upcoming events</h2></div>
    ${evs.length>1?`<div class="sorts evf" role="group" aria-label="Show events">${[['for','For you'],['all','Every event']].map(([k,l])=>`<button data-a="evFilter" data-k="${k}" class="${(S.evFilter||'for')===k?'on':''}" aria-pressed="${(S.evFilter||'for')===k}">${l}</button>`).join('')}</div>`:''}
@@ -1140,7 +1140,7 @@ function renderEventView(id){
      <div class="ovt"><p>${esc(f.long)} · ${e.time} · ${e.dur}</p><h2>${esc(e.title)}</h2><p>${esc(audLabel(e))} · ${esc(e.sub)} · ages ${e.age}</p></div></div>
     <div class="pad" style="display:grid;gap:14px;padding-block:16px 26px">
      ${rv&&rv.status==='paid'?`<div class="callout good">${ic('check')}<span><b>Your seat is paid${rv.parents.length?` for you and ${rv.parents.length} ${rv.parents.length===1?'parent':'parents'}`:''}.</b> Dinner is included. Your QR ticket below opens on the event day.</span></div>`:
-       rv&&rv.status==='pay_due'?`<div class="callout gold">${ic('ticket')}<span><b>The event is confirmed and your seat is held.</b> Payment opens in the app soon; we will message you. Total ${money(rv.amount,e.cur)}, dinner included.</span></div>`:
+       rv&&rv.status==='pay_due'?`<div class="callout gold">${ic('ticket')}<span><b>The event is confirmed and your seat is held.</b>${rv.due?` Pay by ${esc(fmtDay(rv.due,e.tz).long)} · ${esc(fmtTime(rv.due,e.tz))}, or the seat goes to the next person.`:''}</span></div>${payPanel(e)}`:
        rv?`<div class="callout">${ic('check')}<span><b>You’re reserved${rv.parents.length?` with ${rv.parents.length} ${rv.parents.length===1?'parent':'parents'}`:''}.</b> Nothing to pay until ${st.left} more people reserve. If the event isn’t confirmed by ${esc(fmtDay(st.deadline,e.tz).long)}, it is cancelled and nobody pays.</span></div>`:''}
      ${rv&&rv.status==='paid'?ticketPanel(e):''}
      ${(S.staff||[]).includes(e.id)?`<div class="panel wwu"><div class="wwu-h"><h3>Host tools</h3></div><p class="sub">Scan each guest’s QR ticket at the door. You see their photo, name and checks, then check them in with one tap.</p><button class="btn primary block" data-a="hostOpen" data-id="${e.id}">${ic('scan')}Scan tickets and guest list</button></div>`:''}
@@ -1166,12 +1166,40 @@ function renderEventView(id){
    </div>
    <div class="bookbar pad"><span class="tx"><b>${money(e.priceM,e.cur)}</b><small>${e.parents&&e.priceP?`+ ${money(e.priceP,e.cur)} per parent`:'per person'}</small></span>${
      rv&&rv.status==='paid'?`<button class="btn ghost" disabled>${ic('check')}Seat paid</button>`:
+     rv&&rv.status==='pay_due'&&PAYQ&&PAYQ.eid===e.id&&PAYQ.q&&!PAYQ.q.error?`<button class="btn primary" data-a="payEvent" data-id="${e.id}"${PAYBUSY?' disabled':''}>${ic('lock')}Pay ${money(PAYQ.q.total_cents,PAYQ.q.currency)}</button>`:
      rv?`<button class="btn ghost" data-a="cancelRes" data-id="${e.id}"${busy?' disabled':''}>Cancel reservation</button>`:
      !forMe(e)?`<button class="btn ghost" disabled>For ${esc((e.aud||{}).l||'members')} only</button>`:
      !ageOk(e)?`<button class="btn ghost" disabled>For ages ${e.age}</button>`:
      `<button class="btn primary" data-a="book" data-id="${e.id}"${canBook?'':' disabled'}>Reserve free seat</button>`}</div>
   </div>`;
 }
+/* ---------- Event payment (PayPal) ---------- */
+let PAYQ=null,PAYBUSY=false,PAYCHK=null;
+function payPanel(e){const q=PAYQ&&PAYQ.eid===e.id?PAYQ.q:null;
+  if(!q)return `<div class="panel"><h3>Pay for your seat</h3>${spinner('Loading')}</div>`;
+  if(q.error)return q.error==='too_late'?`<div class="callout bad">${ic('info')}<span>The time to pay has passed, so this seat was released.</span></div>`:'';
+  const par=q.parents||0,pct=q.ticket_cents?Math.round(q.tax_cents/q.ticket_cents*100):0;
+  return `<div class="panel pay"><h3>Pay for your seat</h3>
+   <div class="sumrow"><span>${par?`You and ${par} ${par===1?'parent':'parents'}, dinner included`:'You, dinner included'}</span><span>${money(q.ticket_cents,q.currency)}</span></div>
+   ${q.tax_cents?`<div class="sumrow"><span>HST ${pct}%</span><span>${money(q.tax_cents,q.currency)}</span></div>`:''}
+   <div class="sumrow total"><b>Total</b><b>${money(q.total_cents,q.currency)}</b></div>
+   <button class="btn primary block" data-a="payEvent" data-id="${e.id}"${PAYBUSY?' disabled':''}>${ic('lock')}${PAYBUSY?'Opening PayPal…':`Pay ${money(q.total_cents,q.currency)} with PayPal`}</button>
+   ${q.order?`<button class="link" data-a="payCheck" data-id="${e.id}" style="justify-self:center">I already paid · check again</button>`:''}
+   <p class="hint">You pay on PayPal’s secure page, with a PayPal account or a card. NeuMarry never sees your card. Full refund up to 48 hours before the event.</p></div>`}
+async function loadPayQuote(eid){let q;try{q=await API.rpc('my_pay_quote',{eid})}catch(e){q={error:'net'}}PAYQ={eid,q:q||{error:'net'}};
+  if(q&&q.order&&PAYCHK!==eid){PAYCHK=eid;payCheck(eid,true)}
+  if(view&&view.type==='event'&&view.id===eid)render()}
+function payPending(v){try{if(v===undefined)return localStorage.getItem('rm.payPending');if(v)localStorage.setItem('rm.payPending',v);else localStorage.removeItem('rm.payPending')}catch(e){return null}}
+async function payCheck(eid,quiet){let r;try{r=await API.fn('event-pay',{action:'check',eid})}catch(e){if(!quiet)toast((e&&e.message)||'Could not reach PayPal. Try again.','info');return}
+  if(r&&r.status==='paid'){payPending(null);PAYQ=null;await loadEvents().catch(()=>{});toast('Payment received. Your seat is paid.','check');render();return true}
+  if(!quiet)toast(r&&r.status==='waiting'?'PayPal has not finished the payment yet. Finish it on the PayPal page, then come back.':'No payment found yet.','info');
+  return false}
+/* Back from PayPal: the web app opens with ?pp=<event>; the phone app checks when it comes back to the front. */
+async function payReturn(){let q=null;try{q=new URLSearchParams(location.search)}catch(e){}const eid=q&&q.get('pp');
+  if(!eid)return;history.replaceState(null,'',location.pathname);
+  if(!S.me)return;S.tab='events';view={type:'event',id:eid};render();
+  if(q.get('cancel')){toast('Payment cancelled. Your seat is still held until the time to pay ends.','info');return}
+  await payCheck(eid,false)}
 /* ---------- Event QR ticket (guest) and check-in (host) ---------- */
 let TICKET=null,TK_T=null,TK_S=null;
 function qrSvg(text){try{const q=qrcode(0,'M');q.addData(text);q.make();return q.createSvgTag({cellSize:6,margin:2,scalable:true})}catch(e){return ''}}
@@ -1198,6 +1226,7 @@ function afterRenderEvents(){
   else if(TICKET.d&&!TK_T){const wait=TICKET.d.code?Math.max(1,TICKET.d.seconds_left)*1000+300:60000;TK_T=setTimeout(()=>{TK_T=null;if(TICKET&&TICKET.eid===e.id)loadTicket(e.id)},wait)}
   if(paid&&TICKET&&TICKET.d&&TICKET.d.code){const end=TICKET.at+TICKET.d.seconds_left*1000;
     TK_S=setInterval(()=>{const el=document.getElementById('tk-left');if(!el){clearInterval(TK_S);return}el.textContent=Math.max(0,Math.ceil((end-Date.now())/1000))},500)}
+  if(e&&e.my&&e.my.status==='pay_due'&&(!PAYQ||PAYQ.eid!==e.id)){PAYQ={eid:e.id,q:null};loadPayQuote(e.id)}
   if(view&&view.type==='host')hostAttach();else hostStop();
 }
 let HOST={eid:null,stream:null,loop:null,busy:false,res:null,guests:null,err:''};
@@ -1722,6 +1751,13 @@ const A={
   async hostCheckIn(){const r=HOST.res;if(!r||!r.rid||HOST.busy)return;HOST.busy=true;render();
     try{const x=await API.rpc('checkin_do',{rid:r.rid});r.checked_in_at=x&&x.checked_in_at;r.done=true;toast(`${r.name.split(' ')[0]} is checked in.`,'check')}catch(e){toast((e&&e.message)||'Could not check in. Try again.','info')}
     HOST.busy=false;await hostLoadGuests();render()},
+  async payEvent(el){const eid=el.dataset.id;if(PAYBUSY)return;PAYBUSY=true;render();
+    try{const r=await API.fn('event-pay',{action:'start',eid,web:!!CFG.web});
+      if(r&&r.status==='paid'){PAYBUSY=false;await payCheck(eid,true);return}
+      if(r&&r.url){payPending(eid);if(CFG.web){location.href=r.url;return}window.open(r.url,'_blank')}
+    }catch(e){toast((e&&e.message)||'PayPal is not answering. Try again in a minute.','info')}
+    PAYBUSY=false;render()},
+  payCheck(el){payCheck(el.dataset.id,false)},
   goPhoto(){sheet=null;if(S.screen==='signup')return;openEdit(1)},
   goVerify(el){sheet=null;if(S.screen==='signup')return;openEdit(5);const n=el&&el.dataset&&+el.dataset.n;if(n&&S.draft){S.draft.vs=n;render()}},
   vGo(el){const d=S.draft;if(!d)return;d.vs=+el.dataset.n||0;save();render();const sc=document.getElementById('su-scroll');if(sc)sc.scrollTop=0},
@@ -1925,7 +1961,7 @@ async function poll(){
   }catch(e){}
 }
 setInterval(()=>{const now=Date.now();document.querySelectorAll('[data-until]').forEach(el=>{el.textContent=fmtLeft(+el.dataset.until-now)});poll()},2000);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S.screen==='app'){tick=9;poll()}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S.screen==='app'){tick=9;poll();const p=payPending();if(p)payCheck(p,true)}});
 
 /* ---------- Boot ---------- */
 async function boot(){
@@ -1936,6 +1972,7 @@ async function boot(){
   console.info('[boot] session',!!API.session());
   if(!API.session()){S.screen='welcome';render();console.info('[boot] welcome shown');return}
   await afterLogin();
+  payReturn().catch(()=>{});
   console.info('[boot] signed in, screen',S.screen);
 }
 window.addEventListener('error',e=>console.error('[js error]',e.message,e.filename,e.lineno));
@@ -1943,7 +1980,7 @@ window.addEventListener('unhandledrejection',e=>console.error('[js rejection]',e
 if(isNative&&Plug().App){
   Plug().App.addListener('appUrlOpen',ev=>{if(ev&&ev.url&&ev.url.startsWith(CFG.redirect))handleAuthUrl(ev.url)});
   Plug().App.addListener('backButton',()=>{if(!goBack())Plug().App.exitApp()});
-  Plug().App.addListener('resume',()=>{if(S.screen==='app'){tick=9;poll()}});
+  Plug().App.addListener('resume',()=>{if(S.screen==='app'){tick=9;poll();const p=payPending();if(p)payCheck(p,true)}});
 }
 /* A payment that was pending (for example cash at a store) and completes later. */
 if(Bill()){try{Bill().addListener('purchasesUpdated',()=>{if(S.screen==='app')restorePurchases(false)})}catch(e){}}

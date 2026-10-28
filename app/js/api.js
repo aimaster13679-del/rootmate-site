@@ -47,6 +47,11 @@ window.RM_API = (function () {
     purchase_other_account: 'This Google Play purchase belongs to a different NeuMarry account. Log in with that account, or contact us.',
     store_unavailable: 'Google Play is not answering right now. Your purchase is safe; it will switch on Gold the next time you open NeuMarry.',
     server_busy: 'The server is busy. Please try again in a moment.',
+    paypal_busy: 'PayPal is not answering right now. Nothing was charged. Try again in a minute.',
+    not_due: 'Payment opens when the event is confirmed.',
+    amount_mismatch: 'The amount paid did not match. Our team will check it and contact you.',
+    wrong_order: 'This payment belongs to a different seat. Contact us and we will fix it.',
+    no_reservation: 'You do not have a seat at this event.',
     network: 'No internet connection. Check your connection and try again.'
   };
   function friendly(code, fallback) { return FRIENDLY[code] || fallback || 'Something went wrong. Please try again.'; }
