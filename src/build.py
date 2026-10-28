@@ -433,7 +433,7 @@ PX_HEAD = ("<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){
            "s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');"
            "(function(){var tz='',c=null;try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';c=localStorage.getItem('nm.ads')}catch(e){}"
            "var eu=/^(Europe\\/|Atlantic\\/(Reykjavik|Canary|Madeira|Faroe|Azores))/.test(tz);window.nmEU=eu;"
-           "if(c==='denied'||(eu&&c!=='granted'))fbq('consent','revoke');"
+           "var gpc=navigator.globalPrivacyControl===true;window.nmGPC=gpc;if(c==='denied'||((eu||gpc)&&c!=='granted'))fbq('consent','revoke');"
            "fbq('init','" + PX_ID + "');fbq('track','PageView');"
            "document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a[href]');"
            "if(a&&/(^|\\/)app\\/?(\\?|#|$)/.test(a.getAttribute('href')))fbq('track','Lead')},true)})();</script>")

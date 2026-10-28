@@ -304,7 +304,7 @@ const BETA=Date.now()<Date.parse(CFG.betaUntil);
 function meFromServer(m){
   const p=m.profile,q=m.prefs||{};
   const pr={ageMin:q.age_min??18,ageMax:q.age_max??75,hMin:q.h_min??HEIGHTS[0].cm,hMax:q.h_max??HEIGHTS[HEIGHTS.length-1].cm,liveCountry:q.live_country||'Any',radius:q.radius_km||0,
-    oc:q.origin_country||'Any',os:q.origin_state||'Any',religion:q.religion||'Any',community:q.community||'Any',alsoComm:q.also_communities||[],tongue:q.tongue||'Any',diet:q.diet||'Any',settled:!!q.settled_only,verifiedOnly:q.verified_only!==false};
+    oc:q.origin_country||'Any',os:q.origin_state||'Any',religion:q.religion||'Any',community:q.community||'Any',alsoComm:q.also_communities||[],tongue:q.tongue||'Any',diet:q.diet||'Any',timeline:q.timeline||'Any',settled:!!q.settled_only,verifiedOnly:q.verified_only!==false};
   const photos=(m.photos||[]).filter(x=>x.status!=='rejected');const rejectedPhoto=(m.photos||[]).find(x=>x.status==='rejected');
   const ver=k=>{const list=(m.verifications||[]).filter(v=>v.kind===k);return list.length?list[list.length-1]:null};
   return {id:p.id,name:p.full_name,g:p.gender,lookingFor:p.looking_for,dob:p.dob,age:ageFrom(p.dob),h:p.height_cm,marital:p.marital,createdBy:p.created_by,
@@ -409,6 +409,8 @@ function passFilters(p,o){
   if(pr.oc!=='Any'&&p.oc!==pr.oc)return false;
   if(pr.oc!=='Any'&&pr.os!=='Any'&&p.os!==pr.os)return false;
   if(pr.religion!=='Any'&&p.r!==pr.religion)return false;
+  if(pr.timeline==='year'&&p.ans&&p.ans[8]!==0)return false;
+  if(pr.timeline==='two'&&p.ans&&p.ans[8]!==0&&p.ans[8]!==1)return false;
   if(pr.religion!=='Any'&&pr.community!=='Any'&&!commMatch(p.c,pr.community)&&!(pr.alsoComm||[]).some(x=>commMatch(p.c,x)))return false;
   if(pr.tongue!=='Any'&&p.t!==pr.tongue)return false;
   if(pr.diet==='veg'&&dietGroup(p.diet)!==0)return false;
@@ -433,7 +435,7 @@ function blankDraft(){return {name:'',createdBy:'Self',g:'',lookingFor:'',dob:''
   privacy:{blur:true,vis:'verified',showC:true,incognito:false},prefs:null}}
 function defaultPrefs(d){const a=ageFrom(d.dob)||27;const male=d.g==='M';
   return {ageMin:Math.max(18,male?a-5:a-1),ageMax:male?a+1:a+6,hMin:male?HEIGHTS[0].cm:(+d.h||HEIGHTS[0].cm),hMax:HEIGHTS[HEIGHTS.length-1].cm,
-    liveCountry:d.country||'Any',radius:0,oc:d.oc||'Any',os:'Any',religion:d.r||'Any',community:'Any',alsoComm:[],tongue:'Any',diet:'Any',settled:false}}
+    liveCountry:d.country||'Any',radius:0,oc:d.oc||'Any',os:'Any',religion:d.r||'Any',community:'Any',alsoComm:[],tongue:'Any',diet:'Any',timeline:'Any',settled:false}}
 
 /* ---------- Pickers ---------- */
 const cOpt=n=>({v:n,l:n,pre:flag(n)});
@@ -507,6 +509,11 @@ function renderPicker(){
    ${showSearch?`<div class="psearch pad">${ic('search')}<input id="pick-q" type="search" placeholder="${esc(def.ph||'Search')}" value="${esc(picker.q||'')}" autocomplete="off" enterkeyhint="done" aria-label="${esc(def.ph||'Search')}"></div>`:''}
    <div class="plist pad" id="pick-list" role="listbox"${def.multi?' aria-multiselectable="true"':''}>${pickRows()}</div>${def.multi?`<div class="sheet-f pad"><button class="btn primary block" data-a="pickClose">Done${(()=>{const a=getPath(picker.t==='me'?S.me:S.draft,picker.k);return Array.isArray(a)&&a.length?` · ${a.length} selected`:''})()}</button></div>`:''}</div></div>`;
 }
+/* Marriage timeline (28 Oct, his ok): filter "Ready to marry" + a pill on each card, from question 9 "How soon do you want to marry?". */
+const _pickerDef0=pickerDef;
+pickerDef=function(key,t){if(key==='prefs.timeline')return {title:'Ready to marry',opts:[{v:'Any',l:'Any time'},{v:'year',l:'Within a year'},{v:'two',l:'Within 2 years'}]};return _pickerDef0(key,t)};
+const TL_PILL=['Ready to marry within a year','Ready to marry in 1–2 years','Marriage when it feels right'];
+function timelinePill(p){const a=p.ans&&p.ans[8];return a===0||a===1||a===2?`<div class="tlrow"><span class="pill mtl">${ic('clock')}<span>${TL_PILL[a]}</span></span></div>`:''}
 function applyChange(t,key,v){
   const o=t==='me'?S.me:S.draft;if(!o)return;
   setPath(o,key,v);
@@ -576,7 +583,7 @@ function card(p){
       <span class="mtop"><span class="mchip glass">${ic('sparkle')}${c.total}% match</span>${st==='received'?`<span class="mchip state">${ic('heart')}Likes you</span>`:p.days<=10?`<span class="mchip new">New</span>`:''}</span>
       <span class="mname"><span class="nm">${esc(shown(p))} <span class="age">${p.age}</span> ${vtick(p)}</span><small>${lk?`${ic('lock')} Name, photos and profile with Gold`:`${esc(p.job)} · ${ftIn(p.h)}`}</small></span>
     </button>
-    <div class="mbody">${rootsLine(p)}
+    <div class="mbody">${rootsLine(p)}${timelinePill(p)}
       <ul class="why">${whyChips(p).map(w=>`<li${w.r?' class="r"':''}>${esc(w.t)}</li>`).join('')}</ul>
       ${trustBadges(p)}
       <div class="mact">${lk?`<button class="btn gold" data-a="upgrade" data-r="profile" data-id="${p.id}">${ic('crown')}See ${p.g==='F'?'her':'his'} profile</button>`:actionBar(p)}</div></div>
@@ -886,7 +893,8 @@ function renderSignup(){if(!S.editMode)setTimeout(()=>noteStep(S.step),0);
     ${pr.oc!=='Any'?pickF('prefs.os','Their roots: state / region','draft'):''}
     ${pickF('prefs.religion','Religion','draft')}
     ${pickF('prefs.community','Community','draft',{disabled:pr.religion==='Any'||!commOf(pr.religion).length,hint:pr.religion==='Any'?'Choose a religion to pick a community.':''})}
-    ${pr.community!=='Any'?pickF('prefs.alsoComm','Also open to these communities','draft',{hint:'More communities means more matches and more people to meet at events.'}):''}`;
+    ${pr.community!=='Any'?pickF('prefs.alsoComm','Also open to these communities','draft',{hint:'More communities means more matches and more people to meet at events.'}):''}
+    ${pickF('prefs.timeline','Ready to marry','draft')}`;
   }
   if(st===5&&d.vs)return verifyHead(d)+`<div class="scroll" id="su-scroll"><div class="form pad">${body}</div></div>`+verifyFoot(d);
   const vReady=st===5&&verifyAllReady(d,edit?S.me:null),vFirst=st===5?([1,2,3].find(n=>!['ok','wait','ready'].includes(vState(n,d,edit?S.me:null)))||1):1;
@@ -1335,6 +1343,7 @@ function renderAdmin(){
    <div class="scroll" id="view-scroll"><div class="pad" style="display:grid;gap:14px;padding-block:16px 26px">
     ${a.loading?`<div style="display:grid;place-items:center;padding:30px">${spinner('Loading')}</div>`:''}
     ${signupsBlock(a.signups||[])}
+    <div class="panel pay-test"><div class="adm-h"><b>${ic('ticket')} Payment test (team only)</b><small>Only the team sees this event. You pay CA$1.00 + 13% HST = CA$1.13 with the real PayPal, then refund it in the PayPal dashboard.</small></div><div class="adm-act"><button class="btn primary sm" data-a="admPayTest">Open the test seat</button></div></div>
     <div class="sec-h"><h2>To review (${q.length})</h2></div>
     ${q.length?q.map(item).join(''):a.loading?'':`<p class="hint">Nothing waiting. Well done.</p>`}
     <div class="sec-h"><h2>Reports (${reps.length})</h2></div>
@@ -1413,6 +1422,7 @@ function renderSheet(){
      ${pr.community!=='Any'?pickF('prefs.alsoComm','Also open to these communities','me',{hint:'Widens your matches and who you meet at events.'}):''}
      ${pickF('prefs.tongue','Mother tongue','me')}
      ${pickF('prefs.diet','Diet','me')}
+     ${pickF('prefs.timeline','Ready to marry','me',{hint:'From their answer to “How soon do you want to marry?”'})}
      <h3 class="section-t">Trust</h3>
      <div class="panel" style="padding:4px 16px">
       ${toggle('prefs.settled','Citizens and permanent residents only','Hide people on temporary visas or permits',pr.settled,'me')}
@@ -1526,7 +1536,7 @@ function profileRow(d){const co=coordsOf(d)||[null,null];const cons=readConsent(
     diet:d.diet,smoke:d.sm,drink:d.dr,answers:d.ans.map(Number),blur_photos:!!d.privacy.blur,phone:fullPhone(d),
     marketing_ok:!!cons.mkt,terms_version:'2026-10',terms_at:cons.at||new Date().toISOString()}}
 function prefsRow(pr,uid){return {user_id:uid,age_min:+pr.ageMin,age_max:+pr.ageMax,h_min:+pr.hMin,h_max:+pr.hMax,live_country:pr.liveCountry,radius_km:+pr.radius||0,
-  origin_country:pr.oc,origin_state:pr.os,religion:pr.religion,community:pr.community,also_communities:pr.alsoComm||[],tongue:pr.tongue,diet:pr.diet,settled_only:!!pr.settled,verified_only:!!pr.verifiedOnly}}
+  origin_country:pr.oc,origin_state:pr.os,religion:pr.religion,community:pr.community,also_communities:pr.alsoComm||[],tongue:pr.tongue,diet:pr.diet,timeline:pr.timeline||'Any',settled_only:!!pr.settled,verified_only:!!pr.verifiedOnly}}
 function saveConsent(a){try{localStorage.setItem('rm.consent',JSON.stringify({mkt:!!a.mkt,at:new Date().toISOString()}))}catch(e){}}
 function readConsent(){try{return JSON.parse(localStorage.getItem('rm.consent')||'{}')||{}}catch(e){return {}}}
 async function sha256(blob){try{const buf=await blob.arrayBuffer();const h=await crypto.subtle.digest('SHA-256',buf);return Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join('')}catch(e){return null}}
@@ -1822,6 +1832,7 @@ const A={
     try{const v=await verifyPurchase(p);await loadMe();await loadCards();busy='';sheet=null;render();
       if(v&&v.entitled)toast(back==='chat'?'Welcome to Gold. Your chat is open.':'Welcome to Gold.','crown');else toast('Google Play has not confirmed this payment yet. Gold switches on as soon as it does.','info')}
     catch(e){busy='';sheet=null;render();if(e&&e.code==='purchase_other_account')fail(e);else toast('Payment received. Gold will switch on the next time you open NeuMarry. If it does not, contact us.','info')}},
+  async admPayTest(el){if(el)el.disabled=true;try{const eid=await API.rpc('admin_pay_test');await loadEvents();PAYQ=null;view={type:'event',id:typeof eid==='string'?eid:(eid&&(eid.admin_pay_test||Object.values(eid)[0]))};render();const v=document.getElementById('view-scroll');if(v)v.scrollTop=0}catch(e){if(el)el.disabled=false;toast('Could not open the test seat. Try again.','info')}},
   openAdmin(){view={type:'admin'};S.admin={loading:true,queue:[],reports:[],urls:{}};render();loadAdmin()},
   async admApprove(el){await adminReview(el,true)},
   async admReject(el){const sel=document.querySelector(`[data-adm-reason="${el.dataset.id}"]`);const reason=sel&&sel.value;if(!reason){toast('Choose a reason first, so the member knows what to fix.','info');if(sel)sel.focus();return}await adminReview(el,false,reason)},
