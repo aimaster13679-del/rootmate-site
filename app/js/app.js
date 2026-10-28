@@ -1318,6 +1318,7 @@ function signupsBlock(list){const today=list.filter(x=>Date.now()-Date.parse(x.c
      <span>Joined ${esc(when(x.created_at))} · ${esc(x.provider==='google'?'Google':x.provider==='email'?'Email and password':x.provider)}${x.city?` · ${esc(x.city)}, ${esc(x.country||'')}`:''}</span>
      <span>Last active ${esc(when(x.last_active))} · ${x.logins||1} ${x.logins===1||!x.logins?'login':'logins'}${x.form_minutes!=null?` · ${x.form_minutes} min in the form`:''}</span>
      ${x.phone_tz?`<span>Phone: ${esc(tzPlace(x.phone_tz))}${x.phone_lang?` · language ${esc(x.phone_lang)}`:''}</span>`:''}
+     ${x.reminded_at?`<span>${ic('mail')} Reminder email sent ${esc(when(x.reminded_at))}</span>`:''}
      <span class="pill ${STEP_CLS[x.step]||''}">${esc(x.step)}</span></span>
      ${x.email&&x.step!=='Fully verified and live'?`<a class="btn ghost sm" href="mailto:${esc(x.email)}?subject=${encodeURIComponent('Your NeuMarry profile')}">${ic('mail')}Email</a>`:''}</div>`}).join('')}</div>`:`<p class="hint">No new sign-ups in the last 30 days.</p>`}`}
 function renderAdmin(){
