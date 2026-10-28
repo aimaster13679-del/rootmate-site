@@ -130,6 +130,11 @@ const QS=[
  {q:'When you disagree, you…',k:'Disagreements',o:['Talk it through right away','Take some space, then talk','Let it pass quietly'],b:['Both talk things out','Both need space, then talk','Both let things pass']},
  {q:'How soon do you want to marry?',k:'Timeline',o:['Within a year','In 1–2 years','When it feels right'],b:['Both ready within a year','Same timeline: 1–2 years','Both in no rush']}
 ];
+/* Icons added after the prototype (28 Oct): clock, QR ticket, scanner. */
+Object.assign(IC,{
+ clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+ qr:'<path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z"/><path d="M14 14h2.5v2.5H14zM17.5 17.5H20V20h-2.5zM14 18.5V20M18.5 14H20"/>',
+ scan:'<path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9M20 15v3.5a1.5 1.5 0 0 1-1.5 1.5H15M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15M4 12h16"/>'});
 
 const API=window.RM_API, CFG=window.RM_CONFIG;
 /* Editorial portraits: tonal head-and-shoulders silhouettes used as stand-ins where no
@@ -283,6 +288,9 @@ function isGold(){return S.me&&S.me.plan!=='free'}
 function locked(p){return !isGold()&&!p.mutual}
 function fullyV(p){return !!p.v.id&&!!p.v.selfie&&!!p.v.roots&&!!p.v.lives}
 function verified(){const v=S.me&&S.me.v;return !!v&&v.id&&v.selfie&&v.roots&&v.lives}
+/* Live = every check passed and a photo approved. Only live members are shown to others, and only they see others. */
+function photoOk(){return !!S.me&&(S.me.photos||[]).some(x=>x.status==='approved')}
+function isLive(){return verified()&&photoOk()}
 function canChat(id){const p=byId(id);return !!p&&p.mutual&&(isGold()||p.gold)}
 function chatWhy(id){const p=byId(id);if(isGold()||!p)return '';if(p.gold)return `${p.first||'They'} ${p.first?'has':'have'} Gold, so you can chat for free`;return ''}
 const BETA=Date.now()<Date.parse(CFG.betaUntil);
@@ -322,7 +330,8 @@ function attachPhotos(){PROFILES.forEach(p=>{p.photos=p.photoPaths.map(urlOf).fi
 async function loadMe(){const m=await API.rpc('me');if(!m||!m.profile)return null;S.me=meFromServer(m);return S.me}
 async function loadCards(){
   if(!S.me)return;
-  const [fit,ints]=await Promise.all([API.rpc('member_cards',{lim:400,off:0}),API.select('interests',{select:'*'})]);
+  const [fit,ints,fitN]=await Promise.all([API.rpc('member_cards',{lim:400,off:0}),API.select('interests',{select:'*'}),isLive()?null:API.rpc('fit_count').catch(()=>0)]);
+  S.fitN=fitN||0;
   const me=S.me.id,map={};
   (ints||[]).forEach(i=>{const other=i.from_user===me?i.to_user:i.from_user;let st;
     if(i.status==='accepted')st='mutual';
@@ -350,7 +359,7 @@ async function loadMessages(){
   return fresh_;
 }
 function ensureMatchChats(){Object.keys(S.interests).forEach(id=>{if(S.interests[id]==='mutual'&&!S.chats[id])S.chats[id]=[{f:'sys',x:'You both said yes. Say hello! Phone numbers stay hidden.',ts:Date.now()-1000}]})}
-async function loadEvents(){const list=await API.rpc('event_list');S.events=(list||[]).map(eventFromServer)}
+async function loadEvents(){const [list,staff]=await Promise.all([API.rpc('event_list'),API.rpc('staff_events').catch(()=>[])]);S.events=(list||[]).map(eventFromServer);S.staff=(staff||[]).map(x=>typeof x==='string'?x:(x.staff_events||Object.values(x)[0]))}
 async function loadAll(){
   await Promise.all([loadCards(),loadBlocks(),loadMessages(),loadEvents()]);
   ensureMatchChats();S.loaded=true;
@@ -399,7 +408,6 @@ function passFilters(p,o){
   if(pr.tongue!=='Any'&&p.t!==pr.tongue)return false;
   if(pr.diet==='veg'&&dietGroup(p.diet)!==0)return false;
   if(pr.settled&&!SETTLED.includes(p.res))return false;
-  if(pr.verifiedOnly&&!fullyV(p))return false;
   return true;
 }
 function matchList(){return PROFILES.filter(p=>p.fits&&!p.paused&&baseEligible(p)&&passFilters(p)&&S.interests[p.id]!=='declined'&&(S.showPassed||!S.passed.includes(p.id)))}
@@ -410,7 +418,7 @@ function sortList(list,mode){
   else arr.sort((a,b)=>c.get(b.id)-c.get(a.id));
   return arr;
 }
-function activeFilterCount(){const pr=S.me.prefs,d=defaultPrefs(S.me);let n=0;['liveCountry','radius','oc','os','religion','community','tongue','diet','settled','verifiedOnly'].forEach(k=>{if(String(pr[k])!==String(d[k]))n++});if((pr.alsoComm||[]).length)n++;return n}
+function activeFilterCount(){const pr=S.me.prefs,d=defaultPrefs(S.me);let n=0;['liveCountry','radius','oc','os','religion','community','tongue','diet','settled'].forEach(k=>{if(String(pr[k])!==String(d[k]))n++});if((pr.alsoComm||[]).length)n++;return n}
 
 /* ---------- Defaults ---------- */
 function blankDraft(){return {name:'',createdBy:'Self',g:'',lookingFor:'',dob:'',h:'',marital:'Never married',photo:null,photoBlob:null,
@@ -420,7 +428,7 @@ function blankDraft(){return {name:'',createdBy:'Self',g:'',lookingFor:'',dob:''
   privacy:{blur:true,vis:'verified',showC:true,incognito:false},prefs:null}}
 function defaultPrefs(d){const a=ageFrom(d.dob)||27;const male=d.g==='M';
   return {ageMin:Math.max(18,male?a-5:a-1),ageMax:male?a+1:a+6,hMin:male?HEIGHTS[0].cm:(+d.h||HEIGHTS[0].cm),hMax:HEIGHTS[HEIGHTS.length-1].cm,
-    liveCountry:d.country||'Any',radius:0,oc:d.oc||'Any',os:'Any',religion:d.r||'Any',community:'Any',alsoComm:[],tongue:'Any',diet:'Any',settled:false,verifiedOnly:true}}
+    liveCountry:d.country||'Any',radius:0,oc:d.oc||'Any',os:'Any',religion:d.r||'Any',community:'Any',alsoComm:[],tongue:'Any',diet:'Any',settled:false}}
 
 /* ---------- Pickers ---------- */
 const cOpt=n=>({v:n,l:n,pre:flag(n)});
@@ -922,7 +930,28 @@ function recheckCall(me){if(!me.livesAt)return '';const until=me.livesUntil?Date
 function livesState(me){if(me.v.lives)return ['ok',`Status and current address proven${me.livesAt?' · '+new Date(me.livesAt).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'}):''}`];
   const st=vState(3,{},me);if(st==='wait')return ['wait','With our team, usually within 24 hours'];if(st==='rej')return ['no','Not approved. Upload a new one.'];
   if(me.livesAt)return ['no','Confirm your city again: upload a new address document.'];return ['no','Not uploaded yet']}
+function renderNotLive(){
+  const me=S.me,n=S.fitN||0,who=me.lookingFor==='F'?'women':'men';
+  const ph=photoOk()?'ok':me.photoPending?'wait':(me.rejectedPhoto?'rej':'todo');
+  const st=[vState(1,{},me),vState(2,{},me),vState(3,{},me),ph],done=st.filter(x=>x==='ok').length,allIn=st.every(x=>x==='ok'||x==='wait');
+  return `<div class="topbar pad"><div class="grow"><div class="hello">${greet()}, <em>${esc(me.name.split(' ')[0])}</em></div><div class="sub">Your profile is not live yet</div></div></div>
+  <div class="scroll" id="main"><div class="main-inner pad">
+   <div class="nearby golive"><span class="gl-h">${ic('shield')}<b>Only fully verified members are live on NeuMarry</b></span>
+    <div class="nb-n"><b>${n}</b><span>verified ${who} already fit what you are looking for</span></div>
+    <div class="seats"><span>${done} of 4 checks done</span><span class="sb"><i style="width:${done*25}%"></i></span></div>
+    <small>Nobody can see your profile, and you cannot see anyone, until all 4 checks are done. This keeps every profile on NeuMarry real.</small></div>
+   <div class="vsteps">
+    ${vStep(1,st[0],'ID and live selfie','Passport, OCI or national ID, and a selfie','goVerify')}
+    ${vStep(2,st[1],'Your roots','A document that shows where you come from','goVerify')}
+    ${vStep(3,st[2],'Where you live','Status document, and an address document under 3 months old','goVerify')}
+    ${vStep(4,st[3],'Profile photo','A clear photo of you, checked by our team','goPhoto')}</div>
+   ${allIn?`<div class="callout">${ic('clock')}<span><b>Everything is with our team.</b> We check within 24 hours. Your profile goes live the moment the last check is approved.</span></div>`:
+     `<button class="btn primary block" data-a="${st.slice(0,3).every(x=>x==='ok'||x==='wait')?'goPhoto':'goVerify'}">${ic('shield')}Finish verification</button>`}
+   <p class="note">${esc(WHY_LINE)}</p>
+  </div></div>`;
+}
 function renderMatches(){
+  if(!isLive())return renderNotLive();
   const me=S.me,pr=me.prefs,list=sortList(matchList(),S.sort);
   const t=scopeText(),n=activeFilterCount();
   const recv=PROFILES.filter(p=>baseEligible(p)&&S.interests[p.id]==='received');
@@ -968,13 +997,13 @@ function renderEvents(){
   const evs=events();const mine=evs.filter(e=>e.my);
   return topbar('Events','Hosted evenings with dinner included')+
   `<div class="scroll" id="main"><div class="main-inner pad">
-   ${mine.length?`<div class="sec-h"><h2>Your reservations</h2></div>${mine.map(e=>{const r=e.my,f=fmtDay(e.date,e.tz);return `<button class="tkrow" data-a="openEvent" data-id="${e.id}"><span class="tki" style="${r.status==='pay_due'?'':'background:var(--gold-soft);color:var(--gold)'}">${ic(r.status==='pay_due'?'ticket':'cal')}</span><span class="tx"><b>${esc(e.title)}</b><small>${r.status==='pay_due'?'Confirmed · we will message you when payment opens':`${esc(f.long)} · waiting for ${evStat(e).left} more to confirm`}</small></span>${ic('back','flipx')}</button>`}).join('')}`:''}
+   ${mine.length?`<div class="sec-h"><h2>Your reservations</h2></div>${mine.map(e=>{const r=e.my,f=fmtDay(e.date,e.tz);return `<button class="tkrow" data-a="openEvent" data-id="${e.id}"><span class="tki" style="${r.status==='pay_due'?'':'background:var(--gold-soft);color:var(--gold)'}">${ic(r.status==='pay_due'?'ticket':'cal')}</span><span class="tx"><b>${esc(e.title)}</b><small>${r.status==='paid'?'Paid · your QR ticket opens on the event day':r.status==='pay_due'?'Confirmed · we will message you when payment opens':`${esc(f.long)} · waiting for ${evStat(e).left} more to confirm`}</small></span>${ic('back','flipx')}</button>`}).join('')}`:''}
    <div class="callout">${ic('users')}<span>Reserve free. An event is confirmed when enough people reserve; then you pay in the app. Dinner is included, and nothing is paid at the restaurant. If it is not confirmed, nobody pays.</span></div>
    <div class="sec-h"><h2>Upcoming events</h2></div>
    ${evs.length>1?`<div class="sorts evf" role="group" aria-label="Show events">${[['for','For you'],['all','Every event']].map(([k,l])=>`<button data-a="evFilter" data-k="${k}" class="${(S.evFilter||'for')===k?'on':''}" aria-pressed="${(S.evFilter||'for')===k}">${l}</button>`).join('')}</div>`:''}
    ${(()=>{const fk=evs.length>1?(S.evFilter||'for'):'all';const shownEv=evs.filter(e=>fk==='all'?true:forMe(e));
      return shownEv.length?shownEv.map(evCard).join(''):`<div class="empty"><span class="eic">${ic('cal')}</span><h3>${evs.length?'No events for your community yet':'New events are coming'}</h3><p>${evs.length?'Hosts add community events as more members join.':'The first Family Mixers are being planned. You will see them here.'}</p>${evs.length?`<div class="btns"><button class="btn sm ghost" data-a="evFilter" data-k="all">Every event</button></div>`:''}</div>`})()}
-   <p class="note">Every event: separate tables in one shared room, ID-verified guests, a NeuMarry host.</p>
+   <p class="note">Every event: separate tables in one shared room, fully verified guests (ID, roots and city), a NeuMarry host, QR check-in at the door.</p>
    <div class="panel wwu"><div class="wwu-h"><h3>Bring Family Mixers to your city</h3></div>
     <button class="rowi" data-a="hostAsk">${ic('users')}<span class="tx"><b>${S.hostSent?'Host application received':'Host events'}</b><span>${S.hostSent?'We reply within 3 working days':'CA$100 for every event · training included'}</span></span>${ic('chev','rchev')}</button>
     <button class="rowi" data-a="restaurantAsk">${ic('dish')}<span class="tx"><b>${S.restSent?'Restaurant request received':'Own a restaurant?'}</b><span>${S.restSent?'Our team will call you':'We bring 30 to 60 paying guests for dinner'}</span></span>${ic('chev','rchev')}</button></div>
@@ -1105,14 +1134,17 @@ function renderEventView(id){
     <div class="evhero">${evArt(e,true)}<div class="vhead over pad"><button class="iconbtn" data-a="closeView" aria-label="Back">${ic('back')}</button><div class="grow"></div></div>
      <div class="ovt"><p>${esc(f.long)} · ${e.time} · ${e.dur}</p><h2>${esc(e.title)}</h2><p>${esc(audLabel(e))} · ${esc(e.sub)} · ages ${e.age}</p></div></div>
     <div class="pad" style="display:grid;gap:14px;padding-block:16px 26px">
-     ${rv&&rv.status==='pay_due'?`<div class="callout gold">${ic('ticket')}<span><b>The event is confirmed and your seat is held.</b> Payment opens in the app soon; we will message you. Total ${money(rv.amount,e.cur)}, dinner included.</span></div>`:
+     ${rv&&rv.status==='paid'?`<div class="callout good">${ic('check')}<span><b>Your seat is paid${rv.parents.length?` for you and ${rv.parents.length} ${rv.parents.length===1?'parent':'parents'}`:''}.</b> Dinner is included. Your QR ticket below opens on the event day.</span></div>`:
+       rv&&rv.status==='pay_due'?`<div class="callout gold">${ic('ticket')}<span><b>The event is confirmed and your seat is held.</b> Payment opens in the app soon; we will message you. Total ${money(rv.amount,e.cur)}, dinner included.</span></div>`:
        rv?`<div class="callout">${ic('check')}<span><b>You’re reserved${rv.parents.length?` with ${rv.parents.length} ${rv.parents.length===1?'parent':'parents'}`:''}.</b> Nothing to pay until ${st.left} more people reserve. If the event isn’t confirmed by ${esc(fmtDay(st.deadline,e.tz).long)}, it is cancelled and nobody pays.</span></div>`:''}
+     ${rv&&rv.status==='paid'?ticketPanel(e):''}
+     ${(S.staff||[]).includes(e.id)?`<div class="panel wwu"><div class="wwu-h"><h3>Host tools</h3></div><p class="sub">Scan each guest’s QR ticket at the door. You see their photo, name and checks, then check them in with one tap.</p><button class="btn primary block" data-a="hostOpen" data-id="${e.id}">${ic('scan')}Scan tickets and guest list</button></div>`:''}
      <div class="panel"><h3>${st.confirmed?'Confirmed':'How booking works'}</h3>
       <div class="seats"><span>${st.n} of ${e.need} people reserved${st.confirmed?'':` · needs ${st.left} more by ${esc(fmtDay(st.deadline,e.tz).long)}`}</span><span class="sb"><i style="width:${Math.min(100,Math.round(st.n/e.need*100))}%"></i></span></div>
       <ol class="hint" style="margin:0;padding-left:18px;display:grid;gap:4px"><li>Reserve a seat for free and choose your dish.</li><li>When ${e.need} people reserve, the event is confirmed.</li><li>You pay in the app. Dinner is included; nothing is paid at the restaurant.</li><li>Not confirmed in time? It is cancelled and nobody pays.</li></ol></div>
      ${e.includes.length?`<div class="panel"><h3>What’s included</h3><ul class="incl">${e.includes.map(x=>`<li>${ic('check')}<span>${esc(x)}</span></li>`).join('')}</ul></div>`:''}
      ${e.agenda.length?`<div class="panel"><h3>How the evening goes</h3><ul class="tl">${e.agenda.map(([tm,x])=>`<li><time>${esc(tm)}</time><i></i><span>${esc(x)}</span></li>`).join('')}</ul></div>`:''}
-     <div class="panel"><h3>Who you’ll meet</h3><p class="sub">ID-verified members ${esc(audLabel(e)==='All communities'?'from every community':audLabel(e).toLowerCase())}, ages ${e.age}. Your host seats you first with your best matches at the event.</p>
+     <div class="panel"><h3>Who you’ll meet</h3><p class="sub">Fully verified members ${esc(audLabel(e)==='All communities'?'from every community':audLabel(e).toLowerCase())}, ages ${e.age}. Your host seats you first with your best matches at the event.</p>
       <div class="seats"><span>Women: ${wl} of ${wc} seats left</span><span class="sb"><i style="width:${Math.round((wc-wl)/wc*100)}%"></i></span></div>
       <div class="seats"><span>Men: ${ml} of ${mc} seats left</span><span class="sb"><i style="width:${Math.round((mc-ml)/mc*100)}%"></i></span></div></div>
      <div class="panel"><h3>Tickets</h3>
@@ -1120,7 +1152,7 @@ function renderEventView(id){
       ${e.parents&&e.priceP?`<div class="sumrow"><span>Parent, dinner included (up to 2)</span><b>${money(e.priceP,e.cur)} each</b></div>`:`<p class="hint">Members only.</p>`}
       <p class="hint">Early price while the event is filling. The price goes up once it is confirmed, and again in the last 3 days. Men and women pay the same.</p></div>
      <div class="panel"><h3>Good to know</h3><ul class="incl">
-      <li>${ic('shield')}<span>Every guest is ID-verified before the event.</span></li>
+      <li>${ic('shield')}<span>Every guest is fully verified (ID, roots and city) and checked in at the door with a QR ticket.</span></li>
       <li>${ic('users')}<span>Conversations happen at separate tables in one shared room, never in a private room.</span></li>
       <li>${ic('pin')}<span>A partner restaurant in ${esc(e.area)}. The exact address is on your ticket after payment.</span></li>
       <li>${ic('refresh')}<span>Cancel your reservation any time before you pay.</span></li>
@@ -1128,12 +1160,97 @@ function renderEventView(id){
     </div>
    </div>
    <div class="bookbar pad"><span class="tx"><b>${money(e.priceM,e.cur)}</b><small>${e.parents&&e.priceP?`+ ${money(e.priceP,e.cur)} per parent`:'per person'}</small></span>${
+     rv&&rv.status==='paid'?`<button class="btn ghost" disabled>${ic('check')}Seat paid</button>`:
      rv?`<button class="btn ghost" data-a="cancelRes" data-id="${e.id}"${busy?' disabled':''}>Cancel reservation</button>`:
      !forMe(e)?`<button class="btn ghost" disabled>For ${esc((e.aud||{}).l||'members')} only</button>`:
      !ageOk(e)?`<button class="btn ghost" disabled>For ages ${e.age}</button>`:
      `<button class="btn primary" data-a="book" data-id="${e.id}"${canBook?'':' disabled'}>Reserve free seat</button>`}</div>
   </div>`;
 }
+/* ---------- Event QR ticket (guest) and check-in (host) ---------- */
+let TICKET=null,TK_T=null,TK_S=null;
+function qrSvg(text){try{const q=qrcode(0,'M');q.addData(text);q.make();return q.createSvgTag({cellSize:6,margin:2,scalable:true})}catch(e){return ''}}
+function ticketPanel(e){
+  const t=TICKET&&TICKET.eid===e.id?TICKET.d:null;
+  if(!t)return `<div class="panel ticket"><h3>Your QR ticket</h3>${spinner('Loading your ticket')}</div>`;
+  if(t.error==='ended')return '';
+  if(t.error==='too_early'){const o=new Date(t.opens_at);return `<div class="panel ticket"><span class="tk-ic">${ic('qr')}</span><h3>Your QR ticket</h3><p class="sub">It appears here on the day of the event, from ${esc(fmtDay(o,e.tz).long)} · ${esc(fmtTime(o,e.tz))}. At the door the host scans it and checks you in.</p></div>`}
+  if(t.error)return `<div class="panel ticket"><span class="tk-ic">${ic('qr')}</span><h3>Your QR ticket</h3><p class="sub">${t.error==='verify_first'?'Your verification needs attention before you can check in. <button class="link" data-a="goVerify">Open verification</button>':'Your ticket could not load. Check your internet; it tries again by itself.'}</p></div>`;
+  if(t.checked_in_at)return `<div class="panel ticket in"><span class="tk-ic ok">${ic('check')}</span><h3>You are checked in</h3><p class="sub">Welcome to ${esc(e.title)}. Enjoy the evening!</p></div>`;
+  return `<div class="panel ticket"><h3>Your QR ticket</h3>
+   <div class="qrbox" role="img" aria-label="QR ticket">${qrSvg(t.qr)}</div>
+   <div class="tk-code"><span>Door code</span><b class="notr">${esc(t.code.slice(0,3))} ${esc(t.code.slice(3))}</b></div>
+   <p class="tk-live">${ic('refresh')}<span>New code in <b id="tk-left">${t.seconds_left}</b> s</span></p>
+   <p class="hint">Show this at the door. The code changes every 30 seconds, so a screenshot will not work.${t.parents?` Your ${t.parents===1?'parent comes':'parents come'} in with you on this ticket.`:''}</p></div>`;
+}
+async function loadTicket(eid){let d;try{d=await API.rpc('my_ticket',{eid})}catch(e){d={error:'net'}}
+  TICKET={eid,d:d||{error:'net'},at:Date.now()};if(view&&view.type==='event'&&view.id===eid)render()}
+function afterRenderEvents(){
+  const e=view&&view.type==='event'?evById(view.id):null,paid=!!(e&&e.my&&e.my.status==='paid');
+  clearInterval(TK_S);TK_S=null;
+  if(!paid){clearTimeout(TK_T);TK_T=null;TICKET=null}
+  else if(!TICKET||TICKET.eid!==e.id){clearTimeout(TK_T);TK_T=null;TICKET={eid:e.id,d:null,at:0};loadTicket(e.id)}
+  else if(TICKET.d&&!TK_T){const wait=TICKET.d.code?Math.max(1,TICKET.d.seconds_left)*1000+300:60000;TK_T=setTimeout(()=>{TK_T=null;if(TICKET&&TICKET.eid===e.id)loadTicket(e.id)},wait)}
+  if(paid&&TICKET&&TICKET.d&&TICKET.d.code){const end=TICKET.at+TICKET.d.seconds_left*1000;
+    TK_S=setInterval(()=>{const el=document.getElementById('tk-left');if(!el){clearInterval(TK_S);return}el.textContent=Math.max(0,Math.ceil((end-Date.now())/1000))},500)}
+  if(view&&view.type==='host')hostAttach();else hostStop();
+}
+let HOST={eid:null,stream:null,loop:null,busy:false,res:null,guests:null,err:''};
+const HOST_ERR={expired:'This code has expired. Ask the guest to open the live ticket in the NeuMarry app; screenshots do not work.',other_event:'This ticket is for a different event.',
+  not_found:'This is not a NeuMarry ticket.',not_paid:'This seat is not paid.',scan_qr:'Two tickets share this code right now. Scan the QR instead.',net:'No internet. Try again.'};
+function guestPic(path,name){const u=path&&urlOf(path);return u?`<img class="gpic" src="${esc(u)}" alt="">`:`<span class="gpic ini" aria-hidden="true">${esc((name||'?').trim().charAt(0))}</span>`}
+function hostResult(r){
+  if(!r.ok)return `<div class="panel hres bad"><span class="tk-ic bad">${ic('x')}</span><h3>Do not let in yet</h3><p class="sub">${esc(HOST_ERR[r.error]||'This ticket could not be checked.')}</p><button class="btn primary block" data-a="hostNext">${ic('scan')}Scan again</button></div>`;
+  const par=Array.isArray(r.parents)?r.parents:[],okV=!!r.fully_verified;
+  return `<div class="panel hres${r.done?' in':''}">
+   <div class="hres-top">${guestPic(r.photo,r.name)}<div><h3>${esc(r.name)}</h3><p class="sub">${r.age} · ${esc(r.city)}, ${esc(r.country)}</p><p class="sub">Roots: ${esc(r.roots||'')}</p></div></div>
+   <p class="hint">Look at the face: it must match this photo.</p>
+   <ul class="incl">
+    <li>${ic(okV?'check':'x')}<span>${okV?'Fully verified: ID and selfie, roots and city':'Verification is not complete. Do not check in; call the NeuMarry team.'}</span></li>
+    <li>${ic('check')}<span>Seat paid</span></li>
+    ${r.meal?`<li>${ic('check')}<span>Dinner: ${esc(MEALS[r.meal]||r.meal)}</span></li>`:''}
+    ${par.map(x=>`<li>${ic('users')}<span>With ${esc(x.relation||'parent')}: ${esc(x.name||'')}${x.meal?' · '+esc(MEALS[x.meal]||x.meal):''}</span></li>`).join('')}</ul>
+   ${r.done?`<div class="callout good">${ic('check')}<span><b>Checked in.</b> Welcome them in.</span></div>`:
+     r.checked_in_at?`<div class="callout bad">${ic('info')}<span><b>Already checked in at ${esc(timeStr(Date.parse(r.checked_in_at)))}.</b> The same ticket cannot come in twice.</span></div>`:''}
+   <div class="btns2">${r.done||r.checked_in_at?'':`<button class="btn primary" data-a="hostCheckIn"${okV&&!HOST.busy?'':' disabled'}>${ic('check')}Check in${par.length?` · ${1+par.length}`:''}</button>`}
+    <button class="btn ghost" data-a="hostNext">${ic('scan')}Scan next</button></div></div>`;
+}
+function renderHostView(eid){
+  const e=evById(eid),g=HOST.guests||[],inN=g.filter(x=>x.checked_in_at).length,ppl=g.reduce((a,x)=>a+1+(x.parents||0),0),pplIn=g.filter(x=>x.checked_in_at).reduce((a,x)=>a+1+(x.parents||0),0);
+  return `<div class="view" role="dialog" aria-label="Check-in">
+   <div class="vhead pad"><button class="iconbtn" data-a="closeView" aria-label="Back">${ic('back')}</button><div class="grow"><b>Check-in</b><small>${esc(e?e.title:'')}</small></div><button class="iconbtn soft" data-a="hostRefresh" aria-label="Refresh guest list">${ic('refresh')}</button></div>
+   <div class="scroll" id="view-scroll"><div class="pad" style="display:grid;gap:14px;padding-block:8px 26px">
+    <div class="hstats"><div><b>${inN}<small>/${g.length}</small></b><span>members in</span></div><div><b>${pplIn}<small>/${ppl}</small></b><span>people with parents</span></div></div>
+    ${HOST.res?hostResult(HOST.res):`<div class="scanbox">${HOST.stream?`<video id="host-video" playsinline muted autoplay></video><span class="scanframe" aria-hidden="true"></span><span class="scanhint">${HOST.busy?'Checking…':'Point at the QR ticket'}</span>`:
+      `<div class="scanoff">${ic('qr')}<p>Scan each guest’s QR ticket at the door.</p><button class="btn primary" data-a="hostCam">${ic('camera')}Start camera</button></div>`}</div>
+     ${HOST.err?`<div class="callout bad">${ic('info')}<span>${esc(HOST.err)}</span></div>`:''}
+     <div class="panel"><h3>No camera? Type the door code</h3><div class="codein"><input id="host-code" inputmode="numeric" maxlength="6" placeholder="6-digit code" autocomplete="off" aria-label="Door code"><button class="btn primary" data-a="hostCode">Check</button></div><p class="hint">The door code is under the guest’s QR. It changes every 30 seconds.</p></div>`}
+    <div class="sec-h"><h2>Guests</h2><small>${inN} of ${g.length} checked in</small></div>
+    ${HOST.guests===null?spinner('Loading guests'):g.length?`<div class="panel glist">${g.map(x=>`<div class="rowi">${guestPic(x.photo,x.full_name)}<span class="tx"><b>${esc(x.full_name)}</b><span>${x.gender==='F'?'Woman':'Man'}${x.parents?` · +${x.parents} ${x.parents===1?'parent':'parents'}`:''}${x.meal?' · '+esc(MEALS[x.meal]||x.meal):''}</span></span>${x.checked_in_at?`<span class="pill good">${ic('check')}${esc(timeStr(Date.parse(x.checked_in_at)))}</span>`:`<span class="pill">Not yet</span>`}</div>`).join('')}</div>`:`<p class="hint">Paid guests appear here.</p>`}
+   </div></div></div>`;
+}
+async function hostLoadGuests(){try{HOST.guests=(await API.rpc('host_guests',{eid:HOST.eid}))||[];await signPaths(HOST.guests.map(x=>x.photo).filter(Boolean))}catch(e){HOST.guests=HOST.guests||[]}
+  if(view&&view.type==='host')render()}
+function hostAttach(){const v=document.getElementById('host-video');if(v&&HOST.stream&&v.srcObject!==HOST.stream){v.srcObject=HOST.stream;v.play().catch(()=>{})}}
+function hostStop(){if(HOST.loop){clearInterval(HOST.loop);HOST.loop=null}if(HOST.stream){HOST.stream.getTracks().forEach(t=>t.stop());HOST.stream=null}}
+function loadJsQR(){return window.jsQR?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');s.src='js/vendor/jsQR.js';s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
+async function hostCamStart(){
+  try{HOST.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});HOST.err=''}
+  catch(e){HOST.err='The camera is blocked. Allow the camera for NeuMarry in your phone settings, or type the door code below.';render();return}
+  let det=null;try{if('BarcodeDetector' in window)det=new BarcodeDetector({formats:['qr_code']})}catch(e){det=null}
+  if(!det)await loadJsQR().catch(()=>{});
+  const cv=document.createElement('canvas'),cx=cv.getContext('2d',{willReadFrequently:true});
+  render();
+  HOST.loop=setInterval(async()=>{const v=document.getElementById('host-video');if(!v||HOST.res||HOST.busy||v.readyState<2)return;
+    let txt=null;
+    try{if(det){const c=await det.detect(v);txt=c[0]&&c[0].rawValue}
+      else if(window.jsQR){const w=v.videoWidth,h=v.videoHeight;if(!w)return;const s=Math.min(1,640/w);cv.width=w*s;cv.height=h*s;cx.drawImage(v,0,0,cv.width,cv.height);const r=jsQR(cx.getImageData(0,0,cv.width,cv.height).data,cv.width,cv.height,{inversionAttempts:'dontInvert'});txt=r&&r.data}}catch(e){}
+    if(txt&&/^NEUMARRY:/i.test(txt))hostLookup(txt)},280);
+}
+async function hostLookup(code){if(HOST.busy)return;HOST.busy=true;render();
+  try{HOST.res=await API.rpc('checkin_lookup',{eid:HOST.eid,scanned:code});if(HOST.res&&HOST.res.photo)await signPaths([HOST.res.photo])}catch(e){HOST.res={ok:false,error:'net'}}
+  HOST.busy=false;if(navigator.vibrate)try{navigator.vibrate(HOST.res&&HOST.res.ok?60:[60,80,60])}catch(e){}
+  render()}
 function renderCelebrate(){
   const p=byId(celebrate.id);if(!p)return '';
   return `<div class="celebrate" role="dialog" aria-label="It’s a match">${hearts(14)}
@@ -1242,7 +1359,6 @@ function renderSheet(){
      ${pickF('prefs.diet','Diet','me')}
      <h3 class="section-t">Trust</h3>
      <div class="panel" style="padding:4px 16px">
-      ${toggle('prefs.verifiedOnly','Fully verified only','ID, roots and city all proven with documents',pr.verifiedOnly,'me')}
       ${toggle('prefs.settled','Citizens and permanent residents only','Hide people on temporary visas or permits',pr.settled,'me')}
      </div>`,
      `<button class="btn ghost" data-a="resetFilters">Reset</button><button class="btn primary" data-a="closeSheet">${S.prefsSaving?spinner('Updating'):`Show ${n} ${n===1?'match':'matches'}`}</button>`);
@@ -1275,9 +1391,8 @@ function renderSheet(){
      canBuy?`${BETA?busyBtn('ghost','betaGold','Try Gold free'):`<button class="btn ghost" data-a="closeSheet">Not now</button>`}${busyBtn('gold','buyGold',ic('crown')+'Get Gold')}`:
      `<button class="btn ghost" data-a="closeSheet">Not now</button>${BETA?busyBtn('gold','betaGold',ic('crown')+'Try Gold free'):`<button class="btn gold" data-a="buySoon">${ic('crown')}Get Gold</button>`}`);}
   if(t==='verifyGate'){const pendIS=(me.idCheck&&me.idCheck.status==='pending')||(me.selfieCheck&&me.selfieCheck.status==='pending');
-    if(sheet.ev)return sheetShell('Verify to continue',`<div class="callout">${ic('shield')}<span>${pendIS?'Your ID and selfie are with our team. Once they are approved, usually within 24 hours, you can book events.':'To keep fake profiles out, only members with an approved ID and selfie can book events. It takes about two minutes.'}</span></div>`,`<button class="btn ghost" data-a="closeSheet">Not now</button>${pendIS?'':`<button class="btn primary" data-a="goVerify" data-n="1">Verify now</button>`}`);
     const all=[1,2,3].map(n=>vState(n,{},me)),wait=all.every(x=>x==='ok'||x==='wait'),first=[1,2,3].find(n=>!['ok','wait'].includes(all[n-1]))||1;
-    return sheetShell('Finish verification to send interests',`<div class="callout">${ic('shield')}<span>Everyone you write to has proven their roots and their city. They expect the same from you.</span></div>
+    return sheetShell(sheet.ev?'Finish verification to book events':'Finish verification to send interests',`<div class="callout">${ic('shield')}<span>${sheet.ev?'Every guest at a NeuMarry event has proven their ID, their roots and their city. They expect the same from you.':'Everyone you write to has proven their roots and their city. They expect the same from you.'}</span></div>
      <div class="vsteps">${vStep(1,all[0],'ID and live selfie','Passport or national ID, and a selfie.','goVerify')}${vStep(2,all[1],'Your roots','A document from where you grew up.','goVerify')}${vStep(3,all[2],'Where you live now','Your status and your current address.','goVerify')}</div>
      ${wait?'<p class="hint">Your documents are with our team, usually within 24 hours.</p>':`<p class="hint">${WHY_LINE}</p>`}`,`<button class="btn ghost" data-a="closeSheet">Not now</button>${wait?'':`<button class="btn primary" data-a="goVerify" data-n="${first}">Continue</button>`}`)}
   if(t==='book'){const e=evById(sheet.id);const n=sheet.parents;const total=e.priceM+(e.parents?n*(e.priceP||0):0);
@@ -1322,7 +1437,7 @@ function render(){
     html=(tabs[S.tab]||renderMatches)()+
     `<div class="navwrap"><nav class="nav n4" aria-label="Main">${[['matches','Matches','rings'],['events','Events','cal',c.ev],['connections','Chats','chat',c.conn],['me','Me','user']].map(([k,l,i,n])=>
       `<button data-a="tab" data-k="${k}" class="${S.tab===k?'on':''}" aria-current="${S.tab===k?'page':'false'}">${ic(i)}<span>${l}</span>${n?`<span class="count-dot" aria-label="${n} new">${n}</span>`:''}</button>`).join('')}</nav></div>`;
-    if(view)html+=view.type==='chat'?renderChatView(view.id):view.type==='event'?renderEventView(view.id):view.type==='admin'?renderAdmin():renderProfileView(view.id,view.type==='me');
+    if(view)html+=view.type==='chat'?renderChatView(view.id):view.type==='event'?renderEventView(view.id):view.type==='admin'?renderAdmin():view.type==='host'?renderHostView(view.id):renderProfileView(view.id,view.type==='me');
     if(sheet)html+=renderSheet();
     if(picker)html+=renderPicker();
     if(celebrate)html+=renderCelebrate();
@@ -1337,6 +1452,7 @@ function render(){
   if(pk&&pk===prevPick){const w=app.querySelector('.picker-wrap');if(w)w.classList.add('still')}
   const newChat=vk!==prevView;
   prevSheet=sk;prevView=vk;prevPick=pk;justRevealed=null;
+  afterRenderEvents(vk);
   Object.keys(keep).forEach(id=>{const el=document.getElementById(id);if(el)el.scrollTop=keep[id]});
   const pk1=document.querySelector('.picks');if(pk1)pk1.scrollLeft=picksLeft;
   const tabOn=app.querySelector('.steps-nav button.on');if(tabOn){const nv=tabOn.parentNode;nv.scrollLeft=tabOn.offsetLeft-nv.offsetLeft-nv.clientWidth/2+tabOn.offsetWidth/2}
@@ -1389,7 +1505,7 @@ function queuePrefsSave(){clearTimeout(prefsT);S.prefsSaving=true;prefsT=setTime
 async function savePrivacy(){const me=S.me;try{await API.update('profiles',{id:'eq.'+me.id},{blur_photos:!!me.privacy.blur,show_community:!!me.privacy.showC,incognito:!!me.privacy.incognito,hidden:me.privacy.vis==='hidden'})}catch(e){fail(e);await loadMe();render()}}
 
 /* ---------- Flow helpers ---------- */
-function needVerified(ev){const ok=ev?!!(S.me&&S.me.v.id&&S.me.v.selfie):verified();if(!ok){sheet={type:'verifyGate',ev:!!ev};render();return true}return false}
+function needVerified(ev){const ok=verified();if(!ok){sheet={type:'verifyGate',ev:!!ev};render();return true}return false}
 function startSignup(){if(!readConsent().at){S.auth={mode:'consent'};S.errors={};S.screen='auth';render();return}const saved=loadDraft();S.draft=saved?Object.assign(blankDraft(),saved.d,{photo:null,photoBlob:null,idBlob:null,selfieBlob:null,selfie:null,idName:'',rootsBlob:null,rootsName:'',statusBlob:null,statusName:'',addrBlob:null,addrName:'',loc:null,vs:0}):blankDraft();
   S.step=saved?Math.min(saved.step||1,6):1;S.editMode=false;S.errors={};S.screen='signup';render()}
 function openEdit(step){const me=S.me;const d=clone(Object.assign({},me,{photo:me.photo}));d.phone=me.phone?digitsOnly(me.phone).replace(new RegExp('^'+digitsOnly(dial(me.country))),''):'';
@@ -1593,6 +1709,15 @@ const A={
     catch(e){busy='';render();fail(e)}},
   async block(el){const id=el.dataset.id;const p=byId(id);try{await API.insert('blocks',{blocker:S.me.id,blocked:id},{returning:false});S.blocked.push(id);sheet=null;view=null;render();toast(`${p&&p.first?p.first:'They'} ${p&&p.first?'is':'are'} blocked.`,'x')}catch(e){fail(e)}},
   closeSheet(){sheet=null;S.errors={};render()},
+  hostOpen(el){HOST={eid:el.dataset.id,stream:null,loop:null,busy:false,res:null,guests:null,err:''};view={type:'host',id:el.dataset.id,prev:view};render();hostLoadGuests()},
+  hostCam(){hostCamStart()},
+  hostCode(){const c=((document.getElementById('host-code')||{}).value||'').replace(/\D/g,'');if(c.length!==6){toast('Type the 6-digit door code.','info');return}hostLookup(c)},
+  hostNext(){HOST.res=null;render()},
+  hostRefresh(){hostLoadGuests()},
+  async hostCheckIn(){const r=HOST.res;if(!r||!r.rid||HOST.busy)return;HOST.busy=true;render();
+    try{const x=await API.rpc('checkin_do',{rid:r.rid});r.checked_in_at=x&&x.checked_in_at;r.done=true;toast(`${r.name.split(' ')[0]} is checked in.`,'check')}catch(e){toast((e&&e.message)||'Could not check in. Try again.','info')}
+    HOST.busy=false;await hostLoadGuests();render()},
+  goPhoto(){sheet=null;if(S.screen==='signup')return;openEdit(1)},
   goVerify(el){sheet=null;if(S.screen==='signup')return;openEdit(5);const n=el&&el.dataset&&+el.dataset.n;if(n&&S.draft){S.draft.vs=n;render()}},
   vGo(el){const d=S.draft;if(!d)return;d.vs=+el.dataset.n||0;save();render();const sc=document.getElementById('su-scroll');if(sc)sc.scrollTop=0},
   vBack(){const d=S.draft;if(!d)return;d.vs=d.vs===1?0:d.vs-1;render();const sc=document.getElementById('su-scroll');if(sc)sc.scrollTop=0},
