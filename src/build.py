@@ -15,7 +15,7 @@ fix = [
  ('Then phone, government ID and a live selfie, so everyone you meet is real.', 'Then a government ID and a live selfie, so everyone you meet is real.'),
  ('daily matches, chats, video calls and event seats', 'daily matches, chats and event seats'),
  ('Chat and video call, without sharing your number</li>', 'Chat in the app, without sharing your number</li>'),
- ('unlocks names and photos, interests, chat and video calls, daily picks, event guest lists and Quick Match, from CA$49.99 a month.', 'unlocks names and photos, interests, chat, daily picks and event guest lists, from CA$49.99 a month.'),
+ ('unlocks names and photos, interests, chat and video calls, daily picks, event guest lists and Quick Match, from CA$80 a month.', 'unlocks names and photos, interests, chat, daily picks and event guest lists, from CA$80 a month.'),
  ('Yes. When you and a match are ready, you can set up a family video call in the app. Parents join with a link from any country, on a phone or computer, without installing anything, and the app shows the time for both families.', 'Yes. Family video calls are coming to the app soon: when you and a match are ready, parents will join with a link from any country, on a phone or computer, without installing anything, and the app will show the time for both families.'),
  ("verified by phone, government ID and a live selfie.", "verified with a government ID and a live selfie."),
  ("'The full Terms are in the app, under Me, then Legal and privacy.'", "'Read the full Terms of Service on this website.'"),
@@ -191,7 +191,7 @@ page('delete-account', 'Delete your account', 'How to delete your NeuMarry accou
 page('child-safety', 'Child safety standards', 'NeuMarry is for adults only. Our standards against child sexual abuse and exploitation, how to report a concern, and our child safety contact.')
 
 CTA = ('<div class="cta"><div><b>Create your free NeuMarry profile today.</b><p>It works in your web browser now, and the Android app uses the same account. '
-       'The first 500 verified women in Canada get 3 months of Gold free.</p></div><a class="btn" href="app/">Create your profile</a></div>')
+       'The first 300 verified women, in every country, get 3 months of Gold free.</p></div><a class="btn" href="app/">Create your profile</a></div>')
 for g in G:
     others = [o for o in G if o['slug'] != g['slug']][:4]
     related = '<h2>Read next</h2><ul class="rel">' + ''.join(f'<li><a href="{o["slug"]}.html">{o["short"]}</a></li>' for o in others) + '</ul>'
@@ -307,7 +307,7 @@ def fr_fix_links(html):
         return 'href="../' + h + '"'
     return re.sub(r'href="([^"]*)"', fix, html)
 FR_CTA = ('<div class="cta"><div><b>Créez votre profil NeuMarry gratuit dès aujourd’hui.</b><p>L’application fonctionne déjà dans votre navigateur Web, et l’application Android utilise le même compte. '
-          'Les 500 premières femmes vérifiées au Canada reçoivent 3 mois de Gold gratuits.</p></div><a class="btn" href="app/">Créer mon profil</a></div>')
+          'Les 300 premières femmes vérifiées, dans tous les pays, reçoivent 3 mois de Gold gratuits.</p></div><a class="btn" href="app/">Créer mon profil</a></div>')
 if FR_SLUGS:
     os.makedirs(os.path.join(OUT, 'fr'), exist_ok=True)
     def fr_meta(slug):
@@ -405,7 +405,7 @@ llms = ['# NeuMarry', '',
         'Members match on values, lifestyle, roots and distance, and meet with their families at hosted Family Mixer evenings. Launching in Toronto, Canada in November 2026; the app works in every country.', '',
         'Key facts:',
         '- Every member verifies a government ID and a live selfie before sending interests or messages.',
-        '- Free: profile, verification, number of people who fit you and your match % with each. Gold (from CA$49.99 a month) adds names, photos, interests and chat.',
+        '- Free: profile, verification, number of people who fit you and your match % with each. Gold (from CA$80 a month) adds names, photos, interests and chat.',
         '- Web app: https://neumarry.com/app/ . Android app on Google Play; iPhone later. App languages: English and French.',
         '- For adults 18 and over looking for marriage. Not a casual dating app.', '',
         '## About', ''] + [f'- [{p["short"]}]({SITE}{p["slug"]}.html): {p["desc"]}' for p in P] + \
