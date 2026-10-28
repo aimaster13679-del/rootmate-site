@@ -130,6 +130,9 @@ const QS=[
  {q:'When you disagree, you…',k:'Disagreements',o:['Talk it through right away','Take some space, then talk','Let it pass quietly'],b:['Both talk things out','Both need space, then talk','Both let things pass']},
  {q:'How soon do you want to marry?',k:'Timeline',o:['Within a year','In 1–2 years','When it feels right'],b:['Both ready within a year','Same timeline: 1–2 years','Both in no rush']}
 ];
+/* Gold prices from 28 Oct (his ok): [symbol, 1 month, 3 months, 6 months]. Each plan stays under Google Play's ~US$400 limit. */
+Object.assign(PRICE,{CAD:['CA$','119.99','299.99','479.99'],USD:['US$','89.99','219.99','349.99'],GBP:['£','69.99','169.99','269.99'],AUD:['A$','129.99','329.99','529.99'],
+ AED:['AED ','329','799','1,279'],EUR:['€','79.99','199.99','319.99'],NZD:['NZ$','149.99','359.99','579.99'],SGD:['S$','119.99','289.99','459.99'],CHF:['CHF ','79.99','199.99','319.99']});
 /* Icons added after the prototype (28 Oct): clock, QR ticket, scanner. */
 Object.assign(IC,{
  clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
@@ -241,7 +244,9 @@ function today(){const d=new Date();return `${d.getFullYear()}-${d.getMonth()+1}
 function timeStr(ts){const d=new Date(ts),n=new Date();const same=d.toDateString()===n.toDateString();return same?d.toLocaleTimeString(RM_I18N.lang==='fr'?'fr-CA':[],{hour:'numeric',minute:'2-digit'}):d.toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short'})}
 function shown(p){return p.name||'Member'}
 function isBlurred(p){return !(p.photos&&p.photos.length)&&p.photoCount>0}
-function price(){const c=CMAP[S.me.country];const cur=c?c[3]:'USD';const pr=PRICE[cur]||PRICE.USD;const g=parseFloat(pr[1]);const fx=n=>(Math.round(g*n)-0.01).toFixed(2);return {sym:pr[0],gold:pr[1],conc:pr[2],m3:fx(2.4),m6:fx(3.6),pm3:(fx(2.4)/3).toFixed(2),pm6:(fx(3.6)/6).toFixed(2)}}
+function price(){const c=CMAP[S.me.country];const cur=c?c[3]:'USD';const pr=PRICE[cur]||PRICE.USD;const n=v=>parseFloat(String(v).replace(/,/g,''));
+  const per=(v,m)=>{const x=n(v)/m;return cur==='AED'?String(Math.round(x)):x.toFixed(2)};
+  return {sym:pr[0],gold:pr[1],m3:pr[2],m6:pr[3],pm3:per(pr[2],3),pm6:per(pr[3],6)}}
 /* Fork and knife, for partner restaurants. */
 IC.dish='<path d="M7 3v7a2 2 0 0 0 4 0V3M9 3v18M17 21V3c-2.2 0-3.5 2.8-3.5 6.5S14.8 14 17 14"/>';
 /* Google Play Billing: one subscription (neumarry_gold) with three base plans m1, m3, m6. */
@@ -1053,7 +1058,7 @@ function renderMe(){
     ${toggle('paused','Pause my profile','Hide from everyone while you talk to someone',me.privacy.vis==='hidden','me')}
    </div></div>
    <div class="panel"><h3>Your plan</h3>
-    ${me.plan==='free'?`<p class="sub">Free shows how many people fit you and your match % with each, and you can chat when a Gold member matches with you. Names, photos, interests, chat, daily picks and event guest lists are part of Gold.</p>${me.g==='F'&&me.country==='Canada'&&!me.womenOffer?`<div class="callout gold">${ic('gift')}<span>Welcome offer: the first 500 verified women in Canada get 3 months of Gold free. It switches on when your ID is approved.</span></div>`:''}<button class="btn gold" data-a="upgrade">${ic('crown')}See Gold, from ${planOpts()[2][3]}/month</button>`:
+    ${me.plan==='free'?`<p class="sub">Free shows how many people fit you and your match % with each, and you can chat when a Gold member matches with you. Names, photos, interests, chat, daily picks and event guest lists are part of Gold.</p>${me.g==='F'&&!me.womenOffer&&(me.womenLeft==null||me.womenLeft>0)?`<div class="callout gold">${ic('gift')}<span>Welcome offer: the first 300 verified women get 3 months of Gold free. It switches on when your ID is approved.</span></div>`:''}<button class="btn gold" data-a="upgrade">${ic('crown')}See Gold, from ${planOpts()[2][3]}/month</button>`:
     `<p class="sub">${esc(goldLine)}</p>${me.goldSource==='admin'?`<button class="btn ghost" data-a="endBeta">Switch back to Free to try it</button>`:me.goldSource==='google'?MANAGE_SUB():`<p class="hint">Manage or cancel Gold in your Google Play account.</p>`}`}</div>
    ${isGold()&&me.v.id?`<div class="panel"><h3>Invite people you trust</h3><p class="sub">Friends who join with your code get 10% off their first Gold purchase and an “Invited by” badge. You get a “Trusted member” badge and 10% off your next renewal, up to 6 times a year.</p>
     <div class="vrow">${ic('gift')}<span class="tx"><b>Your invite code</b><small><span class="code" id="inv-code">${S.invite?esc(S.invite):'…'}</span></small></span>${S.invite?`<button class="iconbtn" data-a="copyCode" data-k="${esc(S.invite)}" aria-label="Copy invite code">${ic('copy')}</button>`:''}</div>
