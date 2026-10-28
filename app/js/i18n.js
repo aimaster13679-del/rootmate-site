@@ -230,6 +230,16 @@
     'Gold can be bought in the NeuMarry app for Android. It opens on Google Play very soon.': 'Gold s’achète dans l’application NeuMarry pour Android, bientôt sur Google Play.',
     'Gold purchases open in the app very soon.': 'Les achats Gold ouvrent très bientôt dans l’application.', 'The free test period has ended. Gold purchases open in the app soon.': 'La période d’essai gratuite est terminée. Les achats Gold ouvrent bientôt dans l’application.',
     // 28 Oct: verified-only and QR check-in
+    // 28 Oct: why come to an event
+    'Why meet at a Family Mixer': 'Pourquoi venir à une soirée Family Mixer',
+    'Why come': 'Pourquoi venir',
+    'See the real person.': 'Voyez la vraie personne.',
+    'In one evening you see how someone talks, listens and treats others, which no photo or chat shows.': 'En une soirée, vous voyez comment quelqu’un parle, écoute et traite les autres, ce qu’aucune photo ni discussion ne montre.',
+    'Families meet the same evening.': 'Les familles se rencontrent le même soir.',
+    'Parents talk in their own lounge, so many rishta questions are answered at the table, not over weeks of calls.': 'Les parents discutent dans leur propre salon : beaucoup de questions de rishta se règlent à table, pas après des semaines d’appels.',
+    'Only verified people.': 'Seulement des personnes vérifiées.',
+    'Every guest has proven their ID, roots and city, and your host seats you first with your best matches.': 'Chaque invité a prouvé son identité, ses racines et sa ville, et votre animateur vous place d’abord avec vos meilleures affinités.',
+    'For many families, one evening together settles what months of chatting cannot.': 'Pour beaucoup de familles, une soirée ensemble règle ce que des mois de discussion ne règlent pas.',
     // 28 Oct: PayPal event payment
     'Pay for your seat': 'Payer votre place',
     'You, dinner included': 'Vous, souper compris',

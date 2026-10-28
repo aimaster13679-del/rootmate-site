@@ -1003,6 +1003,7 @@ function renderEvents(){
   return topbar('Events','Hosted evenings with dinner included')+
   `<div class="scroll" id="main"><div class="main-inner pad">
    ${mine.length?`<div class="sec-h"><h2>Your reservations</h2></div>${mine.map(e=>{const r=e.my,f=fmtDay(e.date,e.tz);return `<button class="tkrow" data-a="openEvent" data-id="${e.id}"><span class="tki" style="${r.status==='pay_due'?'':'background:var(--gold-soft);color:var(--gold)'}">${ic(r.status==='pay_due'?'ticket':'cal')}</span><span class="tx"><b>${esc(e.title)}</b><small>${r.status==='paid'?'Paid · your QR ticket opens on the event day':r.status==='pay_due'?`Confirmed · pay${r.due?' by '+esc(fmtDay(r.due,e.tz).long):''} to keep your seat`:`${esc(f.long)} · waiting for ${evStat(e).left} more to confirm`}</small></span>${ic('back','flipx')}</button>`}).join('')}`:''}
+   ${evs.length?whyEvent():''}
    <div class="callout">${ic('users')}<span>Reserve free. An event is confirmed when enough people reserve; then you pay in the app. Dinner is included, and nothing is paid at the restaurant. If it is not confirmed, nobody pays.</span></div>
    <div class="sec-h"><h2>Upcoming events</h2></div>
    ${evs.length>1?`<div class="sorts evf" role="group" aria-label="Show events">${[['for','For you'],['all','Every event']].map(([k,l])=>`<button data-a="evFilter" data-k="${k}" class="${(S.evFilter||'for')===k?'on':''}" aria-pressed="${(S.evFilter||'for')===k}">${l}</button>`).join('')}</div>`:''}
@@ -1147,6 +1148,7 @@ function renderEventView(id){
      <div class="panel"><h3>${st.confirmed?'Confirmed':'How booking works'}</h3>
       <div class="seats"><span>${st.n} of ${e.need} people reserved${st.confirmed?'':` · needs ${st.left} more by ${esc(fmtDay(st.deadline,e.tz).long)}`}</span><span class="sb"><i style="width:${Math.min(100,Math.round(st.n/e.need*100))}%"></i></span></div>
       <ol class="hint" style="margin:0;padding-left:18px;display:grid;gap:4px"><li>Reserve a seat for free and choose your dish.</li><li>When ${e.need} people reserve, the event is confirmed.</li><li>You pay in the app. Dinner is included; nothing is paid at the restaurant.</li><li>Not confirmed in time? It is cancelled and nobody pays.</li></ol></div>
+     ${rv&&rv.status==='paid'?'':whyEvent('Why come')}
      ${e.includes.length?`<div class="panel"><h3>What’s included</h3><ul class="incl">${e.includes.map(x=>`<li>${ic('check')}<span>${esc(x)}</span></li>`).join('')}</ul></div>`:''}
      ${e.agenda.length?`<div class="panel"><h3>How the evening goes</h3><ul class="tl">${e.agenda.map(([tm,x])=>`<li><time>${esc(tm)}</time><i></i><span>${esc(x)}</span></li>`).join('')}</ul></div>`:''}
      <div class="panel"><h3>Who you’ll meet</h3><p class="sub">Fully verified members ${esc(audLabel(e)==='All communities'?'from every community':audLabel(e).toLowerCase())}, ages ${e.age}. Your host seats you first with your best matches at the event.</p>
@@ -1173,6 +1175,11 @@ function renderEventView(id){
      `<button class="btn primary" data-a="book" data-id="${e.id}"${canBook?'':' disabled'}>Reserve free seat</button>`}</div>
   </div>`;
 }
+/* Why come to an event (28 Oct, CMO text): honest reasons, no promised numbers. */
+const WHY_EVENT=[['See the real person.','In one evening you see how someone talks, listens and treats others, which no photo or chat shows.'],
+  ['Families meet the same evening.','Parents talk in their own lounge, so many rishta questions are answered at the table, not over weeks of calls.'],
+  ['Only verified people.','Every guest has proven their ID, roots and city, and your host seats you first with your best matches.']];
+function whyEvent(title){return `<div class="panel whyev"><h3>${title||'Why meet at a Family Mixer'}</h3><ul class="incl">${WHY_EVENT.map(([b,t])=>`<li>${ic('check')}<span><b>${b}</b> ${t}</span></li>`).join('')}</ul><p class="sub"><em>For many families, one evening together settles what months of chatting cannot.</em></p></div>`}
 /* ---------- Event payment (PayPal) ---------- */
 let PAYQ=null,PAYBUSY=false,PAYCHK=null;
 function payPanel(e){const q=PAYQ&&PAYQ.eid===e.id?PAYQ.q:null;

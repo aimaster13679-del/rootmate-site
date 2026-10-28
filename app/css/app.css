@@ -789,3 +789,7 @@ a.btn{text-decoration:none}
 .glist{padding:4px 16px;gap:0}.glist>.rowi{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}.glist>.rowi:last-child{border-bottom:0}
 .glist .tx{flex:1;min-width:0;display:grid;gap:1px}.glist .tx span{font-size:13px;color:var(--muted)}
 .pill .ic{width:14px;height:14px}
+/* Why come to an event (28 Oct) */
+.panel.whyev{border:1.5px solid #F2C3CF;background:linear-gradient(160deg,#FFF0F4,var(--surface) 62%)}
+.panel.whyev .incl li{align-items:flex-start}.panel.whyev .incl .ic{color:var(--rose);margin-top:2px}
+.panel.whyev em{font-style:italic;color:var(--rose-deep)}
