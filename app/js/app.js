@@ -997,6 +997,13 @@ function renderNotLive(){
    <p class="note">${esc(WHY_LINE)}</p>
   </div></div>`;
 }
+/* Daily introductions (29 Oct, his ok, feature 5): up to 3 fully verified people a day, best fit first, a new set each day. */
+function introsToday(list){const pool=list.filter(p=>!['sent','mutual','declined'].includes(S.interests[p.id]));if(pool.length<=3)return pool;
+  const day=Math.floor((Date.now()-new Date().getTimezoneOffset()*6e4)/864e5),k=(day*3)%pool.length;return [0,1,2].map(i=>pool[(k+i)%pool.length])}
+function introBlock(list){const it=introsToday(list);if(!it.length)return '';
+  return `<div class="sec-h"><h2>Today’s introductions</h2><small>New ones in <span data-until="${midnight()}">${fmtLeft(midnight()-Date.now())}</span></small></div>
+  <div class="nm-intro" onscroll="var d=this.nextElementSibling;if(d){var i=Math.round(this.scrollLeft/this.clientWidth);[].forEach.call(d.children,function(e,j){e.classList.toggle('on',j===i)})}">${it.map(p=>`<div class="nm-slide">${card(p)}</div>`).join('')}</div>
+  ${it.length>1?`<div class="nm-dots" aria-hidden="true">${it.map((_,i)=>`<i class="${i?'':'on'}"></i>`).join('')}</div>`:''}`}
 function renderMatches(){
   if(!isLive())return renderNotLive();
   const me=S.me,pr=me.prefs,list=sortList(matchList(),S.sort);
@@ -1014,9 +1021,9 @@ function renderMatches(){
     ${me.privacy.vis==='hidden'?`<div class="callout">${ic('eye')}<span>Your profile is paused, so nobody new can find you. <button class="link" data-a="unpause">Show my profile again</button></span></div>`:''}
     ${!isGold()?`<div class="nearby"><div class="nb-n"><b>${list.length}</b><span>${who} fit what you are looking for, ${esc(t.live)}</span></div><div class="nb-s"><span>${ic('sparkle')}<b>${hi}</b> are 80%+ matches</span><span>${ic('heart')}<b>${recv.length}</b> already like you</span></div><button class="btn gold block" data-a="upgrade" data-r="nearby">${ic('crown')}See who they are</button><small>Free shows how many people fit you and your match % with each. Names, photos and everything else come with Gold.</small></div>`:''}
     ${recv.length?`<button class="likes" data-a="goLikes"><span class="stack">${recv.slice(0,3).map(p=>avatar(p,'sm')).join('')}</span><span class="tx"><b>${recv.length} ${recv.length===1?'person likes':'people like'} you</b><span>See who, and say yes to start chatting</span></span>${ic('heart')}</button>`:''}
-    ${picks.length?`<div class="sec-h"><h2>Today’s picks for you</h2><small>New picks in <span data-until="${midnight()}">${fmtLeft(midnight()-Date.now())}</span></small></div>
-    <div class="picks" role="list">${picks.map(tile).join('')}</div>`:''}
-    <div class="sec-h"><h2>All matches</h2></div>
+    ${introBlock(list)}
+    ${list.length>3&&!S.showAllM?`<button class="btn ghost block" data-a="showAllM">See all ${list.length} matches</button>`:''}
+    ${!list.length||S.showAllM?`<div class="sec-h"><h2>All matches</h2></div>
     <div class="listhead"><div class="sorts" role="group" aria-label="Sort">${[['best','Best match'],['near','Nearest'],['new','Newest']].map(([k,l])=>`<button data-a="sort" data-k="${k}" class="${S.sort===k?'on':''}" aria-pressed="${S.sort===k}">${l}</button>`).join('')}</div></div>
     ${list.length?list.map(card).join(''):`<div class="empty"><span class="eic">${ic('search')}</span><h3>${PROFILES.some(p=>p.fits)?'No one fits every filter yet':'New members are joining'}</h3><p>${PROFILES.some(p=>p.fits)?'Try widening one preference.':'NeuMarry is just opening. Verified members appear here as they join. Widening a preference shows more people.'}</p><div class="btns">
       ${pr.radius>0?`<button class="btn sm ghost" data-a="widen" data-k="radius">Anywhere in ${esc(pr.liveCountry)}</button>`:''}
@@ -1024,6 +1031,7 @@ function renderMatches(){
       ${pr.community!=='Any'?`<button class="btn sm ghost" data-a="widen" data-k="community">Any community</button>`:''}
       ${pr.os!=='Any'?`<button class="btn sm ghost" data-a="widen" data-k="os">Anyone from ${esc(pr.oc)}</button>`:''}
       <button class="btn sm ghost" data-a="filters">Open filters</button></div></div>`}
+    `:''}
     ${passedN?`<button class="link" data-a="togglePassed" style="justify-self:start">${S.showPassed?'Hide':'Show'} ${passedN} passed ${passedN===1?'profile':'profiles'}</button>`:''}
   </div></div>`;
 }
@@ -1867,6 +1875,7 @@ const A={
       if(v&&v.entitled)toast(back==='chat'?'Welcome to Gold. Your chat is open.':'Welcome to Gold.','crown');else toast('Google Play has not confirmed this payment yet. Gold switches on as soon as it does.','info')}
     catch(e){busy='';sheet=null;render();if(e&&e.code==='purchase_other_account')fail(e);else toast('Payment received. Gold will switch on the next time you open NeuMarry. If it does not, contact us.','info')}},
   async admPayTest(el){if(el)el.disabled=true;try{const eid=await API.rpc('admin_pay_test');await loadEvents();PAYQ=null;view={type:'event',id:typeof eid==='string'?eid:(eid&&(eid.admin_pay_test||Object.values(eid)[0]))};render();const v=document.getElementById('view-scroll');if(v)v.scrollTop=0}catch(e){if(el)el.disabled=false;toast('Could not open the test seat. Try again.','info')}},
+  showAllM(){S.showAllM=true;render()},
   openAdmin(){view={type:'admin'};S.admin={loading:true,queue:[],reports:[],urls:{}};render();loadAdmin()},
   async admApprove(el){await adminReview(el,true)},
   async admReject(el){const sel=document.querySelector(`[data-adm-reason="${el.dataset.id}"]`);const reason=sel&&sel.value;if(!reason){toast('Choose a reason first, so the member knows what to fix.','info');if(sel)sel.focus();return}await adminReview(el,false,reason)},

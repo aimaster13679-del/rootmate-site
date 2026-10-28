@@ -821,3 +821,9 @@ a.btn{text-decoration:none}
 .nm-why li{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;line-height:1.4}
 .nm-why li .ic{flex:none;width:18px;height:18px;margin-top:1px;color:var(--rose);stroke-width:2}
 .nm-card .tlrow{margin-top:2px}
+
+/* Daily introductions */
+.nm-intro{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 calc(var(--pad,18px) * -1);padding:0 var(--pad,18px) 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.nm-intro::-webkit-scrollbar{display:none}
+.nm-slide{flex:0 0 100%;scroll-snap-align:center}
+.nm-dots{display:flex;gap:6px;justify-content:center;margin:-2px 0 6px}.nm-dots i{width:22px;height:4px;border-radius:2px;background:#F0D6DC}.nm-dots i.on{background:var(--rose)}
