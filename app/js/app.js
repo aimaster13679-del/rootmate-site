@@ -1101,6 +1101,7 @@ function renderMe(){
     ${me.photoPending?`<p class="hint">${ic('info')} Your photo is waiting for a quick check by our team.</p>`:''}
     <div class="complete"><div class="hint">Profile ${pct}% complete${pct<100?' · a complete profile builds more trust':''}</div><div class="bar"><i style="width:${pct}%"></i></div></div>
     <button class="btn ghost" data-a="edit">Edit profile</button></div>
+   <button class="likes nm-bio" data-a="shareBio"><span class="pi">${ic('send')}</span><span class="tx"><b>Family biodata</b><span>Send your verified profile card to your parents on WhatsApp</span></span>${ic('back','flipx')}</button>
    ${recheckCall(me)}<div class="panel"><h3>Verification</h3><div>${vr(idS[0],'Government ID',idS[1],1)}${vr(sS[0],'Live selfie',sS[1],1)}${vr(rS[0],`Roots: ${me.os}, ${me.oc}`,rS[0]==='ok'&&me.rootsAt?`Proven with a document · ${dt(me.rootsAt)}`:rS[1],2)}${vr(lS[0],`Lives in: ${myPlace()}, ${me.country}`,lS[1],3)}${me.locOk?vr('ok','Location check',`Confirmed · ${dt(me.locAt)}`):''}<div class="vrow">${ic('info','no-ic')}<span class="tx"><b>Phone number</b><small>${me.phone?esc(me.phone)+' · code checks by SMS are coming soon':'Optional · add it in Edit profile'}</small></span></div></div></div>
    ${workCard()}
    <div class="panel"><h3>Privacy</h3><div>
@@ -1166,6 +1167,15 @@ function renderProfileView(id,isMe){
    ${isMe?'':`<div class="pv-act pad">${actionBar(p)}</div>`}
   </div>`;
 }
+/* Conversation starters (29 Oct, feature 3): from the answers you share. */
+function starters(p){const me=S.me,out=[];
+  if(p.oc===me.oc)out.push(`How does your family celebrate at home in ${p.cityName}?`);
+  if(me.ans[0]===p.ans[0]&&p.ans[0]===0)out.push(`What do you love most about ${p.cityName}?`);
+  if(me.ans[5]===p.ans[5])out.push(['What does a family weekend look like for you?','Which place here do you like to go out with friends?','Where is the next trip you dream of?'][p.ans[5]]||'');
+  if(me.ans[1]===p.ans[1])out.push('What do you enjoy most about your work?');
+  out.push('What made you move to '+p.cityName+'?');
+  const list=[...new Set(out.filter(Boolean))].slice(0,3);
+  return `<div class="nm-start pad"><small>Ideas from your answers</small><div>${list.map(t=>`<button data-a="starter" data-t="${esc(t)}">${esc(t)}</button>`).join('')}</div></div>`}
 function renderChatView(id){
   const p=byId(id);if(!p)return '';
   const msgs=S.chats[id]||[];
@@ -1178,6 +1188,7 @@ function renderChatView(id){
     ${msgs.map(m=>!canChat(id)&&m.f==='them'?`<div class="msg them locked" aria-label="Message from ${esc(p.first||'them')}, locked"><span class="blurtxt" aria-hidden="true">${esc(m.x)}</span><span class="lockline">${ic('lock')}${esc(p.first||'They')} sent you a message</span></div>`:
       `<div class="msg ${m.f}${m.pending?' pending':''}">${esc(m.x)}${m.f!=='sys'?`<time>${m.pending?'Sending…':timeStr(m.ts)}</time>`:''}</div>${m.flag&&m.f==='them'?`<div class="msg sys">${ic('shield')} This message mentions money or visas. Never send money or pay for visa help, and report anyone who asks.</div>`:''}`).join('')}
    </div></div>
+   ${canChat(id)&&msgs.filter(m=>m.f!=='sys').length<6?starters(p):''}
    ${canChat(id)?`<div class="composer pad"><label class="sr" for="chat-in">Message</label><input id="chat-in" type="text" maxlength="1000" placeholder="Message ${esc(p.first||'')}" autocomplete="off" enterkeyhint="send"><button class="btn primary" data-a="send" data-id="${id}" aria-label="Send">${ic('send')}</button></div>`:
    `<div class="lockbar pad"><span class="tx"><b>Read and reply to ${esc(p.first||'your match')}</b><small>Chat opens when either of you has Gold</small></span><button class="btn gold" data-a="upgrade" data-r="chat" data-id="${id}">${ic('crown')}Unlock</button></div>`}
   </div>`;
@@ -1474,6 +1485,7 @@ function renderSheet(){
   }
   if(t==='more'){const p=byId(sheet.id);
     return sheetShell(shown(p),`<div class="rows">
+     ${sheet.chat?`<button class="rowi" data-a="safeMeet" data-id="${p.id}">${ic('shield')}<span class="tx"><b>Share my meeting plan</b><span>Send where and when you meet to someone you trust</span></span></button>`:''}
      ${sheet.chat?`<button class="rowi" data-a="engaged" data-id="${p.id}">${ic('heart')}<span class="tx"><b>${S.storyFor[p.id]?'Thank you for sharing':'We’re getting married!'}</b><span>Pause your profile and share your story</span></span></button>`:''}
      <button class="rowi" data-a="report" data-id="${p.id}">${ic('flag')}<span class="tx"><b>Report</b><span>Fake profile, money requests, rude messages</span></span></button>
      <button class="rowi" data-a="block" data-id="${p.id}">${ic('x')}<span class="tx"><b>Block</b><span>They will not see you or contact you again</span></span></button></div>`);}
@@ -1876,6 +1888,12 @@ const A={
       if(v&&v.entitled)toast(back==='chat'?'Welcome to Gold. Your chat is open.':'Welcome to Gold.','crown');else toast('Google Play has not confirmed this payment yet. Gold switches on as soon as it does.','info')}
     catch(e){busy='';sheet=null;render();if(e&&e.code==='purchase_other_account')fail(e);else toast('Payment received. Gold will switch on the next time you open NeuMarry. If it does not, contact us.','info')}},
   async admPayTest(el){if(el)el.disabled=true;try{const eid=await API.rpc('admin_pay_test');await loadEvents();PAYQ=null;view={type:'event',id:typeof eid==='string'?eid:(eid&&(eid.admin_pay_test||Object.values(eid)[0]))};render();const v=document.getElementById('view-scroll');if(v)v.scrollTop=0}catch(e){if(el)el.disabled=false;toast('Could not open the test seat. Try again.','info')}},
+  starter(el){const i=document.getElementById('chat-in');if(i){i.value=el.dataset.t;i.focus()}},
+  safeMeet(el){const p=byId(el.dataset.id);sheet=null;render();const t=`I am meeting ${p.first||'someone'} from NeuMarry (verified: ID, selfie, roots and city checked). Place: ____ . Time: ____ . I will message you when I am back home.`;
+    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank','noopener')},
+  shareBio(){const me=S.me,parts=me.name.trim().split(/\s+/);const n=(typeof checksDone==='function'?[me.v.id,me.v.selfie,me.v.roots,me.v.lives,true].filter(Boolean).length:5);
+    const lines=[`${parts[0]}${parts[1]?' '+parts[1][0]+'.':''}, ${me.age}`,`Roots: ${me.os}, ${me.oc}`,`Lives in: ${me.city||me.state}, ${me.country}`,`Work: ${me.job}`,`Education: ${me.edu}`,`Height: ${ftIn(me.h)}`,`Faith: ${me.r}`,`Looking for: ${me.prefs.ageMin}-${me.prefs.ageMax}${me.prefs.oc!=='Any'?', roots in '+me.prefs.oc:''}`,`Verified by NeuMarry: ${n} of 5 checks`,'','NeuMarry, verified matrimony for people living abroad: https://neumarry.com'];
+    const t=lines.join('\n');if(navigator.share){navigator.share({title:'My NeuMarry profile',text:t}).catch(()=>{})}else window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank','noopener')},
   showAllM(){S.showAllM=true;render()},
   openAdmin(){view={type:'admin'};S.admin={loading:true,queue:[],reports:[],urls:{}};render();loadAdmin()},
   async admApprove(el){await adminReview(el,true)},

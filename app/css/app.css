@@ -836,3 +836,12 @@ a.btn{text-decoration:none}
 .nm-chk span i{width:34px;height:34px;border-radius:50%;background:var(--sunk);display:grid;place-items:center}
 .nm-chk span i .ic{width:16px;height:16px;stroke-width:2.4}
 .nm-chk span.ok{color:#2F7A5B}.nm-chk span.ok i{background:#E4F3EB}
+
+/* starters, biodata, events and Gold in the new design */
+.nm-start{padding-block:8px 4px;background:var(--bg)}
+.nm-start small{font-size:12.5px;font-weight:700;color:var(--muted)}
+.nm-start div{display:flex;gap:8px;overflow-x:auto;margin-top:6px;scrollbar-width:none}.nm-start div::-webkit-scrollbar{display:none}
+.nm-start button{flex:none;border:0;background:var(--rose-soft);color:var(--rose-deep);font:700 13px var(--f-body);padding:9px 12px;border-radius:14px;max-width:260px;text-align:left}
+.nm-bio .pi{width:40px;height:40px;border-radius:50%;background:#E4F3EB;color:#2F7A5B;display:grid;place-items:center}
+.evcard{border-radius:26px;box-shadow:0 14px 30px -18px rgba(90,30,54,.5);border-color:#F6E3E7}
+.plan.pick.on{box-shadow:0 0 0 3px #F5E3BE}

@@ -154,6 +154,7 @@
     'Lives': 'Vit à', 'Lives in': 'Vit à', 'Mindset, side by side': 'États d’esprit, côte à côte', 'Good to know': 'Bon à savoir',
     'Today’s introductions': 'Présentations du jour', 'New ones in': 'Nouvelles dans',
     'Checked by NeuMarry': 'Vérifié par NeuMarry',
+    'Ideas from your answers': 'Idées tirées de vos réponses', 'Share my meeting plan': 'Partager mon plan de rencontre', 'Send where and when you meet to someone you trust': 'Envoyez le lieu et l’heure à une personne de confiance', 'Family biodata': 'Biodonnées pour la famille', 'Send your verified profile card to your parents on WhatsApp': 'Envoyez votre fiche vérifiée à vos parents sur WhatsApp',
     'Same roots as you': 'Mêmes origines que vous', 'fit': 'affinité',
     'Photos unlock when you both accept': 'Les photos se débloquent quand vous acceptez tous les deux', 'Unlock': 'Débloquer', 'See her profile': 'Voir son profil', 'See his profile': 'Voir son profil', 'See her full profile': 'Voir son profil complet', 'See his full profile': 'Voir son profil complet',
     'See who they are': 'Voir qui c’est', 'Name, photos and profile with Gold': 'Nom, photos et profil avec Gold', 'Name, photos, mindset side by side and every reason you match.': 'Nom, photos, états d’esprit côte à côte et toutes les raisons de votre affinité.',
