@@ -834,7 +834,7 @@ function tzWarn(d){const t=tzCountry();if(!t||!d.country||t===d.country||d.tzAck
   <div class="vopts"><button type="button" class="vopt" data-a="tzSwitch" data-v="${esc(t)}"><span class="rd" aria-hidden="true"></span><span class="tx"><b>I live in ${esc(t)}</b><small>Change my country to ${esc(t)}</small></span></button>
   <button type="button" class="vopt" data-a="tzKeep"><span class="rd" aria-hidden="true"></span><span class="tx"><b>I live in ${esc(d.country)}, I’m only visiting ${esc(t)}</b><small>Keep ${esc(d.country)}. You prove it with documents in step 5.</small></span></button></div>
   <p class="hint">We use only your phone’s time zone. No permission is needed.</p>`}
-function renderSignup(){
+function renderSignup(){if(!S.editMode)setTimeout(()=>noteStep(S.step),0);
   const d=S.draft,st=S.step,edit=S.editMode;let body='';const lockedId=edit&&S.me&&S.me.v.id;
   if(st===1){
     const maxDob=new Date();maxDob.setFullYear(maxDob.getFullYear()-18);
@@ -1309,11 +1309,15 @@ const ADM_HINT={id:'Name and date of birth must match the profile. Photo must ma
   address:'Same name as the ID, an address in the city on the profile (or within 50 km), dated in the last 3 months or a valid photo ID with the address.'};
 /* New sign-ups (28 Oct, his ok): who joined in the last 30 days and where they stopped, so the team can help. */
 const STEP_CLS={'Fully verified and live':'good','Waiting for our team':'gold'};
+function tzPlace(tz){if(!tz)return '';const city=tz.split('/').pop().replace(/_/g,' ');return `${city} time zone`}
 function signupsBlock(list){const today=list.filter(x=>Date.now()-Date.parse(x.created_at)<864e5).length;
+  const when=t=>t?new Date(t).toLocaleString(RM_I18N.locale,{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}):'-';
   return `<div class="sec-h"><h2>New sign-ups (${list.length})</h2><small>${today} today · last 30 days</small></div>
-  ${list.length?`<div class="panel glist su-list">${list.map(x=>{const d=new Date(x.created_at);
-    return `<div class="rowi"><span class="tx"><b>${esc(x.full_name||'No name yet')}</b><span class="notr">${esc(x.email||'')}</span>
-     <span>${esc(d.toLocaleString(RM_I18N.locale,{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}))} · ${esc(x.provider==='google'?'Google':x.provider==='email'?'Email and password':x.provider)}${x.city?` · ${esc(x.city)}, ${esc(x.country||'')}`:''}</span>
+  ${list.length?`<div class="panel glist su-list">${list.map(x=>{const nm=x.full_name||x.google_name;
+    return `<div class="rowi"><span class="tx"><b>${esc(nm||'No name yet')}</b><span class="notr">${esc(x.email||'')}</span>
+     <span>Joined ${esc(when(x.created_at))} · ${esc(x.provider==='google'?'Google':x.provider==='email'?'Email and password':x.provider)}${x.city?` · ${esc(x.city)}, ${esc(x.country||'')}`:''}</span>
+     <span>Last active ${esc(when(x.last_active))} · ${x.logins||1} ${x.logins===1||!x.logins?'login':'logins'}${x.form_minutes!=null?` · ${x.form_minutes} min in the form`:''}</span>
+     ${x.phone_tz?`<span>Phone: ${esc(tzPlace(x.phone_tz))}${x.phone_lang?` · language ${esc(x.phone_lang)}`:''}</span>`:''}
      <span class="pill ${STEP_CLS[x.step]||''}">${esc(x.step)}</span></span>
      ${x.email&&x.step!=='Fully verified and live'?`<a class="btn ghost sm" href="mailto:${esc(x.email)}?subject=${encodeURIComponent('Your NeuMarry profile')}">${ic('mail')}Email</a>`:''}</div>`}).join('')}</div>`:`<p class="hint">No new sign-ups in the last 30 days.</p>`}`}
 function renderAdmin(){
@@ -1563,6 +1567,11 @@ function openEdit(step){const me=S.me;const d=clone(Object.assign({},me,{photo:m
   d.photoBlob=null;d.idBlob=null;d.selfieBlob=null;d.selfie=null;d.idName='';
   Object.assign(d,{rootsType:'',rootsBlob:null,rootsName:'',statusType:'',statusBlob:null,statusName:'',addrType:'',addrBlob:null,addrName:'',loc:null,vs:0,tzAck:me.country});
   S.draft=d;S.editMode=true;S.step=step||1;S.errors={};view=null;sheet=null;picker=null;S.screen='signup';render();const sc=document.getElementById('su-scroll');if(sc)sc.scrollTop=0}
+/* Sign-up progress (28 Oct): the server keeps only the step reached, its time and the phone's time zone, so the team can help people who get stuck. */
+let notedStep=0;
+function noteStep(n){if(S.editMode||!API.session()||n===notedStep)return;notedStep=n;
+  let tz=null;try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){}
+  API.rpc('note_signup_step',{n,tz,lang:(navigator.language||'').slice(0,20)}).catch(()=>{notedStep=0})}
 function goStep(n){S.step=n;S.errors={};save();render();const sc=document.getElementById('su-scroll');if(sc)sc.scrollTop=0}
 function showErrors(){render();const first=document.querySelector('.has-err');if(first){const sc=first.closest('.scroll,.sheet-b');if(sc){const r=first.getBoundingClientRect(),cr=sc.getBoundingClientRect();sc.scrollTop+=r.top-cr.top-cr.height/3}const f=first.querySelector('input,textarea,.pick');if(f)try{f.focus({preventScroll:true})}catch(e){}}}
 const fine=()=>window.matchMedia('(pointer:fine)').matches;

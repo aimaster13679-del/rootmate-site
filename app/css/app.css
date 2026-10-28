@@ -794,4 +794,4 @@ a.btn{text-decoration:none}
 .panel.whyev .incl li{align-items:flex-start}.panel.whyev .incl .ic{color:var(--rose);margin-top:2px}
 .panel.whyev em{font-style:italic;color:var(--rose-deep)}
 /* Team: new sign-ups (28 Oct) */
-.su-list .rowi{align-items:flex-start}.su-list .tx{gap:3px}.su-list .pill{justify-self:start;width:max-content;margin-top:3px}
+.su-list .rowi{align-items:flex-start}.su-list .tx{gap:3px}.su-list .pill{justify-self:start;max-width:100%;white-space:normal;text-align:left;margin-top:3px}
