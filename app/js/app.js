@@ -429,7 +429,7 @@ function activeFilterCount(){const pr=S.me.prefs,d=defaultPrefs(S.me);let n=0;['
 
 /* ---------- Defaults ---------- */
 function blankDraft(){return {name:'',createdBy:'Self',g:'',lookingFor:'',dob:'',h:'',marital:'Never married',photo:null,photoBlob:null,
-  oc:'India',os:'',t:'',r:'',c:'',country:'',state:'',city:'',res:'',reloc:'',job:'',edu:'',about:'',diet:'',sm:'No',dr:'No',ans:QS.map(()=>null),
+  oc:'',os:'',t:'',r:'',c:'',country:'',state:'',city:'',res:'',reloc:'',job:'',edu:'',about:'',diet:'',sm:'No',dr:'No',ans:QS.map(()=>null),
   v:{phone:false,id:false,selfie:false,roots:false,lives:false},phone:'',idName:'',idBlob:null,idPreview:null,selfie:null,selfieBlob:null,
   rootsType:'',rootsBlob:null,rootsName:'',statusType:'',statusBlob:null,statusName:'',addrType:'',addrBlob:null,addrName:'',tzAck:'',vs:0,
   privacy:{blur:true,vis:'verified',showC:true,incognito:false},prefs:null}}
@@ -514,6 +514,31 @@ const _pickerDef0=pickerDef;
 pickerDef=function(key,t){if(key==='prefs.timeline')return {title:'Ready to marry',opts:[{v:'Any',l:'Any time'},{v:'year',l:'Within a year'},{v:'two',l:'Within 2 years'}]};return _pickerDef0(key,t)};
 const TL_PILL=['Ready to marry within a year','Ready to marry in 1–2 years','Marriage when it feels right'];
 function timelinePill(p){const a=p.ans&&p.ans[8];return a===0||a===1||a===2?`<div class="tlrow"><span class="pill mtl">${ic('clock')}<span>${TL_PILL[a]}</span></span></div>`:''}
+/* World-wide (29 Oct mock): language and community lists follow the country of origin, more diets, Pakistan NICOP. */
+const TONGUE_BY_ORIGIN={India:POP_TONGUE,Pakistan:['Urdu','Punjabi','Sindhi','Pashto','Saraiki','Balochi','English'],Bangladesh:['Bengali','Sylheti','Chittagonian','English'],
+ Nepal:['Nepali','Maithili','Bhojpuri','Newari','Tamang','English'],'Sri Lanka':['Sinhala','Tamil','English'],Philippines:['Filipino','Cebuano','Ilocano','Hiligaynon','English'],
+ China:['Mandarin','Cantonese','Hokkien','Hakka'],'Hong Kong S.A.R.':['Cantonese','English','Mandarin'],Nigeria:['Yoruba','Igbo','Hausa','English'],Ghana:['Akan','Ewe','English'],
+ Kenya:['Swahili','English','Kikuyu','Luo'],Mexico:['Spanish'],Brazil:['Portuguese'],Vietnam:['Vietnamese'],'South Korea':['Korean'],Japan:['Japanese'],Iran:['Persian','Azerbaijani','Kurdish'],
+ Afghanistan:['Dari','Pashto','Uzbek'],Lebanon:['Arabic','French','Armenian'],Egypt:['Arabic'],Morocco:['Arabic','French','Berber'],Ethiopia:['Amharic','Oromo','Tigrinya'],
+ Somalia:['Somali','Arabic'],Ukraine:['Ukrainian','Russian'],Poland:['Polish'],Italy:['Italian'],Portugal:['Portuguese'],Turkey:['Turkish','Kurdish'],Fiji:['Fiji Hindi','Fijian','English'],
+ 'Fiji Islands':['Fiji Hindi','Fijian','English'],Mauritius:['Mauritian Creole','Bhojpuri','French','English'],Guyana:['English','Guyanese Creole'],'Trinidad And Tobago':['English']};
+const COMM_BY_ORIGIN={Pakistan:['Punjabi','Pashtun','Sindhi','Muhajir','Baloch','Kashmiri','Saraiki'],Bangladesh:['Bengali','Sylheti','Chittagonian'],
+ Nepal:['Brahmin (Bahun)','Chhetri','Newar','Gurung','Magar','Tamang','Rai','Limbu','Tharu','Sherpa','Madhesi','Thakali'],'Sri Lanka':['Sinhalese','Sri Lankan Tamil','Indian Tamil','Sri Lankan Moor','Burgher'],
+ Philippines:['Tagalog','Cebuano','Ilocano','Kapampangan','Bicolano','Waray','Hiligaynon','Moro'],China:['Han','Hui','Manchu','Uyghur','Zhuang','Tibetan','Hakka'],
+ Nigeria:['Yoruba','Igbo','Hausa','Fulani','Ijaw','Edo','Ibibio','Tiv'],Ghana:['Akan','Ewe','Ga-Adangbe','Mole-Dagbani'],Kenya:['Kikuyu','Luo','Luhya','Kalenjin','Kamba','Kenyan Asian'],
+ Afghanistan:['Pashtun','Tajik','Hazara','Uzbek'],Iran:['Persian','Azeri','Kurd','Lur','Armenian'],Lebanon:['Maronite','Sunni','Shia','Druze','Greek Orthodox','Armenian'],
+ Ethiopia:['Oromo','Amhara','Tigray','Somali','Gurage'],'Fiji Islands':['Indo-Fijian','iTaukei'],Guyana:['Indo-Guyanese','Afro-Guyanese'],'Trinidad And Tobago':['Indo-Trinidadian','Afro-Trinidadian'],
+ Mauritius:['Indo-Mauritian','Creole','Sino-Mauritian'],'Hong Kong S.A.R.':['Cantonese','Hakka','Teochew']};
+['Halal','Kosher','Pescatarian'].forEach(x=>{if(!DIETS.includes(x))DIETS.push(x)});
+const _pickerDefW=pickerDef;
+pickerDef=function(key,t){const d=_pickerDefW(key,t),o=t==='me'?S.me:S.draft;
+  if(key==='t'&&o&&TONGUE_BY_ORIGIN[o.oc])d.secs=[['Common in '+o.oc,TONGUE_BY_ORIGIN[o.oc].map(x=>({v:x,l:x}))],['All languages',LANGS.map(x=>({v:x,l:x}))]];
+  if(key==='c'&&o&&COMM_BY_ORIGIN[o.oc]){const have=new Set(d.opts.map(x=>x.v));const extra=COMM_BY_ORIGIN[o.oc].filter(x=>!have.has(x)).map(x=>({v:x,l:x}));
+    d.secs=[['',d.opts.slice(0,1)],['From '+o.oc,extra],[o.r?o.r+' communities':'',d.opts.slice(1)]].filter(s=>s[1].length);delete d.opts}
+  if(key==='os'&&o&&!o.oc)return {title:'State / region',opts:[],ph:'Choose your country of origin first',custom:true};
+  return d};
+const _rootsDocsW=rootsDocs;
+rootsDocs=function(oc){const o=_rootsDocsW(oc);if(oc==='Pakistan')o.splice(1,1,{v:'NICOP or POC',l:'NICOP or POC card',s:'For people of Pakistani origin living abroad.'});return o};
 function applyChange(t,key,v){
   const o=t==='me'?S.me:S.draft;if(!o)return;
   setPath(o,key,v);
@@ -1050,7 +1075,7 @@ function renderMe(){
   const vr=(state,t,s,n)=>`<div class="vrow">${state==='ok'?ic('check','ok-ic'):ic('info','no-ic')}<span class="tx"><b>${esc(t)}</b><small>${esc(s)}</small></span>${state==='no'?`<button class="btn sm primary" data-a="goVerify" data-n="${n||1}">Upload</button>`:''}</div>`;
   const idS=checkState(me.idCheck,me.v.id),sS=checkState(me.selfieCheck,me.v.selfie),rS=checkState(me.rootsCheck,me.v.roots),lS=livesState(me);
   const dt=x=>x?new Date(x).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'}):'';
-  const goldLine=me.plan==='free'?'':me.goldSource==='admin'?`Gold is on for free during the test, until ${new Date(me.goldUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short'})}.`:me.goldSource==='women_offer'?`Your free Gold (welcome offer for women in Canada) runs until ${new Date(me.goldUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'})}.`:me.goldSource==='google'?`Gold through Google Play, paid until ${new Date(me.goldUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'})}.`:`Gold is active until ${new Date(me.goldUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'})}.`;
+  const goldLine=me.plan==='free'?'':me.goldSource==='admin'?`Gold is on for free during the test, until ${new Date(me.goldUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short'})}.`:me.goldSource==='women_offer'?`Your free Gold (welcome offer for women) runs until ${new Date(me.goldUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'})}.`:me.goldSource==='google'?`Gold through Google Play, paid until ${new Date(me.goldUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'})}.`:`Gold is active until ${new Date(me.goldUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'})}.`;
   return topbar('My profile',me.plan==='gold'?'Gold member':me.plan==='concierge'?'Concierge member':'Free member',`<button class="iconbtn soft" data-a="previewMe" aria-label="See my profile as others do">${ic('eye')}</button>`)+
   `<div class="scroll" id="main"><div class="main-inner pad">
    ${me.isAdmin?`<button class="likes" data-a="openAdmin"><span class="pi" style="width:40px;height:40px;border-radius:50%;background:var(--rose-soft);color:var(--rose);display:grid;place-items:center">${ic('shield')}</span><span class="tx"><b>Team: review queue</b><span>Approve photos, IDs and selfies, and handle reports</span></span>${ic('back','flipx')}</button>`:''}

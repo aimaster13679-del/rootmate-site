@@ -342,6 +342,7 @@
     'Hosted evenings with dinner included': 'Soirées animées, souper compris', 'Reserve free': 'Réserver gratuitement', 'Reserve free seat': 'Réserver une place gratuite', 'Reserve your seat': 'Réservez votre place',
     'Reserved': 'Réservé', 'Reserved free': 'Réservé gratuitement', 'Booked': 'Réservé', 'Confirmed': 'Confirmé', 'Tickets': 'Billets', 'Who you’ll meet': 'Qui vous rencontrerez', 'What’s included': 'Ce qui est compris',
     'How the evening goes': 'Déroulement de la soirée', 'How booking works': 'Comment réserver', 'Total if confirmed': 'Total si confirmé', 'Your dish': 'Votre plat', 'Dish': 'Plat', 'Choose a dish': 'Choisissez un plat', 'Choose your dish': 'Choisissez votre plat',
+    'Kosher': 'Casher', 'Pescatarian': 'Pescétarien', 'NICOP or POC card': 'Carte NICOP ou POC', 'For people of Pakistani origin living abroad.': 'Pour les personnes d’origine pakistanaise vivant à l’étranger.', 'Choose your country of origin first': 'Choisissez d’abord votre pays d’origine',
     'Halal': 'Halal', 'Jain': 'Jaïn', 'Member': 'Membre', 'Parents': 'Parents', 'Name for the guest list': 'Nom pour la liste d’invités', 'Add a name for the guest list': 'Ajoutez un nom pour la liste d’invités',
     'Member, dinner included': 'Membre, souper compris', 'Parent, dinner included (up to 2)': 'Parent, souper compris (2 maximum)', 'One more parent': 'Un parent de plus', 'One fewer parent': 'Un parent de moins',
     'Reserve a seat for free and choose your dish.': 'Réservez une place gratuitement et choisissez votre plat.',
