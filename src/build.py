@@ -424,16 +424,29 @@ open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding=
     ''.join(f'  <url><loc>{u}</loc><lastmod>{TODAY}</lastmod><changefreq>{c}</changefreq><priority>{pr}</priority></url>\n' for u, pr, c in urls) + '</urlset>\n')
 # ---------- Google Analytics (website only, not /app/) with Consent Mode v2 ----------
 GA_ID = 'G-N3V0JG9X0D'
+# Meta Pixel (dataset "NeuMarry Website", portfolio Neuconet; his ok 28 Oct 21:50). Website only, never in /app/.
+# Europe (EEA, UK, Switzerland, by time zone): only after "Accept". Elsewhere on, with a one-time notice and a "Decline" choice.
+# Lead = a click on "Create profile" / "Open app" (any link into /app/). No names, emails or profile data are sent.
+PX_ID = '1427089529012759'
+PX_HEAD = ("<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};"
+           "if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;"
+           "s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');"
+           "(function(){var tz='',c=null;try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';c=localStorage.getItem('nm.ads')}catch(e){}"
+           "var eu=/^(Europe\\/|Atlantic\\/(Reykjavik|Canary|Madeira|Faroe|Azores))/.test(tz);window.nmEU=eu;"
+           "if(c==='denied'||(eu&&c!=='granted'))fbq('consent','revoke');"
+           "fbq('init','" + PX_ID + "');fbq('track','PageView');"
+           "document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a[href]');"
+           "if(a&&/(^|\\/)app\\/?(\\?|#|$)/.test(a.getAttribute('href')))fbq('track','Lead')},true)})();</script>")
 EU = ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']
 GA_HEAD = ('<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}'
            "gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',region:" + json.dumps(EU) + "});"
            "gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'granted'});"
            "try{var nmC=localStorage.getItem('nm.analytics');if(nmC==='granted'||nmC==='denied')gtag('consent','update',{analytics_storage:nmC})}catch(e){}"
            "gtag('js',new Date());gtag('config','" + GA_ID + "',{allow_google_signals:false,allow_ad_personalization_signals:false});</script>"
-           '<script async src="https://www.googletagmanager.com/gtag/js?id=' + GA_ID + '"></script>')
+           '<script async src="https://www.googletagmanager.com/gtag/js?id=' + GA_ID + '"></script>' + PX_HEAD)
 BANNER_TXT = {
- 'en': dict(t='This website counts visits with Google Analytics so we can improve it. No ads, and we never sell your data.', ok='Accept', no='Decline', more='Privacy Policy', link='Analytics settings', href='privacy.html'),
- 'fr': dict(t='Ce site compte les visites avec Google Analytics pour s’améliorer. Aucune publicité, et nous ne vendons jamais vos données.', ok='Accepter', no='Refuser', more='Politique de confidentialité', link='Paramètres d’analyse', href='../privacy.html'),
+ 'en': dict(t='This website uses Google Analytics to count visits and the Meta Pixel to measure our ads on Facebook and Instagram. We never sell your data.', ok='Accept', no='Decline', more='Privacy Policy', link='Cookie settings', href='privacy.html'),
+ 'fr': dict(t='Ce site utilise Google Analytics pour compter les visites et le pixel Meta pour mesurer nos publicités sur Facebook et Instagram. Nous ne vendons jamais vos données.', ok='Accepter', no='Refuser', more='Politique de confidentialité', link='Paramètres des témoins', href='../privacy.html'),
 }
 def banner(lang):
     b = BANNER_TXT[lang]
@@ -448,9 +461,10 @@ def banner(lang):
             '<p>' + b['t'] + ' <a href="' + b['href'] + '">' + b['more'] + '</a></p>'
             '<div class="b"><button type="button" class="n" data-c="denied">' + b['no'] + '</button><button type="button" class="y" data-c="granted">' + b['ok'] + '</button></div></div>'
             "<script>(function(){var tz='';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||''}catch(e){}"
-            "if(!/^(Europe\\/|Atlantic\\/(Reykjavik|Canary|Madeira|Faroe|Azores))/.test(tz))return;"
-            "var d=document.getElementById('nm-consent'),c=null;try{c=localStorage.getItem('nm.analytics')}catch(e){}"
-            "function set(v){try{localStorage.setItem('nm.analytics',v)}catch(e){}gtag('consent','update',{analytics_storage:v});d.hidden=true}"
+            "var eu=/^(Europe\\/|Atlantic\\/(Reykjavik|Canary|Madeira|Faroe|Azores))/.test(tz);"
+            "var d=document.getElementById('nm-consent'),c=null;try{c=localStorage.getItem('nm.ads')}catch(e){}"
+            "function set(v){try{localStorage.setItem('nm.ads',v);if(eu||v==='denied')localStorage.setItem('nm.analytics',v)}catch(e){}"
+            "if(eu||v==='denied')gtag('consent','update',{analytics_storage:v});if(window.fbq)fbq('consent',v==='granted'?'grant':'revoke');d.hidden=true}"
             "d.addEventListener('click',function(e){var v=e.target&&e.target.getAttribute('data-c');if(v)set(v)});"
             "if(c!=='granted'&&c!=='denied')d.hidden=false;"
             "var f=document.querySelector('footer .wrap');if(f){var a=document.createElement('button');a.type='button';a.className='nm-alink link';a.textContent='" + b['link'].replace("'", "\\'") + "';"
