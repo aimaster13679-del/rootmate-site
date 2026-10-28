@@ -340,6 +340,10 @@
     'Community events': 'Événements communautaires', 'Every event': 'Chaque événement', 'Parents welcome': 'Parents bienvenus', 'Members only': 'Membres seulement', 'Members only.': 'Membres seulement.',
     'Every event: separate tables in one shared room, ID-verified guests, a NeuMarry host.': 'À chaque événement : des tables séparées dans une même salle, des invités vérifiés et un hôte NeuMarry.',
     'Hosted evenings with dinner included': 'Soirées animées, souper compris', 'Reserve free': 'Réserver gratuitement', 'Reserve free seat': 'Réserver une place gratuite', 'Reserve your seat': 'Réservez votre place',
+    'Waiting list': 'Liste d’attente', 'On the waiting list': 'Sur la liste d’attente', 'Join waiting list': 'Liste d’attente', 'Join the waiting list': 'Rejoindre la liste d’attente', 'Full': 'Complet',
+    'You’re on the waiting list.': 'Vous êtes sur la liste d’attente.', 'You’re on the waiting list. If a seat frees up, we email you.': 'Vous êtes sur la liste d’attente. Si une place se libère, nous vous écrivons.',
+    'All seats and the waiting list are full. Try another event.': 'Toutes les places et la liste d’attente sont complètes. Essayez un autre événement.',
+    'Reserve free. An event is confirmed when every seat and the waiting list are full; then you pay in the app. Dinner is included, and nothing is paid at the restaurant. Not full in time? We move it to a new date and email you. Nobody pays before then.': 'Réservez gratuitement. Un événement est confirmé quand toutes les places et la liste d’attente sont complètes ; vous payez alors dans l’application. Le souper est compris et rien n’est payé au restaurant. Pas complet à temps ? Nous le déplaçons à une nouvelle date et vous écrivons. Personne ne paie avant.',
     'Reserved': 'Réservé', 'Reserved free': 'Réservé gratuitement', 'Booked': 'Réservé', 'Confirmed': 'Confirmé', 'Tickets': 'Billets', 'Who you’ll meet': 'Qui vous rencontrerez', 'What’s included': 'Ce qui est compris',
     'How the evening goes': 'Déroulement de la soirée', 'How booking works': 'Comment réserver', 'Total if confirmed': 'Total si confirmé', 'Your dish': 'Votre plat', 'Dish': 'Plat', 'Choose a dish': 'Choisissez un plat', 'Choose your dish': 'Choisissez votre plat',
     'Kosher': 'Casher', 'Pescatarian': 'Pescétarien', 'NICOP or POC card': 'Carte NICOP ou POC', 'For people of Pakistani origin living abroad.': 'Pour les personnes d’origine pakistanaise vivant à l’étranger.', 'Choose your country of origin first': 'Choisissez d’abord votre pays d’origine',
@@ -595,6 +599,15 @@
 
   /* ---------- Sentences with names, numbers and dates ---------- */
   var RX = [
+    [/^Seats for (women|men) are full · join the waiting list$/, function (m) { return 'Places ' + (m[1] === 'women' ? 'femmes' : 'hommes') + ' complètes · rejoignez la liste d’attente'; }],
+    [/^Full for (women|men)$/, function (m) { return 'Complet pour les ' + (m[1] === 'women' ? 'femmes' : 'hommes'); }],
+    [/^All seats for (women|men) are taken\. If a seat frees up, it is yours and we email you at once\. Nothing to pay until then\.$/, function (m) { return 'Toutes les places pour les ' + (m[1] === 'women' ? 'femmes' : 'hommes') + ' sont prises. Si une place se libère, elle est à vous et nous vous écrivons aussitôt. Rien à payer d’ici là.'; }],
+    [/^When all (\d+) seats are taken and (\d+) more people are on the waiting list, the event is confirmed\.$/, function (m) { return 'Quand les ' + m[1] + ' places sont prises et que ' + m[2] + ' personnes de plus sont sur la liste d’attente, l’événement est confirmé.'; }],
+    [/^Not full (\d+) days before\? We move it to a new date and email everyone\. Nobody pays before the event is confirmed\.$/, function (m) { return 'Pas complet ' + m[1] + ' jours avant ? Nous le déplaçons à une nouvelle date et écrivons à tout le monde. Personne ne paie avant la confirmation.'; }],
+    [/^Nothing to pay until (\d+) more people reserve\. If the event isn’t full by (.+), we move it to a new date and email you\. Nobody pays before then\.$/, function (m) { return 'Rien à payer tant que ' + m[1] + ' personnes de plus n’ont pas réservé. Si l’événement n’est pas complet d’ici le ' + m[2] + ', nous le déplaçons à une nouvelle date et vous écrivons. Personne ne paie avant.'; }],
+    [/^New date: (.+)\.$/, function (m) { return 'Nouvelle date : ' + m[1] + '.'; }],
+    [/^Moved from (.+) because not every seat was filled yet\. Your reservation stays\.$/, function (m) { return 'Déplacé du ' + m[1] + ' car toutes les places n’étaient pas encore prises. Votre réservation est conservée.'; }],
+    [/^Waiting list: (\d+) of (\d+) places left for women, (\d+) of (\d+) for men\.$/, function (m) { return 'Liste d’attente : ' + m[1] + ' places sur ' + m[2] + ' pour les femmes, ' + m[3] + ' sur ' + m[4] + ' pour les hommes.'; }],
     [/^(\d+) of (\d+) reserved · confirms when (\d+) more reserve by (.+)$/, function (m) { return m[1] + ' sur ' + m[2] + ' réservés · confirmé quand ' + m[3] + ' de plus réservent d’ici le ' + m[4]; }],
     [/^(\d+) of (\d+) people reserved · needs (\d+) more by (.+)$/, function (m) { return m[1] + ' sur ' + m[2] + ' personnes ont réservé · il en faut ' + m[3] + ' de plus d’ici le ' + m[4]; }],
     [/^(\d+) (?:person|people) from any country, anywhere$/, function (m) { return m[1] + ' ' + plural(m[1], 'personne', 'personnes') + ' de tous les pays, partout'; }],
@@ -761,7 +774,10 @@
     [/^Log <em>in<\/em>$/, 'Se <em>connecter</em>'],
     [/^Good morning, <em>(.*)<\/em>$/, 'Bonjour, <em>$1</em>'],
     [/^Good afternoon, <em>(.*)<\/em>$/, 'Bon après-midi, <em>$1</em>'],
-    [/^Good evening, <em>(.*)<\/em>$/, 'Bonsoir, <em>$1</em>']
+    [/^Good evening, <em>(.*)<\/em>$/, 'Bonsoir, <em>$1</em>'],
+    [/^Common in (.+)$/, function (m) { return 'Fréquentes ' + inCountry(m[1]); }],
+    [/^From ([A-Z].+)$/, function (m) { return 'Originaires ' + fromCountry(m[1]); }],
+    [/^(.+) communities$/, function (m) { return 'Communautés : ' + tr(m[1]); }]
   ];
 
   /* Punctuation spacing in French: a no-break space before ! ? : ; */
