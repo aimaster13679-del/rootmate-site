@@ -1046,6 +1046,7 @@ function evCard(e){
     <span class="meta"><span>${ic('cal')}${esc(f.long)} · ${e.time}</span><span>${ic('pin')}${esc(e.area)}</span><span>${ic('users')}Ages ${e.age}</span></span>
     ${st.confirmed?`<span class="seats"><span class="cstat ok">${ic('check')}Confirmed · ${left<=6?`only ${left} seats left for ${S.me.g==='F'?'women':'men'}`:`${left} seats left for ${S.me.g==='F'?'women':'men'}`}</span><span class="sb"><i style="width:${Math.round((cap-left)/cap*100)}%"></i></span></span>`:
     `<span class="seats"><span class="cstat">${st.n} of ${e.need} reserved · confirms when ${st.left} more reserve by ${esc(fmtDay(st.deadline,e.tz).long)}</span><span class="sb"><i style="width:${Math.min(100,Math.round(st.n/e.need*100))}%"></i></span></span>`}
+    <span class="nm-seats"><span>Women ${wc-wl} of ${wc}<span class="b"><i style="width:${wc?Math.round((wc-wl)/wc*100):0}%"></i></span></span><span>Men ${mc-ml} of ${mc}<span class="b m"><i style="width:${mc?Math.round((mc-ml)/mc*100):0}%"></i></span></span></span>
     <span class="evfoot"><span class="price-l"><b>${money(e.priceM,e.cur)}</b> per member, dinner included${e.parents&&e.priceP?` · parents ${money(e.priceP,e.cur)}`:''}</span>${rv&&rv.status==='pay_due'?`<span class="pill gold">Confirmed</span>`:rv?`<span class="pill good">Reserved free</span>`:`<span class="pill gold">Reserve free</span>`}</span>
    </span></button>`;
 }
@@ -1101,7 +1102,7 @@ function renderMe(){
     ${me.photoPending?`<p class="hint">${ic('info')} Your photo is waiting for a quick check by our team.</p>`:''}
     <div class="complete"><div class="hint">Profile ${pct}% complete${pct<100?' · a complete profile builds more trust':''}</div><div class="bar"><i style="width:${pct}%"></i></div></div>
     <button class="btn ghost" data-a="edit">Edit profile</button></div>
-   <button class="likes nm-bio" data-a="shareBio"><span class="pi">${ic('send')}</span><span class="tx"><b>Family biodata</b><span>Send your verified profile card to your parents on WhatsApp</span></span>${ic('back','flipx')}</button>
+   <button class="likes nm-bio" data-a="shareBio"><span class="pi">${ic('send')}</span><span class="tx"><b>Family biodata</b><span>Send a private 7-day link to your parents. No phone, email or photos.</span></span>${ic('back','flipx')}</button>${S.bioUntil?`<p class="hint">Your link works until ${esc(new Date(S.bioUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short'}))}. <button class="link" data-a="stopBio">Stop link</button></p>`:''}
    ${recheckCall(me)}<div class="panel"><h3>Verification</h3><div>${vr(idS[0],'Government ID',idS[1],1)}${vr(sS[0],'Live selfie',sS[1],1)}${vr(rS[0],`Roots: ${me.os}, ${me.oc}`,rS[0]==='ok'&&me.rootsAt?`Proven with a document · ${dt(me.rootsAt)}`:rS[1],2)}${vr(lS[0],`Lives in: ${myPlace()}, ${me.country}`,lS[1],3)}${me.locOk?vr('ok','Location check',`Confirmed · ${dt(me.locAt)}`):''}<div class="vrow">${ic('info','no-ic')}<span class="tx"><b>Phone number</b><small>${me.phone?esc(me.phone)+' · code checks by SMS are coming soon':'Optional · add it in Edit profile'}</small></span></div></div></div>
    ${workCard()}
    <div class="panel"><h3>Privacy</h3><div>
@@ -1504,9 +1505,10 @@ function renderSheet(){
     if(Bill()&&!store&&!storeLoading)loadStore().then(x=>{if(x&&sheet&&sheet.type==='upgrade')render()});
     const opts=planOpts(),canBuy=!!(Bill()&&store&&store[pick]);
     if(me.plan!=='free')return sheetShell('Your plan',`<div class="callout">${ic('crown')}<span>You have Gold. Everything is unlocked.</span></div>`,me.goldSource==='google'?MANAGE_SUB():'');
-    return sheetShell(head[0],`${prev}<p class="sub" style="color:var(--muted)">${esc(head[1])}</p>
+    const nLike=PROFILES.filter(x=>baseEligible(x)&&S.interests[x.id]==='received').length;
+    return sheetShell('NeuMarry Gold',`<div class="nm-ghero"><span class="cr">${ic('crown')}</span><h3>${nLike?`${nLike} ${nLike===1?'person already likes':'people already like'} you`:esc(head[0])}</h3><p>${nLike?'Gold lets you see who they are and reply. Every one of them is fully verified.':esc(head[1])}</p></div>${prev}
      <div class="plans" role="radiogroup" aria-label="Gold plans">${opts.map(([k,l,tot,pm,tag])=>`<button class="plan pick${pick===k?' on':''}" data-a="pickPlan" data-k="${k}" role="radio" aria-checked="${pick===k}"><span class="ph"><b>${l}</b>${tag?`<span class="pill ${k==='m3'?'gold':'good'}">${tag}</span>`:''}</span><span class="price">${pm}<small> /month</small></span>${k==='m1'?'':`<small class="hint">${tot} billed every ${l}</small>`}</button>`).join('')}</div>
-     <ul class="incl">${['Full profiles, names and photos','Send interests and chat','All 5 daily picks, and see who likes you','Browse privately'].map(x=>`<li>${ic('check')}<span>${x}</span></li>`).join('')}</ul>
+     <ul class="incl">${['Full profiles, names and photos','Send interests and chat','Daily introductions, and see who likes you','Browse privately'].map(x=>`<li>${ic('check')}<span>${x}</span></li>`).join('')}</ul>
      ${BETA?`<div class="callout gold">${ic('gift')}<span><b>Test version:</b> ${canBuy?'testers can switch on Gold for free to try everything, or buy it with Google Play.':'buying opens when NeuMarry launches. Until then, testers can switch on Gold for free to try everything.'}</span></div>`:''}
      <p class="note">Cancel anytime in your Google Play account. Safety features, verification and reporting are always free.</p>`,
      canBuy?`${BETA?busyBtn('ghost','betaGold','Try Gold free'):`<button class="btn ghost" data-a="closeSheet">Not now</button>`}${busyBtn('gold','buyGold',ic('crown')+'Get Gold')}`:
@@ -1891,9 +1893,11 @@ const A={
   starter(el){const i=document.getElementById('chat-in');if(i){i.value=el.dataset.t;i.focus()}},
   safeMeet(el){const p=byId(el.dataset.id);sheet=null;render();const t=`I am meeting ${p.first||'someone'} from NeuMarry (verified: ID, selfie, roots and city checked). Place: ____ . Time: ____ . I will message you when I am back home.`;
     window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank','noopener')},
-  shareBio(){const me=S.me,parts=me.name.trim().split(/\s+/);const n=(typeof checksDone==='function'?[me.v.id,me.v.selfie,me.v.roots,me.v.lives,true].filter(Boolean).length:5);
-    const lines=[`${parts[0]}${parts[1]?' '+parts[1][0]+'.':''}, ${me.age}`,`Roots: ${me.os}, ${me.oc}`,`Lives in: ${me.city||me.state}, ${me.country}`,`Work: ${me.job}`,`Education: ${me.edu}`,`Height: ${ftIn(me.h)}`,`Faith: ${me.r}`,`Looking for: ${me.prefs.ageMin}-${me.prefs.ageMax}${me.prefs.oc!=='Any'?', roots in '+me.prefs.oc:''}`,`Verified by NeuMarry: ${n} of 5 checks`,'','NeuMarry, verified matrimony for people living abroad: https://neumarry.com'];
-    const t=lines.join('\n');if(navigator.share){navigator.share({title:'My NeuMarry profile',text:t}).catch(()=>{})}else window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank','noopener')},
+  async shareBio(el){if(el)el.disabled=true;let r;try{r=await API.rpc('make_bio_link')}catch(e){if(el)el.disabled=false;toast('Could not make the link. Try again.','info');return}
+    const tk=r&&(r.token||(r.make_bio_link&&r.make_bio_link.token));S.bioUntil=r&&(r.expires_at||(r.make_bio_link&&r.make_bio_link.expires_at));render();
+    const url='https://neumarry.com/bio.html?t='+encodeURIComponent(tk),t=`My verified NeuMarry profile for the family (the link works for 7 days): ${url}`;
+    if(navigator.share){navigator.share({title:'My NeuMarry biodata',text:t}).catch(()=>{})}else window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank','noopener')},
+  async stopBio(){try{await API.rpc('stop_bio_links')}catch(e){}S.bioUntil=null;render();toast('Your biodata link is stopped.','check')},
   showAllM(){S.showAllM=true;render()},
   openAdmin(){view={type:'admin'};S.admin={loading:true,queue:[],reports:[],urls:{}};render();loadAdmin()},
   async admApprove(el){await adminReview(el,true)},

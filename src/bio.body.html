@@ -1,0 +1,16 @@
+<h1>Family biodata</h1>
+<p class="lede" id="bio-lede">A private profile card shared by a NeuMarry member with their family.</p>
+<div id="bio" class="bio-card" aria-live="polite"><p>Loading…</p></div>
+<p class="note">This link was made by the member and works for 7 days. It never shows phone numbers, email, address, ID documents or photos. To talk, create a free profile on NeuMarry and send an interest.</p>
+<p><a class="btn" href="app/">Create your free profile</a></p>
+<style>.bio-card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px;margin:16px 0;box-shadow:0 14px 30px -18px rgba(90,30,54,.45)}
+.bio-card h2{font-family:Lora,Georgia,serif;font-weight:500;font-size:26px;margin:0 0 4px}.bio-card .seal{display:inline-block;background:#E4F3EB;color:#2F7A5B;font-weight:800;font-size:13px;padding:5px 10px;border-radius:999px;margin-bottom:12px}
+.bio-card dl{display:grid;grid-template-columns:120px 1fr;gap:8px 12px;margin:0}.bio-card dt{color:var(--muted);font-weight:700}.bio-card dd{margin:0;font-weight:700}.note{color:var(--muted);font-size:14px}</style>
+<script>(function(){var t=new URLSearchParams(location.search).get('t')||'',box=document.getElementById('bio');
+function esc(x){return String(x==null?'':x).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+if(!t){box.innerHTML='<p>This link is not complete. Ask for a new one.</p>';return}
+fetch('https://ndxlguuywifovqdzdvtq.supabase.co/rest/v1/rpc/bio_card',{method:'POST',headers:{'apikey':'sb_publishable_oBR1e77Tx1mNysmxcZ2cgw_qDOpS4gt','Content-Type':'application/json'},body:JSON.stringify({t:t})})
+.then(function(r){return r.json()}).then(function(d){if(!d||d.error){box.innerHTML='<p>This link has ended or was stopped by the member. Ask them for a new one.</p>';return}
+var h=d.height_cm?d.height_cm+' cm':'',rows=[['Roots',d.roots],['Lives in',d.lives],['Work',d.job],['Education',d.education],['Height',h],['Faith',d.religion],['Diet',d.diet],['Marital status',d.marital],['Profile made by',d.created_by],['Looking for',[d.looking_age?'age '+d.looking_age:'',d.looking_roots?'roots in '+d.looking_roots:''].filter(Boolean).join(', ')]];
+box.innerHTML='<h2>'+esc(d.name)+', '+esc(d.age)+'</h2><span class="seal">Verified by NeuMarry: '+esc(d.checks)+' of 5 checks</span><dl>'+rows.filter(function(r){return r[1]}).map(function(r){return '<dt>'+esc(r[0])+'</dt><dd>'+esc(r[1])+'</dd>'}).join('')+'</dl>';
+}).catch(function(){box.innerHTML='<p>Could not load. Check your connection and open the link again.</p>'})})();</script>

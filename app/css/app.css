@@ -845,3 +845,11 @@ a.btn{text-decoration:none}
 .nm-bio .pi{width:40px;height:40px;border-radius:50%;background:#E4F3EB;color:#2F7A5B;display:grid;place-items:center}
 .evcard{border-radius:26px;box-shadow:0 14px 30px -18px rgba(90,30,54,.5);border-color:#F6E3E7}
 .plan.pick.on{box-shadow:0 0 0 3px #F5E3BE}
+
+.nm-seats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 2px;font-size:12.5px;font-weight:700}
+.nm-seats .b{display:block;height:7px;border-radius:4px;background:#F6E1E6;margin-top:5px;overflow:hidden}.nm-seats .b i{display:block;height:100%;background:var(--rose)}.nm-seats .b.m i{background:#5A1E36}
+.nm-ghero{background:linear-gradient(160deg,#3B1F2A,#5A1E36);color:#fff;border-radius:22px;padding:18px;margin-bottom:12px}
+.nm-ghero .cr{width:52px;height:52px;border-radius:17px;background:linear-gradient(135deg,#E9C77F,#B8863A);display:grid;place-items:center;color:#3B1F2A}
+.nm-ghero .cr .ic{width:26px;height:26px}
+.nm-ghero h3{font-family:var(--f-display);font-weight:500;font-size:24px;line-height:1.15;margin-top:12px}
+.nm-ghero p{color:#F3D9E0;font-size:14px;margin-top:6px;line-height:1.45}

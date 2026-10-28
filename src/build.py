@@ -191,6 +191,8 @@ page('delete-account', 'Delete your account', 'How to delete your NeuMarry accou
 page('child-safety', 'Child safety standards', 'NeuMarry is for adults only. Our standards against child sexual abuse and exploitation, how to report a concern, and our child safety contact.')
 # Where PayPal sends members back from the phone app after paying for an event (not for search engines).
 page('paid', 'Payment done', 'Your NeuMarry event payment.')
+page('bio', 'Family biodata', 'A private NeuMarry profile card shared with family.')
+_bp = os.path.join(OUT, 'bio.html'); _bh = open(_bp, encoding='utf-8').read().replace('content="index,follow,max-image-preview:large"', 'content="noindex,nofollow"'); open(_bp, 'w', encoding='utf-8').write(_bh)
 _pp = os.path.join(OUT, 'paid.html'); _ph = open(_pp, encoding='utf-8').read().replace('content="index,follow,max-image-preview:large"', 'content="noindex"'); open(_pp, 'w', encoding='utf-8').write(_ph)
 
 CTA = ('<div class="cta"><div><b>Create your free NeuMarry profile today.</b><p>It works in your web browser now, and the Android app uses the same account. '
