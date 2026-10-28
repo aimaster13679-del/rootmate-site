@@ -618,6 +618,7 @@ function card(p){
 /* New design (29 Oct, his "design ok"): roots route on every card, checks seal, fit ring. */
 function checksDone(p){const v=p.v||{};return [v.id,v.selfie,v.roots,v.lives,true].filter(Boolean).length}
 function checksSeal(p){const n=checksDone(p);return `<span class="nm-seal${n===5?'':' part'}">${ic('check')}${n} of 5 checks</span>`}
+function checksRow(p){const v=p.v||{};return `<div class="nm-chk">${[['ID',v.id],['Live selfie',v.selfie],['Roots',v.roots],['City',v.lives],['Photos',true]].map(([k,ok])=>`<span class="${ok?'ok':''}"><i>${ic(ok?'check':'clock')}</i>${k}</span>`).join('')}</div>`}
 function routeLine(p){const me=S.me,same=p.oc===me.oc&&p.os===me.os,sameC=p.oc===me.oc;
   return `<div class="nm-route"><div class="nm-rt"><span class="nm-pl"><b>${esc(p.os||p.oc)}</b><small>${esc(p.os?p.oc:'')}</small></span>
     <svg class="nm-arc" viewBox="0 0 120 40" preserveAspectRatio="none" aria-hidden="true"><path d="M5 32 Q60 -6 115 32"/><circle cx="5" cy="32" r="4" class="o"/><circle cx="115" cy="32" r="4" class="d"/></svg>
@@ -1148,18 +1149,18 @@ function renderProfileView(id,isMe){
    <div class="scroll" id="view-scroll">
     <div class="pv-top">${isMe?avatar(null,'xl',true):avatar(p,'xl')}
       <div class="vhead over pad"><button class="iconbtn" data-a="closeView" aria-label="Back">${ic('back')}</button><div class="grow"></div>${isMe?'':`<button class="iconbtn" data-a="more" data-id="${p.id}" aria-label="More options">${ic('more')}</button>`}</div>
-      <div class="pv-ov"><div class="tx"><h2>${esc(nm)} ${vtick(p)}</h2><p>${p.age} · ${esc(p.job)}</p></div>${c?ring(c.total):''}</div></div>
+      <div class="pv-ov"><div class="tx"><h2>${esc(nm)} <span class="age">${p.age}</span></h2><p>${checksSeal(p)} ${esc(p.job)}</p></div>${c?`<span class="nm-fit" style="--fit:${c.total}%" aria-label="${c.total}% fit"><span>${c.total}%<small>fit</small></span></span>`:''}</div></div>
     <div class="pad" style="display:grid;gap:14px;padding-block:16px 26px">
-     ${isMe?`<div class="callout">${ic('eye')}<span>This is how other members see your profile once they can open it.</span></div>`:rootsLine(p)}
+     ${isMe?`<div class="callout">${ic('eye')}<span>This is how other members see your profile once they can open it.</span></div>`:`<div class="panel">${routeLine(p)}</div>`}
      ${!isMe&&S.interests[p.id]==='received'?`<div class="callout gold">${ic('heart')}<span>${esc(p.first)} sent you an interest. Accept to unlock photos and chat.</span></div>`:''}
      ${!isMe&&p.paused?`<div class="callout">${ic('eye')}<span>${esc(p.first)} has paused ${p.g==='F'?'her':'his'} profile for now.</span></div>`:''}
-     ${!isMe?`<ul class="why">${whyChips(p).map(w=>`<li${w.r?' class="r"':''}>${esc(w.t)}</li>`).join('')}</ul>${trustBadges(p)}`:''}
+     ${!isMe?`<ul class="nm-why">${whyChips(p).map(w=>`<li>${ic('heart')}<span>${esc(w.t)}</span></li>`).join('')}</ul>${timelinePill(p)}`:''}
      <div class="panel"><h3>About</h3><p class="notr">${esc(p.about)}</p></div>
      ${more}
      <div class="panel"><dl class="kv">${kv.map(([k,v])=>`<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl></div>
      ${c?`<div class="panel"><h3>Why ${c.total}%</h3><div class="meter">${[['Values',c.values],['Lifestyle',c.life],['Preferences',c.pref],['Distance',c.loc],['Roots',c.roots]].map(([k,v])=>`<div class="m"><span>${k}</span><span class="t"><i style="width:${Math.round(v*100)}%"></i></span><b>${Math.round(v*100)}</b></div>`).join('')}</div></div>
      <div class="panel"><h3>Mindset, side by side</h3><div>${valsHtml}</div></div>`:''}
-     <div class="panel"><h3>Trust</h3><div>${trustRows(p)}</div><p class="hint">Documents are never shown to members.</p></div>
+     <div class="panel"><h3>Checked by NeuMarry</h3>${checksRow(p)}<div>${trustRows(p)}</div><p class="hint">Documents are never shown to members.</p></div>
     </div>
    </div>
    ${isMe?'':`<div class="pv-act pad">${actionBar(p)}</div>`}

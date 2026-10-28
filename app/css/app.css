@@ -827,3 +827,12 @@ a.btn{text-decoration:none}
 .nm-intro::-webkit-scrollbar{display:none}
 .nm-slide{flex:0 0 100%;scroll-snap-align:center}
 .nm-dots{display:flex;gap:6px;justify-content:center;margin:-2px 0 6px}.nm-dots i{width:22px;height:4px;border-radius:2px;background:#F0D6DC}.nm-dots i.on{background:var(--rose)}
+
+/* Profile in the new design */
+.pv-ov .tx h2 .age{font-family:var(--f-body);font-weight:500;opacity:.85}
+.pv-ov .tx p{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.nm-chk{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:4px 0 10px}
+.nm-chk span{display:grid;justify-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--muted);text-align:center;line-height:1.2}
+.nm-chk span i{width:34px;height:34px;border-radius:50%;background:var(--sunk);display:grid;place-items:center}
+.nm-chk span i .ic{width:16px;height:16px;stroke-width:2.4}
+.nm-chk span.ok{color:#2F7A5B}.nm-chk span.ok i{background:#E4F3EB}
