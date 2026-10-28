@@ -63,8 +63,8 @@ assert 'RootMate' not in s
 # Full document around the fragment
 i = s.index('</style>') + len('</style>')
 head, body = s[:i], s[i:]
-GUIDES = ['nri-matrimony-canada', 'toronto-matrimony', 'matrimony-events-toronto', 'community-matrimony-canada',
-          'matrimony-for-parents', 'verified-matrimony', 'nri-matrimony-usa-uk', 'find-life-partner-abroad']
+GUIDES = ['matrimony-abroad-canada', 'toronto-matrimony', 'matrimony-events-toronto', 'community-matrimony-canada',
+          'matrimony-for-parents', 'verified-matrimony', 'matrimony-abroad-usa-uk', 'find-life-partner-abroad']
 def guide_meta(slug):
     t = rd('guides/%s.html' % slug)
     get = lambda k: re.search(r'<!--%s: (.*?)-->' % k, t).group(1)
@@ -101,7 +101,7 @@ ORG = {'@type': 'Organization', '@id': SITE + '#org', 'name': 'NeuMarry', 'url':
        'description': 'Verified matrimony app for people living away from the country they grew up in.', 'sameAs': [u for n, u in SOCIAL]}
 HOME_TITLE = 'NeuMarry: Matrimony & Marriage App for People Living Abroad'
 HOME_DESC = 'Verified matrimony for everyone living away from the country they grew up in, from every country and community. Match on roots, city and values. Meet families at events. Free to join.'
-KEYWORDS = 'matrimony, matrimonial, marriage app, matrimony abroad, expat marriage, immigrant matrimony, NRI matrimony, Indian matrimony Canada, shaadi, marriage, rishta, life partner, bride, groom, Toronto matrimony, Brampton matrimony, Gujarati matrimony, Punjabi matrimony, matrimony app'
+KEYWORDS = 'matrimony, matrimonial, marriage app, matrimony abroad, expat marriage, immigrant matrimony, Indian matrimony Canada, shaadi, marriage, rishta, life partner, bride, groom, Toronto matrimony, Brampton matrimony, Gujarati matrimony, Punjabi matrimony, matrimony app'
 meta = ('<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
         f'<meta name="description" content="{esc(HOME_DESC)}"><meta name="keywords" content="{KEYWORDS}">' + social(HOME_TITLE, HOME_DESC, SITE))
 legal_links = '<a class="link" href="privacy.html">Privacy Policy</a><a class="link" href="terms.html">Terms of Service</a><a class="link" href="delete-account.html">Delete account</a><a class="link" href="child-safety.html">Child safety</a>'
@@ -407,7 +407,9 @@ llms = ['# NeuMarry', '',
         '> NeuMarry is a verified matrimony app for people living away from the country they grew up in, from every country and community. '
         'Members match on values, lifestyle, roots and distance, and meet with their families at hosted Family Mixer evenings. Launching in Toronto, Canada in November 2026; the app works in every country.', '',
         'Key facts:',
-        '- Every member verifies a government ID and a live selfie before sending interests or messages.',
+        '- Every member verifies a government ID and a live selfie, and proves their roots and the city they live in, before others can see them.',
+        '- No income, salary or wealth requirement for anyone, men or women. NeuMarry is not Knot.dating and has no Rs 50 lakh rule.',
+        '- Not only for Indians: open to people of every country and community, matched with people of their own roots.',
         '- Free: profile, verification, number of people who fit you and your match % with each. Gold (from CA$80 a month) adds names, photos, interests and chat.',
         '- Web app: https://neumarry.com/app/ . Android app on Google Play; iPhone later. App languages: English and French.',
         '- For adults 18 and over looking for marriage. Not a casual dating app.', '',
@@ -482,4 +484,13 @@ for root, dirs, files in os.walk(OUT):
         i = h.rindex('</body>'); h = h[:i] + banner(lang) + h[i:]
         open(fp, 'w', encoding='utf-8').write(h)
 
+# Old page names (renamed 29 Oct: no "NRI" on NeuMarry). Visitors and Google are sent to the new page.
+for old, new in [('nri-matrimony-canada', 'matrimony-abroad-canada'), ('nri-matrimony-usa-uk', 'matrimony-abroad-usa-uk')]:
+    for sub, base in [('', SITE), ('fr', SITE + 'fr/')]:
+        if sub and not os.path.isdir(os.path.join(OUT, sub)): continue
+        url = base + new + '.html'
+        open(os.path.join(OUT, sub, old + '.html'), 'w', encoding='utf-8').write(
+            '<!doctype html><html><head><meta charset="utf-8"><title>NeuMarry</title><meta name="robots" content="noindex,follow">'
+            f'<link rel="canonical" href="{url}"><meta http-equiv="refresh" content="0; url={url}"></head>'
+            f'<body><p><a href="{url}">This page has moved. Open the new page.</a></p></body></html>')
 print('site built')
