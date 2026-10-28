@@ -152,6 +152,7 @@
     'Match': 'Match', 'Send interest': 'Envoyer un intérêt', 'Interest sent': 'Intérêt envoyé', 'Accept': 'Accepter', 'Decline': 'Refuser', 'Matched': 'Match', 'Likes you': 'Vous aime',
     'Chat': 'Discuter', 'Message': 'Message', 'Pass': 'Passer', 'Save for later': 'Garder pour plus tard', 'Saved': 'Gardé', 'More options': 'Plus d’options', 'Close': 'Fermer',
     'Lives': 'Vit à', 'Lives in': 'Vit à', 'Mindset, side by side': 'États d’esprit, côte à côte', 'Good to know': 'Bon à savoir',
+    'Same roots as you': 'Mêmes origines que vous', 'fit': 'affinité',
     'Photos unlock when you both accept': 'Les photos se débloquent quand vous acceptez tous les deux', 'Unlock': 'Débloquer', 'See her profile': 'Voir son profil', 'See his profile': 'Voir son profil', 'See her full profile': 'Voir son profil complet', 'See his full profile': 'Voir son profil complet',
     'See who they are': 'Voir qui c’est', 'Name, photos and profile with Gold': 'Nom, photos et profil avec Gold', 'Name, photos, mindset side by side and every reason you match.': 'Nom, photos, états d’esprit côte à côte et toutes les raisons de votre affinité.',
     'Do a video call before meeting, and meet in public.': 'Faites un appel vidéo avant de vous rencontrer, et rencontrez-vous dans un lieu public.',
@@ -599,6 +600,9 @@
 
   /* ---------- Sentences with names, numbers and dates ---------- */
   var RX = [
+    [/^(\d) of 5 checks$/, function (m) { return m[1] + ' vérifications sur 5'; }],
+    [/^Roots in (.+), like you$/, function (m) { return 'Origines : ' + m[1] + ', comme vous'; }],
+    [/^Roots in (.+)$/, function (m) { return 'Origines : ' + m[1]; }],
     [/^Seats for (women|men) are full · join the waiting list$/, function (m) { return 'Places ' + (m[1] === 'women' ? 'femmes' : 'hommes') + ' complètes · rejoignez la liste d’attente'; }],
     [/^Full for (women|men)$/, function (m) { return 'Complet pour les ' + (m[1] === 'women' ? 'femmes' : 'hommes'); }],
     [/^All seats for (women|men) are taken\. If a seat frees up, it is yours and we email you at once\. Nothing to pay until then\.$/, function (m) { return 'Toutes les places pour les ' + (m[1] === 'women' ? 'femmes' : 'hommes') + ' sont prises. Si une place se libère, elle est à vous et nous vous écrivons aussitôt. Rien à payer d’ici là.'; }],

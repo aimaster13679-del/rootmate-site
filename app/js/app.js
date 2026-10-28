@@ -602,18 +602,27 @@ function actionBar(p){
 }
 function card(p){
   const c=compat(p);const st=S.interests[p.id];const lk=locked(p)&&!(st==='received'&&p.gold);
-  return `<article class="mcard${lk?' lockd':''}" id="card-${p.id}">
+  const top=st==='received'?`<span class="mchip state">${ic('heart')}Likes you</span>`:p.days<=10?`<span class="mchip new">New</span>`:'<span></span>';
+  return `<article class="mcard nm-card${lk?' lockd':''}" id="card-${p.id}">
     <button class="mphoto" data-a="open" data-id="${p.id}" aria-label="${lk?`See this ${c.total}% match with Gold`:`Open ${esc(shown(p))}'s profile`}">
       ${avatar(p,'cover')}
-      <span class="mtop"><span class="mchip glass">${ic('sparkle')}${c.total}% match</span>${st==='received'?`<span class="mchip state">${ic('heart')}Likes you</span>`:p.days<=10?`<span class="mchip new">New</span>`:''}</span>
-      <span class="mname"><span class="nm">${esc(shown(p))} <span class="age">${p.age}</span> ${vtick(p)}</span><small>${lk?`${ic('lock')} Name, photos and profile with Gold`:`${esc(p.job)} · ${ftIn(p.h)}`}</small></span>
+      <span class="mtop">${top}<span class="nm-fit" style="--fit:${c.total}%" aria-label="${c.total}% fit"><span>${c.total}%<small>fit</small></span></span></span>
+      <span class="mname"><span class="nm">${esc(shown(p))} <span class="age">${p.age}</span> ${checksSeal(p)}</span><small>${lk?`${ic('lock')} Name, photos and profile with Gold`:`${esc(p.job)} · ${ftIn(p.h)}`}</small></span>
     </button>
-    <div class="mbody">${rootsLine(p)}${timelinePill(p)}
-      <ul class="why">${whyChips(p).map(w=>`<li${w.r?' class="r"':''}>${esc(w.t)}</li>`).join('')}</ul>
-      ${trustBadges(p)}
+    <div class="mbody">${routeLine(p)}
+      <ul class="nm-why">${whyChips(p).map(w=>`<li>${ic('heart')}<span>${esc(w.t)}</span></li>`).join('')}</ul>
+      ${timelinePill(p)}${p.gold?`<div class="badges"><span class="pill gold">${ic('crown')}Gold member</span></div>`:''}
       <div class="mact">${lk?`<button class="btn gold" data-a="upgrade" data-r="profile" data-id="${p.id}">${ic('crown')}See ${p.g==='F'?'her':'his'} profile</button>`:actionBar(p)}</div></div>
   </article>`;
 }
+/* New design (29 Oct, his "design ok"): roots route on every card, checks seal, fit ring. */
+function checksDone(p){const v=p.v||{};return [v.id,v.selfie,v.roots,v.lives,true].filter(Boolean).length}
+function checksSeal(p){const n=checksDone(p);return `<span class="nm-seal${n===5?'':' part'}">${ic('check')}${n} of 5 checks</span>`}
+function routeLine(p){const me=S.me,same=p.oc===me.oc&&p.os===me.os,sameC=p.oc===me.oc;
+  return `<div class="nm-route"><div class="nm-rt"><span class="nm-pl"><b>${esc(p.os||p.oc)}</b><small>${esc(p.os?p.oc:'')}</small></span>
+    <svg class="nm-arc" viewBox="0 0 120 40" preserveAspectRatio="none" aria-hidden="true"><path d="M5 32 Q60 -6 115 32"/><circle cx="5" cy="32" r="4" class="o"/><circle cx="115" cy="32" r="4" class="d"/></svg>
+    <span class="nm-pl r"><b>${esc(p.cityName)}</b><small>${esc(p.country)}</small></span></div>
+    <div class="nm-rnote"><span class="${same||sameC?'ok':''}">${same?'Same roots as you':sameC?`Roots in ${esc(p.oc)}, like you`:`Roots in ${esc(p.oc)}`}</span><span>${esc(distLabel(p))}</span></div></div>`}
 function rowItem(p,end,act){return `<button class="rowi" data-a="${act||'open'}" data-id="${p.id}">${avatar(p,'sm')}<span class="tx"><b>${esc(shown(p))} ${vtick(p)}</b><span>${p.age} · ${esc(p.os)} → ${esc(p.cityName)}</span></span><span class="end">${end||''}</span></button>`}
 function errOf(k){return S.errors[k]?`<span class="err" id="err-${k.replace(/\./g,'-')}">${esc(S.errors[k])}</span>`:''}
 function fldCls(k){return 'fld'+(S.errors[k]?' has-err':'')}

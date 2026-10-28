@@ -796,3 +796,28 @@ a.btn{text-decoration:none}
 .panel.whyev em{font-style:italic;color:var(--rose-deep)}
 /* Team: new sign-ups (28 Oct) */
 .su-list .rowi{align-items:flex-start}.su-list .tx{gap:3px}.su-list .pill{justify-self:start;max-width:100%;white-space:normal;text-align:left;margin-top:3px}
+
+/* ---- New design 29 Oct (his "design ok"): Home card ---- */
+.nm-card{border-radius:30px;box-shadow:0 18px 40px -18px rgba(90,30,54,.45),0 2px 6px rgba(90,30,54,.06);border-color:#F6E3E7}
+.nm-card .mphoto{aspect-ratio:4/3.3}
+.nm-card .mphoto::after{inset:30% 0 0;background:linear-gradient(180deg,rgba(59,31,42,0),rgba(59,31,42,.86))}
+.nm-veil{display:inline-flex;align-items:center;gap:7px;background:rgba(59,31,42,.55);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:12.5px;font-weight:700;padding:8px 13px;border-radius:999px;white-space:nowrap;max-width:calc(100% - 78px);overflow:hidden;text-overflow:ellipsis}
+.nm-veil .ic{width:14px;height:14px}
+.nm-fit{flex:none;width:62px;height:62px;border-radius:50%;background:conic-gradient(var(--rose) 0 var(--fit),rgba(255,255,255,.28) var(--fit) 100%);display:grid;place-items:center}
+.nm-fit>span{width:52px;height:52px;border-radius:50%;background:rgba(59,31,42,.74);display:grid;place-content:center;text-align:center;color:#fff;font-weight:800;font-size:15px;line-height:1}
+.nm-fit small{display:block;font-size:9.5px;font-weight:700;opacity:.8;margin-top:2px}
+.nm-seal{display:inline-flex;align-items:center;gap:5px;background:#E4F3EB;color:#2F7A5B;font-family:var(--f-body);font-size:12px;font-weight:800;padding:5px 9px;border-radius:999px;white-space:nowrap}
+.nm-seal .ic{width:13px;height:13px;stroke-width:2.6}.nm-seal.part{background:var(--gold-soft);color:var(--warn)}
+.nm-route{display:grid;gap:6px}
+.nm-rt{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px}
+.nm-pl b{display:block;font-family:var(--f-display);font-weight:600;font-size:17px;line-height:1.15}
+.nm-pl small{font-size:12.5px;color:var(--muted)}.nm-pl.r{text-align:right}
+.nm-arc{width:100%;height:38px;overflow:visible}
+.nm-arc path{fill:none;stroke:var(--rose);stroke-width:1.6;stroke-dasharray:3 4;vector-effect:non-scaling-stroke}
+.nm-arc .o{fill:var(--gold)}.nm-arc .d{fill:var(--rose)}
+.nm-rnote{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;color:var(--muted)}
+.nm-rnote .ok{color:#2F7A5B;font-weight:700}
+.nm-why{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.nm-why li{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;line-height:1.4}
+.nm-why li .ic{flex:none;width:18px;height:18px;margin-top:1px;color:var(--rose);stroke-width:2}
+.nm-card .tlrow{margin-top:2px}
