@@ -29,7 +29,7 @@ window.RM_API = (function () {
     validation_failed: 'Check the email address.',
     email_address_invalid: 'Check the email address.',
     forbidden: 'You cannot do this yet.',
-    verify_first: 'Your ID and selfie need to be approved first.',
+    verify_first: 'Finish your verification first: ID and selfie, roots and city.',
     event_closed: 'This event is no longer taking reservations.',
     too_late: 'Reservations closed 48 hours before the event.',
     not_your_event: 'This event is for a different community.',

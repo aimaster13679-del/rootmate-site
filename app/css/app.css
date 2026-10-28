@@ -752,3 +752,40 @@ a.btn{text-decoration:none}
 .progress.p4{grid-template-columns:repeat(4,1fr)}
 .pill.ver{background:#E3F4EC;color:var(--good)}
 .roots .pv{display:inline-flex;color:var(--good);margin-left:3px;vertical-align:-2px} .roots .pv .ic{width:15px;height:15px}
+/* Not live yet (28 Oct): only fully verified members are live */
+.golive .gl-h{display:flex;gap:9px;align-items:flex-start;font-size:15px;line-height:1.35}.golive .gl-h .ic{color:var(--rose-deep);margin-top:1px}
+.golive .seats{display:grid;gap:6px;font-size:13px;font-weight:700;color:var(--ink)}
+.callout.good{background:#E3F4EC}.callout.good .ic{color:var(--good)}
+.callout.bad{background:var(--bad-soft)}.callout.bad .ic{color:var(--bad)}
+/* Event QR ticket */
+.ticket{justify-items:center;text-align:center;border:1.5px solid #E7C27A;background:linear-gradient(170deg,#FFF8E8,var(--surface) 55%)}
+.ticket .sub,.ticket .hint{text-align:center}
+.tk-ic{width:52px;height:52px;border-radius:18px;display:grid;place-items:center;background:var(--gold-soft);color:var(--gold)}.tk-ic .ic{width:26px;height:26px}
+.tk-ic.ok{background:#E3F4EC;color:var(--good)}.tk-ic.bad{background:var(--bad-soft);color:var(--bad)}
+.ticket.in{border-color:#9FD3BA;background:linear-gradient(170deg,#E9F7F0,var(--surface) 55%)}
+.qrbox{width:min(250px,72vw);aspect-ratio:1;background:#fff;border-radius:20px;padding:10px;border:1px solid var(--line);box-shadow:var(--shadow)}
+.qrbox svg{width:100%;height:100%;display:block}
+.tk-code{display:grid;gap:2px}.tk-code span{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tk-code b{font-size:30px;font-weight:800;letter-spacing:.12em;font-variant-numeric:tabular-nums;color:var(--ink)}
+.tk-live{display:inline-flex;gap:6px;align-items:center;font-size:13px;font-weight:700;color:var(--warn)}.tk-live .ic{width:16px;height:16px}
+/* Host check-in */
+.hstats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hstats>div{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:12px 14px;display:grid;gap:2px;box-shadow:var(--shadow)}
+.hstats b{font-family:var(--f-display);font-weight:500;font-size:30px;line-height:1;color:var(--rose-deep)}.hstats b small{font-size:16px;color:var(--muted)}
+.hstats span{font-size:12.5px;font-weight:700;color:var(--muted)}
+.scanbox{position:relative;border-radius:26px;overflow:hidden;background:#24131A;aspect-ratio:1;display:grid;place-items:center}
+.scanbox video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.scanframe{position:absolute;inset:18%;border:3px solid rgba(255,255,255,.92);border-radius:22px;box-shadow:0 0 0 999px rgba(20,8,12,.35)}
+.scanhint{position:absolute;left:0;right:0;bottom:14px;text-align:center;color:#fff;font-weight:800;font-size:14px;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.scanoff{display:grid;gap:12px;justify-items:center;text-align:center;color:#FFE7EC;padding:24px}.scanoff .ic{width:54px;height:54px;color:#FF8DA0}
+.codein{display:flex;gap:10px}.codein input{flex:1;min-width:0;border:1.5px solid var(--line);border-radius:16px;padding:12px 14px;font-size:20px;font-weight:800;letter-spacing:.14em;background:var(--surface)}
+.codein input:focus{border-color:var(--rose);outline:none}
+.hres{border-width:1.5px}.hres.bad{justify-items:center;text-align:center;border-color:#F2B8C0}.hres.in{border-color:#9FD3BA}
+.hres-top{display:flex;gap:14px;align-items:center}.hres-top h3{font-size:23px}
+.hres-top .gpic{width:96px;height:96px;border-radius:24px}
+.gpic{width:42px;height:42px;border-radius:14px;object-fit:cover;flex:none;background:var(--rose-soft)}
+.gpic.ini{display:grid;place-items:center;font-weight:800;color:var(--rose);font-size:18px}
+.btns2{display:flex;gap:10px;flex-wrap:wrap}.btns2 .btn{flex:1 1 140px}
+.glist{padding:4px 16px;gap:0}.glist>.rowi{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}.glist>.rowi:last-child{border-bottom:0}
+.glist .tx{flex:1;min-width:0;display:grid;gap:1px}.glist .tx span{font-size:13px;color:var(--muted)}
+.pill .ic{width:14px;height:14px}
