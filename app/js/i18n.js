@@ -605,6 +605,9 @@
 
   /* ---------- Sentences with names, numbers and dates ---------- */
   var RX = [
+    [/^Reserve with a (.+) seat hold\. An event is confirmed when every seat and the waiting list are full; then you pay the rest in the app\. Dinner is included, and nothing is paid at the restaurant\. Not full in time\? We move it to a new date and email you; if the new date does not suit you, your hold is refunded\.$/, function (m) { return 'Réservez avec un dépôt de ' + m[1] + '. Un événement est confirmé quand toutes les places et la liste d’attente sont complètes ; vous payez alors le reste dans l’application. Le souper est compris et rien n’est payé au restaurant. Pas complet à temps ? Nous le déplaçons à une nouvelle date et vous écrivons ; si la nouvelle date ne vous convient pas, votre dépôt est remboursé.'; }],
+    [/^Not full (\d+) days before\? We move it to a new date and email everyone\. If the new date does not suit you, your hold is refunded\.$/, function (m) { return 'Pas complet ' + m[1] + ' jours avant ? Nous le déplaçons à une nouvelle date et écrivons à tout le monde. Si la nouvelle date ne vous convient pas, votre dépôt est remboursé.'; }],
+    [/^One more step: pay the (.+) hold to keep your place on the waiting list\.$/, function (m) { return 'Encore une étape : payez le dépôt de ' + m[1] + ' pour garder votre place sur la liste d’attente.'; }],
     [/^ ?Your seat counts once it is paid\. It is taken off your ticket, and refunded in full if the event is not confirmed\.$/, function () { return ' Votre place compte une fois le dépôt payé. Il est déduit de votre billet et remboursé en entier si l’événement n’est pas confirmé.'; }],
     [/^Reserve a seat with a (.+) hold and choose your dish\.$/, function (m) { return 'Réservez une place avec un dépôt de ' + m[1] + ' et choisissez votre plat.'; }],
     [/^Pay (.+) to hold$/, function (m) { return 'Payer ' + m[1] + ' pour retenir'; }],

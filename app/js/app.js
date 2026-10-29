@@ -674,7 +674,8 @@ function eventFromServer(x){
     need:x.need_total,have:x.reserved_total,parents:x.parents_allowed,includes:x.includes||[],agenda:Array.isArray(x.timetable)?x.timetable:[],
     priceM:x.member_price_cents,priceP:x.parent_price_cents,hold:x.hold_cents||0,meals:x.meal_options||[],status:x.status,deadline:new Date(x.confirm_deadline),
     womenFrom:x.women_book_from&&new Date(x.women_book_from),menFrom:x.men_book_from&&new Date(x.men_book_from),
-    my:x.my_status?{status:x.my_status,holdPaid:x.my_hold_cents||0,parents:x.my_parents||[],meal:x.my_meal,amount:x.my_amount_cents,due:x.my_due_by&&new Date(x.my_due_by)}:null,venue:x.venue}
+    my:x.my_status?{status:x.my_status,holdPaid:x.my_hold_cents||0,parents:x.my_parents||[],meal:x.my_meal,amount:x.my_amount_cents,due:x.my_due_by&&new Date(x.my_due_by),wait:!!x.my_waitlisted}:null,venue:x.venue,
+    wait:[x.wait_women||0,Math.max(0,(x.wait_women||0)-(x.waiting_women||0)),x.wait_men||0,Math.max(0,(x.wait_men||0)-(x.waiting_men||0))],moved:x.postponed_from&&new Date(x.postponed_from)}
 }
 /* Seat hold (29 Oct, his answer "2"): a small payment when reserving, so every reservation is real. */
 function holdOn(e){return e&&e.hold>0&&e.status!=='confirmed'}
@@ -685,6 +686,7 @@ function audOk(e,p){const a=e.aud||{k:'all'};return a.k==='all'||(a.k==='t'&&p.t
 function audLabel(e){const a=e.aud||{k:'all'};return a.k==='all'?'All communities':`For ${a.l}`}
 function forMe(e){return audOk(e,S.me)}
 function ageOk(e){return S.me.age>=e.ageMin&&S.me.age<=e.ageMax}
+function evMine(e){const f=S.me&&S.me.g==='F',[wc,wl,mc,ml]=e.seats,w=e.wait||[0,0,0,0];return {seatsLeft:f?wl:ml,waitLeft:f?w[1]:w[3],waitCap:f?w[0]:w[2],who:f?'women':'men'}}
 function evStat(e){return {n:e.have,confirmed:e.status==='confirmed',left:Math.max(0,e.need-e.have),deadline:e.deadline}}
 function evArt(e,hero){const up=hero?'0':'-40';const g={family:['#FFC2A6','#FF8399','#E8436B'],speed:['#FFA9BA','#EE4D74','#B8325F'],festive:['#FFD69E','#FF9C7E','#E2586E'],brunch:['#FFD3B0','#FF9AA8','#E8436B'],online:['#D9C2FF','#B98AF0','#8E5BD8']}[e.kind]||['#FFC2A6','#FF8399','#E8436B'];const id='ea'+String(e.id).slice(0,8);
   let s=`<svg class="art" viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${g[0]}"/><stop offset=".55" stop-color="${g[1]}"/><stop offset="1" stop-color="${g[2]}"/></linearGradient><radialGradient id="${id}l"><stop offset="0" stop-color="#FFF6D8"/><stop offset="1" stop-color="#FFF6D8" stop-opacity="0"/></radialGradient></defs><rect width="400" height="250" fill="url(#${id})"/>`;
@@ -1058,15 +1060,15 @@ function renderMatches(){
 function evCard(e){
   const f=fmtDay(e.date,e.tz),rv=e.my,st=evStat(e),[wc,wl,mc,ml]=e.seats;const left=S.me.g==='F'?wl:ml,cap=S.me.g==='F'?wc:mc;
   return `<button class="evcard" data-a="openEvent" data-id="${e.id}" aria-label="${esc(e.title)}, ${esc(f.long)}">
-   <span class="evart" style="display:block">${evArt(e)}<span class="evd"><span>${f.mon}</span><b>${f.day}</b><span>${f.wd}</span></span><span class="evk">${rv?`<span class="booked">${ic('check')}${rv.status==='paid'?'Booked':'Reserved'}</span>`:''}<span>${ic(e.parents?'users':'user')}${e.parents?'Parents welcome':'Members only'}</span></span></span>
+   <span class="evart" style="display:block">${evArt(e)}<span class="evd"><span>${f.mon}</span><b>${f.day}</b><span>${f.wd}</span></span><span class="evk">${rv?`<span class="booked">${ic('check')}${rv.status==='paid'?'Booked':rv.wait?'Waiting list':'Reserved'}</span>`:''}<span>${ic(e.parents?'users':'user')}${e.parents?'Parents welcome':'Members only'}</span></span></span>
    <span class="evb">
     <span class="evt serif" style="font-size:21px;display:block">${esc(e.title)}</span>
     <span class="aud${forMe(e)?'':' off'}">${ic(forMe(e)?'globe':'lock')}${esc(audLabel(e))}</span>
     <span class="meta"><span>${ic('cal')}${esc(f.long)} · ${e.time}</span><span>${ic('pin')}${esc(e.area)}</span><span>${ic('users')}Ages ${e.age}</span></span>
     ${st.confirmed?`<span class="seats"><span class="cstat ok">${ic('check')}Confirmed · ${left<=6?`only ${left} seats left for ${S.me.g==='F'?'women':'men'}`:`${left} seats left for ${S.me.g==='F'?'women':'men'}`}</span><span class="sb"><i style="width:${Math.round((cap-left)/cap*100)}%"></i></span></span>`:
-    `<span class="seats"><span class="cstat">${st.n} of ${e.need} reserved · confirms when ${st.left} more reserve by ${esc(fmtDay(st.deadline,e.tz).long)}</span><span class="sb"><i style="width:${Math.min(100,Math.round(st.n/e.need*100))}%"></i></span></span>`}
+    `<span class="seats"><span class="cstat">${evMine(e).seatsLeft?`${st.n} of ${e.need} reserved · confirms when ${st.left} more reserve by ${esc(fmtDay(st.deadline,e.tz).long)}`:evMine(e).waitLeft?`Seats for ${evMine(e).who} are full · join the waiting list`:`Full for ${evMine(e).who}`}</span><span class="sb"><i style="width:${Math.min(100,Math.round(st.n/e.need*100))}%"></i></span></span>`}
     <span class="nm-seats"><span>Women ${wc-wl} of ${wc}<span class="b"><i style="width:${wc?Math.round((wc-wl)/wc*100):0}%"></i></span></span><span>Men ${mc-ml} of ${mc}<span class="b m"><i style="width:${mc?Math.round((mc-ml)/mc*100):0}%"></i></span></span></span>
-    <span class="evfoot"><span class="price-l"><b>${money(e.priceM,e.cur)}</b> per member, dinner included${e.parents&&e.priceP?` · parents ${money(e.priceP,e.cur)}`:''}</span>${rv&&rv.status==='pay_due'?`<span class="pill gold">Confirmed</span>`:rv&&rv.status==='hold_due'?`<span class="pill gold">Pay ${money(e.hold,e.cur)} to hold</span>`:rv?`<span class="pill good">${rv.holdPaid?'Reserved':'Reserved free'}</span>`:holdOn(e)?`<span class="pill gold">Reserve · ${money(e.hold,e.cur)} hold</span>`:`<span class="pill gold">Reserve free</span>`}</span>
+    <span class="evfoot"><span class="price-l"><b>${money(e.priceM,e.cur)}</b> per member, dinner included${e.parents&&e.priceP?` · parents ${money(e.priceP,e.cur)}`:''}</span>${rv&&rv.status==='pay_due'?`<span class="pill gold">Confirmed</span>`:rv&&rv.status==='hold_due'?`<span class="pill gold">Pay ${money(e.hold,e.cur)} to hold</span>`:rv&&rv.wait?`<span class="pill">On the waiting list</span>`:rv?`<span class="pill good">${rv.holdPaid?'Reserved':'Reserved free'}</span>`:!evMine(e).seatsLeft&&evMine(e).waitLeft?`<span class="pill gold">Join waiting list</span>`:!evMine(e).seatsLeft?`<span class="pill">Full</span>`:holdOn(e)?`<span class="pill gold">Reserve · ${money(e.hold,e.cur)} hold</span>`:`<span class="pill gold">Reserve free</span>`}</span>
    </span></button>`;
 }
 function renderEvents(){
@@ -1075,7 +1077,7 @@ function renderEvents(){
   `<div class="scroll" id="main"><div class="main-inner pad">
    ${mine.length?`<div class="sec-h"><h2>Your reservations</h2></div>${mine.map(e=>{const r=e.my,f=fmtDay(e.date,e.tz);return `<button class="tkrow" data-a="openEvent" data-id="${e.id}"><span class="tki" style="${r.status==='pay_due'?'':'background:var(--gold-soft);color:var(--gold)'}">${ic(r.status==='pay_due'?'ticket':'cal')}</span><span class="tx"><b>${esc(e.title)}</b><small>${r.status==='paid'?'Paid · your QR ticket opens on the event day':r.status==='pay_due'?`Confirmed · pay${r.due?' by '+esc(fmtDay(r.due,e.tz).long):''} to keep your seat`:r.status==='hold_due'?`Pay the ${money(e.hold,e.cur)} seat hold to keep your seat`:`${esc(f.long)} · waiting for ${evStat(e).left} more to confirm`}</small></span>${ic('back','flipx')}</button>`}).join('')}`:''}
    ${evs.length?whyEvent():''}
-   <div class="callout">${ic('users')}<span>${evs.some(holdOn)?`Reserve with a ${money(evs.find(holdOn).hold,evs.find(holdOn).cur)} seat hold. An event is confirmed when enough people reserve; then you pay the rest in the app. Dinner is included, and nothing is paid at the restaurant. If it is not confirmed, the hold is refunded in full.`:'Reserve free. An event is confirmed when enough people reserve; then you pay in the app. Dinner is included, and nothing is paid at the restaurant. If it is not confirmed, nobody pays.'}</span></div>
+   <div class="callout">${ic('users')}<span>${evs.some(holdOn)?`Reserve with a ${money(evs.find(holdOn).hold,evs.find(holdOn).cur)} seat hold. An event is confirmed when every seat and the waiting list are full; then you pay the rest in the app. Dinner is included, and nothing is paid at the restaurant. Not full in time? We move it to a new date and email you; if the new date does not suit you, your hold is refunded.`:'Reserve free. An event is confirmed when every seat and the waiting list are full; then you pay in the app. Dinner is included, and nothing is paid at the restaurant. Not full in time? We move it to a new date and email you. Nobody pays before then.'}</span></div>
    <div class="sec-h"><h2>Upcoming events</h2></div>
    ${evs.length>1?`<div class="sorts evf" role="group" aria-label="Show events">${[['for','For you'],['all','Every event']].map(([k,l])=>`<button data-a="evFilter" data-k="${k}" class="${(S.evFilter||'for')===k?'on':''}" aria-pressed="${(S.evFilter||'for')===k}">${l}</button>`).join('')}</div>`:''}
    ${(()=>{const fk=evs.length>1?(S.evFilter||'for'):'all';const shownEv=evs.filter(e=>fk==='all'?true:forMe(e));
@@ -1225,18 +1227,21 @@ function renderEventView(id){
      ${rv&&rv.status==='paid'?`<div class="callout good">${ic('check')}<span><b>Your seat is paid${rv.parents.length?` for you and ${rv.parents.length} ${rv.parents.length===1?'parent':'parents'}`:''}.</b> Dinner is included. Your QR ticket below opens on the event day.</span></div>`:
        rv&&rv.status==='pay_due'?`<div class="callout gold">${ic('ticket')}<span><b>The event is confirmed and your seat is held.</b>${rv.due?` Pay by ${esc(fmtDay(rv.due,e.tz).long)} · ${esc(fmtTime(rv.due,e.tz))}, or the seat goes to the next person.`:''}</span></div>${payPanel(e)}`:
        rv&&rv.status==='hold_due'?`<div class="callout gold">${ic('ticket')}<span><b>One more step: pay the ${money(e.hold,e.cur)} seat hold.</b> Your seat counts once it is paid. It is taken off your ticket, and refunded in full if the event is not confirmed.</span></div>${payPanel(e)}`:
-       rv?`<div class="callout">${ic('check')}<span><b>You’re reserved${rv.parents.length?` with ${rv.parents.length} ${rv.parents.length===1?'parent':'parents'}`:''}.</b> Nothing to pay until ${st.left} more people reserve. If the event isn’t confirmed by ${esc(fmtDay(st.deadline,e.tz).long)}, it is cancelled and nobody pays.</span></div>`:''}
+       rv&&rv.wait&&rv.status!=='hold_due'?`<div class="callout">${ic('clock')}<span><b>You’re on the waiting list.</b> All seats for ${evMine(e).who} are taken. If a seat frees up, it is yours and we email you at once. Nothing to pay until then.</span></div>`:
+       rv?`<div class="callout">${ic('check')}<span><b>You’re reserved${rv.parents.length?` with ${rv.parents.length} ${rv.parents.length===1?'parent':'parents'}`:''}.</b> Nothing to pay until ${st.left} more people reserve. If the event isn’t full by ${esc(fmtDay(st.deadline,e.tz).long)}, we move it to a new date and email you. Nobody pays before then.</span></div>`:''}
+     ${e.moved?`<div class="callout gold">${ic('cal')}<span><b>New date: ${esc(fmtDay(e.date,e.tz).long)} · ${e.time}.</b> Moved from ${esc(fmtDay(e.moved,e.tz).long)} because not every seat was filled yet. Your reservation stays.</span></div>`:''}
      ${rv&&rv.status==='paid'?ticketPanel(e):''}
      ${(S.staff||[]).includes(e.id)?`<div class="panel wwu"><div class="wwu-h"><h3>Host tools</h3></div><p class="sub">Scan each guest’s QR ticket at the door. You see their photo, name and checks, then check them in with one tap.</p><button class="btn primary block" data-a="hostOpen" data-id="${e.id}">${ic('scan')}Scan tickets and guest list</button></div>`:''}
      <div class="panel"><h3>${st.confirmed?'Confirmed':'How booking works'}</h3>
       <div class="seats"><span>${st.n} of ${e.need} people reserved${st.confirmed?'':` · needs ${st.left} more by ${esc(fmtDay(st.deadline,e.tz).long)}`}</span><span class="sb"><i style="width:${Math.min(100,Math.round(st.n/e.need*100))}%"></i></span></div>
-      <ol class="hint" style="margin:0;padding-left:18px;display:grid;gap:4px"><li>${holdOn(e)?`Reserve a seat with a ${money(e.hold,e.cur)} hold and choose your dish.`:'Reserve a seat for free and choose your dish.'}</li><li>When ${e.need} people reserve, the event is confirmed.</li><li>${holdOn(e)?'You pay the rest in the app. Dinner is included; nothing is paid at the restaurant.':'You pay in the app. Dinner is included; nothing is paid at the restaurant.'}</li><li>${holdOn(e)?'Not confirmed in time? It is cancelled and your hold is refunded in full.':'Not confirmed in time? It is cancelled and nobody pays.'}</li></ol></div>
+      <ol class="hint" style="margin:0;padding-left:18px;display:grid;gap:4px"><li>${holdOn(e)?`Reserve a seat with a ${money(e.hold,e.cur)} hold and choose your dish.`:'Reserve a seat for free and choose your dish.'}</li><li>When all ${e.seats[0]+e.seats[2]} seats are taken and ${e.wait[0]+e.wait[2]} more people are on the waiting list, the event is confirmed.</li><li>${holdOn(e)?'You pay the rest in the app. Dinner is included; nothing is paid at the restaurant.':'You pay in the app. Dinner is included; nothing is paid at the restaurant.'}</li><li>${holdOn(e)?`Not full ${DECIDE_DAYS} days before? We move it to a new date and email everyone. If the new date does not suit you, your hold is refunded.`:`Not full ${DECIDE_DAYS} days before? We move it to a new date and email everyone. Nobody pays before the event is confirmed.`}</li></ol></div>
      ${rv&&rv.status==='paid'?'':whyEvent('Why come')}
      ${e.includes.length?`<div class="panel"><h3>What’s included</h3><ul class="incl">${e.includes.map(x=>`<li>${ic('check')}<span>${esc(x)}</span></li>`).join('')}</ul></div>`:''}
      ${e.agenda.length?`<div class="panel"><h3>How the evening goes</h3><ul class="tl">${e.agenda.map(([tm,x])=>`<li><time>${esc(tm)}</time><i></i><span>${esc(x)}</span></li>`).join('')}</ul></div>`:''}
      <div class="panel"><h3>Who you’ll meet</h3><p class="sub">Fully verified members ${esc(audLabel(e)==='All communities'?'from every community':audLabel(e).toLowerCase())}, ages ${e.age}. Your host seats you first with your best matches at the event.</p>
       <div class="seats"><span>Women: ${wl} of ${wc} seats left</span><span class="sb"><i style="width:${Math.round((wc-wl)/wc*100)}%"></i></span></div>
-      <div class="seats"><span>Men: ${ml} of ${mc} seats left</span><span class="sb"><i style="width:${Math.round((mc-ml)/mc*100)}%"></i></span></div></div>
+      <div class="seats"><span>Men: ${ml} of ${mc} seats left</span><span class="sb"><i style="width:${Math.round((mc-ml)/mc*100)}%"></i></span></div>
+      ${e.wait[0]+e.wait[2]?`<p class="hint">Waiting list: ${e.wait[1]} of ${e.wait[0]} places left for women, ${e.wait[3]} of ${e.wait[2]} for men.</p>`:''}</div>
      <div class="panel"><h3>Tickets</h3>
       <div class="sumrow"><span>Member, dinner included</span><b>${money(e.priceM,e.cur)}</b></div>
       ${e.parents&&e.priceP?`<div class="sumrow"><span>Parent, dinner included (up to 2)</span><b>${money(e.priceP,e.cur)} each</b></div>`:`<p class="hint">Members only.</p>`}
@@ -1255,7 +1260,8 @@ function renderEventView(id){
      rv?`<button class="btn ghost" data-a="cancelRes" data-id="${e.id}"${busy?' disabled':''}>Cancel reservation</button>`:
      !forMe(e)?`<button class="btn ghost" disabled>For ${esc((e.aud||{}).l||'members')} only</button>`:
      !ageOk(e)?`<button class="btn ghost" disabled>For ages ${e.age}</button>`:
-     `<button class="btn primary" data-a="book" data-id="${e.id}"${canBook?'':' disabled'}>${holdOn(e)?`Reserve · ${money(e.hold,e.cur)} hold`:'Reserve free seat'}</button>`}</div>
+     !evMine(e).seatsLeft&&!evMine(e).waitLeft?`<button class="btn ghost" disabled>Full</button>`:
+     `<button class="btn primary" data-a="book" data-id="${e.id}"${canBook?'':' disabled'}>${!evMine(e).seatsLeft?'Join the waiting list':holdOn(e)?`Reserve · ${money(e.hold,e.cur)} hold`:'Reserve free seat'}</button>`}</div>
   </div>`;
 }
 /* Why come to an event (28 Oct, CMO text): honest reasons, no promised numbers. */
@@ -1425,6 +1431,7 @@ function renderAdmin(){
    <div class="vhead pad"><button class="iconbtn" data-a="closeView" aria-label="Back">${ic('back')}</button><div class="grow"><span><b>Team review</b><small>${c?`${c.members} member${c.members===1?'':'s'} · ${c.verified} verified · ${c.women} women, ${c.men} men · ${c.waitlist} on waitlist`:'Loading…'}</small></span></div><button class="iconbtn" data-a="openAdmin" aria-label="Refresh">${ic('refresh')}</button></div>
    <div class="scroll" id="view-scroll"><div class="pad" style="display:grid;gap:14px;padding-block:16px 26px">
     ${a.loading?`<div style="display:grid;place-items:center;padding:30px">${spinner('Loading')}</div>`:''}
+    ${eventsBlock(a.events||[])}
     ${signupsBlock(a.signups||[])}
     <div class="panel pay-test"><div class="adm-h"><b>${ic('ticket')} Payment test (team only)</b><small>Only the team sees this event. You pay CA$1.00 + 13% HST = CA$1.13 with the real PayPal, then refund it in the PayPal dashboard.</small></div><div class="adm-act"><button class="btn primary sm" data-a="admPayTest">Open the test seat</button></div></div>
     <div class="sec-h"><h2>To review (${q.length})</h2></div>
@@ -1611,6 +1618,21 @@ function render(){
   const cs=document.getElementById('chat-scroll');if(cs&&(newChat||chatAtEnd))cs.scrollTop=cs.scrollHeight;
   if(aeId){const el=document.getElementById(aeId);if(el&&el!==document.activeElement&&/^(INPUT|TEXTAREA|BUTTON|SELECT)$/.test(el.tagName))try{el.focus({preventScroll:true})}catch(e){}}
 }
+
+/* Events for the team (29 Oct, his rule): seats + waiting list, and "Move date" when an event is not full in time. */
+const DECIDE_DAYS=7;
+function evTz(e){return TZCITY[e.city]||TZC[e.country]||'UTC'}
+function dateInputVal(d,tz){return new Date(d).toLocaleDateString('en-CA',{timeZone:tz||'UTC'})}
+function eventsBlock(list){if(!list.length)return '';
+  return `<div class="sec-h"><h2>Events (${list.length})</h2></div><p class="hint" style="margin:-6px 0 0">An event is confirmed only when every seat and the waiting list are full.</p>
+  ${list.map(e=>{const d=new Date(e.starts_at),need=e.seats_women+e.seats_men+e.wait_women+e.wait_men,have=e.seated_w+e.seated_m+Math.min(e.waiting_w,e.wait_women)+Math.min(e.waiting_m,e.wait_men);
+    return `<div class="panel adm ev-adm"><div class="adm-h"><b>${esc(e.title)} · ${esc(e.city)}</b><small>${esc(d.toLocaleString(RM_I18N.locale,{weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit',timeZone:evTz(e)}))} ${esc(e.city)} time${e.postponed_from?` · moved from ${esc(new Date(e.postponed_from).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',timeZone:evTz(e)}))}`:''}</small></div>
+     <div class="seats"><span>Women: ${e.seated_w} of ${e.seats_women} seats · waiting list ${e.waiting_w} of ${e.wait_women}</span><span class="sb"><i style="width:${Math.round(Math.min(1,(e.seated_w+e.waiting_w)/(e.seats_women+e.wait_women||1))*100)}%"></i></span></div>
+     <div class="seats"><span>Men: ${e.seated_m} of ${e.seats_men} seats · waiting list ${e.waiting_m} of ${e.wait_men}</span><span class="sb"><i style="width:${Math.round(Math.min(1,(e.seated_m+e.waiting_m)/(e.seats_men+e.wait_men||1))*100)}%"></i></span></div>
+     <span class="pill ${e.status==='confirmed'?'good':e.needs_new_date?'bad':''}">${e.status==='confirmed'?'Confirmed':e.needs_new_date?`Not full in time: ${have} of ${need}. Needs a new date`:`Filling: ${have} of ${need}`}</span>
+     ${e.status==='open'?`<div class="fld"><span>New date in ${esc(e.city)} (talk to the restaurant first)</span><input type="date" style="width:100%;box-sizing:border-box;min-width:0" id="mv-${e.id}" data-tz="${esc(evTz(e))}" value="${dateInputVal(e.suggested,evTz(e))}" min="${dateInputVal(Date.now()+(DECIDE_DAYS+2)*864e5,evTz(e))}"></div>
+     <p class="hint">Same time of day. All ${e.enrolled} enrolled ${e.enrolled===1?'person gets':'people get'} an email with the new date. Nobody has paid yet.</p>
+     <div class="adm-act"><button class="btn ${e.needs_new_date?'primary':'ghost'} sm" data-a="admMoveEvent" data-id="${e.id}" data-t="${esc(e.starts_at)}"${busy==='mv'+e.id?' disabled':''}>${ic('cal')}Move date and email everyone</button></div>`:''}</div>`}).join('')}`}
 /* ---------- Saving to the server ---------- */
 function digitsOnly(s){return String(s||'').replace(/\D/g,'')}
 function fullPhone(d){const dg=digitsOnly(d.phone);if(!dg)return null;const code=digitsOnly(dial(d.country));return '+'+(code&&!dg.startsWith(code)?code:'')+dg}
@@ -1820,9 +1842,9 @@ const A={
     busy='reserve';render();
     try{const r=await API.rpc('reserve_event',{eid:e.id,meal:sheet.meal,parents:sheet.p.slice(0,n).map(x=>({name:x.name.trim(),relation:x.rel,meal:x.meal}))});
       busy='';S.errors={};sheet=null;await loadEvents();
-      if(r&&r.status==='hold_due'){PAYQ=null;view={type:'event',id:e.id};render();toast(`One more step: pay the ${money(e.hold,e.cur)} seat hold to keep your seat.`,'ticket');return}
+      if(r&&r.status==='hold_due'){PAYQ=null;view={type:'event',id:e.id};render();toast(r.waitlisted?`One more step: pay the ${money(e.hold,e.cur)} hold to keep your place on the waiting list.`:`One more step: pay the ${money(e.hold,e.cur)} seat hold to keep your seat.`,'ticket');return}
       render();
-      toast(r&&r.confirmed?`The ${e.title} is confirmed! Your seat is held; we will message you when payment opens.`:`Seat reserved free. We’ll ask for payment once the event is confirmed.`,'check')}
+      toast(r&&r.waitlisted?`You’re on the waiting list. If a seat frees up, we email you.`:r&&r.confirmed?`The ${e.title} is confirmed! Your seat is held; we will message you when payment opens.`:`Seat reserved free. We’ll ask for payment once the event is confirmed.`,'check')}
     catch(x){busy='';render();fail(x)}},
   cancelRes(el){sheet={type:'cancelRes',id:el.dataset.id};render()},
   async cancelDo(el){busy='cancelDo';render();try{const hp=(evById(el.dataset.id)||{}).my;await API.rpc('cancel_reservation',{eid:el.dataset.id});busy='';sheet=null;await loadEvents();render();toast(hp&&hp.holdPaid?'Reservation cancelled. Your seat went back to other members.':'Reservation cancelled. Nothing was charged.','check')}catch(e){busy='';render();fail(e)}},
@@ -1935,6 +1957,11 @@ const A={
     if(navigator.share){navigator.share({title:'My NeuMarry biodata',text:t}).catch(()=>{})}else window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank','noopener')},
   async stopBio(){try{await API.rpc('stop_bio_links')}catch(e){}S.bioUntil=null;render();toast('Your biodata link is stopped.','check')},
   showAllM(){S.showAllM=true;render()},
+  /* Team: move an event to a new date (same time of day) and queue the emails. */
+  async admMoveEvent(el){const id=el.dataset.id,inp=document.getElementById('mv-'+id);if(!inp||!inp.value){toast('Choose the new date first.','info');return}
+  const old=new Date(el.dataset.t),from=dateInputVal(old,inp.dataset.tz),days=Math.round((Date.parse(inp.value)-Date.parse(from))/864e5);const nw=new Date(old.getTime()+days*864e5);
+  busy='mv'+id;render();try{const r=await API.rpc('admin_move_event',{eid:id,new_start:nw.toISOString()});busy='';toast(`Date moved. ${r.emails} ${r.emails===1?'email goes':'emails go'} out within 3 hours.`,'check');loadAdmin();loadEvents().then(render)}
+  catch(e){busy='';render();fail(e)}},
   openAdmin(){view={type:'admin'};S.admin={loading:true,queue:[],reports:[],urls:{}};render();loadAdmin()},
   async admApprove(el){await adminReview(el,true)},
   async admReject(el){const sel=document.querySelector(`[data-adm-reason="${el.dataset.id}"]`);const reason=sel&&sel.value;if(!reason){toast('Choose a reason first, so the member knows what to fix.','info');if(sel)sel.focus();return}await adminReview(el,false,reason)},
@@ -1945,9 +1972,9 @@ const A={
 async function adminReview(el,ok,reason){const id=el.dataset.id,k=el.dataset.k;
   try{await API.rpc('admin_review',{row_kind:k==='photo'?'photo':'verification',rid:id,approve:ok,reason:reason||null});S.admin.queue=S.admin.queue.filter(x=>x.row_id!==id);if(S.admin.counts)S.admin.counts.pending--;render();toast(ok?'Approved.':'Rejected. The member sees the reason.',ok?'check':'x')}catch(e){fail(e)}}
 async function loadAdmin(){
-  try{const [q,r,c,ap,ru,su]=await Promise.all([API.rpc('admin_queue'),API.rpc('admin_reports'),API.rpc('admin_counts'),API.rpc('admin_applications').catch(()=>[]),API.rpc('admin_rude').catch(()=>[]),API.rpc('admin_signups',{days:30}).catch(()=>[])]);
+  try{const [q,r,c,ap,ru,su,ev]=await Promise.all([API.rpc('admin_queue'),API.rpc('admin_reports'),API.rpc('admin_counts'),API.rpc('admin_applications').catch(()=>[]),API.rpc('admin_rude').catch(()=>[]),API.rpc('admin_signups',{days:30}).catch(()=>[]),API.rpc('admin_events').catch(()=>[])]);
     const queue=(q||[]).map(x=>Object.assign(x,{bucket:x.kind==='photo'?'photos':'verification'}));
-    S.admin={loading:false,queue,reports:r||[],counts:c,apps:ap||[],rude:ru||[],signups:su||[],urls:{}};render();
+    S.admin={loading:false,queue,reports:r||[],counts:c,apps:ap||[],rude:ru||[],signups:su||[],events:ev||[],urls:{}};render();
     const ph=[...new Set(queue.filter(x=>x.bucket==='photos').map(x=>x.path).concat(queue.map(x=>x.profile_photo).filter(Boolean)))];
     const vf=queue.filter(x=>x.bucket==='verification').map(x=>x.path);
     const [a,b]=await Promise.all([API.signMany('photos',ph,1800),API.signMany('verification',vf,600)]);
