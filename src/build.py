@@ -16,7 +16,7 @@ fix = [
  ('daily matches, chats, video calls and event seats', 'daily matches, chats and event seats'),
  ('Chat and video call, without sharing your number</li>', 'Chat in the app, without sharing your number</li>'),
  ('unlocks names and photos, interests, chat and video calls, daily picks, event guest lists and Quick Match, from CA$80 a month.', 'unlocks names and photos, interests, chat, daily picks and event guest lists, from CA$80 a month.'),
- ('Yes. When you and a match are ready, you can set up a family video call in the app. Parents join with a link from any country, on a phone or computer, without installing anything, and the app shows the time for both families.', 'Yes. Family video calls are coming to the app soon: when you and a match are ready, parents will join with a link from any country, on a phone or computer, without installing anything, and the app will show the time for both families.'),
+ ('Yes. When you and a match are ready, you can set up a family video call in the app. Parents join with a link from any country, on a phone or computer, without installing anything, and the app shows the time for both families.', 'Yes. From Me in the app you can share a private family biodata link: your parents open it in any country, on a phone or computer, without installing anything. The link lasts 7 days and you can stop it at any time.'),
  ("verified by phone, government ID and a live selfie.", "verified with a government ID and a live selfie."),
  ("'The full Terms are in the app, under Me, then Legal and privacy.'", "'Read the full Terms of Service on this website.'"),
  ('Open Me, then Legal and privacy, then Delete my account.', 'Open Me, then Delete my account.'),
@@ -34,7 +34,7 @@ fix = [
 
  # No video calls in the app yet; the web app is live.
  ('<b>Quick Match<em>December</em></b><p>Both say yes, then a 5-minute video intro the same day. No phone numbers shared.</p>',
-  '<b>Family video calls<em>Coming soon</em></b><p>When you both say yes, parents join a call from any country with a link. No phone numbers shared.</p>'),
+  '<b>Family biodata link<em>New</em></b><p>Share your profile with your parents in any country through a private 7-day link. No phone numbers shared.</p>'),
  ('<p>No. The website tells you about RootMate and lets you join the waitlist. Signing up, matching, chats and event bookings all happen in the app for Android and iPhone, so every member is verified on their own phone.</p>',
   '<p>Yes. Open neumarry.com/app in any web browser, on your phone or computer, to create your profile, get verified, see your matches and chat. The Android app uses the same account.</p>'),
 
@@ -121,7 +121,7 @@ home_ld = {'@context': 'https://schema.org', '@graph': [
      'description': HOME_DESC, 'url': SITE + 'app/', 'publisher': {'@id': SITE + '#org'}, 'offers': {'@type': 'Offer', 'price': '0', 'priceCurrency': 'CAD'}},
     {'@type': 'Event', 'name': 'NeuMarry Family Mixer, Toronto', 'startDate': '2026-11-28T17:30:00-05:00', 'endDate': '2026-11-28T20:30:00-05:00',
      'eventStatus': 'https://schema.org/EventScheduled', 'eventAttendanceMode': 'https://schema.org/OfflineEventAttendanceMode',
-     'description': 'An evening of conversation and dinner for verified singles aged 24 to 34 looking for marriage. Parents welcome.',
+     'description': 'An evening of conversation and dinner for verified singles aged 18 to 38 looking for marriage. Parents welcome.',
      'image': [OG], 'url': SITE + 'matrimony-events-toronto.html',
      'location': {'@type': 'Place', 'name': 'Partner restaurant in the Greater Toronto Area', 'address': {'@type': 'PostalAddress', 'addressLocality': 'Toronto', 'addressRegion': 'ON', 'addressCountry': 'CA'}},
      'organizer': {'@id': SITE + '#org'},

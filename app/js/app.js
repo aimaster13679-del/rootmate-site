@@ -332,25 +332,32 @@ async function signPaths(paths){const need=paths.filter(p=>p&&!(URLS[p]&&URLS[p]
 function urlOf(path){return URLS[path]?URLS[path].u:null}
 function attachPhotos(){PROFILES.forEach(p=>{p.photos=p.photoPaths.map(urlOf).filter(Boolean)});if(S.me){const u=S.me.photoPaths[0]&&urlOf(S.me.photoPaths[0]);if(u)S.me.photo=u}}
 
-async function loadMe(){const m=await API.rpc('me');if(!m||!m.profile)return null;S.me=meFromServer(m);return S.me}
+/* Instant open (29 Oct): the last server answers are kept on this phone (RAW), shown at once on the next
+   start, and replaced by fresh answers a moment later. Cleared on sign-out. */
+const RAW={};const CK='rm.cache.v1';
+async function loadMe(){const m=await API.rpc('me');if(!m||!m.profile)return null;RAW.me=m;S.me=meFromServer(m);return S.me}
 async function loadCards(){
   if(!S.me)return;
   const [fit,ints,fitN]=await Promise.all([API.rpc('member_cards',{lim:400,off:0}),API.select('interests',{select:'*'}),isLive()?null:API.rpc('fit_count').catch(()=>0)]);
-  S.fitN=fitN||0;
+  const have=new Set((fit||[]).map(c=>c.id));const extra=[];
+  (ints||[]).forEach(i=>{const o=i.from_user===S.me.id?i.to_user:i.from_user;if(!have.has(o)&&!extra.includes(o))extra.push(o)});
+  let rel=[];if(extra.length)rel=await API.rpc('member_cards',{only_ids:extra,lim:400,off:0});
+  RAW.cards=(fit||[]).concat(rel||[]);RAW.ints=ints||[];RAW.fitN=fitN||0;applyCards();
+  await signPaths(PROFILES.flatMap(p=>p.photoPaths.slice(0,3)).concat(S.me.photoPaths.slice(0,1)));
+  attachPhotos();
+}
+function applyCards(){
+  S.fitN=RAW.fitN||0;
   const me=S.me.id,map={};
-  (ints||[]).forEach(i=>{const other=i.from_user===me?i.to_user:i.from_user;let st;
+  (RAW.ints||[]).forEach(i=>{const other=i.from_user===me?i.to_user:i.from_user;let st;
     if(i.status==='accepted')st='mutual';
     else if(i.from_user===me)st='sent';
     else st=i.status==='declined'?'declined':'received';
     if(!map[other]||st==='mutual')map[other]=st});
   S.interests=map;
-  const have=new Set((fit||[]).map(c=>c.id));const extra=Object.keys(map).filter(id=>!have.has(id));
-  let rel=[];if(extra.length)rel=await API.rpc('member_cards',{only_ids:extra,lim:400,off:0});
-  PROFILES=(fit||[]).concat(rel||[]).map(cardFromServer);
-  await signPaths(PROFILES.flatMap(p=>p.photoPaths.slice(0,3)).concat(S.me.photoPaths.slice(0,1)));
-  attachPhotos();
+  PROFILES=(RAW.cards||[]).map(cardFromServer);attachPhotos();
 }
-async function loadBlocks(){const b=await API.select('blocks',{select:'blocked'});S.blocked=(b||[]).map(x=>x.blocked)}
+async function loadBlocks(){const b=await API.select('blocks',{select:'blocked'});RAW.blocks=b||[];S.blocked=(b||[]).map(x=>x.blocked)}
 let lastMsg=0;
 async function loadMessages(){
   const list=await API.rpc('my_messages',{after_id:lastMsg});
@@ -364,7 +371,16 @@ async function loadMessages(){
   return fresh_;
 }
 function ensureMatchChats(){Object.keys(S.interests).forEach(id=>{if(S.interests[id]==='mutual'&&!S.chats[id])S.chats[id]=[{f:'sys',x:'You both said yes. Say hello! Phone numbers stay hidden.',ts:Date.now()-1000}]})}
-async function loadEvents(){const [list,staff]=await Promise.all([API.rpc('event_list'),API.rpc('staff_events').catch(()=>[])]);S.events=(list||[]).map(eventFromServer);S.staff=(staff||[]).map(x=>typeof x==='string'?x:(x.staff_events||Object.values(x)[0]))}
+async function loadEvents(){const [list,staff]=await Promise.all([API.rpc('event_list'),API.rpc('staff_events').catch(()=>[])]);RAW.ev=list||[];RAW.staff=staff||[];applyEvents()}
+function applyEvents(){S.events=(RAW.ev||[]).map(eventFromServer);S.staff=(RAW.staff||[]).map(x=>typeof x==='string'?x:(x.staff_events||Object.values(x)[0]))}
+function cacheSave(){try{if(!RAW.me||!RAW.cards||!API.userId())return;const u={},keep=Date.now()+900e3;
+  Object.keys(URLS).forEach(k=>{if(URLS[k].exp>keep)u[k]=URLS[k]});
+  localStorage.setItem(CK,JSON.stringify({uid:API.userId(),at:Date.now(),raw:RAW,urls:u}))}catch(e){}}
+function cacheLoad(){try{const c=JSON.parse(localStorage.getItem(CK)||'null');
+  if(!c||c.uid!==API.userId()||Date.now()-c.at>7*864e5||!c.raw||!c.raw.me||!c.raw.cards)return false;
+  Object.assign(RAW,c.raw);Object.assign(URLS,c.urls||{});S.me=meFromServer(RAW.me);applyCards();
+  S.blocked=(RAW.blocks||[]).map(x=>x.blocked);applyEvents();ensureMatchChats();return true}catch(e){console.warn('[cache]',e&&e.message);return false}}
+function cacheClear(){try{localStorage.removeItem(CK)}catch(e){}Object.keys(RAW).forEach(k=>delete RAW[k])}
 async function loadAll(){
   await Promise.all([loadCards(),loadBlocks(),loadMessages(),loadEvents()]);
   ensureMatchChats();S.loaded=true;
@@ -1662,21 +1678,25 @@ async function restorePurchases(loud){const B=Bill();if(!B||!S.me||restoring)ret
   finally{restoring=false}}
 async function afterLogin(){
   loadLocal();S.bootError='';
+  /* Instant open: show the last data kept on this phone at once, then refresh it. */
+  const warm=S.screen!=='app'&&cacheLoad();
+  if(warm){S.screen='app';if(!['matches','events','connections','me'].includes(S.tab))S.tab='matches';S.loaded=true;render();console.info('[boot] warm start')}
   try{
     /* Faster start (29 Oct): blocks and events do not need my profile, so load them while it loads. */
     const pre=Promise.all([loadBlocks().catch(()=>{}),loadEvents().catch(()=>{})]);
     const me=await loadMe();
-    if(!me){startSignup();return}
-    if(me.banned){await API.signOut();S=fresh();S.screen='welcome';render();toast('This account has been suspended. Write to us if you think this is a mistake.','shield');return}
+    if(!me){cacheClear();startSignup();return}
+    if(me.banned){cacheClear();await API.signOut();S=fresh();S.screen='welcome';render();toast('This account has been suspended. Write to us if you think this is a mistake.','shield');return}
     S.screen='app';if(!['matches','events','connections','me'].includes(S.tab))S.tab='matches';render();
-    await Promise.all([loadCards(),loadMessages(),pre]);ensureMatchChats();S.loaded=true;render();loadInvite();restorePurchases(false);
+    await Promise.all([loadCards(),loadMessages(),pre]);ensureMatchChats();S.loaded=true;render();cacheSave();loadInvite();restorePurchases(false);
     API.rpc('touch_seen').catch(()=>{});
   }catch(e){
-    if(e.code==='signed_out'){S=fresh();S.screen='welcome';render();return}
+    if(e.code==='signed_out'){cacheClear();S=fresh();S.screen='welcome';render();return}
+    if(warm&&S.screen==='app'){toast(e.code==='network'?'No internet connection. Showing what was saved on this phone.':'NeuMarry could not refresh. Pull down or try again soon.','info');return}
     S.screen='boot';S.bootError=e.code==='network'?'No internet connection. Check your connection and try again.':'NeuMarry could not load. Please try again.';render();
   }
 }
-async function signedOut(msg){view=null;sheet=null;picker=null;celebrate=null;PROFILES=[];lastMsg=0;Object.keys(URLS).forEach(k=>delete URLS[k]);S=fresh();S.screen='welcome';render();if(msg)toast(msg,'info')}
+async function signedOut(msg){cacheClear();view=null;sheet=null;picker=null;celebrate=null;PROFILES=[];lastMsg=0;Object.keys(URLS).forEach(k=>delete URLS[k]);S=fresh();S.screen='welcome';render();if(msg)toast(msg,'info')}
 API.onSignedOut=()=>signedOut('Please log in again.');
 
 /* ---------- Actions ---------- */
@@ -2067,7 +2087,7 @@ async function poll(){
   }catch(e){}
 }
 setInterval(()=>{const now=Date.now();document.querySelectorAll('[data-until]').forEach(el=>{el.textContent=fmtLeft(+el.dataset.until-now)});poll()},2000);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S.screen==='app'){tick=9;poll();const p=payPending();if(p)payCheck(p,true)}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&S.screen==='app'&&S.loaded)cacheSave();if(!document.hidden&&S.screen==='app'){tick=9;poll();const p=payPending();if(p)payCheck(p,true)}});
 
 /* ---------- Boot ---------- */
 async function boot(){
