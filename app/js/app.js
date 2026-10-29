@@ -374,7 +374,7 @@ async function loadMessages(){
   return fresh_;
 }
 function ensureMatchChats(){Object.keys(S.interests).forEach(id=>{if(S.interests[id]==='mutual'&&!S.chats[id])S.chats[id]=[{f:'sys',x:'You both said yes. Say hello! Phone numbers stay hidden.',ts:Date.now()-1000}]})}
-async function loadEvents(){const [list,staff]=await Promise.all([API.rpc('event_list'),API.rpc('staff_events').catch(()=>[])]);RAW.ev=list||[];RAW.staff=staff||[];applyEvents()}
+async function loadEvents(){const [list,staff,board]=await Promise.all([API.rpc('event_list'),API.rpc('staff_events').catch(()=>[]),API.rpc('city_board').catch(()=>null)]);RAW.ev=list||[];RAW.staff=staff||[];S.board=board||S.board||null;applyEvents()}
 function applyEvents(){S.events=(RAW.ev||[]).map(eventFromServer);S.staff=(RAW.staff||[]).map(x=>typeof x==='string'?x:(x.staff_events||Object.values(x)[0]))}
 function cacheSave(){try{if(!RAW.me||!RAW.cards||!API.userId())return;const u={},keep=Date.now()+900e3;
   Object.keys(URLS).forEach(k=>{if(URLS[k].exp>keep)u[k]=URLS[k]});
@@ -959,8 +959,8 @@ function renderSignup(){if(!S.editMode)setTimeout(()=>noteStep(S.step),0);
   const vReady=st===5&&verifyAllReady(d,edit?S.me:null),vFirst=st===5?([1,2,3].find(n=>!['ok','wait','ready'].includes(vState(n,d,edit?S.me:null)))||1):1;
   const vAny=st===5&&[1,2,3].some(n=>vState(n,d,edit?S.me:null)!=='todo');
   return `<div class="su-head pad"><button class="iconbtn" data-a="suBack" aria-label="${st===1&&!edit?'Back to start':'Previous step'}">${ic('back')}</button>
-    <div class="t"><small>${edit?'Edit profile':'Step '+st+' of 6'}</small><h2>${STEPS[st-1]}</h2>
-    ${edit?`<div class="steps-nav" role="tablist">${STEPS.map((s,i)=>`<button data-a="suJump" data-n="${i+1}" class="${i+1===st?'on':''}" role="tab" aria-selected="${i+1===st}">${i+1}. ${SHORT[i]}</button>`).join('')}</div>`:`<div class="progress" aria-hidden="true">${STEPS.map((_,i)=>`<i class="${i<st?'on':''}"></i>`).join('')}</div>`}</div></div>
+    <div class="t"><small>${edit?'Edit profile':'Step '+st+' of 6 · saved'}</small><h2>${STEPS[st-1]}</h2>
+    ${edit?`<div class="steps-nav" role="tablist">${STEPS.map((s,i)=>`<button data-a="suJump" data-n="${i+1}" class="${i+1===st?'on':''}" role="tab" aria-selected="${i+1===st}">${i+1}. ${SHORT[i]}</button>`).join('')}</div>`:`<div class="progress" aria-hidden="true">${STEPS.map((_,i)=>`<i class="${i<st?'on':''}"></i>`).join('')}</div>${S.draft&&S.draft.g!=='M'?`<p class="su-offer">${ic('crown')}<span>First 300 verified women in every country get <b>3 months of Gold free</b></span></p>`:''}`}</div></div>
   <div class="scroll" id="su-scroll"><div class="form pad">${body}</div></div>
   <div class="su-foot pad">${edit?`<button class="btn ghost" data-a="suCancel"${busy?' disabled':''}>Discard</button><button class="btn primary" data-a="suSave"${busy?' disabled':''}>${busy==='save'?spinner('Saving')+' Saving':'Save changes'}</button>`:
     st===5&&!vReady?`<button class="btn ghost" data-a="suNext">Do this later</button><button class="btn primary" data-a="vGo" data-n="${vFirst}">${vAny?'Next check':'Start'}</button>`:
@@ -1074,8 +1074,23 @@ function evCard(e){
     <span class="evfoot"><span class="price-l"><b>${money(e.priceM,e.cur)}</b> per member, dinner included${e.parents&&e.priceP?` · parents ${money(e.priceP,e.cur)}`:''}</span>${rv&&rv.status==='pay_due'?`<span class="pill gold">Confirmed</span>`:rv&&rv.status==='hold_due'?`<span class="pill gold">Pay ${money(e.hold,e.cur)} to hold</span>`:rv&&rv.wait?`<span class="pill">On the waiting list</span>`:rv?`<span class="pill good">${rv.holdPaid?'Reserved':'Reserved free'}</span>`:!evMine(e).seatsLeft&&evMine(e).waitLeft?`<span class="pill gold">Join waiting list</span>`:!evMine(e).seatsLeft?`<span class="pill">Full</span>`:holdOn(e)?`<span class="pill gold">Reserve · ${money(e.hold,e.cur)} hold</span>`:`<span class="pill gold">Reserve free</span>`}</span>
    </span></button>`;
 }
+/* Events world-wide (his ok 29 Oct 22:50): your city vote, online mixer for your country, cities opening soon. */
+const WCITIES=[['Toronto','Canada'],['Vancouver','Canada'],['London','United Kingdom'],['Dubai','United Arab Emirates'],['Singapore','Singapore'],['Sydney','Australia'],['Melbourne','Australia'],['New York / NJ','United States'],['Bay Area','United States'],['Auckland','New Zealand']];
+function seatBar(w,m){const pw=Math.min(100,w/30*100),pm=Math.min(100,m/30*100);
+  return `<div class="cvbar"><span><i style="width:${pw}%"></i></span><small>${w} of 30 women</small></div><div class="cvbar men"><span><i style="width:${pm}%"></i></span><small>${m} of 30 men</small></div>`}
+function worldEvents(){const b=S.board;if(!b||!b.city)return '';const mine=b.mine||[];const inC=mine.includes('city'),inO=mine.includes('online');
+  const c=b.city,o=b.online||{women:0,men:0};const tot=c.women+c.men;const top=b.top||[];
+  const cnt=(n)=>{const t=top.find(x=>x.city.toLowerCase()===n.toLowerCase().split(' /')[0].toLowerCase());return t?t.women+t.men:0};
+  const live=n=>events().some(e=>e.city&&e.city.toLowerCase()===n.toLowerCase());
+  return `<div class="sec-h"><h2>Events around the world</h2></div>
+  <div class="panel cv"><div class="cv-h">${ic('pin')}<span><b>${esc(c.city)}</b><small>${tot} interested · opens at 60 (30 women + 30 men)</small></span></div>${seatBar(c.women,c.men)}
+   <button class="btn ${inC?'ghost':'primary'} sm" data-a="cityVote" data-k="city" data-on="${inC?0:1}">${inC?ic('check')+'You asked for events here':'Bring events to '+esc(c.city)}</button></div>
+  <div class="panel cv"><div class="cv-h">${ic('users')}<span><b>Online Family Mixer · ${esc(o.country||c.country)}</b><small>Hosted online evening for verified members in your country. We email the date.</small></span></div>${seatBar(o.women,o.men)}
+   <button class="btn ${inO?'ghost':'primary'} sm" data-a="cityVote" data-k="online" data-on="${inO?0:1}">${inO?ic('check')+'You are on the list':'Join the online mixer list'}</button></div>
+  <div class="cvchips">${WCITIES.map(([n,co])=>`<span class="cvchip${live(n)?' on':''}"><b>${esc(n)}</b><small>${live(n)?'Events open':cnt(n)?cnt(n)+' interested':'Opening soon'}</small></span>`).join('')}</div>`}
 function renderEvents(){
-  const evs=events();const mine=evs.filter(e=>e.my);
+  const me0=S.me||{};const near=e=>e.city&&me0.city&&e.city.toLowerCase()===String(me0.city).toLowerCase()?0:e.country===me0.country?1:2;
+  const evs=events().slice().sort((a,b)=>near(a)-near(b)||a.date-b.date);const mine=evs.filter(e=>e.my);
   return topbar('Events','Hosted evenings with dinner included')+
   `<div class="scroll" id="main"><div class="main-inner pad">
    ${mine.length?`<div class="sec-h"><h2>Your reservations</h2></div>${mine.map(e=>{const r=e.my,f=fmtDay(e.date,e.tz);return `<button class="tkrow" data-a="openEvent" data-id="${e.id}"><span class="tki" style="${r.status==='pay_due'?'':'background:var(--gold-soft);color:var(--gold)'}">${ic(r.status==='pay_due'?'ticket':'cal')}</span><span class="tx"><b>${esc(e.title)}</b><small>${r.status==='paid'?'Paid · your QR ticket opens on the event day':r.status==='pay_due'?`Confirmed · pay${r.due?' by '+esc(fmtDay(r.due,e.tz).long):''} to keep your seat`:r.status==='hold_due'?`Pay the ${money(e.hold,e.cur)} seat hold to keep your seat`:`${esc(f.long)} · waiting for ${evStat(e).left} more to confirm`}</small></span>${ic('back','flipx')}</button>`}).join('')}`:''}
@@ -1085,6 +1100,7 @@ function renderEvents(){
    ${evs.length>1?`<div class="sorts evf" role="group" aria-label="Show events">${[['for','For you'],['all','Every event']].map(([k,l])=>`<button data-a="evFilter" data-k="${k}" class="${(S.evFilter||'for')===k?'on':''}" aria-pressed="${(S.evFilter||'for')===k}">${l}</button>`).join('')}</div>`:''}
    ${(()=>{const fk=evs.length>1?(S.evFilter||'for'):'all';const shownEv=evs.filter(e=>fk==='all'?true:forMe(e));
      return shownEv.length?shownEv.map(evCard).join(''):`<div class="empty"><span class="eic">${ic('cal')}</span><h3>${evs.length?'No events for your community yet':'New events are coming'}</h3><p>${evs.length?'Hosts add community events as more members join.':'The first Family Mixers are being planned. You will see them here.'}</p>${evs.length?`<div class="btns"><button class="btn sm ghost" data-a="evFilter" data-k="all">Every event</button></div>`:''}</div>`})()}
+   ${worldEvents()}
    <p class="note">Every event: separate tables in one shared room, fully verified guests (ID, roots and city), a NeuMarry host, QR check-in at the door.</p>
    <div class="panel wwu"><div class="wwu-h"><h3>Bring Family Mixers to your city</h3></div>
     <button class="rowi" data-a="hostAsk">${ic('users')}<span class="tx"><b>${S.hostSent?'Host application received':'Host events'}</b><span>${S.hostSent?'We reply within 3 working days':'CA$100 for every event · training included'}</span></span>${ic('chev','rchev')}</button>
@@ -1805,6 +1821,7 @@ const A={
   pickSet(el){if(!picker)return;const def=pickerDef(picker.k,picker.t);let v=el.dataset.v;
     if(def.multi){const o=picker.t==='me'?S.me:S.draft;const a=(getPath(o,picker.k)||[]).slice();const i=a.indexOf(v);if(i>=0)a.splice(i,1);else a.push(v);applyChange(picker.t,picker.k,a);const l=document.getElementById('pick-list');const st=l?l.scrollTop:0;render();const l2=document.getElementById('pick-list');if(l2)l2.scrollTop=st;return}if(def.num)v=+v;applyChange(picker.t,picker.k,v);const k=picker.k;picker=null;render();
     const b=document.getElementById('pk-'+k.replace(/\./g,'-'));if(b&&fine())b.focus({preventScroll:true})},
+  async cityVote(el){const k=el.dataset.k,on=el.dataset.on==='1';try{await API.rpc('vote_city',{k,on_:on});S.board=await API.rpc('city_board');render();toast(on?(k==='online'?'You are on the online mixer list':'Thank you. We count you in for your city'):'Removed','check')}catch(e){toast('Could not save. Try again.')}},
   tab(el){S.tab=el.dataset.k;view=null;sheet=null;picker=null;save();render();const m=document.getElementById('main');if(m)m.scrollTop=0;if(S.tab==='me')loadInvite();if(S.tab==='events')loadEvents().then(render).catch(()=>{})},
   seg(el){S.seg=el.dataset.k;save();render()},
   goLikes(){S.tab='connections';S.seg='received';save();render();const m=document.getElementById('main');if(m)m.scrollTop=0},
