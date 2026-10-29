@@ -243,4 +243,13 @@ PAIRS = [
  ("'Questions go to our Privacy and Grievance Officer, who replies within 30 days.'", "'Les questions vont à notre responsable de la confidentialité et des plaintes, qui répond dans les 30 jours.'"),
  # Guides section
  ('<p class="eyebrow">Guides</p><h2>Matrimony abroad, explained.</h2><nav class="guides" aria-label="Guides">', '<p class="eyebrow">Guides</p><h2>Le mariage à l’étranger, expliqué.</h2><nav class="guides" aria-label="Guides">'),
+ # Trust strip
+ ('aria-label="Trust and safety"','aria-label="Confiance et sécurité"'),
+ ('<span>Sign in with Google</span>','<span>Se connecter avec Google</span>'),
+ ('<small>GET IT ON</small>','<small>DISPONIBLE SUR</small>'),
+ ('<small>Event tickets</small>','<small>Billets d’événement</small>'),
+ ('<b>Photos checked</b>with Google Cloud Vision','<b>Photos vérifiées</b>avec Google Cloud Vision'),
+ ('<b>Every ID checked</b>by a person','<b>Chaque pièce d’identité</b>vérifiée par une personne'),
+ ('<b>Only verified</b>members are shown','<b>Seuls les membres</b>vérifiés sont affichés'),
+ ('<b>Data encrypted</b>in transit and at rest','<b>Données chiffrées</b>en transit et au repos'),
 ]
