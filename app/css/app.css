@@ -13,7 +13,8 @@
   --f-script:"Great Vibes","Snell Roundhand","Apple Chancery",cursive;
   color-scheme:light;
 }
-html{height:100%;box-sizing:border-box}
+html{height:100%;box-sizing:border-box;--sat:max(env(safe-area-inset-top,0px),var(--safe-area-inset-top,0px));--sab:max(env(safe-area-inset-bottom,0px),var(--safe-area-inset-bottom,0px));padding-top:var(--sat);padding-bottom:var(--sab);background:#FFEEF1}
+/* 29 Oct (his report: app went under the phone's status bar): keep everything below the status bar and above the gesture bar on edge-to-edge Android. */
 *,*::before,*::after{box-sizing:border-box}
 body{height:100%;margin:0;background:var(--outer);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
 button,input,select,textarea{font:inherit;color:inherit}
