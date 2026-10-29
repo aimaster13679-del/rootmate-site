@@ -573,6 +573,7 @@ const $=s=>document.querySelector(s);
 const LAUNCH=Date.parse('2026-11-28T22:30:00Z'); // first Family Mixer, 5:30 pm in Toronto
 /* Store links: paste each listing URL when it goes live. Empty = 'Coming soon', button scrolls to the waitlist. */
 const STORE={play:'',ios:''};
+try{const q=new URLSearchParams(location.search).get('p');if(q&&/^[A-Za-z0-9]{2,20}$/.test(q))localStorage.setItem('rm.p',q.toUpperCase())}catch(e){}
 
 if(LIVE){const s=$('#preview-strip');if(s)s.hidden=true}
 if(STORE.play){const t=$('#tr-play');t.href=STORE.play;t.target='_blank';t.rel='noopener'}
