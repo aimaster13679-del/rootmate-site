@@ -495,4 +495,30 @@ for old, new in [('nri-matrimony-canada', 'matrimony-abroad-canada'), ('nri-matr
             '<!doctype html><html><head><meta charset="utf-8"><title>NeuMarry</title><meta name="robots" content="noindex,follow">'
             f'<link rel="canonical" href="{url}"><meta http-equiv="refresh" content="0; url={url}"></head>'
             f'<body><p><a href="{url}">This page has moved. Open the new page.</a></p></body></html>')
+# 29 Oct (his ok on the growth plan): a slim "Create profile" bar at the bottom of every page, so a visitor can
+# start at any moment. Opens the sign-up straight away (app/?start=1). Not on legal, app, payment or biodata pages.
+STICKY_SKIP = {'terms.html', 'privacy.html', 'delete-account.html', 'child-safety.html', 'paid.html', 'bio.html'}
+STICKY_CSS = ('<style>#nm-go{position:fixed;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));z-index:40;max-width:560px;margin:0 auto;'
+              'display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.96);border:1px solid #F3E0E1;border-radius:18px;'
+              'box-shadow:0 10px 30px rgba(59,31,42,.16);padding:10px 10px 10px 16px;font:600 14px/1.3 "Nunito Sans",system-ui,sans-serif;color:#3B1F2A}'
+              '#nm-go small{display:block;font-weight:400;color:#8A6B75;font-size:12px}#nm-go span{flex:1;min-width:0}'
+              '#nm-go a{flex:none;background:linear-gradient(135deg,#FF8FA3,#E8436B 60%,#C9325A);color:#fff;text-decoration:none;font-weight:800;'
+              'padding:11px 16px;border-radius:999px;white-space:nowrap}body{padding-bottom:84px}</style>')
+def sticky(lang, prefix):
+    t = (('Verified people. Real families.', 'Free to join · every country'), 'Create profile') if lang == 'en' else \
+        (('Des personnes vérifiées. De vraies familles.', 'Inscription gratuite · tous les pays'), 'Créer mon profil')
+    return (STICKY_CSS + f'<div id="nm-go" role="complementary" aria-label="{t[1]}"><span>{t[0][0]}<small>{t[0][1]}</small></span>'
+            f'<a href="{prefix}app/?start=1">{t[1]}</a></div>')
+for root, dirs, files in os.walk(OUT):
+    rel = os.path.relpath(root, OUT)
+    if rel.split(os.sep)[0] in ('app', 'src', '.git', 'node_modules', 'img', 'fonts'):
+        dirs[:] = []; continue
+    for fn in files:
+        if not fn.endswith('.html') or fn in STICKY_SKIP: continue
+        fp = os.path.join(root, fn); h = open(fp, encoding='utf-8').read()
+        if 'http-equiv="refresh"' in h or 'id="nm-go"' in h or '</body>' not in h: continue
+        fr = rel.split(os.sep)[0] == 'fr'
+        prefix = '../' * (0 if rel == '.' else len(rel.split(os.sep)))
+        h = h.replace('</body>', sticky('fr' if fr else 'en', prefix) + '</body>', 1)
+        open(fp, 'w', encoding='utf-8').write(h)
 print('site built')
