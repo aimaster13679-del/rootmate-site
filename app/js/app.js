@@ -1663,11 +1663,13 @@ async function restorePurchases(loud){const B=Bill();if(!B||!S.me||restoring)ret
 async function afterLogin(){
   loadLocal();S.bootError='';
   try{
+    /* Faster start (29 Oct): blocks and events do not need my profile, so load them while it loads. */
+    const pre=Promise.all([loadBlocks().catch(()=>{}),loadEvents().catch(()=>{})]);
     const me=await loadMe();
     if(!me){startSignup();return}
     if(me.banned){await API.signOut();S=fresh();S.screen='welcome';render();toast('This account has been suspended. Write to us if you think this is a mistake.','shield');return}
     S.screen='app';if(!['matches','events','connections','me'].includes(S.tab))S.tab='matches';render();
-    await loadAll();render();loadInvite();restorePurchases(false);
+    await Promise.all([loadCards(),loadMessages(),pre]);ensureMatchChats();S.loaded=true;render();loadInvite();restorePurchases(false);
     API.rpc('touch_seen').catch(()=>{});
   }catch(e){
     if(e.code==='signed_out'){S=fresh();S.screen='welcome';render();return}
