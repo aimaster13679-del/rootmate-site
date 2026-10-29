@@ -249,7 +249,7 @@ PAIRS = [
  ('<small>GET IT ON</small>','<small>DISPONIBLE SUR</small>'),
  ('<small>Event tickets</small>','<small>Billets d’événement</small>'),
  ('<b>Photos checked</b>with Google Cloud Vision','<b>Photos vérifiées</b>avec Google Cloud Vision'),
- ('<b>Every ID checked</b>by a person','<b>Chaque pièce d’identité</b>vérifiée par une personne'),
+ ('<b>Every ID read by Google</b>and checked by a person','<b>Chaque pièce d’identité lue par Google</b>et vérifiée par une personne'),
  ('<b>Only verified</b>members are shown','<b>Seuls les membres</b>vérifiés sont affichés'),
  ('<b>Data encrypted</b>in transit and at rest','<b>Données chiffrées</b>en transit et au repos'),
 ]

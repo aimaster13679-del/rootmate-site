@@ -335,7 +335,10 @@ function attachPhotos(){PROFILES.forEach(p=>{p.photos=p.photoPaths.map(urlOf).fi
 /* Instant open (29 Oct): the last server answers are kept on this phone (RAW), shown at once on the next
    start, and replaced by fresh answers a moment later. Cleared on sign-out. */
 const RAW={};const CK='rm.cache.v1';
-async function loadMe(){const m=await API.rpc('me');if(!m||!m.profile)return null;RAW.me=m;S.me=meFromServer(m);return S.me}
+/* Bureau partner link neumarry.com/?p=CODE: kept on the phone, saved once on the profile. */
+try{const q=new URLSearchParams(location.search).get('p');if(q&&/^[A-Za-z0-9]{2,20}$/.test(q))localStorage.setItem('rm.p',q.toUpperCase())}catch(e){}
+function savePartner(m){let c='';try{c=localStorage.getItem('rm.p')||''}catch(e){}if(!c||(m.profile&&m.profile.partner_code))return;API.rpc('set_partner_code',{c}).then(()=>{try{localStorage.removeItem('rm.p')}catch(e){}}).catch(()=>{})}
+async function loadMe(){const m=await API.rpc('me');if(!m||!m.profile)return null;RAW.me=m;S.me=meFromServer(m);savePartner(m);return S.me}
 async function loadCards(){
   if(!S.me)return;
   const [fit,ints,fitN]=await Promise.all([API.rpc('member_cards',{lim:400,off:0}),API.select('interests',{select:'*'}),isLive()?null:API.rpc('fit_count').catch(()=>0)]);
@@ -1418,13 +1421,14 @@ function signupsBlock(list){const today=list.filter(x=>Date.now()-Date.parse(x.c
      ${x.reminded_at?`<span>${ic('mail')} Reminder email sent ${esc(when(x.reminded_at))}</span>`:''}
      <span class="pill ${STEP_CLS[x.step]||''}">${esc(x.step)}</span></span>
      ${x.email&&x.step!=='Fully verified and live'?`<a class="btn ghost sm" href="mailto:${esc(x.email)}?subject=${encodeURIComponent('Your NeuMarry profile')}">${ic('mail')}Email</a>`:''}</div>`}).join('')}</div>`:`<p class="hint">No new sign-ups in the last 30 days.</p>`}`}
+const admAuto=g=>{if(!g)return `<p class="hint">${ic('shield')} Google check: waiting (or not available for PDF).</p>`;const t=(ok,part,lbl)=>`<span class="gchk ${ok?'ok':part?'mid':'no'}">${ok?'✓':part?'~':'✗'} ${lbl}</span>`;return `<p class="hint gline"><b>Google Cloud Vision:</b> ${t(g.name==='match',g.name==='partial','Name')}${t(g.dob==='match',g.dob==='year','Birth date')}${t(g.faces===1,g.faces>1,g.faces===1?'1 face':g.faces+' faces')}</p>`};
 function renderAdmin(){
   const a=S.admin||{};const q=a.queue||[];const reps=a.reports||[];const c=a.counts;
   const item=x=>{const img=a.urls&&a.urls[x.bucket+':'+x.path];const prof=a.urls&&x.profile_photo&&a.urls['photos:'+x.profile_photo];
     const isPdf=/\.pdf$/i.test(x.path||'');
     return `<div class="panel adm" id="adm-${x.row_id}"><div class="adm-h"><b>${esc(ADM_KIND[x.kind]||x.kind)}</b><small>${esc(x.full_name)} · ${x.gender==='F'?'Woman':'Man'}, ${x.age} · ${esc(x.city)}, ${esc(x.country)}</small>${['roots','status','address'].includes(x.kind)?`<small>${x.kind==='roots'?`Roots on profile: ${esc(x.origin_state||'')}, ${esc(x.origin_country||'')}`:`Residency on profile: ${esc(x.residency||'')}`}${x.id_type?` · Document: ${esc(x.id_type)}`:''}</small>`:''}</div>
       <div class="adm-imgs">${img?(isPdf?`<a class="btn ghost sm" href="${esc(img)}" target="_blank" rel="noopener">Open PDF</a>`:`<img src="${esc(img)}" alt="${esc(x.kind)} of ${esc(x.full_name)}">`):`<span class="hint">Loading image…</span>`}${x.kind!=='photo'&&prof?`<img src="${esc(prof)}" alt="Profile photo of ${esc(x.full_name)}">`:''}</div>
-      <p class="hint">${ADM_HINT[x.kind]||''}</p>${x.kind==='photo'&&x.ai_check?`<p class="hint">${x.ai_check==='doubtful'?`${ic('shield')} <b>Automatic check: may be revealing or violent.</b> Look carefully.`:'Automatic check: nothing inappropriate found.'}</p>`:''}
+      <p class="hint">${ADM_HINT[x.kind]||''}</p>${x.kind==='id'?admAuto(a.auto&&a.auto[x.row_id]):''}${x.kind==='photo'&&x.ai_check?`<p class="hint">${x.ai_check==='doubtful'?`${ic('shield')} <b>Automatic check: may be revealing or violent.</b> Look carefully.`:'Automatic check: nothing inappropriate found.'}</p>`:''}
       <div class="adm-act"><select data-adm-reason="${x.row_id}" aria-label="Reason if rejected"><option value="">Reason if rejected…</option>${(x.kind==='photo'?['Face not clear','Not a real photo of you','Group photo','Inappropriate photo']:['roots','status','address'].includes(x.kind)?['Image not readable','Does not match the profile','Not an accepted document','Older than 3 months','Name does not match the ID']:['Image not readable','Does not match the profile','Not a valid ID','Not a live selfie']).map(r=>`<option>${r}</option>`).join('')}</select>
       <button class="btn ghost sm" data-a="admReject" data-id="${x.row_id}" data-k="${x.kind}">Reject</button><button class="btn primary sm" data-a="admApprove" data-id="${x.row_id}" data-k="${x.kind}">Approve</button></div></div>`};
   return `<div class="view" role="dialog" aria-label="Team review">
@@ -1662,7 +1666,10 @@ async function uploadPhoto(blob){const uid=API.userId();const path=`${uid}/${uui
 }
 async function uploadCheck(kind,blob,name,type){const uid=API.userId();let path=null;
   if(blob){const ext=kind!=='selfie'&&/pdf$/i.test(blob.type||name||'')?'pdf':'jpg';path=`${uid}/${kind}-${uuid()}.${ext}`;await API.upload('verification',path,blob)}
-  await API.insert('verifications',{user_id:uid,kind,path,id_type:(type||(kind==='id'?name:'')||'').slice(0,60)||null},{returning:false});
+  const rows=await API.insert('verifications',{user_id:uid,kind,path,id_type:(type||(kind==='id'?name:'')||'').slice(0,60)||null});
+  /* Google Cloud Vision reads the ID (name, birth date, face) for the team; never blocks the member. */
+  const vid=Array.isArray(rows)&&rows[0]&&rows[0].id;
+  if(kind==='id'&&vid&&blob&&!/pdf/i.test(blob.type||'')&&blob.size<8e6){try{const fr=new FileReader();fr.onload=()=>{const b=String(fr.result||'').split(',')[1]||'';if(b)API.fn('id-check',{verificationId:vid,image:b}).catch(()=>{})};fr.readAsDataURL(blob)}catch(e){}}
 }
 async function uploadAll(d){const errs=[];
   if(d.photoBlob){S.saveMsg='Uploading your photo';render();try{await uploadPhoto(d.photoBlob);d.photoBlob=null}catch(e){errs.push(e.message)}}
@@ -1975,6 +1982,7 @@ async function loadAdmin(){
   try{const [q,r,c,ap,ru,su,ev]=await Promise.all([API.rpc('admin_queue'),API.rpc('admin_reports'),API.rpc('admin_counts'),API.rpc('admin_applications').catch(()=>[]),API.rpc('admin_rude').catch(()=>[]),API.rpc('admin_signups',{days:30}).catch(()=>[]),API.rpc('admin_events').catch(()=>[])]);
     const queue=(q||[]).map(x=>Object.assign(x,{bucket:x.kind==='photo'?'photos':'verification'}));
     S.admin={loading:false,queue,reports:r||[],counts:c,apps:ap||[],rude:ru||[],signups:su||[],events:ev||[],urls:{}};render();
+    const idq=queue.filter(x=>x.kind==='id').map(x=>x.row_id);if(idq.length)API.select('verifications',{select:'id,auto_check',id:'in.('+idq.join(',')+')'}).then(rs=>{S.admin.auto={};(rs||[]).forEach(v=>{if(v.auto_check)S.admin.auto[v.id]=v.auto_check});render()}).catch(()=>{});
     const ph=[...new Set(queue.filter(x=>x.bucket==='photos').map(x=>x.path).concat(queue.map(x=>x.profile_photo).filter(Boolean)))];
     const vf=queue.filter(x=>x.bucket==='verification').map(x=>x.path);
     const [a,b]=await Promise.all([API.signMany('photos',ph,1800),API.signMany('verification',vf,600)]);
