@@ -64,7 +64,7 @@ assert 'RootMate' not in s
 i = s.index('</style>') + len('</style>')
 head, body = s[:i], s[i:]
 GUIDES = ['matrimony-abroad-canada', 'toronto-matrimony', 'matrimony-events-toronto', 'community-matrimony-canada',
-          'matrimony-for-parents', 'verified-matrimony', 'matrimony-abroad-usa-uk', 'find-life-partner-abroad']
+          'matrimony-for-parents', 'verified-matrimony', 'matrimony-abroad-usa-uk', 'find-life-partner-abroad', 'safe-matrimony-for-women']
 def guide_meta(slug):
     t = rd('guides/%s.html' % slug)
     get = lambda k: re.search(r'<!--%s: (.*?)-->' % k, t).group(1)

@@ -672,10 +672,13 @@ function eventFromServer(x){
     date:d,time:fmtTime(d,tz),dur:durLabel(x.duration_min),aud,ageMin:x.age_min,ageMax:x.age_max,age:`${x.age_min}–${x.age_max}`,
     seats:[x.seats_women,Math.max(0,x.seats_women-x.reserved_women),x.seats_men,Math.max(0,x.seats_men-x.reserved_men)],
     need:x.need_total,have:x.reserved_total,parents:x.parents_allowed,includes:x.includes||[],agenda:Array.isArray(x.timetable)?x.timetable:[],
-    priceM:x.member_price_cents,priceP:x.parent_price_cents,meals:x.meal_options||[],status:x.status,deadline:new Date(x.confirm_deadline),
+    priceM:x.member_price_cents,priceP:x.parent_price_cents,hold:x.hold_cents||0,meals:x.meal_options||[],status:x.status,deadline:new Date(x.confirm_deadline),
     womenFrom:x.women_book_from&&new Date(x.women_book_from),menFrom:x.men_book_from&&new Date(x.men_book_from),
-    my:x.my_status?{status:x.my_status,parents:x.my_parents||[],meal:x.my_meal,amount:x.my_amount_cents,due:x.my_due_by&&new Date(x.my_due_by)}:null,venue:x.venue}
+    my:x.my_status?{status:x.my_status,holdPaid:x.my_hold_cents||0,parents:x.my_parents||[],meal:x.my_meal,amount:x.my_amount_cents,due:x.my_due_by&&new Date(x.my_due_by)}:null,venue:x.venue}
 }
+/* Seat hold (29 Oct, his answer "2"): a small payment when reserving, so every reservation is real. */
+function holdOn(e){return e&&e.hold>0&&e.status!=='confirmed'}
+function holdNote(e){return `A ${money(e.hold,e.cur)} seat hold, paid now with PayPal, keeps your seat. It is taken off your ticket when the event is confirmed and refunded in full if the event is not confirmed. If you cancel, the hold is not refunded.`}
 function events(){return S.events}
 function evById(id){return S.events.find(e=>e.id===id)}
 function audOk(e,p){const a=e.aud||{k:'all'};return a.k==='all'||(a.k==='t'&&p.t===a.v)||(a.k==='r'&&p.r===a.v)}
@@ -1063,16 +1066,16 @@ function evCard(e){
     ${st.confirmed?`<span class="seats"><span class="cstat ok">${ic('check')}Confirmed · ${left<=6?`only ${left} seats left for ${S.me.g==='F'?'women':'men'}`:`${left} seats left for ${S.me.g==='F'?'women':'men'}`}</span><span class="sb"><i style="width:${Math.round((cap-left)/cap*100)}%"></i></span></span>`:
     `<span class="seats"><span class="cstat">${st.n} of ${e.need} reserved · confirms when ${st.left} more reserve by ${esc(fmtDay(st.deadline,e.tz).long)}</span><span class="sb"><i style="width:${Math.min(100,Math.round(st.n/e.need*100))}%"></i></span></span>`}
     <span class="nm-seats"><span>Women ${wc-wl} of ${wc}<span class="b"><i style="width:${wc?Math.round((wc-wl)/wc*100):0}%"></i></span></span><span>Men ${mc-ml} of ${mc}<span class="b m"><i style="width:${mc?Math.round((mc-ml)/mc*100):0}%"></i></span></span></span>
-    <span class="evfoot"><span class="price-l"><b>${money(e.priceM,e.cur)}</b> per member, dinner included${e.parents&&e.priceP?` · parents ${money(e.priceP,e.cur)}`:''}</span>${rv&&rv.status==='pay_due'?`<span class="pill gold">Confirmed</span>`:rv?`<span class="pill good">Reserved free</span>`:`<span class="pill gold">Reserve free</span>`}</span>
+    <span class="evfoot"><span class="price-l"><b>${money(e.priceM,e.cur)}</b> per member, dinner included${e.parents&&e.priceP?` · parents ${money(e.priceP,e.cur)}`:''}</span>${rv&&rv.status==='pay_due'?`<span class="pill gold">Confirmed</span>`:rv&&rv.status==='hold_due'?`<span class="pill gold">Pay ${money(e.hold,e.cur)} to hold</span>`:rv?`<span class="pill good">${rv.holdPaid?'Reserved':'Reserved free'}</span>`:holdOn(e)?`<span class="pill gold">Reserve · ${money(e.hold,e.cur)} hold</span>`:`<span class="pill gold">Reserve free</span>`}</span>
    </span></button>`;
 }
 function renderEvents(){
   const evs=events();const mine=evs.filter(e=>e.my);
   return topbar('Events','Hosted evenings with dinner included')+
   `<div class="scroll" id="main"><div class="main-inner pad">
-   ${mine.length?`<div class="sec-h"><h2>Your reservations</h2></div>${mine.map(e=>{const r=e.my,f=fmtDay(e.date,e.tz);return `<button class="tkrow" data-a="openEvent" data-id="${e.id}"><span class="tki" style="${r.status==='pay_due'?'':'background:var(--gold-soft);color:var(--gold)'}">${ic(r.status==='pay_due'?'ticket':'cal')}</span><span class="tx"><b>${esc(e.title)}</b><small>${r.status==='paid'?'Paid · your QR ticket opens on the event day':r.status==='pay_due'?`Confirmed · pay${r.due?' by '+esc(fmtDay(r.due,e.tz).long):''} to keep your seat`:`${esc(f.long)} · waiting for ${evStat(e).left} more to confirm`}</small></span>${ic('back','flipx')}</button>`}).join('')}`:''}
+   ${mine.length?`<div class="sec-h"><h2>Your reservations</h2></div>${mine.map(e=>{const r=e.my,f=fmtDay(e.date,e.tz);return `<button class="tkrow" data-a="openEvent" data-id="${e.id}"><span class="tki" style="${r.status==='pay_due'?'':'background:var(--gold-soft);color:var(--gold)'}">${ic(r.status==='pay_due'?'ticket':'cal')}</span><span class="tx"><b>${esc(e.title)}</b><small>${r.status==='paid'?'Paid · your QR ticket opens on the event day':r.status==='pay_due'?`Confirmed · pay${r.due?' by '+esc(fmtDay(r.due,e.tz).long):''} to keep your seat`:r.status==='hold_due'?`Pay the ${money(e.hold,e.cur)} seat hold to keep your seat`:`${esc(f.long)} · waiting for ${evStat(e).left} more to confirm`}</small></span>${ic('back','flipx')}</button>`}).join('')}`:''}
    ${evs.length?whyEvent():''}
-   <div class="callout">${ic('users')}<span>Reserve free. An event is confirmed when enough people reserve; then you pay in the app. Dinner is included, and nothing is paid at the restaurant. If it is not confirmed, nobody pays.</span></div>
+   <div class="callout">${ic('users')}<span>${evs.some(holdOn)?`Reserve with a ${money(evs.find(holdOn).hold,evs.find(holdOn).cur)} seat hold. An event is confirmed when enough people reserve; then you pay the rest in the app. Dinner is included, and nothing is paid at the restaurant. If it is not confirmed, the hold is refunded in full.`:'Reserve free. An event is confirmed when enough people reserve; then you pay in the app. Dinner is included, and nothing is paid at the restaurant. If it is not confirmed, nobody pays.'}</span></div>
    <div class="sec-h"><h2>Upcoming events</h2></div>
    ${evs.length>1?`<div class="sorts evf" role="group" aria-label="Show events">${[['for','For you'],['all','Every event']].map(([k,l])=>`<button data-a="evFilter" data-k="${k}" class="${(S.evFilter||'for')===k?'on':''}" aria-pressed="${(S.evFilter||'for')===k}">${l}</button>`).join('')}</div>`:''}
    ${(()=>{const fk=evs.length>1?(S.evFilter||'for'):'all';const shownEv=evs.filter(e=>fk==='all'?true:forMe(e));
@@ -1221,12 +1224,13 @@ function renderEventView(id){
     <div class="pad" style="display:grid;gap:14px;padding-block:16px 26px">
      ${rv&&rv.status==='paid'?`<div class="callout good">${ic('check')}<span><b>Your seat is paid${rv.parents.length?` for you and ${rv.parents.length} ${rv.parents.length===1?'parent':'parents'}`:''}.</b> Dinner is included. Your QR ticket below opens on the event day.</span></div>`:
        rv&&rv.status==='pay_due'?`<div class="callout gold">${ic('ticket')}<span><b>The event is confirmed and your seat is held.</b>${rv.due?` Pay by ${esc(fmtDay(rv.due,e.tz).long)} · ${esc(fmtTime(rv.due,e.tz))}, or the seat goes to the next person.`:''}</span></div>${payPanel(e)}`:
+       rv&&rv.status==='hold_due'?`<div class="callout gold">${ic('ticket')}<span><b>One more step: pay the ${money(e.hold,e.cur)} seat hold.</b> Your seat counts once it is paid. It is taken off your ticket, and refunded in full if the event is not confirmed.</span></div>${payPanel(e)}`:
        rv?`<div class="callout">${ic('check')}<span><b>You’re reserved${rv.parents.length?` with ${rv.parents.length} ${rv.parents.length===1?'parent':'parents'}`:''}.</b> Nothing to pay until ${st.left} more people reserve. If the event isn’t confirmed by ${esc(fmtDay(st.deadline,e.tz).long)}, it is cancelled and nobody pays.</span></div>`:''}
      ${rv&&rv.status==='paid'?ticketPanel(e):''}
      ${(S.staff||[]).includes(e.id)?`<div class="panel wwu"><div class="wwu-h"><h3>Host tools</h3></div><p class="sub">Scan each guest’s QR ticket at the door. You see their photo, name and checks, then check them in with one tap.</p><button class="btn primary block" data-a="hostOpen" data-id="${e.id}">${ic('scan')}Scan tickets and guest list</button></div>`:''}
      <div class="panel"><h3>${st.confirmed?'Confirmed':'How booking works'}</h3>
       <div class="seats"><span>${st.n} of ${e.need} people reserved${st.confirmed?'':` · needs ${st.left} more by ${esc(fmtDay(st.deadline,e.tz).long)}`}</span><span class="sb"><i style="width:${Math.min(100,Math.round(st.n/e.need*100))}%"></i></span></div>
-      <ol class="hint" style="margin:0;padding-left:18px;display:grid;gap:4px"><li>Reserve a seat for free and choose your dish.</li><li>When ${e.need} people reserve, the event is confirmed.</li><li>You pay in the app. Dinner is included; nothing is paid at the restaurant.</li><li>Not confirmed in time? It is cancelled and nobody pays.</li></ol></div>
+      <ol class="hint" style="margin:0;padding-left:18px;display:grid;gap:4px"><li>${holdOn(e)?`Reserve a seat with a ${money(e.hold,e.cur)} hold and choose your dish.`:'Reserve a seat for free and choose your dish.'}</li><li>When ${e.need} people reserve, the event is confirmed.</li><li>${holdOn(e)?'You pay the rest in the app. Dinner is included; nothing is paid at the restaurant.':'You pay in the app. Dinner is included; nothing is paid at the restaurant.'}</li><li>${holdOn(e)?'Not confirmed in time? It is cancelled and your hold is refunded in full.':'Not confirmed in time? It is cancelled and nobody pays.'}</li></ol></div>
      ${rv&&rv.status==='paid'?'':whyEvent('Why come')}
      ${e.includes.length?`<div class="panel"><h3>What’s included</h3><ul class="incl">${e.includes.map(x=>`<li>${ic('check')}<span>${esc(x)}</span></li>`).join('')}</ul></div>`:''}
      ${e.agenda.length?`<div class="panel"><h3>How the evening goes</h3><ul class="tl">${e.agenda.map(([tm,x])=>`<li><time>${esc(tm)}</time><i></i><span>${esc(x)}</span></li>`).join('')}</ul></div>`:''}
@@ -1247,11 +1251,11 @@ function renderEventView(id){
    </div>
    <div class="bookbar pad"><span class="tx"><b>${money(e.priceM,e.cur)}</b><small>${e.parents&&e.priceP?`+ ${money(e.priceP,e.cur)} per parent`:'per person'}</small></span>${
      rv&&rv.status==='paid'?`<button class="btn ghost" disabled>${ic('check')}Seat paid</button>`:
-     rv&&rv.status==='pay_due'&&PAYQ&&PAYQ.eid===e.id&&PAYQ.q&&!PAYQ.q.error?`<button class="btn primary" data-a="payEvent" data-id="${e.id}"${PAYBUSY?' disabled':''}>${ic('lock')}Pay ${money(PAYQ.q.total_cents,PAYQ.q.currency)}</button>`:
+     (rv&&(rv.status==='pay_due'||rv.status==='hold_due'))&&PAYQ&&PAYQ.eid===e.id&&PAYQ.q&&!PAYQ.q.error?`<button class="btn primary" data-a="payEvent" data-id="${e.id}"${PAYBUSY?' disabled':''}>${ic('lock')}Pay ${money(PAYQ.q.total_cents,PAYQ.q.currency)}</button>`:
      rv?`<button class="btn ghost" data-a="cancelRes" data-id="${e.id}"${busy?' disabled':''}>Cancel reservation</button>`:
      !forMe(e)?`<button class="btn ghost" disabled>For ${esc((e.aud||{}).l||'members')} only</button>`:
      !ageOk(e)?`<button class="btn ghost" disabled>For ages ${e.age}</button>`:
-     `<button class="btn primary" data-a="book" data-id="${e.id}"${canBook?'':' disabled'}>Reserve free seat</button>`}</div>
+     `<button class="btn primary" data-a="book" data-id="${e.id}"${canBook?'':' disabled'}>${holdOn(e)?`Reserve · ${money(e.hold,e.cur)} hold`:'Reserve free seat'}</button>`}</div>
   </div>`;
 }
 /* Why come to an event (28 Oct, CMO text): honest reasons, no promised numbers. */
@@ -1265,9 +1269,16 @@ function payPanel(e){const q=PAYQ&&PAYQ.eid===e.id?PAYQ.q:null;
   if(!q)return `<div class="panel"><h3>Pay for your seat</h3>${spinner('Loading')}</div>`;
   if(q.error)return q.error==='too_late'?`<div class="callout bad">${ic('info')}<span>The time to pay has passed, so this seat was released.</span></div>`:'';
   const par=q.parents||0,pct=q.ticket_cents?Math.round(q.tax_cents/q.ticket_cents*100):0;
+  if(q.hold)return `<div class="panel pay"><h3>Hold your seat</h3>
+   <div class="sumrow"><span>Seat hold, taken off your ticket</span><span>${money(q.ticket_cents,q.currency)}</span></div>
+   <div class="sumrow total"><b>Pay now</b><b>${money(q.total_cents,q.currency)}</b></div>
+   <button class="btn primary block" data-a="payEvent" data-id="${e.id}"${PAYBUSY?' disabled':''}>${ic('lock')}${PAYBUSY?'Opening PayPal…':`Pay ${money(q.total_cents,q.currency)} with PayPal`}</button>
+   ${q.order?`<button class="link" data-a="payCheck" data-id="${e.id}" style="justify-self:center">I already paid · check again</button>`:''}
+   <p class="hint">You pay on PayPal’s secure page, with a PayPal account or a card. NeuMarry never sees your card. Refunded in full if the event is not confirmed; not refunded if you cancel.</p></div>`;
   return `<div class="panel pay"><h3>Pay for your seat</h3>
    <div class="sumrow"><span>${par?`You and ${par} ${par===1?'parent':'parents'}, dinner included`:'You, dinner included'}</span><span>${money(q.ticket_cents,q.currency)}</span></div>
    ${q.tax_cents?`<div class="sumrow"><span>HST ${pct}%</span><span>${money(q.tax_cents,q.currency)}</span></div>`:''}
+   ${q.hold_paid_cents?`<div class="sumrow"><span>Seat hold already paid</span><span>−${money(q.hold_paid_cents,q.currency)}</span></div>`:''}
    <div class="sumrow total"><b>Total</b><b>${money(q.total_cents,q.currency)}</b></div>
    <button class="btn primary block" data-a="payEvent" data-id="${e.id}"${PAYBUSY?' disabled':''}>${ic('lock')}${PAYBUSY?'Opening PayPal…':`Pay ${money(q.total_cents,q.currency)} with PayPal`}</button>
    ${q.order?`<button class="link" data-a="payCheck" data-id="${e.id}" style="justify-self:center">I already paid · check again</button>`:''}
@@ -1277,6 +1288,7 @@ async function loadPayQuote(eid){let q;try{q=await API.rpc('my_pay_quote',{eid})
   if(view&&view.type==='event'&&view.id===eid)render()}
 function payPending(v){try{if(v===undefined)return localStorage.getItem('rm.payPending');if(v)localStorage.setItem('rm.payPending',v);else localStorage.removeItem('rm.payPending')}catch(e){return null}}
 async function payCheck(eid,quiet){let r;try{r=await API.fn('event-pay',{action:'check',eid})}catch(e){if(!quiet)toast((e&&e.message)||'Could not reach PayPal. Try again.','info');return}
+  if(r&&r.status==='held'){payPending(null);PAYQ=null;await loadEvents().catch(()=>{});toast('Hold received. Your seat is reserved.','check');render();return true}
   if(r&&r.status==='paid'){payPending(null);PAYQ=null;await loadEvents().catch(()=>{});toast('Payment received. Your seat is paid.','check');render();return true}
   if(!quiet)toast(r&&r.status==='waiting'?'PayPal has not finished the payment yet. Finish it on the PayPal page, then come back.':'No payment found yet.','info');
   return false}
@@ -1312,7 +1324,7 @@ function afterRenderEvents(){
   else if(TICKET.d&&!TK_T){const wait=TICKET.d.code?Math.max(1,TICKET.d.seconds_left)*1000+300:60000;TK_T=setTimeout(()=>{TK_T=null;if(TICKET&&TICKET.eid===e.id)loadTicket(e.id)},wait)}
   if(paid&&TICKET&&TICKET.d&&TICKET.d.code){const end=TICKET.at+TICKET.d.seconds_left*1000;
     TK_S=setInterval(()=>{const el=document.getElementById('tk-left');if(!el){clearInterval(TK_S);return}el.textContent=Math.max(0,Math.ceil((end-Date.now())/1000))},500)}
-  if(e&&e.my&&e.my.status==='pay_due'&&(!PAYQ||PAYQ.eid!==e.id)){PAYQ={eid:e.id,q:null};loadPayQuote(e.id)}
+  if(e&&e.my&&(e.my.status==='pay_due'||e.my.status==='hold_due')&&(!PAYQ||PAYQ.eid!==e.id)){PAYQ={eid:e.id,q:null};loadPayQuote(e.id)}
   if(view&&view.type==='host')hostAttach();else hostStop();
 }
 let HOST={eid:null,stream:null,loop:null,busy:false,res:null,guests:null,err:''};
@@ -1548,9 +1560,9 @@ function renderSheet(){
       <div class="sumrow"><span>Member × 1</span><span>${money(e.priceM,e.cur)}</span></div>
       ${n?`<div class="sumrow"><span>Parents × ${n}</span><span>${money(n*(e.priceP||0),e.cur)}</span></div>`:''}
       <div class="sumrow total"><span>Total if confirmed</span><span>${money(total,e.cur)}</span></div></div>
-     <p class="note">Nothing is charged now. When the event is confirmed you pay in the app; dinner is included and nothing is paid at the restaurant. Prices before tax.</p>`,
-     `<button class="btn ghost" data-a="closeSheet">Cancel</button>${busyBtn('primary','reserve','Reserve free')}`);}
-  if(t==='cancelRes'){const e=evById(sheet.id);return sheetShell('Cancel your reservation?',`<p>Your seat at the ${esc(e.title)} goes back to other members. Nothing was charged.</p>`,`<button class="btn ghost" data-a="closeSheet">Keep my seat</button>${busyBtn('danger','cancelDo','Cancel reservation',` data-id="${e.id}"`)}`);}
+     <p class="note">${holdOn(e)?holdNote(e)+' Prices before tax.':'Nothing is charged now. When the event is confirmed you pay in the app; dinner is included and nothing is paid at the restaurant. Prices before tax.'}</p>`,
+     `<button class="btn ghost" data-a="closeSheet">Cancel</button>${busyBtn('primary','reserve',holdOn(e)?`Reserve and pay ${money(e.hold,e.cur)}`:'Reserve free')}`);}
+  if(t==='cancelRes'){const e=evById(sheet.id);return sheetShell('Cancel your reservation?',`<p>Your seat at the ${esc(e.title)} goes back to other members. ${e.my&&e.my.holdPaid?`The ${money(e.my.holdPaid,e.cur)} seat hold is not refunded.`:'Nothing was charged.'}</p>`,`<button class="btn ghost" data-a="closeSheet">Keep my seat</button>${busyBtn('danger','cancelDo','Cancel reservation',` data-id="${e.id}"`)}`);}
   return '';
 }
 
@@ -1807,11 +1819,13 @@ const A={
     if(Object.keys(err).length){S.errors=err;render();const f=document.querySelector('.sheet .has-err');if(f)f.scrollIntoView({block:'center'});return}
     busy='reserve';render();
     try{const r=await API.rpc('reserve_event',{eid:e.id,meal:sheet.meal,parents:sheet.p.slice(0,n).map(x=>({name:x.name.trim(),relation:x.rel,meal:x.meal}))});
-      busy='';S.errors={};sheet=null;await loadEvents();render();
+      busy='';S.errors={};sheet=null;await loadEvents();
+      if(r&&r.status==='hold_due'){PAYQ=null;view={type:'event',id:e.id};render();toast(`One more step: pay the ${money(e.hold,e.cur)} seat hold to keep your seat.`,'ticket');return}
+      render();
       toast(r&&r.confirmed?`The ${e.title} is confirmed! Your seat is held; we will message you when payment opens.`:`Seat reserved free. We’ll ask for payment once the event is confirmed.`,'check')}
     catch(x){busy='';render();fail(x)}},
   cancelRes(el){sheet={type:'cancelRes',id:el.dataset.id};render()},
-  async cancelDo(el){busy='cancelDo';render();try{await API.rpc('cancel_reservation',{eid:el.dataset.id});busy='';sheet=null;await loadEvents();render();toast('Reservation cancelled. Nothing was charged.','check')}catch(e){busy='';render();fail(e)}},
+  async cancelDo(el){busy='cancelDo';render();try{const hp=(evById(el.dataset.id)||{}).my;await API.rpc('cancel_reservation',{eid:el.dataset.id});busy='';sheet=null;await loadEvents();render();toast(hp&&hp.holdPaid?'Reservation cancelled. Your seat went back to other members.':'Reservation cancelled. Nothing was charged.','check')}catch(e){busy='';render();fail(e)}},
   engaged(el){if(S.storyFor[el.dataset.id]){sheet=null;render();return}sheet={type:'engaged',id:el.dataset.id,pause:true,pub:false,text:''};render()},
   async storySend(el){const id=el.dataset.id;busy='storySend';render();
     try{await API.insert('stories',{user_id:S.me.id,partner:id,body:(sheet.text||'').trim()||null,may_publish:!!sheet.pub},{returning:false});
