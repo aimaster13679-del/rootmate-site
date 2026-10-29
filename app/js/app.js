@@ -374,7 +374,7 @@ async function loadMessages(){
   return fresh_;
 }
 function ensureMatchChats(){Object.keys(S.interests).forEach(id=>{if(S.interests[id]==='mutual'&&!S.chats[id])S.chats[id]=[{f:'sys',x:'You both said yes. Say hello! Phone numbers stay hidden.',ts:Date.now()-1000}]})}
-async function loadEvents(){const [list,staff,board]=await Promise.all([API.rpc('event_list'),API.rpc('staff_events').catch(()=>[]),API.rpc('city_board').catch(()=>null)]);RAW.ev=list||[];RAW.staff=staff||[];S.board=board||S.board||null;applyEvents()}
+async function loadEvents(){const [list,staff,board,pn]=await Promise.all([API.rpc('event_list'),API.rpc('staff_events').catch(()=>[]),API.rpc('city_board').catch(()=>null),API.rpc('partners_near').catch(()=>[])]);RAW.ev=list||[];RAW.staff=staff||[];S.board=board||S.board||null;S.partnersNear=pn||[];applyEvents()}
 function applyEvents(){S.events=(RAW.ev||[]).map(eventFromServer);S.staff=(RAW.staff||[]).map(x=>typeof x==='string'?x:(x.staff_events||Object.values(x)[0]))}
 function cacheSave(){try{if(!RAW.me||!RAW.cards||!API.userId())return;const u={},keep=Date.now()+900e3;
   Object.keys(URLS).forEach(k=>{if(URLS[k].exp>keep)u[k]=URLS[k]});
@@ -794,6 +794,7 @@ const LEGAL={terms:['Terms of Service: the key points',[
 
 /* ---------- Signup ---------- */
 const SHORT=['About','Roots','Location','Values','Verify','Privacy'];
+const SU_TRUST=['Everyone on NeuMarry verifies, just like you. That is why every match you see is verified.','Roots are checked with a document, so “same roots” on a match is always real.','Every member proves the city they live in, so “near you” really means near you.','We match on these answers and show you the reasons on every match.','ID read by Google and checked by a person, plus a live selfie. Only fully verified members are shown.','Premium and private: your photo and full name stay hidden until you both say yes.'];
 const STEPS=['About you','Your roots','Where you live now','Values & lifestyle','Verify you’re real','Privacy & preferences'];
 function checkLine(c,label){if(!c)return '';const st=c.status;return `<p class="hint">${st==='approved'?`${ic('check')} ${label} approved`:st==='rejected'?`<b style="color:var(--bad)">${label} not approved${c.note?': '+esc(c.note):''}.</b> Upload a new one.`:`${label} received. Our team checks it within 24 hours.`}</p>`}
 /* ---------- Verify: ID and selfie, roots, where you live now, location (owner's ok 25 Oct 2026) ---------- */
@@ -905,13 +906,22 @@ function renderSignup(){if(!S.editMode)setTimeout(()=>noteStep(S.step),0);
   if(st===1){
     const maxDob=new Date();maxDob.setFullYear(maxDob.getFullYear()-18);
     const pend=edit&&S.me&&S.me.photoPending&&!d.photoBlob;const rej=edit&&S.me&&S.me.rejectedPhoto&&!d.photoBlob;
-    body=`<div class="photo-pick">${avatar(null,'lg',true)}<div style="display:grid;gap:6px"><span class="btn ghost sm file">${ic('camera')}${d.photo?'Change photo':'Add a photo'}<input type="file" accept="image/*" data-file="photo" aria-label="Profile photo"></span><span class="hint">${pend?'Your photo is waiting for a quick check by our team.':rej?`<b style="color:var(--bad)">Your last photo was not approved${S.me.rejectedPhoto.note?': '+esc(S.me.rejectedPhoto.note):''}.</b> Add a clear photo of your face.`:'A clear, recent photo of your face. Hidden from others until you both accept.'}</span></div></div>${errOf('photo')}
+    const q3=`<div class="fld" data-f="g"><span>I am</span>${radioChips('g',[{v:'M',l:'A man'},{v:'F',l:'A woman'}],d.g,true,lockedId)}${errOf('g')}</div>
+    <div class="fld" data-f="lookingFor"><span>Looking for</span>${radioChips('lookingFor',[{v:'F',l:'A woman'},{v:'M',l:'A man'}],d.lookingFor)}${errOf('lookingFor')}</div>
+    ${inF('dob','Date of birth','date',d.dob,`max="${maxDob.toISOString().slice(0,10)}" min="1950-01-01"${lockedId?' disabled':''}`)}`;
+    body=edit?`<div class="photo-pick">${avatar(null,'lg',true)}<div style="display:grid;gap:6px"><span class="btn ghost sm file">${ic('camera')}${d.photo?'Change photo':'Add a photo'}<input type="file" accept="image/*" data-file="photo" aria-label="Profile photo"></span><span class="hint">${pend?'Your photo is waiting for a quick check by our team.':rej?`<b style="color:var(--bad)">Your last photo was not approved${S.me.rejectedPhoto.note?': '+esc(S.me.rejectedPhoto.note):''}.</b> Add a clear photo of your face.`:'A clear, recent photo of your face. Hidden from others until you both accept.'}</span></div></div>${errOf('photo')}
     ${inF('name','Full name','text',d.name,`autocomplete="name" maxlength="60"${lockedId?' disabled':''}`,lockedId?'Checked against your ID. Write to us to change it.':'Others see only your first name and last initial until you match.')}
     ${pickF('createdBy','Profile created by','draft')}
     <div class="fld" data-f="g"><span>I am</span>${radioChips('g',[{v:'M',l:'A man'},{v:'F',l:'A woman'}],d.g,true,lockedId)}${errOf('g')}</div>
     <div class="fld" data-f="lookingFor"><span>Looking for</span>${radioChips('lookingFor',[{v:'F',l:'A woman'},{v:'M',l:'A man'}],d.lookingFor)}${errOf('lookingFor')}</div>
     <div class="row2">${inF('dob','Date of birth','date',d.dob,`max="${maxDob.toISOString().slice(0,10)}" min="1950-01-01"${lockedId?' disabled':''}`)}${pickF('h','Height','draft',{ph:'Select'})}</div>
-    ${pickF('marital','Marital status','draft')}`;
+    ${pickF('marital','Marital status','draft')}`
+     :`<div class="q3"><p class="q3-h"><b>3 quick questions</b><small>Then your photo and name</small></p>
+    ${q3}</div>
+    <div class="photo-pick">${avatar(null,'lg',true)}<div style="display:grid;gap:6px"><span class="btn ghost sm file">${ic('camera')}${d.photo?'Change photo':'Add a photo'}<input type="file" accept="image/*" data-file="photo" aria-label="Profile photo"></span><span class="hint">${pend?'Your photo is waiting for a quick check by our team.':rej?`<b style="color:var(--bad)">Your last photo was not approved${S.me.rejectedPhoto.note?': '+esc(S.me.rejectedPhoto.note):''}.</b> Add a clear photo of your face.`:'A clear, recent photo of your face. Hidden from others until you both accept.'}</span></div></div>${errOf('photo')}
+    ${inF('name','Full name','text',d.name,`autocomplete="name" maxlength="60"${lockedId?' disabled':''}`,lockedId?'Checked against your ID. Write to us to change it.':'Others see only your first name and last initial until you match.')}
+    ${pickF('createdBy','Profile created by','draft')}
+    <div class="row2">${pickF('h','Height','draft',{ph:'Select'})}${pickF('marital','Marital status','draft')}</div>`;
   }else if(st===2){
     const hasStates=statesOf(d.oc).length>0;
     body=`<div class="callout">${ic('pin')}<span>Where were you born and brought up? We use this to find people from your roots.</span></div>
@@ -961,7 +971,7 @@ function renderSignup(){if(!S.editMode)setTimeout(()=>noteStep(S.step),0);
   return `<div class="su-head pad"><button class="iconbtn" data-a="suBack" aria-label="${st===1&&!edit?'Back to start':'Previous step'}">${ic('back')}</button>
     <div class="t"><small>${edit?'Edit profile':'Step '+st+' of 6 · saved'}</small><h2>${STEPS[st-1]}</h2>
     ${edit?`<div class="steps-nav" role="tablist">${STEPS.map((s,i)=>`<button data-a="suJump" data-n="${i+1}" class="${i+1===st?'on':''}" role="tab" aria-selected="${i+1===st}">${i+1}. ${SHORT[i]}</button>`).join('')}</div>`:`<div class="progress" aria-hidden="true">${STEPS.map((_,i)=>`<i class="${i<st?'on':''}"></i>`).join('')}</div>${S.draft&&S.draft.g!=='M'?`<p class="su-offer">${ic('crown')}<span>First 300 verified women in every country get <b>3 months of Gold free</b></span></p>`:''}`}</div></div>
-  <div class="scroll" id="su-scroll"><div class="form pad">${body}</div></div>
+  <div class="scroll" id="su-scroll"><div class="form pad">${edit?'':`<p class="su-trust">${ic('shield')}<span>${SU_TRUST[st-1]}</span></p>`}${body}</div></div>
   <div class="su-foot pad">${edit?`<button class="btn ghost" data-a="suCancel"${busy?' disabled':''}>Discard</button><button class="btn primary" data-a="suSave"${busy?' disabled':''}>${busy==='save'?spinner('Saving')+' Saving':'Save changes'}</button>`:
     st===5&&!vReady?`<button class="btn ghost" data-a="suNext">Do this later</button><button class="btn primary" data-a="vGo" data-n="${vFirst}">${vAny?'Next check':'Start'}</button>`:
     `<button class="btn primary" data-a="suNext"${busy?' disabled':''}>${busy==='save'?spinner('Saving')+' '+esc(S.saveMsg||'Saving'):st===6?'Finish and see matches':'Continue'}</button>`}</div>`;
@@ -1087,6 +1097,7 @@ function worldEvents(){const b=S.board;if(!b||!b.city)return '';const mine=b.min
    <button class="btn ${inC?'ghost':'primary'} sm" data-a="cityVote" data-k="city" data-on="${inC?0:1}">${inC?ic('check')+'You asked for events here':'Bring events to '+esc(c.city)}</button></div>
   <div class="panel cv"><div class="cv-h">${ic('users')}<span><b>Online Family Mixer · ${esc(o.country||c.country)}</b><small>Hosted online evening for verified members in your country. We email the date.</small></span></div>${seatBar(o.women,o.men)}
    <button class="btn ${inO?'ghost':'primary'} sm" data-a="cityVote" data-k="online" data-on="${inO?0:1}">${inO?ic('check')+'You are on the list':'Join the online mixer list'}</button></div>
+  ${(S.partnersNear||[]).length?`<div class="sec-h"><h2>Our partners near you</h2></div><div class="cvchips">${S.partnersNear.map(x=>`<span class="cvchip pt"><b>${esc(x.name)}</b><small>${x.kind==='bureau'?'Matrimonial bureau':x.kind==='restaurant'?'Partner restaurant':'Event host'} · ${esc(x.city)}</small></span>`).join('')}</div>`:''}
   <div class="cvchips">${WCITIES.map(([n,co])=>`<span class="cvchip${live(n)?' on':''}"><b>${esc(n)}</b><small>${live(n)?'Events open':cnt(n)?cnt(n)+' interested':'Opening soon'}</small></span>`).join('')}</div>`}
 function renderEvents(){
   const me0=S.me||{};const near=e=>e.city&&me0.city&&e.city.toLowerCase()===String(me0.city).toLowerCase()?0:e.country===me0.country?1:2;

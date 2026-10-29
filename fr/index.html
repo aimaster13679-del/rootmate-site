@@ -150,6 +150,12 @@ section.sec{padding-block:72px}
 .appbox{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:34px;padding:44px;box-shadow:var(--shadow)}
 .appbox>*{min-width:0}
 @media (max-width:860px){.appbox{grid-template-columns:1fr;padding:28px 22px;gap:28px}}
+.near{padding:26px 0 6px}.nearbox{display:grid;grid-template-columns:1.2fr 1fr;gap:22px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:26px}
+.near h2{margin:4px 0 8px}.nearcount{font-weight:700;color:var(--good);margin:6px 0 0}
+.nearsteps{list-style:none;margin:0;padding:0;display:grid;gap:10px}.nearsteps li{display:flex;gap:12px;align-items:center;background:var(--band);border-radius:16px;padding:12px 14px}
+.nearsteps b{flex:none;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--rose);color:#fff;font-size:14px}
+.nearsteps span{font-size:13.5px;color:var(--muted);line-height:1.3}.nearsteps strong{display:block;color:var(--ink);font-size:14.5px}
+@media(max-width:820px){.nearbox{grid-template-columns:1fr;padding:20px}}
 .trust{padding:26px 0 8px}
 .trust .wrap{display:grid;gap:16px}
 .tr-brands{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center}
@@ -310,6 +316,21 @@ dialog form.card{border:0;box-shadow:none;background:transparent;padding:16px 22
     <li><svg class="ic" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg><span><b>Seuls les membres</b>vérifiés sont affichés</span></li>
     <li><svg class="ic" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 018 0v2.5"/></svg><span><b>Données chiffrées</b>en transit et au repos</span></li>
   </ul>
+</div></section>
+
+<section class="near" id="near"><div class="wrap nearbox">
+  <div>
+    <p class="eyebrow">Vous cherchez à vous marier ?</p>
+    <h2>NeuMarry ne vous propose que des profils vérifiés.</h2>
+    <p class="sub">Chaque membre prouve son identité, ses origines et sa ville. Soutenez l’app et partagez-la avec vos proches à l’étranger : quand 30 femmes et 30 hommes près de chez vous s’inscrivent, nous organisons un Family Mixer dans votre ville.</p>
+    <p class="nearcount" id="near-count" hidden></p>
+    <div class="ctas"><a class="btn primary" href="../app/" onclick="try{localStorage.setItem('rm.lang','fr')}catch(e){}">Créer mon profil gratuit</a><a class="btn ghost" id="near-share" href="https://wa.me/?text=NeuMarry%3A%20verified%20matrimony%20for%20people%20living%20abroad.%20Every%20member%20proves%20their%20ID%2C%20roots%20and%20city.%20https%3A%2F%2Fneumarry.com" target="_blank" rel="noopener">Partager NeuMarry</a></div>
+  </div>
+  <ol class="nearsteps">
+    <li><b>1</b><span><strong>Inscrivez-vous et vérifiez</strong>Identité, selfie en direct, origines et ville</span></li>
+    <li><b>2</b><span><strong>Partagez autour de vous</strong>Amis, famille, votre communauté</span></li>
+    <li><b>3</b><span><strong>30 femmes + 30 hommes près de vous</strong>Nous organisons un Family Mixer dans votre ville</span></li>
+  </ol>
 </div></section>
 
 <section class="sec" id="how"><div class="wrap">
@@ -573,6 +594,9 @@ const $=s=>document.querySelector(s);
 const LAUNCH=Date.parse('2026-11-28T22:30:00Z'); // first Family Mixer, 5:30 pm in Toronto
 /* Store links: paste each listing URL when it goes live. Empty = 'Coming soon', button scrolls to the waitlist. */
 const STORE={play:'',ios:''};
+(async()=>{try{const r=await fetch(`${BACKEND.url}/rest/v1/rpc/public_counts`,{method:'POST',headers:{'apikey':BACKEND.anonKey,'Authorization':`Bearer ${BACKEND.anonKey}`,'Content-Type':'application/json'},body:'{}'});const c=await r.json();
+if(c&&c.joined){const el=document.getElementById('near-count');el.textContent=(document.documentElement.lang==='fr'?`${c.joined} membres inscrits · ${c.waiting} en attente de vérification`:`${c.joined} members joined · ${c.waiting} waiting for verification`);el.hidden=false}}catch(e){}})();
+try{const sh=document.getElementById('near-share');if(navigator.share&&sh)sh.addEventListener('click',ev=>{ev.preventDefault();navigator.share({title:'NeuMarry',text:'Verified matrimony for people living abroad. Every member proves their ID, roots and city.',url:'https://neumarry.com'}).catch(()=>{})})}catch(e){}
 try{const q=new URLSearchParams(location.search).get('p');if(q&&/^[A-Za-z0-9]{2,20}$/.test(q))localStorage.setItem('rm.p',q.toUpperCase())}catch(e){}
 
 if(LIVE){const s=$('#preview-strip');if(s)s.hidden=true}

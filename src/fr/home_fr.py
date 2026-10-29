@@ -252,4 +252,12 @@ PAIRS = [
  ('<b>Every ID read by Google</b>and checked by a person','<b>Chaque pièce d’identité lue par Google</b>et vérifiée par une personne'),
  ('<b>Only verified</b>members are shown','<b>Seuls les membres</b>vérifiés sont affichés'),
  ('<b>Data encrypted</b>in transit and at rest','<b>Données chiffrées</b>en transit et au repos'),
+ # Near you
+ ('<p class="eyebrow">Looking for marriage?</p>','<p class="eyebrow">Vous cherchez à vous marier ?</p>'),
+ ('<h2>NeuMarry gives you verified matches only.</h2>','<h2>NeuMarry ne vous propose que des profils vérifiés.</h2>'),
+ ('Every member proves their ID, roots and city. Support the app and share it with friends and family abroad: when 30 women and 30 men near you join, we host a Family Mixer in your city.','Chaque membre prouve son identité, ses origines et sa ville. Soutenez l’app et partagez-la avec vos proches à l’étranger : quand 30 femmes et 30 hommes près de chez vous s’inscrivent, nous organisons un Family Mixer dans votre ville.'),
+ ('target="_blank" rel="noopener">Share NeuMarry</a>','target="_blank" rel="noopener">Partager NeuMarry</a>'),
+ ('<strong>Join and verify</strong>ID, live selfie, roots and city','<strong>Inscrivez-vous et vérifiez</strong>Identité, selfie en direct, origines et ville'),
+ ('<strong>Share with people near you</strong>Friends, family, your community','<strong>Partagez autour de vous</strong>Amis, famille, votre communauté'),
+ ('<strong>30 women + 30 men near you</strong>We host a Family Mixer in your city','<strong>30 femmes + 30 hommes près de vous</strong>Nous organisons un Family Mixer dans votre ville'),
 ]
