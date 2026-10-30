@@ -858,3 +858,4 @@ a.btn{text-decoration:none}
 .nm-ghero .cr .ic{width:26px;height:26px}
 .nm-ghero h3{font-family:var(--f-display);font-weight:500;font-size:24px;line-height:1.15;margin-top:12px}
 .nm-ghero p{color:#F3D9E0;font-size:14px;margin-top:6px;line-height:1.45}
+.cvok{display:flex;gap:6px;align-items:flex-start;color:var(--good,#1E7D52);margin:6px 0 0}.cvok svg{width:16px;height:16px;flex:none;margin-top:2px}

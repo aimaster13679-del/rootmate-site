@@ -268,7 +268,7 @@ function planOpts(){const L=price(),tags={m1:'',m3:'Most popular',m6:'Best value
 function commMatch(pc,pref){return pc===pref||String(pc||'').startsWith(pref+' – ')}
 function uuid(){if(window.crypto&&crypto.randomUUID)return crypto.randomUUID();return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return (c==='x'?r:(r&3|8)).toString(16)})}
 function hashStr(s){let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
-function money(cents,cur){const sym={CAD:'CA$',USD:'US$',GBP:'£',AUD:'A$',EUR:'€',INR:'₹'}[cur]||((cur||'')+' ');const v=cents/100;return sym+(Number.isInteger(v)?v:v.toFixed(2))}
+function money(cents,cur){const sym={CAD:'CA$',USD:'US$',GBP:'£',AUD:'A$',EUR:'€',INR:'₹',NZD:'NZ$',SGD:'S$',CHF:'CHF ',AED:'AED '}[cur]||((cur||'')+' ');const v=cents/100;return sym+(Number.isInteger(v)?v:v.toFixed(2))}
 const isNative=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform());
 const Plug=()=>(window.Capacitor&&window.Capacitor.Plugins)||{};
 
@@ -374,7 +374,7 @@ async function loadMessages(){
   return fresh_;
 }
 function ensureMatchChats(){Object.keys(S.interests).forEach(id=>{if(S.interests[id]==='mutual'&&!S.chats[id])S.chats[id]=[{f:'sys',x:'You both said yes. Say hello! Phone numbers stay hidden.',ts:Date.now()-1000}]})}
-async function loadEvents(){const [list,staff,board,pn]=await Promise.all([API.rpc('event_list'),API.rpc('staff_events').catch(()=>[]),API.rpc('city_board').catch(()=>null),API.rpc('partners_near').catch(()=>[])]);RAW.ev=list||[];RAW.staff=staff||[];S.board=board||S.board||null;S.partnersNear=pn||[];applyEvents()}
+async function loadEvents(){const [list,staff,board,pn]=await Promise.all([API.rpc('event_list'),API.rpc('staff_events').catch(()=>[]),API.rpc('city_board').catch(()=>null),API.rpc('partners_near').catch(()=>[]),API.rpc('online_next').catch(()=>null)]).then(r=>{S.online=r[4]||null;return r});RAW.ev=list||[];RAW.staff=staff||[];S.board=board||S.board||null;S.partnersNear=pn||[];applyEvents()}
 function applyEvents(){S.events=(RAW.ev||[]).map(eventFromServer);S.staff=(RAW.staff||[]).map(x=>typeof x==='string'?x:(x.staff_events||Object.values(x)[0]))}
 function cacheSave(){try{if(!RAW.me||!RAW.cards||!API.userId())return;const u={},keep=Date.now()+900e3;
   Object.keys(URLS).forEach(k=>{if(URLS[k].exp>keep)u[k]=URLS[k]});
@@ -1092,13 +1092,14 @@ function worldEvents(){const b=S.board;if(!b||!b.city)return '';const mine=b.min
   const c=b.city,o=b.online||{women:0,men:0};const tot=c.women+c.men;const top=b.top||[];
   const cnt=(n)=>{const t=top.find(x=>x.city.toLowerCase()===n.toLowerCase().split(' /')[0].toLowerCase());return t?t.women+t.men:0};
   const live=n=>events().some(e=>e.city&&e.city.toLowerCase()===n.toLowerCase());
+  const rdy=n=>top.some(x=>x.ready&&x.city.toLowerCase()===n.toLowerCase().split(' /')[0].toLowerCase());
   return `<div class="sec-h"><h2>Events around the world</h2></div>
-  <div class="panel cv"><div class="cv-h">${ic('pin')}<span><b>${esc(c.city)}</b><small>${tot} interested · opens at 60 (30 women + 30 men)</small></span></div>${seatBar(c.women,c.men)}
+  <div class="panel cv"><div class="cv-h">${ic('pin')}<span><b>${esc(c.city)}</b><small>${c.ready?'Ready: 30 women + 30 men asked for events here':tot+' interested · opens at 60 (30 women + 30 men)'}</small></span></div>${c.ready?`<p class="hint cvok">${ic('check')}We are planning the first Family Mixer in ${esc(c.city)}. Everyone who asked gets an email with the date.${c.currency&&c.currency!=='CAD'?` Tickets in ${esc(c.currency)}.`:''}</p>`:seatBar(c.women,c.men)}
    <button class="btn ${inC?'ghost':'primary'} sm" data-a="cityVote" data-k="city" data-on="${inC?0:1}">${inC?ic('check')+'You asked for events here':'Bring events to '+esc(c.city)}</button></div>
-  <div class="panel cv"><div class="cv-h">${ic('users')}<span><b>Online Family Mixer · ${esc(o.country||c.country)}</b><small>Hosted online evening for verified members in your country. We email the date.</small></span></div>${seatBar(o.women,o.men)}
+  <div class="panel cv"><div class="cv-h">${ic('users')}<span><b>Online Family Mixer · ${esc(o.country||c.country)}</b><small>${S.online&&S.online.starts_at?esc(new Date(S.online.starts_at).toLocaleString(RM_I18N.locale,{weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}))+' (your time) · Free · Google Meet':'Free video evening on Google Meet for verified members in your country. We email the date.'}</small></span></div>${S.online&&S.online.link?`<a class="btn primary sm" href="${esc(S.online.link)}" target="_blank" rel="noopener">${ic('users')}Join the video call now</a>`:S.online&&S.online.starts_at&&inO?`<p class="hint">The video link opens here 1 hour before the start, only for verified members on the list.</p>`:seatBar(o.women,o.men)}
    <button class="btn ${inO?'ghost':'primary'} sm" data-a="cityVote" data-k="online" data-on="${inO?0:1}">${inO?ic('check')+'You are on the list':'Join the online mixer list'}</button></div>
   ${(S.partnersNear||[]).length?`<div class="sec-h"><h2>Our partners near you</h2></div><div class="cvchips">${S.partnersNear.map(x=>`<span class="cvchip pt"><b>${esc(x.name)}</b><small>${x.kind==='bureau'?'Matrimonial bureau':x.kind==='restaurant'?'Partner restaurant':'Event host'} · ${esc(x.city)}</small></span>`).join('')}</div>`:''}
-  <div class="cvchips">${WCITIES.map(([n,co])=>`<span class="cvchip${live(n)?' on':''}"><b>${esc(n)}</b><small>${live(n)?'Events open':cnt(n)?cnt(n)+' interested':'Opening soon'}</small></span>`).join('')}</div>`}
+  <div class="cvchips">${WCITIES.map(([n,co])=>`<span class="cvchip${live(n)?' on':''}"><b>${esc(n)}</b><small>${live(n)?'Events open':rdy(n)?'Ready · date soon':cnt(n)?cnt(n)+' interested':'Opening soon'}</small></span>`).join('')}</div>`}
 function renderEvents(){
   const me0=S.me||{};const near=e=>e.city&&me0.city&&e.city.toLowerCase()===String(me0.city).toLowerCase()?0:e.country===me0.country?1:2;
   const evs=events().slice().sort((a,b)=>near(a)-near(b)||a.date-b.date);const mine=evs.filter(e=>e.my);
@@ -1462,7 +1463,7 @@ function renderAdmin(){
    <div class="vhead pad"><button class="iconbtn" data-a="closeView" aria-label="Back">${ic('back')}</button><div class="grow"><span><b>Team review</b><small>${c?`${c.members} member${c.members===1?'':'s'} · ${c.verified} verified · ${c.women} women, ${c.men} men · ${c.waitlist} on waitlist`:'Loading…'}</small></span></div><button class="iconbtn" data-a="openAdmin" aria-label="Refresh">${ic('refresh')}</button></div>
    <div class="scroll" id="view-scroll"><div class="pad" style="display:grid;gap:14px;padding-block:16px 26px">
     ${a.loading?`<div style="display:grid;place-items:center;padding:30px">${spinner('Loading')}</div>`:''}
-    ${eventsBlock(a.events||[])}
+    ${eventsBlock(a.events||[])}${citiesBlock(a)}
     ${signupsBlock(a.signups||[])}
     <div class="panel pay-test"><div class="adm-h"><b>${ic('ticket')} Payment test (team only)</b><small>Only the team sees this event. You pay CA$1.00 + 13% HST = CA$1.13 with the real PayPal, then refund it in the PayPal dashboard.</small></div><div class="adm-act"><button class="btn primary sm" data-a="admPayTest">Open the test seat</button></div></div>
     <div class="sec-h"><h2>To review (${q.length})</h2></div>
@@ -1654,6 +1655,18 @@ function render(){
 const DECIDE_DAYS=7;
 function evTz(e){return TZCITY[e.city]||TZC[e.country]||'UTC'}
 function dateInputVal(d,tz){return new Date(d).toLocaleDateString('en-CA',{timeZone:tz||'UTC'})}
+function citiesBlock(a){const cs=a.cities||[],om=a.online||[];if(!cs.length&&!om.length&&!(a.events||[]).length)return '';
+  return `<div class="sec-h"><h2>Cities asking for events (${cs.length})</h2></div><p class="hint" style="margin:-6px 0 0">A city is ready at 30 women + 30 men. Then the team gets an email and every voter gets one too.</p>
+  ${cs.map(c=>`<div class="panel adm"><div class="adm-h"><b>${esc(c.city)} · ${esc(c.country)}</b><small>${c.women} women · ${c.men} men · tickets in ${esc(c.currency)}${c.currency==='USD'&&c.country!=='United States'?' (PayPal does not take the local money)':''}</small></div>
+   <span class="pill ${c.ready?'good':''}">${c.ready?`Ready since ${esc(new Date(c.reached_at).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short'}))} · emails ${c.mails_sent} of ${c.mails_total}`:`${c.women+c.men} of 60`}</span>
+   ${c.ready?c.event_id?`<p class="hint">Draft Family Mixer made (${esc(c.event_status||'draft')}). Add the restaurant and host, check tax with the accountant, then open it.</p>`:`<div class="adm-act"><button class="btn primary sm" data-a="admOpenCity" data-c="${esc(c.city)}" data-co="${esc(c.country)}"${busy==='oc'+c.city?' disabled':''}>${ic('cal')}Make a draft Family Mixer here</button></div>`:''}</div>`).join('')}
+  <div class="sec-h"><h2>Online Family Mixer</h2></div>
+  ${om.map(m=>`<div class="panel adm"><div class="adm-h"><b>${esc(m.country)}</b><small>${esc(new Date(m.starts_at).toLocaleString(RM_I18N.locale,{weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}))} (your time) · ${m.on_list} on the list</small></div></div>`).join('')}
+  <div class="panel adm"><div class="fld"><span>Country</span><input id="om-co" placeholder="Brazil" style="width:100%;box-sizing:border-box"></div>
+   <div class="fld"><span>Date and time (your phone's time)</span><input id="om-st" type="datetime-local" style="width:100%;box-sizing:border-box;min-width:0"></div>
+   <div class="fld"><span>Google Meet link</span><input id="om-url" placeholder="https://meet.google.com/abc-defg-hij" style="width:100%;box-sizing:border-box"></div>
+   <p class="hint">Everyone on that country's list gets an email with the date. The link shows only in the app, only to verified members on the list, from 1 hour before.</p>
+   <div class="adm-act"><button class="btn primary sm" data-a="admSetOnline"${busy==='om'?' disabled':''}>${ic('check')}Save and email the list</button></div></div>`}
 function eventsBlock(list){if(!list.length)return '';
   return `<div class="sec-h"><h2>Events (${list.length})</h2></div><p class="hint" style="margin:-6px 0 0">An event is confirmed only when every seat and the waiting list are full.</p>
   ${list.map(e=>{const d=new Date(e.starts_at),need=e.seats_women+e.seats_men+e.wait_women+e.wait_men,have=e.seated_w+e.seated_m+Math.min(e.waiting_w,e.wait_women)+Math.min(e.waiting_m,e.wait_men);
@@ -1664,6 +1677,7 @@ function eventsBlock(list){if(!list.length)return '';
      ${e.status==='open'?`<div class="fld"><span>New date in ${esc(e.city)} (talk to the restaurant first)</span><input type="date" style="width:100%;box-sizing:border-box;min-width:0" id="mv-${e.id}" data-tz="${esc(evTz(e))}" value="${dateInputVal(e.suggested,evTz(e))}" min="${dateInputVal(Date.now()+(DECIDE_DAYS+2)*864e5,evTz(e))}"></div>
      <p class="hint">Same time of day. All ${e.enrolled} enrolled ${e.enrolled===1?'person gets':'people get'} an email with the new date. Nobody has paid yet.</p>
      <div class="adm-act"><button class="btn ${e.needs_new_date?'primary':'ghost'} sm" data-a="admMoveEvent" data-id="${e.id}" data-t="${esc(e.starts_at)}"${busy==='mv'+e.id?' disabled':''}>${ic('cal')}Move date and email everyone</button></div>`:''}</div>`}).join('')}`}
+let CITYADM=[[],[]];
 /* ---------- Saving to the server ---------- */
 function digitsOnly(s){return String(s||'').replace(/\D/g,'')}
 function fullPhone(d){const dg=digitsOnly(d.phone);if(!dg)return null;const code=digitsOnly(dial(d.country));return '+'+(code&&!dg.startsWith(code)?code:'')+dg}
@@ -1832,6 +1846,10 @@ const A={
   pickSet(el){if(!picker)return;const def=pickerDef(picker.k,picker.t);let v=el.dataset.v;
     if(def.multi){const o=picker.t==='me'?S.me:S.draft;const a=(getPath(o,picker.k)||[]).slice();const i=a.indexOf(v);if(i>=0)a.splice(i,1);else a.push(v);applyChange(picker.t,picker.k,a);const l=document.getElementById('pick-list');const st=l?l.scrollTop:0;render();const l2=document.getElementById('pick-list');if(l2)l2.scrollTop=st;return}if(def.num)v=+v;applyChange(picker.t,picker.k,v);const k=picker.k;picker=null;render();
     const b=document.getElementById('pk-'+k.replace(/\./g,'-'));if(b&&fine())b.focus({preventScroll:true})},
+  async admOpenCity(el){const c=el.dataset.c,co=el.dataset.co;busy='oc'+c;render();try{await API.rpc('admin_open_city',{c,co});toast('Draft Family Mixer made in '+c,'check');loadAdmin()}catch(e){toast('Could not make it. Try again.')}busy='';render()},
+  async admSetOnline(){const co=(document.getElementById('om-co')||{}).value||'',st=(document.getElementById('om-st')||{}).value||'',url=((document.getElementById('om-url')||{}).value||'').trim();
+    if(!co.trim()||!st||!/^https:\/\/meet\.google\.com\/[a-z0-9-]+$/i.test(url)){toast('Country, date and a Google Meet link are needed');return}
+    busy='om';render();try{await API.rpc('admin_set_online',{co:co.trim(),st:new Date(st).toISOString(),url});toast('Saved. The list gets an email','check');loadAdmin()}catch(e){toast(String(e&&e.message||'').includes('too_soon')?'Pick a date at least 1 day ahead':'Could not save. Try again.')}busy='';render()},
   async cityVote(el){const k=el.dataset.k,on=el.dataset.on==='1';try{await API.rpc('vote_city',{k,on_:on});S.board=await API.rpc('city_board');render();toast(on?(k==='online'?'You are on the online mixer list':'Thank you. We count you in for your city'):'Removed','check')}catch(e){toast('Could not save. Try again.')}},
   tab(el){S.tab=el.dataset.k;view=null;sheet=null;picker=null;save();render();const m=document.getElementById('main');if(m)m.scrollTop=0;if(S.tab==='me')loadInvite();if(S.tab==='events')loadEvents().then(render).catch(()=>{})},
   seg(el){S.seg=el.dataset.k;save();render()},
@@ -2007,9 +2025,9 @@ const A={
 async function adminReview(el,ok,reason){const id=el.dataset.id,k=el.dataset.k;
   try{await API.rpc('admin_review',{row_kind:k==='photo'?'photo':'verification',rid:id,approve:ok,reason:reason||null});S.admin.queue=S.admin.queue.filter(x=>x.row_id!==id);if(S.admin.counts)S.admin.counts.pending--;render();toast(ok?'Approved.':'Rejected. The member sees the reason.',ok?'check':'x')}catch(e){fail(e)}}
 async function loadAdmin(){
-  try{const [q,r,c,ap,ru,su,ev]=await Promise.all([API.rpc('admin_queue'),API.rpc('admin_reports'),API.rpc('admin_counts'),API.rpc('admin_applications').catch(()=>[]),API.rpc('admin_rude').catch(()=>[]),API.rpc('admin_signups',{days:30}).catch(()=>[]),API.rpc('admin_events').catch(()=>[])]);
+  try{const [q,r,c,ap,ru,su,ev]=await Promise.all([API.rpc('admin_queue'),API.rpc('admin_reports'),API.rpc('admin_counts'),API.rpc('admin_applications').catch(()=>[]),API.rpc('admin_rude').catch(()=>[]),API.rpc('admin_signups',{days:30}).catch(()=>[]),API.rpc('admin_events').catch(()=>[]),API.rpc('admin_cities').catch(()=>[]),API.rpc('admin_online').catch(()=>[])]).then(r=>{CITYADM=[r[7]||[],r[8]||[]];return r});
     const queue=(q||[]).map(x=>Object.assign(x,{bucket:x.kind==='photo'?'photos':'verification'}));
-    S.admin={loading:false,queue,reports:r||[],counts:c,apps:ap||[],rude:ru||[],signups:su||[],events:ev||[],urls:{}};render();
+    S.admin={loading:false,queue,reports:r||[],counts:c,apps:ap||[],rude:ru||[],signups:su||[],events:ev||[],cities:CITYADM[0],online:CITYADM[1],urls:{}};render();
     const idq=queue.filter(x=>x.kind==='id').map(x=>x.row_id);if(idq.length)API.select('verifications',{select:'id,auto_check',id:'in.('+idq.join(',')+')'}).then(rs=>{S.admin.auto={};(rs||[]).forEach(v=>{if(v.auto_check)S.admin.auto[v.id]=v.auto_check});render()}).catch(()=>{});
     const ph=[...new Set(queue.filter(x=>x.bucket==='photos').map(x=>x.path).concat(queue.map(x=>x.profile_photo).filter(Boolean)))];
     const vf=queue.filter(x=>x.bucket==='verification').map(x=>x.path);
