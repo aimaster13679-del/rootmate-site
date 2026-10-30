@@ -1100,12 +1100,19 @@ function worldEvents(){const b=S.board;if(!b||!b.city)return '';const mine=b.min
    <button class="btn ${inO?'ghost':'primary'} sm" data-a="cityVote" data-k="online" data-on="${inO?0:1}">${inO?ic('check')+'You are on the list':'Join the online mixer list'}</button></div>
   ${(S.partnersNear||[]).length?`<div class="sec-h"><h2>Our partners near you</h2></div><div class="cvchips">${S.partnersNear.map(x=>`<span class="cvchip pt"><b>${esc(x.name)}</b><small>${x.kind==='bureau'?'Matrimonial bureau':x.kind==='restaurant'?'Partner restaurant':'Event host'} · ${esc(x.city)}</small></span>`).join('')}</div>`:''}
   <div class="cvchips">${WCITIES.map(([n,co])=>`<span class="cvchip${live(n)?' on':''}"><b>${esc(n)}</b><small>${live(n)?'Events open':rdy(n)?'Ready · date soon':cnt(n)?cnt(n)+' interested':'Opening soon'}</small></span>`).join('')}</div>`}
+/* Top strip (his 30 Oct: "dusri countries wala dikh nahi raha"): the world at a glance, without scrolling. Full cards stay below. */
+function worldStrip(){const b=S.board;if(!b||!b.city)return '';const c=b.city,top=b.top||[],mine=b.mine||[],inC=mine.includes('city');
+  const cnt=n=>{const t=top.find(x=>x.city.toLowerCase()===n.toLowerCase().split(' /')[0].toLowerCase());return t?t:null};
+  const live=n=>events().some(e=>e.city&&e.city.toLowerCase()===n.toLowerCase());
+  return `<div class="wstrip"><div class="ws-h"><b>${ic('pin')}Events around the world</b><button class="ws-me${inC?' on':''}" data-a="cityVote" data-k="city" data-on="${inC?0:1}">${esc(c.city)} · ${c.ready?'Ready':(c.women+c.men)+' of 60'}${inC?' '+ic('check'):''}</button></div>
+  <div class="ws-row">${WCITIES.map(([n])=>{const t=cnt(n);return `<span class="ws-c${live(n)?' on':t&&t.ready?' rd':''}"><b>${esc(n)}</b><small>${live(n)?'Events open':t&&t.ready?'Ready':t?(t.women+t.men)+' interested':'Opening soon'}</small></span>`}).join('')}</div></div>`}
 function renderEvents(){
   const me0=S.me||{};const near=e=>e.city&&me0.city&&e.city.toLowerCase()===String(me0.city).toLowerCase()?0:e.country===me0.country?1:2;
   const evs=events().slice().sort((a,b)=>near(a)-near(b)||a.date-b.date);const mine=evs.filter(e=>e.my);
   return topbar('Events','Hosted evenings with dinner included')+
   `<div class="scroll" id="main"><div class="main-inner pad">
    ${mine.length?`<div class="sec-h"><h2>Your reservations</h2></div>${mine.map(e=>{const r=e.my,f=fmtDay(e.date,e.tz);return `<button class="tkrow" data-a="openEvent" data-id="${e.id}"><span class="tki" style="${r.status==='pay_due'?'':'background:var(--gold-soft);color:var(--gold)'}">${ic(r.status==='pay_due'?'ticket':'cal')}</span><span class="tx"><b>${esc(e.title)}</b><small>${r.status==='paid'?'Paid · your QR ticket opens on the event day':r.status==='pay_due'?`Confirmed · pay${r.due?' by '+esc(fmtDay(r.due,e.tz).long):''} to keep your seat`:r.status==='hold_due'?`Pay the ${money(e.hold,e.cur)} seat hold to keep your seat`:`${esc(f.long)} · waiting for ${evStat(e).left} more to confirm`}</small></span>${ic('back','flipx')}</button>`}).join('')}`:''}
+   ${worldStrip()}
    ${evs.length?whyEvent():''}
    <div class="callout">${ic('users')}<span>${evs.some(holdOn)?`Reserve with a ${money(evs.find(holdOn).hold,evs.find(holdOn).cur)} seat hold. An event is confirmed when every seat and the waiting list are full; then you pay the rest in the app. Dinner is included, and nothing is paid at the restaurant. Not full in time? We move it to a new date and email you; if the new date does not suit you, your hold is refunded.`:'Reserve free. An event is confirmed when every seat and the waiting list are full; then you pay in the app. Dinner is included, and nothing is paid at the restaurant. Not full in time? We move it to a new date and email you. Nobody pays before then.'}</span></div>
    <div class="sec-h"><h2>Upcoming events</h2></div>
