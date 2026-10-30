@@ -44,7 +44,7 @@ fix = [
   '<div class="ctas"><a class="btn primary" href="app/">Create your free profile</a><a class="btn ghost" href="#app">Get the app</a></div>'),
  ('<p class="avail">For Android and iPhone · Google Play first, App Store soon after</p>',
   '<p class="avail">Works now in your web browser · Android on Google Play soon, iPhone after</p>'),
- ('<a class="btn primary" href="#app" id="reserve-open">Reserve free in the app</a>', '<a class="btn primary" href="app/" id="reserve-open">Reserve free in the app</a>'),
+ ('<a class="btn primary" href="#app" id="reserve-open">Reserve your seat in the app</a>', '<a class="btn primary" href="app/" id="reserve-open">Reserve your seat in the app</a>'),
  ('<h2>Your story could start at the first Family Mixer.</h2><a class="btn" href="#app">Get the app</a>',
   '<h2>Your story could start at the first Family Mixer.</h2><a class="btn" href="app/">Create your free profile</a>'),
  ('Your profile, verification, daily matches, chats and event seats all live in the RootMate app. This website is only here to tell you about it.',

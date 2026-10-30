@@ -268,7 +268,7 @@ function planOpts(){const L=price(),tags={m1:'',m3:'Most popular',m6:'Best value
 function commMatch(pc,pref){return pc===pref||String(pc||'').startsWith(pref+' – ')}
 function uuid(){if(window.crypto&&crypto.randomUUID)return crypto.randomUUID();return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return (c==='x'?r:(r&3|8)).toString(16)})}
 function hashStr(s){let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
-function money(cents,cur){const sym={CAD:'CA$',USD:'US$',GBP:'£',AUD:'A$',EUR:'€',INR:'₹',NZD:'NZ$',SGD:'S$',CHF:'CHF ',AED:'AED '}[cur]||((cur||'')+' ');const v=cents/100;return sym+(Number.isInteger(v)?v:v.toFixed(2))}
+function money(cents,cur){const sym={CAD:'CA$',USD:'US$',GBP:'£',AUD:'A$',EUR:'€',INR:'₹',NZD:'NZ$',SGD:'S$',CHF:'CHF ',AED:'AED ',MXN:'MX$',PHP:'₱',PLN:'zł ',SEK:'SEK ',NOK:'NOK ',DKK:'DKK ',HKD:'HK$',ILS:'₪',THB:'฿',CZK:'CZK '}[cur]||((cur||'')+' ');const v=cents/100;return sym+(Number.isInteger(v)?v:v.toFixed(2))}
 const isNative=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform());
 const Plug=()=>(window.Capacitor&&window.Capacitor.Plugins)||{};
 
@@ -2201,7 +2201,7 @@ window.addEventListener('unhandledrejection',e=>console.error('[js rejection]',e
 if(isNative&&Plug().App){
   Plug().App.addListener('appUrlOpen',ev=>{if(ev&&ev.url&&ev.url.startsWith(CFG.redirect))handleAuthUrl(ev.url)});
   Plug().App.addListener('backButton',()=>{if(!goBack())Plug().App.exitApp()});
-  Plug().App.addListener('resume',()=>{if(S.screen==='app'){tick=9;poll();const p=payPending();if(p)payCheck(p,true)}});
+  Plug().App.addListener('resume',()=>{if(liveUpd.apply())return;if(S.screen==='app'){tick=9;poll();const p=payPending();if(p)payCheck(p,true)}});
 }
 /* A payment that was pending (for example cash at a store) and completes later. */
 if(Bill()){try{Bill().addListener('purchasesUpdated',()=>{if(S.screen==='app')restorePurchases(false)})}catch(e){}}
@@ -2224,6 +2224,19 @@ if(Bill()){try{Bill().addListener('purchasesUpdated',()=>{if(S.screen==='app')re
   window.addEventListener('orientationchange',()=>{tallest=0;setTimeout(later,300)});
   document.addEventListener('focusin',e=>{if(typing(e.target))setTimeout(()=>reveal(e.target),320)});
 })();
+/* Live updates (his ask 30 Oct 2026): new app versions come from neumarry.com/app-update without a Play download.
+   Downloaded quietly a few seconds after opening; used the next time the app comes back from the background or opens. */
+const liveUpd={id:null,v:null,hid:0,
+  U(){return isNative&&Plug().CapacitorUpdater},
+  apply(){const U=this.U();if(!U||!this.id||S.screen!=='app'||Date.now()-this.hid<20000)return false;try{cacheSave()}catch(e){}U.set({id:this.id}).catch(()=>{});return true},
+  async check(){const U=this.U();if(!U)return;try{
+    const cur=await fetch('bundle.json',{cache:'no-store'}).then(r=>r.json()).catch(()=>({}));
+    const L=await fetch('https://neumarry.com/app-update/latest.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json());
+    if(!L||!L.version||!L.url||L.version===cur.v||L.version===this.v)return;
+    const b=await U.download({url:L.url,version:L.version});await U.next({id:b.id});this.id=b.id;this.v=L.version}catch(e){}}};
+if(liveUpd.U()){try{liveUpd.U().notifyAppReady()}catch(e){}setTimeout(()=>liveUpd.check(),5000);setInterval(()=>liveUpd.check(),6*3600e3);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)liveUpd.hid=Date.now()});
+  if(Plug().App)Plug().App.addListener('pause',()=>{liveUpd.hid=Date.now()})}
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack}; /* used by automated tests */
 boot();
 })();
