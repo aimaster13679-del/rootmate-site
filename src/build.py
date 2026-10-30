@@ -100,8 +100,8 @@ SOCIAL_LINKS = ''.join(f'<a class="link" href="{u}" target="_blank" rel="noopene
 ORG = {'@type': 'Organization', '@id': SITE + '#org', 'name': 'NeuMarry', 'url': SITE, 'logo': SITE + 'icon-512.png', 'email': EMAIL,
        'description': 'Verified matrimony app for people living away from the country they grew up in.', 'sameAs': [u for n, u in SOCIAL]}
 HOME_TITLE = 'NeuMarry: Matrimony & Marriage App for People Living Abroad'
-HOME_DESC = 'Verified matrimony for everyone living away from the country they grew up in, from every country and community. Match on roots, city and values. Meet families at events. Free to join.'
-KEYWORDS = 'matrimony, matrimonial, marriage app, matrimony abroad, expat marriage, immigrant matrimony, Indian matrimony Canada, shaadi, marriage, rishta, life partner, bride, groom, Toronto matrimony, Brampton matrimony, Gujarati matrimony, Punjabi matrimony, matrimony app'
+HOME_DESC = 'Verified matrimony for people living away from the country they grew up in, from every country and community. Match on roots, city and values. Free to join.'
+KEYWORDS = 'matrimony, matrimonial, marriage app, matrimony abroad, expat matrimony, expat marriage, immigrant matrimony, verified matrimony app, matrimony Canada, matrimony USA, matrimony UK, matrimony UAE, Dubai matrimony, matrimony Australia, Indian matrimony Canada, shaadi, marriage, rishta, life partner, bride, groom, Toronto matrimony, Brampton matrimony, Gujarati matrimony, Punjabi matrimony, matrimony app'
 meta = ('<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
         f'<meta name="description" content="{esc(HOME_DESC)}"><meta name="keywords" content="{KEYWORDS}">' + social(HOME_TITLE, HOME_DESC, SITE))
 legal_links = '<a class="link" href="privacy.html">Privacy Policy</a><a class="link" href="terms.html">Terms of Service</a><a class="link" href="delete-account.html">Delete account</a><a class="link" href="child-safety.html">Child safety</a>'
@@ -238,7 +238,7 @@ body:JSON.stringify({{role:d.role,name:d.name.trim(),org:(d.org||'').trim()||nul
 if(!r.ok)throw new Error(r.status);f.reset();m.textContent='Thank you. Our team will contact you within 3 working days.';m.className='fmsg ok'}}
 catch(x){{m.textContent='Could not send. Check your connection and try again, or email {EMAIL}.';m.className='fmsg err'}}b.disabled=false}})}})();</script>"""
 
-WWU_TITLE = 'Work with NeuMarry: event hosts, partner restaurants and matrimony bureaus'
+WWU_TITLE = 'Work with NeuMarry: event hosts, restaurants and marriage bureaus'
 WWU_DESC = 'NeuMarry is hiring event hosts in Toronto (CA$100 per event) and partnering with restaurants and matrimonial bureaus. Apply in two minutes.'
 wwu_main = f"""<p class="crumbs"><a href="./">NeuMarry</a> › Work with us</p>
 <h1>Work with NeuMarry</h1>
@@ -337,8 +337,8 @@ if FR_SLUGS:
     fb = fb.replace('<a class="btn primary sm" href="app/">Ouvrir l’app</a>', home_lang('../', 'en', 'Read in English') + '<a class="btn primary sm" href="app/">Ouvrir l’app</a>')
     fb = fb.replace(HERO_START, HERO_START + '<p class="langhero">' + home_lang('../', 'en', 'Read in English').replace('>EN<', '>English<') + '</p>')
     fb = fr_fix_links(fb).replace('href="../app/"', 'href="../app/" onclick="try{localStorage.setItem(\'rm.lang\',\'fr\')}catch(e){}"')
-    FR_HOME_TITLE = 'NeuMarry : application matrimoniale pour les personnes qui vivent à l’étranger'
-    FR_HOME_DESC = 'Mariage avec membres vérifiés pour toutes les personnes qui vivent loin du pays où elles ont grandi, de tous les pays et de toutes les communautés. Suggestions selon les origines, la ville et les valeurs. Rencontrez les familles aux événements. Inscription gratuite.'
+    FR_HOME_TITLE = 'NeuMarry : mariage vérifié pour ceux qui vivent à l’étranger'
+    FR_HOME_DESC = 'Application matrimoniale vérifiée pour qui vit loin du pays où il a grandi, de toutes les communautés. Suggestions selon origines, ville et valeurs. Gratuit.'
     fh = re.sub(r'<script type="application/ld\+json">.*?</script>', '', HOME_HEAD, flags=re.S)
     fh = re.sub(r'<title>.*?</title>', '<title>' + FR_HOME_TITLE + '</title>', fh, flags=re.S)
     fmeta = ('<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'

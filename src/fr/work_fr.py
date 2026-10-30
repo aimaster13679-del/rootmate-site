@@ -1,8 +1,8 @@
 # French "Work with us" and "Event host" pages: (English, French) pairs applied to the English page body.
-WWU_TITLE = 'Travailler avec NeuMarry : animateurs d’événements, restaurants partenaires et agences matrimoniales'
-WWU_DESC = 'NeuMarry recrute des animateurs d’événements à Toronto (100 $ CA par événement) et s’associe à des restaurants et à des agences matrimoniales. Postulez en deux minutes.'
-HOST_TITLE = 'Emplois d’animateur d’événements à Toronto : 100 $ CA par événement · NeuMarry'
-HOST_DESC = 'Animateur d’événements à temps partiel à Toronto, Brampton et Mississauga. Animez les soupers Family Mixer de NeuMarry et gagnez 100 $ CA par événement, payés chaque semaine. Postulez en deux minutes.'
+WWU_TITLE = 'Travailler avec NeuMarry : animateurs, restaurants et agences'
+WWU_DESC = 'NeuMarry recrute des animateurs d’événements à Toronto (100 $ CA par événement) et s’associe à des restaurants et des agences matrimoniales. Postulez vite.'
+HOST_TITLE = 'Animateur d’événements à Toronto : 100 $ CA par soirée · NeuMarry'
+HOST_DESC = 'Animateur à temps partiel à Toronto, Brampton et Mississauga : animez les soupers Family Mixer de NeuMarry, 100 $ CA par événement, payés chaque semaine.'
 
 FORM = [
  ('<legend>I am</legend>', '<legend>Je suis</legend>'),
