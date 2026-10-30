@@ -27,6 +27,10 @@ fix = [
  ('When you both say yes, a RootMate host sets up a family call for both sides.', 'When you both say yes, a RootMate host helps both families connect.'),
  ('.ctaband{', '.links a.hl{background:#FFF3DC;border:1px solid #E7C27A;color:#8A5A12;border-radius:999px;padding:6px 12px;font-weight:700}.ctaband{'),
  ('<a href="#partners">Work with us</a><a href="#faq">FAQ</a>', '<a class="hl" href="work-with-us.html">Work with us</a><a href="#faq">FAQ</a>'),
+ ('<h1>Your person from <em>back home</em> might live ten minutes away.</h1>', '<h1>Every person here is <em>real.</em> Proven.</h1>'),
+ ('Both from Gujarat', 'Same roots'),
+ ('Lives 8 km apart · ID verified', 'ID · selfie · roots · city checked'),
+ ('<div class="proof"><div class="wrap">\n  <div><b>2.57 million</b><span>South Asians live in Canada, the country’s largest racialized group</span></div>\n  <div><b>46%</b><span>of them live in the Toronto area, where they are 19% of the population</span></div>\n  <div><b>32</b><span>is their median age, nine years younger than Canada overall</span></div>\n  <p class="src">Source: <a href="https://www150.statcan.gc.ca/n1/pub/89-657-x/89-657-x2025007-eng.htm" target="_blank" rel="noopener">Statistics Canada, 2021 Census</a></p>\n</div></div>', '<div class="proof"><div class="wrap">\n  <div><b>4 checks</b><span>on every member: government ID, live selfie, roots and the city they live in</span></div>\n  <div><b>0</b><span>unverified profiles shown. Only fully verified members appear to others</span></div>\n  <div><b>Blocked</b><span>money requests in chat, the most common trick of romance scams</span></div>\n  <p class="src">Free tool: <a href="is-this-profile-real.html">Is this matrimony profile real? Take the 10-question check</a></p>\n</div></div>'),
  ('<span class="pill"><i></i>Launching in Toronto · November 2026</span>', '<span class="pill"><i></i>Matrimony for life abroad · Launching in Toronto, November 2026</span>'),
  ('RootMate is matrimony for people living abroad. Meet verified people', 'RootMate is a matrimony app for people living abroad. Meet verified people'),
  ('Hosted Family Mixers with parent tickets, and a Family Circle where parents can suggest profiles. They never chat as you.', 'Hosted Family Mixers with parent tickets, and soon a Family Circle where parents can suggest profiles. They never chat as you.'),
@@ -41,7 +45,7 @@ fix = [
  # The web app is live at /app/: point the calls to action there.
  ('<a class="btn primary sm" href="#app">Get the app</a>', '<a class="btn primary sm" href="app/">Open the app</a>'),
  ('<div class="ctas"><a class="btn primary" href="#app">Get the app</a><a class="btn ghost" href="#join">Join the waitlist</a></div>',
-  '<div class="ctas"><a class="btn primary" href="app/">Create your free profile</a><a class="btn ghost" href="#app">Get the app</a></div>'),
+  '<div class="ctas"><a class="btn primary" href="app/">Create your free profile</a><a class="btn ghost" href="/sample-verified-profile.html">See a sample verified profile</a></div>'),
  ('<p class="avail">For Android and iPhone · Google Play first, App Store soon after</p>',
   '<p class="avail">Works now in your web browser · Android on Google Play soon, iPhone after</p>'),
  ('<a class="btn primary" href="#app" id="reserve-open">Reserve your seat in the app</a>', '<a class="btn primary" href="app/" id="reserve-open">Reserve your seat in the app</a>'),
@@ -70,7 +74,7 @@ def guide_meta(slug):
     get = lambda k: re.search(r'<!--%s: (.*?)-->' % k, t).group(1)
     return dict(slug=slug, title=get('title'), desc=get('desc'), short=get('short'), body=re.sub(r'<!--.*?-->\n?', '', t))
 G = [guide_meta(g) for g in GUIDES]
-PAGES = ['about', 'how-matching-works', 'pricing', 'privacy-and-safety', 'faq', 'brampton-matrimony', 'mississauga-matrimony',
+PAGES = ['about', 'how-matching-works', 'pricing', 'privacy-and-safety', 'faq', 'is-this-profile-real', 'sample-verified-profile', 'brampton-matrimony', 'mississauga-matrimony',
          'uk-matrimony', 'usa-matrimony', 'australia-matrimony', 'uae-matrimony']
 def page_meta(slug):
     t = rd('pages/%s.html' % slug)
