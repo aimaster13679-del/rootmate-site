@@ -916,12 +916,9 @@ function renderSignup(){if(!S.editMode)setTimeout(()=>noteStep(S.step),0);
     <div class="fld" data-f="lookingFor"><span>Looking for</span>${radioChips('lookingFor',[{v:'F',l:'A woman'},{v:'M',l:'A man'}],d.lookingFor)}${errOf('lookingFor')}</div>
     <div class="row2">${inF('dob','Date of birth','date',d.dob,`max="${maxDob.toISOString().slice(0,10)}" min="1950-01-01"${lockedId?' disabled':''}`)}${pickF('h','Height','draft',{ph:'Select'})}</div>
     ${pickF('marital','Marital status','draft')}`
-     :`<div class="q3"><p class="q3-h"><b>3 quick questions</b><small>Then your photo and name</small></p>
+     :`<div class="q3"><p class="q3-h"><b>Let’s find your person</b><small>Just these to start. Photo and checks come later, when you are ready.</small></p>
     ${q3}</div>
-    <div class="photo-pick">${avatar(null,'lg',true)}<div style="display:grid;gap:6px"><span class="btn ghost sm file">${ic('camera')}${d.photo?'Change photo':'Add a photo'}<input type="file" accept="image/*" data-file="photo" aria-label="Profile photo"></span><span class="hint">${pend?'Your photo is waiting for a quick check by our team.':rej?`<b style="color:var(--bad)">Your last photo was not approved${S.me.rejectedPhoto.note?': '+esc(S.me.rejectedPhoto.note):''}.</b> Add a clear photo of your face.`:'A clear, recent photo of your face. Hidden from others until you both accept.'}</span></div></div>${errOf('photo')}
-    ${inF('name','Full name','text',d.name,`autocomplete="name" maxlength="60"${lockedId?' disabled':''}`,lockedId?'Checked against your ID. Write to us to change it.':'Others see only your first name and last initial until you match.')}
-    ${pickF('createdBy','Profile created by','draft')}
-    <div class="row2">${pickF('h','Height','draft',{ph:'Select'})}${pickF('marital','Marital status','draft')}</div>`;
+    ${inF('name','Full name','text',d.name,`autocomplete="name" maxlength="60"`,'Others see only your first name and last initial until you both say yes.')}`;
   }else if(st===2){
     const hasStates=statesOf(d.oc).length>0;
     body=`<div class="callout">${ic('pin')}<span>Where were you born and brought up? We use this to find people from your roots.</span></div>
@@ -932,7 +929,9 @@ function renderSignup(){if(!S.editMode)setTimeout(()=>noteStep(S.step),0);
     ${pickF('c','Community (optional)','draft',{ph:d.r?'Choose or type your community':'Choose a religion first',disabled:!d.r,showBlank:!!d.r,hint:'Only used when you or a match filter by it.'})}
     <div class="panel" style="padding:4px 16px">${toggle('privacy.showC','Show my community on my profile','Turn off to keep it private. Filters still work.',d.privacy.showC)}</div>`;
   }else if(st===3){
-    body=`${pickF('country','Country you live in','draft',{ph:'Choose a country'})}
+    body=`${edit?'':`<div class="photo-pick">${avatar(null,'lg',true)}<div style="display:grid;gap:6px"><span class="btn ghost sm file">${ic('camera')}${d.photo?'Change photo':'Add a photo'}<input type="file" accept="image/*" data-file="photo" aria-label="Profile photo"></span><span class="hint">You can also add it later. Our team checks every photo.</span></div></div>
+    ${pickF('createdBy','Profile created by','draft')}
+    <div class="row2">${pickF('h','Height','draft',{ph:'Select'})}${pickF('marital','Marital status','draft')}</div>`}${pickF('country','Country you live in','draft',{ph:'Choose a country'})}
     ${tzWarn(d)}
     <div class="row2">${pickF('state','State / province','draft',{ph:'Choose',disabled:!d.country})}${pickF('city','City','draft',{ph:'Choose or type',disabled:!d.country})}</div>
     ${pickF('res','Residency status','draft',{ph:'Choose',disabled:!d.country})}
@@ -979,11 +978,11 @@ function renderSignup(){if(!S.editMode)setTimeout(()=>noteStep(S.step),0);
 function validateStep(st,d){
   const e={};
   if(st===1){if(!d.name.trim()||d.name.trim().length<2)e.name='Enter your name';else if(!/^[\p{L}][\p{L} .'-]*$/u.test(d.name.trim()))e.name='Use letters only';
-    if(!d.g)e.g='Choose one';if(!d.lookingFor)e.lookingFor='Choose one';
+    if(!d.lookingFor&&d.g)d.lookingFor=d.g==='M'?'F':'M';if(!d.g)e.g='Choose one';if(!d.lookingFor)e.lookingFor='Choose one';
     const a=ageFrom(d.dob);if(!d.dob)e.dob='Enter your date of birth';else if(a===null||a<18)e.dob='You must be 18 or older';else if(a>75)e.dob='Check the year';
-    if(!d.h)e.h='Choose your height';}
+    if(S.editMode&&!d.h)e.h='Choose your height';}
   if(st===2){if(!d.oc)e.oc='Choose your country of origin';if(!d.os)e.os='Choose your state or region';if(!d.t)e.t='Choose your mother tongue';if(!d.r)e.r='Choose your religion';}
-  if(st===3){if(!d.country)e.country='Choose the country you live in';else{if(statesOf(d.country).length&&!d.state)e.state='Choose one';if(!d.city)e.city='Choose or type';if(!d.res)e.res='Choose your residency status';if(!d.reloc)e.reloc='Choose one'}
+  if(st===3){if(!S.editMode&&!d.h)e.h='Choose your height';if(!d.country)e.country='Choose the country you live in';else{if(statesOf(d.country).length&&!d.state)e.state='Choose one';if(!d.city)e.city='Choose or type';if(!d.res)e.res='Choose your residency status';if(!d.reloc)e.reloc='Choose one'}
     if(!d.job.trim())e.job='Add your profession';if(!d.edu.trim())e.edu='Add your education';
     const ab=d.about.trim();if(ab.length<40)e.about=`Write at least 40 characters (${ab.length} so far)`;else if(/(\+?\d[\d\s-]{8,}\d)|@[a-z0-9_.]{3,}|https?:\/\//i.test(ab))e.about='Remove phone numbers, links and social handles. You can share them after you match.';}
   if(st===4){d.ans.forEach((a,i)=>{if(a===null||a===undefined)e['ans.'+i]='Pick one answer'});if(!d.diet)e.diet='Choose your diet';}
@@ -1823,7 +1822,6 @@ const A={
   suBack(){if(S.editMode){if(S.step>1)goStep(S.step-1);else A.suCancel();return}if(S.step>1)goStep(S.step-1);else{sheet={type:'logout'};render()}},
   suJump(el){goStep(+el.dataset.n)},
   async suNext(){const e=validateStep(S.step,S.draft);S.errors=e;if(Object.keys(e).length){showErrors();return}
-    if(S.step===1&&!S.draft.photo){S.errors={photo:'Add a clear photo of your face. It stays hidden until you both accept.'};showErrors();return}
     if(S.step<6){goStep(S.step+1);return}
     if(busy)return;busy='save';S.saveMsg='Saving your profile';render();
     const d=S.draft,uid=API.userId();
