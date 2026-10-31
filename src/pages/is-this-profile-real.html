@@ -1,9 +1,9 @@
-<!--title: Is This Matrimony Profile Real? Free 10-Question Scam Check-->
-<!--desc: Free check for matrimony and dating profiles: 10 quick questions show the warning signs of a fake profile or romance scam. No sign-up. Share it with family.-->
+<!--title: Is This Matrimony Profile Real? Free 1-Minute Scam Check-->
+<!--desc: Free check for matrimony and dating profiles: 6 simple yes/no questions show the warning signs of a fake profile or scam. No sign-up. Share it with family.-->
 <!--short: Is this profile real?-->
 <!--kind: feature-->
 <h1>Is this matrimony profile real?</h1>
-<p class="lede">Answer 10 quick questions about someone you are talking to. You get a clear result and what to do next. Free, no sign-up, nothing is saved.</p>
+<p class="lede">Answer 6 simple yes or no questions about someone you are talking to. You get a clear result and what to do next. Free, no sign-up, nothing is saved.</p>
 <div id="sc" class="sc-box" aria-live="polite"></div>
 <noscript><p>Turn on JavaScript to use the check. The warning signs are listed below.</p></noscript>
 <h2>The warning signs</h2>
@@ -18,27 +18,18 @@
 .sc-bar{height:6px;border-radius:3px;background:#F3E0E1;margin-bottom:12px}.sc-bar i{display:block;height:6px;border-radius:3px;background:#E8436B}
 .sc-m{height:14px;border-radius:7px;background:linear-gradient(90deg,#2D8A61,#E9C98D,#C8384A);position:relative;margin:14px 0 6px}.sc-m i{position:absolute;top:-6px;width:6px;height:26px;border-radius:3px;background:#3B1F2A}
 .sc-f{background:#FDE6E8;border-radius:12px;padding:10px 12px;margin:8px 0;font-weight:700;color:#8C2333}.sc-ok{background:#E9F5EE;color:#1E6B4A}
-.sc-a{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.sc-a{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.sc-a .btn{white-space:normal;text-align:center;max-width:100%;font:inherit;font-weight:800}
 </style>
 <script>(function(){
-var Q=[["Did they ask for money, a gift card, crypto or help with a visa or customs fee?",3,"Asked for money or payment help: the number one sign of a scam."],
-["Do they avoid a live video call, or the camera is always 'broken'?",3,"Avoids live video calls."],
-["Do their photos look like a model, an actor or a stock photo?",2,"Photos look professional or copied."],
-["Did they say 'I love you' or talk about marriage within days?",2,"Very fast love talk."],
-["Do they want to move the chat to another app very quickly?",1,"Wants to leave the app quickly."],
-["Do they say they work abroad on an oil rig, ship, army post or as a doctor overseas?",2,"A far-away job story often used in scams."],
-["Does their story change (age, city, job) when you ask again?",2,"Their story changes."],
-["Do they ask you to keep the relationship secret from your family?",3,"Asks you to keep it secret from family."],
-["Have they ever met you in person or met your family on video?",-1,"Has never met you or your family, even on video."],
-["Did they share an investment or trading 'opportunity'?",3,"Talks about investments or trading."]];
+var Q=[["Did they ask you for money?", 3, "Asked for money. This is the biggest sign of a scam."], ["Do they say no to a video call?", 3, "Says no to video calls."], ["Did they say “I love you” very fast?", 2, "Says “I love you” too fast."], ["Do they want you to hide it from your family?", 3, "Wants you to hide it from family."], ["Does their story keep changing?", 2, "Their story keeps changing."], ["Do their photos look too perfect, like a model?", 2, "Photos look too perfect."]];
 var el=document.getElementById('sc'),i=0,score=0,flags=[];
 document.getElementById('sc-list').innerHTML=Q.filter(function(q){return q[2]}).map(function(q){return '<li>'+q[2]+'</li>'}).join('');
-function ask(){var q=Q[i];el.innerHTML='<div class="sc-bar"><i style="width:'+(i*10)+'%"></i></div><div class="sc-n">'+(i+1)+' of 10</div><div class="sc-q">'+q[0]+'</div><div class="sc-o"><button data-v="1">Yes</button><button data-v="0">No</button></div>'}
+function ask(){var q=Q[i];el.innerHTML='<div class="sc-bar"><i style="width:'+Math.round(i/Q.length*100)+'%"></i></div><div class="sc-n">'+(i+1)+' of 6</div><div class="sc-q">'+q[0]+'</div><div class="sc-o"><button data-v="1">Yes</button><button data-v="0">No</button></div>'}
 el.addEventListener('click',function(e){var b=e.target.closest('button[data-v]');if(!b)return;var q=Q[i],yes=b.dataset.v==='1';
- if(q[1]>0&&yes){score+=q[1];flags.push(q[2])} if(q[1]<0&&!yes){score+=1;flags.push('Has never met you or your family, even on video.')}
+ if(q[1]>0&&yes){score+=q[1];flags.push(q[2])} 
  i++; if(i<Q.length)ask();else done()});
-function done(){var max=12,p=Math.min(100,Math.round(score/max*100)),lvl=score>=6?['High risk. Be careful.','#C8384A']:score>=3?['Some warning signs.','#A86B12']:['Few warning signs.','#2D8A61'];
- var share='https://wa.me/?text='+encodeURIComponent('Free 10-question check: is this matrimony profile real? https://neumarry.com/is-this-profile-real.html');
+function done(){var max=9,p=Math.min(100,Math.round(score/max*100)),lvl=score>=6?['High risk. Be careful.','#C8384A']:score>=3?['Some warning signs.','#A86B12']:['Few warning signs.','#2D8A61'];
+ var share='https://wa.me/?text='+encodeURIComponent('Free 1-minute check: is this matrimony profile real? https://neumarry.com/is-this-profile-real.html');
  el.innerHTML='<div class="sc-q" style="color:'+lvl[1]+'">'+lvl[0]+'</div><div class="sc-m"><i style="left:calc('+p+'% - 3px)"></i></div><div style="display:flex;justify-content:space-between;font-size:12px;color:#8A6B75;font-weight:800"><span>Safe</span><span>Risky</span></div>'+
  (flags.length?flags.map(function(f){return '<div class="sc-f">⚠️ '+f+'</div>'}).join(''):'<div class="sc-f sc-ok">No warning signs from your answers. Still meet on video and with family before deciding.</div>')+
  '<p style="margin-top:12px"><b>What to do now:</b> never send money or codes, ask for a live video call, involve your family, and report the profile on that app.</p>'+
