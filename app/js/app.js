@@ -2303,6 +2303,248 @@ const liveUpd={id:null,v:null,hid:0,
 if(liveUpd.U()){try{liveUpd.U().notifyAppReady()}catch(e){}setTimeout(()=>liveUpd.check(),5000);setInterval(()=>liveUpd.check(),6*3600e3);
   document.addEventListener('visibilitychange',()=>{if(document.hidden)liveUpd.hid=Date.now()});
   if(Plug().App)Plug().App.addListener('pause',()=>{liveUpd.hid=Date.now()})}
+
+/* ---------- NeuMarry v2 design (his ok 1 Nov 2026 00:29 on mock v2; founder preview first) ----------
+   Shown only to the founder accounts until he says ok for everyone. Once a founder signs in on a
+   device, that device keeps the new welcome screen too (nm.v2 in localStorage). */
+const V2_FOUNDERS=['swapnilbhagatt@gmail.com','aimaster13679@gmail.com'];
+function V2(){try{const s=API.session(),u=s&&s.user,em=u&&String(u.email||'').toLowerCase();
+  if(em){const on=V2_FOUNDERS.includes(em);try{on?localStorage.setItem('nm.v2','1'):0}catch(e){}return on}
+  return localStorage.getItem('nm.v2')==='1'}catch(e){return false}}
+Object.assign(IC,{
+  brief:'<rect x="3.5" y="7.5" width="17" height="12" rx="2.5"/><path d="M9 7.5V5.5h6v2M3.5 12.5h17"/>',
+  book:'<path d="M4 5.5A2.5 2.5 0 016.5 3H20v15H6.5A2.5 2.5 0 004 20.5z"/><path d="M4 20.5A2.5 2.5 0 016.5 18H20v3H6.5"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>',
+  moon:'<path d="M19.5 14.5A8 8 0 019.5 4.5a8 8 0 1010 10z"/>',
+  plane:'<path d="M2.5 13.5l19-8-5 15-4-6z"/><path d="M12.5 14.5l9-9"/>',
+  kid:'<circle cx="12" cy="6.5" r="2.5"/><path d="M8 21v-5l-2-3 4-2.5h4l4 2.5-2 3v5"/>',
+  city:'<path d="M3 21h18M5 21V8l6-3v16M11 21V10h8v11M14 13h2M14 16h2"/>',
+  face:'<circle cx="12" cy="12" r="9"/><path d="M9 10h.01M15 10h.01M8.5 14.5c1 1.2 2.2 1.8 3.5 1.8s2.5-.6 3.5-1.8"/>',
+  coin:'<circle cx="12" cy="12" r="8.5"/><path d="M14.5 9.5c-.5-1-1.4-1.5-2.5-1.5-1.5 0-2.5.8-2.5 2s1 1.6 2.5 2 2.5.9 2.5 2-1 2-2.5 2c-1.1 0-2-.5-2.5-1.5M12 6.5v11"/>',
+  talk:'<path d="M4 5h11v8H8l-4 3z"/><path d="M15 9h5v8l-3-2h-6v-2"/>'
+});
+
+/* order of screens: [step, sub-page] ; verification moved to the very end (his ok) */
+const V2SEQ=[[1,''],[2,''],[3,'a'],[3,'b'],[4,'a'],[4,'b'],[6,''],[5,'']];
+const V2PART={'1':[1,'You'],'2':[2,'Your roots'],'3a':[2,'Your life now'],'3b':[3,'Photo and you'],'4a':[4,'Your future home'],'4b':[4,'Your nature'],'6':[4,'Who you want to meet'],'5':[5,'Get verified']};
+const V2CELE={2:['Your roots and life are in','People from your roots show first, with the real distance to you.','Photo and you','about 1 min'],
+  3:['Your profile looks great','Others will see a clear photo and a few true lines about you.','What matters to you','about 2 min'],
+  6:['Your match profile is ready','We now know what matters to you. One last part: your Trust Passport.','Get verified','about 3 min']};
+const LIFE_K=['h','country','state','city','res','reloc','job','edu','marital','createdBy'];
+function v2key(){const d=S.draft||{};return S.step===3||S.step===4?S.step+(d.v2b||'a'):String(S.step)}
+function v2pos(){const d=S.draft||{};return V2SEQ.findIndex(([s,b])=>s===S.step&&(!b||b===(d.v2b||'a')))}
+function v2go(i){const [s,b]=V2SEQ[i];if(S.draft)S.draft.v2b=b||'a';goStep(s)}
+function v2err(k){return S.errors[k]?' has-err':''}
+function v2chips(k,opts,cur,cls){return `<div class="v2chips${v2err(k)}" data-f="${k}">${opts.map(o=>`<button type="button" class="v2chip${String(cur)===String(o.v)?' on':''}${cls?' '+cls:''}" data-a="chipSet" data-k="${k}" data-v="${esc(o.v)}">${o.pre?o.pre+' ':''}${esc(o.l)}</button>`).join('')}</div>${errOf(k)}`}
+function v2opts(k){return (pickerDef(k,'draft').opts||[])}
+function v2segs(){const p=(V2PART[v2key()]||[1])[0];return `<div class="v2segs">${[1,2,3,4,5].map(n=>`<i class="${n<p?'d':n===p?'h':''}"></i>`).join('')}</div>`}
+function v2head(sub){const [p,l]=V2PART[v2key()]||[1,''];return `<div class="v2head pad"><button class="iconbtn" data-a="suBack" aria-label="Back">${ic('back')}</button>
+  <div class="grow"><div class="v2pt"><span>Part ${p} of 5 · ${esc(l)}</span><b>${ic('check')} Saved</b></div>${v2segs()}</div>
+  <button class="iconbtn" data-a="v2leave" aria-label="Save and leave">${ic('x')}</button></div>`}
+function v2foot(label,extra){return `<div class="v2foot pad">${extra||''}<button class="btn primary block" data-a="suNext"${busy?' disabled':''}>${busy==='save'?spinner('Saving')+' '+esc(S.saveMsg||'Saving'):label} ${busy?'':ic('chev')}</button></div>`}
+function v2gain(icn,t){return `<div class="v2gain">${ic(icn)}<span>${t}</span></div>`}
+
+/* ---------- screen 1: welcome ---------- */
+function renderWelcomeV2(){
+  const arcs=[[78,200,214,104],[96,128,226,118],[238,214,210,104],[150,236,226,118],[60,150,214,104]];
+  return `<div class="scroll v2 v2w"><div class="v2w-sky" aria-hidden="true">
+   <svg viewBox="0 0 312 300"><defs><radialGradient id="v2gl" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FF8FA1" stop-opacity=".35"/><stop offset="1" stop-color="#FF8FA1" stop-opacity="0"/></radialGradient></defs>
+   <circle cx="156" cy="170" r="130" fill="url(#v2gl)"/><circle cx="156" cy="170" r="104" fill="none" stroke="#fff" stroke-opacity=".14"/>
+   <ellipse cx="156" cy="170" rx="104" ry="38" fill="none" stroke="#fff" stroke-opacity=".1"/><ellipse cx="156" cy="170" rx="44" ry="104" fill="none" stroke="#fff" stroke-opacity=".1"/>
+   ${arcs.map(([a,b,c,e])=>`<path class="v2arc" d="M${a} ${b}Q${(a+c)/2} ${Math.min(b,e)-70} ${c} ${e}" fill="none" stroke="#FFB4C2" stroke-width="1.6"/><circle cx="${a}" cy="${b}" r="3.5" fill="#FFD7A8"/>`).join('')}
+   <circle cx="214" cy="104" r="6" fill="#FF8FA1"/></svg>
+   ${[['🇳🇬',18,58],['🇵🇭',74,70],['🇲🇽',4,45],['🇮🇳',40,77],['🇱🇧',27,37],['🇰🇷',80,48]].map(([f,x,y])=>`<span class="v2flag" style="left:${x}%;top:${y}%">${f}</span>`).join('')}
+   <span class="v2cityp">${ic('pin')} Your city</span></div>
+  <div class="v2w-body pad">
+   <p class="v2brand">NEUMARRY</p>
+   <h1>Your roots.<br>Your city.<br><em>Your person.</em></h1>
+   <p class="v2w-lede">For people who grew up in one country and live in another. Every member is checked with an ID and a live selfie.</p>
+   <div class="v2prom">${[['shield','Verified','every member'],['lock','Private','no number shared'],['clock','About 6 min','almost all taps']].map(([i,a,b])=>`<div>${ic(i)}<b>${a}</b><span>${b}</span></div>`).join('')}</div>
+   <button class="btn block v2light" data-a="start">Create my profile</button>
+   <button class="btn block v2ghost" data-a="login">I already have an account</button>
+   <p class="v2w-note">By continuing you agree to our <button class="link" data-a="legal" data-k="terms">Terms</button> and <button class="link" data-a="legal" data-k="privacy">Privacy Policy</button>. 18+ only.</p>
+  </div></div>`}
+
+/* ---------- birthday wheel ---------- */
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function v2wheelCols(){const y0=new Date().getFullYear()-18,years=[];for(let y=y0;y>=1951;y--)years.push(y);
+  const days=Array.from({length:31},(_,i)=>i+1);return {days,years}}
+function v2dobParts(d){const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(d.dob||'');if(m)return {y:+m[1],m:+m[2]-1,d:+m[3]};const y=new Date().getFullYear()-28;return {y,m:0,d:1,unset:true}}
+function v2wheel(d){const {days,years}=v2wheelCols(),p=v2dobParts(d);
+  const col=(k,list,lab,cur)=>`<div class="v2wcol" data-wheel="${k}">${list.map(v=>`<div class="v2wit${v===cur&&!p.unset?' on':''}" data-v="${v}">${lab(v)}</div>`).join('')}</div>`;
+  return `<div class="v2wheel${v2err('dob')}" data-f="dob"><i class="v2wsel" aria-hidden="true"></i>${col('d',days,v=>v,p.d)}${col('m',MON.map((_,i)=>i),v=>MON[v],p.m)}${col('y',years,v=>v,p.y)}</div>
+  <p class="v2note">${ic('lock')} ${d.dob&&!p.unset?`<b>${ageFrom(d.dob)} years</b> · only your age is shown, never the date.`:'Spin to your birthday. Only your age is shown.'}</p>${errOf('dob')}`}
+let v2wheelLock=false;
+function v2wheelAfter(){const w=document.querySelector('.v2wheel');if(!w)return;const d=S.draft;const p=v2dobParts(d);const H=40;
+  v2wheelLock=true;w.querySelectorAll('.v2wcol').forEach(c=>{const k=c.dataset.wheel;const want=k==='d'?p.d:k==='m'?p.m:p.y;const items=[...c.children];const i=items.findIndex(x=>+x.dataset.v===want);c.scrollTop=Math.max(0,i)*H});
+  setTimeout(()=>{v2wheelLock=false},80);
+  w.querySelectorAll('.v2wcol').forEach(c=>{let t;c.addEventListener('scroll',()=>{if(v2wheelLock)return;clearTimeout(t);t=setTimeout(()=>{
+    const cur={};w.querySelectorAll('.v2wcol').forEach(cc=>{const i=Math.round(cc.scrollTop/H);const it=cc.children[Math.min(i,cc.children.length-1)];cur[cc.dataset.wheel]=+it.dataset.v;[...cc.children].forEach(x=>x.classList.toggle('on',x===it))});
+    const max=new Date(cur.y,cur.m+1,0).getDate();const dd=Math.min(cur.d,max);
+    d.dob=`${cur.y}-${String(cur.m+1).padStart(2,'0')}-${String(dd).padStart(2,'0')}`;delete S.errors.dob;save();w.classList.remove('has-err');const er=document.getElementById('err-dob');if(er)er.remove();
+    const n=document.querySelector('.v2wheel+.v2note');if(n)n.innerHTML=`${ic('lock')} <b>${ageFrom(d.dob)} years</b> · only your age is shown, never the date.`},140)},{passive:true})})}
+
+/* ---------- the house that shows the answers (screen 6) ---------- */
+function v2house(a){const kids=a[3]===0||a[3]===1,both=a[1]===0,move=a[0]===2,par=a[2]===0||a[2]===1;
+  const n=[a[0],a[1],a[2],a[3]].filter(x=>x!==null&&x!==undefined).length;
+  return `<svg viewBox="0 0 300 168" class="v2house" aria-hidden="true"><circle cx="250" cy="34" r="16" fill="#FFD7A8"/><path d="M0 150C80 136 220 136 300 150V168H0z" fill="#CDE7D6"/>
+  <path d="M80 82L150 30 220 82" fill="#C42E57"/><rect x="92" y="80" width="116" height="74" rx="4" fill="#fff"/><rect x="138" y="112" width="24" height="42" rx="12" fill="#3A1A2B"/>
+  <rect x="104" y="92" width="26" height="22" rx="4" fill="#FFE6EC"/><rect x="170" y="92" width="26" height="22" rx="4" fill="#FFE6EC"/>
+  ${kids?'<g fill="#E8436B"><circle cx="112" cy="100" r="3.5"/><rect x="108.5" y="104" width="7" height="8" rx="3"/><circle cx="122" cy="101" r="3"/><rect x="119" y="104.5" width="6" height="7.5" rx="3"/></g>':''}
+  ${both?'<g fill="#B8863A"><rect x="174" y="102" width="9" height="7" rx="1.5"/><rect x="185" y="102" width="9" height="7" rx="1.5"/></g>':''}
+  ${par?'<g fill="#86697A"><circle cx="232" cy="122" r="4"/><rect x="228" y="127" width="8" height="14" rx="3"/><circle cx="246" cy="123" r="4"/><rect x="242" y="128" width="8" height="13" rx="3"/></g>':''}
+  ${move?'<g transform="translate(40 34) rotate(-12)"><path d="M0 8l26-11-7 21-5-8z" fill="#3A1A2B"/></g>':''}
+  <g transform="translate(40 112)"><path d="M0 40V10" stroke="#24845A" stroke-width="3"/><circle cx="0" cy="8" r="12" fill="#7CCB9E"/></g>
+  <text x="150" y="20" text-anchor="middle" font-family="Nunito Sans,sans-serif" font-weight="900" font-size="10" fill="#C42E57" letter-spacing="1.5">${n} OF 4 ADDED</text></svg>`}
+const HOME_Q=[[3,'kid'],[1,'brief'],[2,'users'],[0,'plane']];
+/* screen 7: one illustrated card per question */
+const NAT_ART={5:['#FFE7D6','#F6B7A0','sun'],6:['#E6F4EC','#9FD3B5','coin'],7:['#EDE6FF','#C2B2F4','talk'],4:['#FCF1DE','#E9C98D','star'],8:['#FFE6EC','#FF9DB1','heart']};
+const NAT_Q=[5,6,7,4,8];
+
+/* ---------- sign-up v2 ---------- */
+function renderSignupV2(){if(!S.editMode)setTimeout(()=>noteStep(S.step),0);
+  const d=S.draft,st=S.step,sub=d.v2b||'a';let body='',cta='Continue',foot='';
+  if(st===5){let h=renderSignupV2.orig();
+    const pass=v2passport(d);h=h.replace('<div class="form pad">','<div class="form pad">'+pass).replace(/Step 5 of 6 · saved/,'Part 5 of 5 · last part');
+    return `<div class="v2 v2col">${h}</div>${S.cele2?v2cele():''}`}
+  if(st===1){const gn=v2gname();if(!d.name&&gn)d.name=gn;
+    const tile=(g,l,s,seed)=>`<button type="button" class="v2gt${d.g===g?' on':''}" data-a="v2g" data-v="${g}"><span class="v2gt-a">${portrait(seed,g,{tone:g==='F'?0:2})}</span><b>${l}</b><small>${s}</small></button>`;
+    body=`<h1 class="v2h">${d.name?`Hi ${esc(d.name.split(' ')[0])}.`:'Hi there.'} <em>Who are you</em> looking for?</h1>
+    ${S.v2name||!d.name?inF('name','Your full name','text',d.name,'autocomplete="name" maxlength="60"','Others see only your first name and last initial until you both say yes.')
+      :`<div class="v2card v2row">${avatar(null,'sm',true)}<div class="grow"><b>${esc(d.name)}</b><small>${gn?'From your Google account':'Your name'}</small></div><button type="button" class="v2pill" data-a="v2name">Change</button></div>`}
+    <div class="v2gts${v2err('g')}" data-f="g">${tile('F','I’m a woman','looking for a man',11)}${tile('M','I’m a man','looking for a woman',42)}</div>${errOf('g')}
+    <p class="v2lb">Your birthday · spin</p>${v2wheel(d)}`;
+    cta='Next: your roots';}
+  else if(st===2){const pop=POP_OC.map(([c])=>c);
+    body=`<h1 class="v2h">Where did you <em>grow up?</em></h1>${v2gain('globe','People from your roots appear first in your matches.')}
+    <div class="v2flags${v2err('oc')}" data-f="oc">${POP_OC.map(([c,f])=>`<button type="button" class="v2fl${d.oc===c?' on':''}" data-a="chipSet" data-k="oc" data-v="${esc(c)}"><span>${f}</span><b>${esc(c)}</b></button>`).join('')}</div>
+    ${pickF('oc',d.oc&&!pop.includes(d.oc)?'Country of origin':'Other country','draft',{ph:'Search all 195 countries'})}
+    ${d.oc?pickF('os','State / region','draft',{ph:statesOf(d.oc).length?'Choose a state or region':'Type your region'}):''}
+    ${d.oc&&TONGUE_BY_ORIGIN[d.oc]?`<p class="v2lb">Language at home · ${esc(d.oc)}</p>${v2chips('t',TONGUE_BY_ORIGIN[d.oc].slice(0,6).map(x=>({v:x,l:x})),d.t)}`:''}
+    ${pickF('t',d.oc&&TONGUE_BY_ORIGIN[d.oc]?'Another language':'Mother tongue','draft',{ph:'Choose a language'})}
+    <p class="v2lb">Faith</p>${v2chips('r',RELS.map(x=>({v:x,l:x})),d.r)}
+    ${d.r?pickF('c','Community (optional)','draft',{ph:'Choose or type your community',showBlank:true,hint:'Only used when you or a match filter by it.'}):''}
+    ${d.r?`<div class="panel" style="padding:4px 16px">${toggle('privacy.showC','Show my community on my profile','Turn off to keep it private. Filters still work.',d.privacy.showC)}</div>`:''}
+    ${d.oc?`<div class="v2roots"><span class="v2rf">${flag(d.oc)||'🌍'}</span><div class="grow"><small>YOUR ROOTS CARD</small><b>${esc([d.os,d.t,d.r].filter(Boolean).join(' · ')||d.oc)}</b></div>${ic('sparkle')}</div>`:''}`;}
+  else if(st===3&&sub==='a'){if(!d.country){const t=tzCountry();if(t)d.country=t}
+    body=`<h1 class="v2h">Your life <em>now</em></h1>${v2gain('pin','Matches show the real distance to you. Your exact address is never shown.')}
+    <div class="v2card v2city${v2err('country')}" data-f="country"><div class="v2map" aria-hidden="true"><svg viewBox="0 0 300 70" preserveAspectRatio="none"><path d="M0 50C60 40 90 60 150 48S250 30 300 42V70H0z" fill="#C9DCEA"/><path d="M20 0L60 70M120 0L100 70M200 0L240 70M0 26H300" stroke="#fff" stroke-width="3" opacity=".8"/></svg>${ic('pin')}</div>
+     <div class="v2row" style="padding:10px 12px"><div class="grow"><b>${d.country?esc((d.city?d.city+', ':'')+d.country):'Where do you live?'}</b><small>${d.country&&tzCountry()===d.country?'Found from your phone':'Choose below'}</small></div></div></div>
+    ${pickF('country','Country you live in','draft',{ph:'Choose a country'})}${tzWarn(d)}
+    <div class="row2">${pickF('state','State / province','draft',{ph:'Choose',disabled:!d.country})}${pickF('city','City','draft',{ph:'Choose or type',disabled:!d.country})}</div>
+    ${d.country?`<p class="v2lb">Residency in ${esc(d.country)}</p>${v2chips('res',v2opts('res'),d.res)}<p class="v2lb">Open to moving for the right person?</p>${v2chips('reloc',relocOpts(d.country),d.reloc)}`:''}
+    <p class="v2lb">What do you do?</p>${pickOrOther('job','',JOBS,'Type your profession')}
+    <p class="v2lb">Highest study</p>${pickOrOther('edu','',EDUS,'Type your study')}${collegeBox(d)}
+    <p class="v2lb">Height</p>${pickF('h','Your height','draft',{ph:'Select'})}
+    <p class="v2lb">Marital status</p>${v2chips('marital',v2opts('marital'),d.marital)}
+    <p class="v2lb">Profile created by</p>${v2chips('createdBy',v2opts('createdBy'),d.createdBy)}`;}
+  else if(st===3){
+    body=`<h1 class="v2h">Your photo <em>studio</em></h1>
+    <div class="v2studio${v2err('photo')}" data-f="photo"><label class="v2main">${d.photo?`<img src="${esc(d.photo)}" alt="Your photo">`:`<span class="v2empty">${ic('camera')}<b>Add your best photo</b><small>From your gallery or camera</small></span>`}
+      <input type="file" accept="image/*" data-file="photo" aria-label="Profile photo">${d.photo?`<span class="v2pill v2on">${ic('star')} First photo</span>`:''}</label>
+     <div class="v2tips"><b>Photos that work</b>${[['face','Face clear, looking at the camera'],['sun','Daylight, no dark filters'],['user','Only you in the first photo']].map(([i,t])=>`<span>${ic(i)}${t}</span>`).join('')}<small>Add more photos, like one with family, from Me after sign-up.</small></div></div>${errOf('photo')}
+    <div class="panel" style="padding:4px 16px">${toggle('privacy.blur','Blur my photos until I accept','Only people you have both accepted see them clearly.',d.privacy.blur)}</div>
+    <p class="v2lb">Pick 3 that are so you</p><div class="v2chips">${TRAITS.map(([k,l])=>`<button type="button" class="v2chip${(d.traits||[]).includes(k)?' on':''}" data-a="traitTap" data-k="${k}">${l}</button>`).join('')}</div>
+    <label class="${fldCls('about')} v2about" data-f="about"><span>About me · we write it from your 3 picks</span><textarea id="f-about" data-bind="about" maxlength="600" placeholder="Pick 3 above and we write this for you. You can change it.">${esc(d.about)}</textarea>${errOf('about')}</label>`;
+    cta='Looks good';}
+  else if(st===4&&sub==='a'){const a=d.ans;
+    body=`<h1 class="v2h">Build your <em>future home</em></h1><div class="v2card v2hc">${v2house(a)}</div>
+    ${HOME_Q.map(([qi,icn])=>{const q=QS[qi];return `<div class="v2q${v2err('ans.'+qi)}" data-f="ans.${qi}"><p class="v2qt">${ic(icn)}${esc(q.q)}</p><div class="v2qo">${q.o.map((o,j)=>`<button type="button" class="v2chip${a[qi]===j?' on':''}" data-a="v2ans" data-i="${qi}" data-j="${j}">${esc(o)}</button>`).join('')}</div>${errOf('ans.'+qi)}</div>`}).join('')}`;
+    cta='My home is ready';}
+  else if(st===4){const a=d.ans;const qi=NAT_Q.find(i=>a[i]===null||a[i]===undefined);const k=NAT_Q.indexOf(qi);
+    if(qi!==undefined){const [c1,c2,icn]=NAT_ART[qi];
+      body=`<div class="v2rowsp"><h1 class="v2h" style="margin:0">This or <em>that?</em></h1><span class="v2pill">${k+1} of ${NAT_Q.length}</span></div>
+      <p class="v2lede">Tap the one that is more you. This is how we match nature, not only profiles.</p>
+      <div class="v2nat"><div class="v2nat-art" style="background:linear-gradient(135deg,${c1},${c2})">${ic(icn)}</div><h2>${esc(QS[qi].q)}</h2>
+       <div class="v2nat-o">${QS[qi].o.map((o,j)=>`<button type="button" class="v2nat-b" data-a="v2ans" data-i="${qi}" data-j="${j}">${esc(o)}</button>`).join('')}</div></div>
+      <div class="v2dots">${NAT_Q.map((i,n)=>`<i class="${a[i]!==null&&a[i]!==undefined?'d':n===k?'h':''}"></i>`).join('')}</div>
+      ${k>0?`<button type="button" class="linkbtn v2back" data-a="v2natBack">Back to card ${k}</button>`:''}`;
+      return `<div class="v2 v2col">${v2head()}<div class="scroll" id="su-scroll"><div class="form pad">${body}</div></div></div>${S.cele2?v2cele():''}`}
+    body=`<h1 class="v2h">Your <em>nature</em>, done.</h1>${v2gain('sparkle','Matches will show where your everyday habits fit.')}
+    <div class="v2card">${NAT_Q.map(i=>`<button type="button" class="v2natr" data-a="v2natRedo" data-i="${i}"><small>${esc(QS[i].k)}</small><b>${esc(QS[i].o[a[i]])}</b>${ic('chev')}</button>`).join('')}</div>
+    <p class="v2lb">Diet</p>${v2chips('diet',v2opts('diet'),d.diet)}
+    <p class="v2lb">Smoking</p>${v2chips('sm',v2opts('sm'),d.sm)}
+    <p class="v2lb">Drinking</p>${v2chips('dr',v2opts('dr'),d.dr)}`;}
+  else if(st===6){if(!d.prefs)d.prefs=defaultPrefs(d);const pr=d.prefs;
+    body=`<h1 class="v2h">Who would you <em>like to meet?</em></h1>${v2gain('heart','We set this from your answers. Change anything, any time.')}
+    <div class="row2">${pickF('prefs.ageMin','Age from','draft')}${pickF('prefs.ageMax','Age to','draft')}</div>${errOf('prefs.ageMax')}
+    <div class="row2">${pickF('prefs.hMin','Height from','draft')}${pickF('prefs.hMax','Height to','draft')}</div>${errOf('prefs.hMax')}
+    ${pickF('prefs.liveCountry','Where they live','draft')}${pr.liveCountry===d.country?pickF('prefs.radius','Distance','draft'):''}
+    ${pickF('prefs.oc','Their roots: country','draft')}${pr.oc!=='Any'?pickF('prefs.os','Their roots: state / region','draft'):''}
+    ${pickF('prefs.religion','Religion','draft')}
+    ${pickF('prefs.community','Community','draft',{disabled:pr.religion==='Any'||!commOf(pr.religion).length,hint:pr.religion==='Any'?'Choose a religion to pick a community.':''})}
+    ${pr.community!=='Any'?pickF('prefs.alsoComm','Also open to these communities','draft',{hint:'More communities means more matches.'}):''}
+    ${pickF('prefs.timeline','Ready to marry','draft')}`;cta='Next: your Trust Passport';}
+  return `<div class="v2 v2col">${v2head()}<div class="scroll" id="su-scroll"><div class="form pad">${body}</div></div>${v2foot(cta,foot)}</div>${S.cele2?v2cele():''}`}
+function v2gname(){try{const u=API.session().user||{},m=u.user_metadata||{};return String(m.full_name||m.name||'').trim().slice(0,60)}catch(e){return ''}}
+
+/* ---------- screen 10: Trust Passport ---------- */
+function v2passport(d){const me=null;const s1=vState(1,d,me),s2=vState(2,d,me),s3=vState(3,d,me),s4=vState(4,d,me);
+  const st=s=>s==='ok'||s==='ready'||s==='wait'?'done':'todo';
+  const items=[['face','Live selfie + ID','About 1 min',st(s1)],['globe','Roots','About 40 sec',st(s2)],['city','City','About 1 min',st(s3)],['pin','Location','Optional, 10 sec',s4==='ready'||s4==='ok'?'done':'todo']];
+  const nx=items.findIndex(x=>x[3]!=='done');
+  return `<div class="v2pass"><div class="v2pass-top">${avatar(null,'md',true)}<div class="grow"><small>NEUMARRY · TRUST PASSPORT</small><b>${esc(d.name||'')}</b><span>${d.oc?flag(d.oc)+' Roots '+esc(d.oc):''}${d.country?' · '+flag(d.country)+' Lives '+esc(d.city||d.country):''}</span></div></div>
+   <div class="v2stamps">${items.map(([i,t,s,state],n)=>`<div class="v2st ${state}${n===nx?' nx':''}" style="--r:${[-3,2,-1,2][n]}deg">${state==='done'?`<i class="v2ok">${ic('check')}</i>`:''}${ic(i)}<b>${t}</b><small>${state==='done'?'Ready':n===nx?'Next · '+s:s}</small></div>`).join('')}</div></div>
+   <p class="v2note">${ic('lock')} Only our safety team sees documents. Deleted 7 days after the check.</p>`}
+
+/* ---------- celebration between parts ---------- */
+function v2cele(){const c=V2CELE[S.cele2.at];if(!c)return '';const p=V2PART[(()=>{const [s,b]=V2SEQ[S.cele2.next];return s===3||s===4?s+(b||'a'):String(s)})()]||[5];
+  const cf=Array.from({length:30},(_,i)=>`<i style="left:${(i*37)%100}%;animation-delay:${(i%9)*0.06}s;background:${['#E8436B','#B8863A','#2D8A61','#FF8FA1','#E9C98D'][i%5]};--r:${(i*47)%360}deg"></i>`).join('');
+  return `<div class="cele v2" role="dialog" aria-live="polite"><div class="cf">${cf}</div><div class="cele-c"><div class="v2seal">${ic('check')}</div><h2>${c[0]}</h2><p>${esc(c[1])}</p>
+  <div class="cele-n"><b>Next: ${c[2]} · ${c[3]}</b><span>Part ${p[0]} of 5</span></div>
+  ${v2segs().replace('v2segs','v2segs v2segs-c')}<button class="btn primary block" data-a="v2celeGo">Keep going</button><p class="hint" style="text-align:center;margin:8px 0 0">Take a break any time, we save everything.</p></div></div>`}
+
+/* ---------- screen 18: everything is saved ---------- */
+function v2leaveSheet(){const i=Math.max(0,v2pos());const left=Math.max(1,Math.round((V2SEQ.length-i)*0.8));
+  return sheetShell('Everything is saved',`<div class="v2"><p class="v2lede" style="margin-top:0">You are about ${left} minute${left>1?'s':''} from your matches. Come back any time and pick up right here.</p>
+   <div class="v2card" style="margin-top:12px">${v2segs()}<p class="v2note" style="margin-top:10px">${ic('mail')} If you stop now, we send one reminder email tomorrow. Nothing more.</p></div></div>`,
+   `<button class="btn primary block" data-a="closeSheet">Finish now</button><button class="btn ghost block" data-a="v2out">Log out for now</button>`)}
+
+/* ---------- screen 13: after the last part ---------- */
+function v2reveal(){const me=S.me;if(!me)return '';const sent=me.idCheck&&me.selfieCheck;
+  const cf=Array.from({length:22},(_,k)=>`<i style="left:${(k*47)%96+2}%;top:${(k*71)%22+4}%;background:${['#E8436B','#FFD7A8','#B8863A','#8FE0B5','#C2B2F4'][k%5]};transform:rotate(${k*37}deg)"></i>`).join('');
+  return `<div class="v2rev v2" role="dialog" aria-modal="true"><div class="v2rev-cf" aria-hidden="true">${cf}</div>
+   <div class="v2rev-c pad"><div class="v2rev-seal">${ic('shield')}</div>
+   <h1 class="v2h" style="text-align:center">${sent?'You’re <em>nearly live.</em>':'Your profile is <em>saved.</em>'}</h1>
+   <p class="v2lede" style="text-align:center">${sent?'A person on our team checks your Trust Passport, usually within a day. Then you see only verified people, and they see you.':'Finish your Trust Passport from Me. Then you see only verified people, and they see you.'}</p>
+   <div class="v2rev-p">${[[11,'F',0],[42,'M',2],[7,'F',1],[23,'M',3]].map(([s,g,t],i)=>`<span style="--r:${[-6,-2,3,7][i]}deg">${portrait(s,g,{tone:t})}</span>`).join('')}</div>
+   <button class="btn primary block" data-a="v2revGo">${sent?'See my profile':'Finish my Trust Passport'}</button></div></div>`}
+
+/* ---------- actions and hooks ---------- */
+(function(){
+  const _suNext=A.suNext,_suBack=A.suBack;
+  A.suNext=async function(){if(!V2()||S.editMode)return _suNext.call(A);
+    const d=S.draft,i=v2pos(),[st,sub]=V2SEQ[i]||[S.step,''];
+    if(st===5){if(busy)return;const e=validateStep(5,d);S.errors=e;if(Object.keys(e).length){showErrors();return}
+      S.step=6;S.v2fin=1;await _suNext.call(A);if(S.screen==='signup'){S.step=5;S.v2fin=0;render()}else{S.v2rev=1;render()}return}
+    let e=validateStep(st,d);
+    if(st===3&&sub==='a')e=Object.fromEntries(Object.entries(e).filter(([k])=>LIFE_K.includes(k)));
+    if(st===3&&sub==='b')e=Object.fromEntries(Object.entries(e).filter(([k])=>!LIFE_K.includes(k)));
+    if(st===4&&sub==='a')e=Object.fromEntries(Object.entries(e).filter(([k])=>['ans.0','ans.1','ans.2','ans.3'].includes(k)));
+    if(st===3&&sub==='b'&&!d.photo)e.photo='Add one clear photo of you';
+    S.errors=e;if(Object.keys(e).length){showErrors();return}
+    if(V2CELE[i]){S.cele2={at:i,next:i+1};render();return}
+    v2go(i+1)};
+  A.suBack=function(){if(!V2()||S.editMode)return _suBack.call(A);if(S.cele2){S.cele2=null;render();return}
+    if(S.step===5&&S.draft&&S.draft.vs)return _suBack.call(A);
+    const i=v2pos();if(i>0)v2go(i-1);else{sheet={type:'v2leave'};render()}};
+  Object.assign(A,{
+    v2g(el){const d=S.draft;d.g=el.dataset.v;d.lookingFor=d.g==='M'?'F':'M';delete S.errors.g;delete S.errors.lookingFor;save();render()},
+    v2name(){S.v2name=1;render();const f=document.getElementById('f-name');if(f)f.focus()},
+    v2ans(el){const d=S.draft;d.ans[+el.dataset.i]=+el.dataset.j;delete S.errors['ans.'+el.dataset.i];save();render()},
+    v2natBack(){const d=S.draft;const qi=NAT_Q.find(i=>d.ans[i]===null||d.ans[i]===undefined);const k=NAT_Q.indexOf(qi);if(k>0){d.ans[NAT_Q[k-1]]=null;render()}},
+    v2natRedo(el){S.draft.ans[+el.dataset.i]=null;render()},
+    v2celeGo(){const n=S.cele2.next;S.cele2=null;v2go(n)},
+    v2leave(){sheet={type:'v2leave'};render()},
+    v2out(){sheet={type:'logout'};render()},
+    v2revGo(){S.v2rev=0;S.tab='me';render()}
+  });
+  const _rs=renderSheet;renderSheet=function(){return sheet&&sheet.type==='v2leave'?v2leaveSheet():_rs()};
+  const _rw=renderWelcome;renderWelcome=function(){return V2()?renderWelcomeV2():_rw()};
+  const _su=renderSignup;renderSignupV2.orig=_su;renderSignup=function(){return V2()&&!S.editMode&&!S.suInter?renderSignupV2():_su()};
+  const _r=render;render=function(){_r();if(V2()){if(S.screen==='signup'&&S.step===1)v2wheelAfter();if(S.screen==='app'&&S.v2rev&&!app.querySelector('.v2rev'))app.insertAdjacentHTML('beforeend',v2reveal())}};
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack}; /* used by automated tests */
 boot();
 })();
