@@ -2669,6 +2669,25 @@ function v2noteFrom(id){const i=(RAW.ints||[]).find(x=>x.from_user===id&&x.to_us
   A.v2note=function(el){S.v2note=S.v2note||{};const id=el.dataset.id;S.v2note[id]=S.v2note[id]===el.dataset.v?'':el.dataset.v;render()};
 })();
 
+/* ---------- Family circle (mock screen 17): share people from your matches with family ---------- */
+const FAM={list:null,busy:false};
+function famLoad(){if(FAM.list||FAM.busy)return;FAM.busy=true;API.rpc('my_family_shares').then(r=>{FAM.list=r||[];FAM.busy=false;render()}).catch(()=>{FAM.list=[];FAM.busy=false})}
+function famHas(id){return (FAM.list||[]).some(x=>x.id===id)}
+function famBlock(){famLoad();const L=FAM.list||[];if(!L.length)return `<div class="panel v2"><p class="v2lb" style="margin:0 0 6px">Family circle</p><p class="v2lede" style="margin:0">Tap <b>Share with family</b> on anyone in your matches. Your family sees them on your private link and tells you 👍 or 🤔. They never talk to your matches.</p></div>`;
+  return `<div class="panel v2"><div class="v2rowsp"><p class="v2lb" style="margin:0">Family circle · ${L.length} shared</p>${S.bioUntil?'':`<button class="v2pill" data-a="shareBio">Send link</button>`}</div>
+   <div style="display:grid;gap:8px;margin-top:10px">${L.map(x=>{const p=byId(x.id);const nm=p?shown(p):'Member';const rs=x.reactions||[];
+    return `<button class="v2famr" data-a="open" data-id="${x.id}">${p?avatar(p,'sm'):''}<span><b>${esc(nm)}${p?', '+p.age:''}</b><small>${rs.length?rs.slice(0,2).map(r=>`${r.reaction==='good'?'👍 Looks good':'🤔 Let’s talk'}${r.who?' · '+esc(r.who):''}`).join(' &nbsp; '):'No answer yet'}</small></span>${ic('chev')}</button>`}).join('')}</div>
+   <p class="v2note" style="margin-top:8px">${ic('lock')} Family sees first name, age, work, roots and city only. No photos or contacts. You decide.</p></div>`}
+(function(){
+  const _me=renderMe;renderMe=function(){const h=_me();if(!V2())return h;const k='<button class="likes nm-bio" data-a="shareBio">';return h.includes(k)?h.replace(k,famBlock()+k):h};
+  const _pv=renderProfileView;renderProfileView=function(id,isMe){const h=_pv(id,isMe);if(!V2()||isMe)return h;const p=byId(id);if(!p||locked(p)||!(p.v&&p.v.id&&p.v.selfie&&p.v.roots&&p.v.lives))return h;famLoad();
+    const on=famHas(id);const btn=`<button class="v2act v2" data-a="v2fam" data-id="${id}" style="${on?'background:var(--good-soft,#E9F5EE);border-color:var(--good)':''}"><span class="ibox">${ic('users')}</span><span><b>${on?'Shared with your family':'Share with family'}</b><small>${on?'Tap to remove. Your family sees first name, age, work, roots and city.':'Your family sees safe facts on your private link and answers 👍 or 🤔'}</small></span>${ic(on?'check':'chev')}</button>`;
+    const k='<div class="panel"><h3>About</h3>';return h.includes(k)?h.replace(k,btn+k):h};
+  A.v2fam=async function(el){const id=el.dataset.id,on=!famHas(id);
+    try{await API.rpc('family_share',{target:id,on_:on});FAM.list=null;famLoad();toast(on?'Shared with your family. Send them your biodata link from Me.':'Removed from your family circle.',on?'users':'check')}
+    catch(e){toast(String((e&&(e.message||e.code))||'').includes('max_10')?'You can share up to 10 people. Remove one first.':'Could not share. Try again.','info')}};
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p)}; /* used by automated tests */
 boot();
 })();

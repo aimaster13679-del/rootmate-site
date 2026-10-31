@@ -1015,3 +1015,5 @@ a.btn{text-decoration:none}
 .v2near small{display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;opacity:.75}.v2near small .ic{width:12px;height:12px}
 .v2near b{font-family:var(--f-display);font-size:22px;font-weight:600}.v2near span{font-size:12.5px;opacity:.8}
 .v2near-r{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}.v2near-r i{font-style:normal;font:800 11px var(--f-body);background:rgba(255,255,255,.12);border-radius:999px;padding:3px 8px}
+.v2famr{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:8px 10px;color:var(--ink)}
+.v2famr>span:nth-of-type(2),.v2famr>span:last-of-type{flex:1;min-width:0}.v2famr b{display:block;font-size:13.5px}.v2famr small{display:block;font-size:11.5px;color:var(--muted);font-weight:700}.v2famr>.ic{width:15px;height:15px;transform:rotate(-90deg);color:var(--muted)}
