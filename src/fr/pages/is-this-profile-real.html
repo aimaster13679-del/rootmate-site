@@ -1,0 +1,47 @@
+<!--title: Ce profil matrimonial est-il réel ? Test gratuit en 10 questions-->
+<!--desc: Test gratuit pour les profils matrimoniaux et de rencontre : 10 questions montrent les signes d’un faux profil ou d’une arnaque sentimentale. Sans inscription.-->
+<!--short: Ce profil est-il réel ?-->
+<!--kind: feature-->
+<h1>Ce profil matrimonial est-il réel ?</h1>
+<p class="lede">Répondez à 10 questions rapides sur une personne avec qui vous parlez. Vous obtenez un résultat clair et quoi faire ensuite. Gratuit, sans inscription, rien n’est enregistré.</p>
+<div id="sc" class="sc-box" aria-live="polite"></div>
+<noscript><p>Activez JavaScript pour faire le test. Les signes d’alerte sont listés plus bas.</p></noscript>
+<h2>Les signes d’alerte</h2>
+<ul class="ticks" id="sc-list"></ul>
+<h2>Ne rencontrez que des personnes vérifiées</h2>
+<p>Sur NeuMarry, chaque membre prouve une pièce d’identité, un selfie en direct, ses origines et sa ville, et une personne vérifie chaque élément. Seules les personnes entièrement vérifiées sont visibles, et les demandes d’argent dans le chat sont bloquées. L’inscription est gratuite.</p>
+<p><a class="btn primary" href="/app/">Commencer gratuitement</a></p>
+<style>
+.sc-box{background:#fff;border:1.5px solid #F3E0E1;border-radius:20px;padding:18px;margin:18px 0;box-shadow:0 10px 24px rgba(59,31,42,.06)}
+.sc-n{font-size:13px;font-weight:800;color:#8A6B75}.sc-q{font-size:19px;font-weight:800;margin:6px 0 14px;line-height:1.35}
+.sc-o{display:flex;gap:10px}.sc-o button{flex:1;border:1.5px solid #F3E0E1;background:#fff;border-radius:14px;padding:13px;font:inherit;font-weight:800;font-size:16px;cursor:pointer}.sc-o button:hover{border-color:#E8436B;background:#FFE7EC}
+.sc-bar{height:6px;border-radius:3px;background:#F3E0E1;margin-bottom:12px}.sc-bar i{display:block;height:6px;border-radius:3px;background:#E8436B}
+.sc-m{height:14px;border-radius:7px;background:linear-gradient(90deg,#2D8A61,#E9C98D,#C8384A);position:relative;margin:14px 0 6px}.sc-m i{position:absolute;top:-6px;width:6px;height:26px;border-radius:3px;background:#3B1F2A}
+.sc-f{background:#FDE6E8;border-radius:12px;padding:10px 12px;margin:8px 0;font-weight:700;color:#8C2333}.sc-ok{background:#E9F5EE;color:#1E6B4A}
+.sc-a{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+</style>
+<script>(function(){
+var Q=[["Vous a-t-on demandé de l’argent, une carte-cadeau, des cryptos ou de l’aide pour un visa ou des frais de douane ?",3,"Demande d’argent ou d’aide pour payer : le signe numéro un d’une arnaque."],
+["Évite-t-on les appels vidéo, ou la caméra est-elle toujours « en panne » ?",3,"Évite les appels vidéo en direct."],
+["Les photos ressemblent-elles à celles d’un mannequin, d’un acteur ou d’une banque d’images ?",2,"Photos trop professionnelles ou copiées."],
+["A-t-on dit « je t’aime » ou parlé de mariage en quelques jours ?",2,"Déclarations d’amour très rapides."],
+["Veut-on passer très vite sur une autre application ?",1,"Veut quitter l’application rapidement."],
+["Dit-on travailler à l’étranger sur une plateforme pétrolière, un navire, une base militaire ou comme médecin ?",2,"Une histoire de travail lointain souvent utilisée dans les arnaques."],
+["L’histoire change-t-elle (âge, ville, métier) quand vous redemandez ?",2,"L’histoire change."],
+["Vous demande-t-on de garder la relation secrète pour votre famille ?",3,"Demande le secret vis-à-vis de la famille."],
+["Vous a-t-on déjà rencontré en personne ou vu votre famille en vidéo ?",-1,"Ne vous a jamais rencontré, ni votre famille, même en vidéo."],
+["Vous a-t-on proposé une « opportunité » d’investissement ou de trading ?",3,"Parle d’investissements ou de trading."]];
+var el=document.getElementById('sc'),i=0,score=0,flags=[];
+document.getElementById('sc-list').innerHTML=Q.filter(function(q){return q[2]}).map(function(q){return '<li>'+q[2]+'</li>'}).join('');
+function ask(){var q=Q[i];el.innerHTML='<div class="sc-bar"><i style="width:'+(i*10)+'%"></i></div><div class="sc-n">'+(i+1)+' sur 10</div><div class="sc-q">'+q[0]+'</div><div class="sc-o"><button data-v="1">Oui</button><button data-v="0">Non</button></div>'}
+el.addEventListener('click',function(e){var b=e.target.closest('button[data-v]');if(!b)return;var q=Q[i],yes=b.dataset.v==='1';
+ if(q[1]>0&&yes){score+=q[1];flags.push(q[2])} if(q[1]<0&&!yes){score+=1;flags.push('Ne vous a jamais rencontré, ni votre famille, même en vidéo.')}
+ i++; if(i<Q.length)ask();else done()});
+function done(){var max=12,p=Math.min(100,Math.round(score/max*100)),lvl=score>=6?['Risque élevé. Soyez prudent.','#C8384A']:score>=3?['Quelques signes d’alerte.','#A86B12']:['Peu de signes d’alerte.','#2D8A61'];
+ var share='https://wa.me/?text='+encodeURIComponent('Test gratuit en 10 questions : ce profil matrimonial est-il réel ? https://neumarry.com/fr/is-this-profile-real.html');
+ el.innerHTML='<div class="sc-q" style="color:'+lvl[1]+'">'+lvl[0]+'</div><div class="sc-m"><i style="left:calc('+p+'% - 3px)"></i></div><div style="display:flex;justify-content:space-between;font-size:12px;color:#8A6B75;font-weight:800"><span>Sûr</span><span>Risqué</span></div>'+
+ (flags.length?flags.map(function(f){return '<div class="sc-f">⚠️ '+f+'</div>'}).join(''):'<div class="sc-f sc-ok">Aucun signe d’alerte selon vos réponses. Faites tout de même un appel vidéo et impliquez la famille avant de décider.</div>')+
+ '<p style="margin-top:12px"><b>Que faire maintenant :</b> n’envoyez jamais d’argent ni de codes, demandez un appel vidéo, impliquez votre famille et signalez le profil sur cette application.</p>'+
+ '<div class="sc-a"><a class="btn primary" href="/app/">Ne rencontrer que des personnes vérifiées</a><a class="btn" href="'+share+'" target="_blank" rel="noopener">Partager ce test avec la famille</a><button class="btn" id="sc-r">Tester un autre profil</button></div>';
+ document.getElementById('sc-r').onclick=function(){i=0;score=0;flags=[];ask()}}
+ask()})();</script>

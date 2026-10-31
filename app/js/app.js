@@ -374,7 +374,7 @@ async function loadMessages(){
   return fresh_;
 }
 function ensureMatchChats(){Object.keys(S.interests).forEach(id=>{if(S.interests[id]==='mutual'&&!S.chats[id])S.chats[id]=[{f:'sys',x:'You both said yes. Say hello! Phone numbers stay hidden.',ts:Date.now()-1000}]})}
-async function loadEvents(){const [list,staff,board,pn]=await Promise.all([API.rpc('event_list'),API.rpc('staff_events').catch(()=>[]),API.rpc('city_board').catch(()=>null),API.rpc('partners_near').catch(()=>[]),API.rpc('online_next').catch(()=>null)]).then(r=>{S.online=r[4]||null;return r});RAW.ev=list||[];RAW.staff=staff||[];S.board=board||S.board||null;S.partnersNear=pn||[];applyEvents()}
+async function loadEvents(){const [list,staff,board,pn]=await Promise.all([API.rpc('event_list'),API.rpc('staff_events').catch(()=>[]),API.rpc('city_board').catch(()=>null),API.rpc('partners_near').catch(()=>[]),API.rpc('online_next').catch(()=>null),API.rpc('my_bio_reactions').catch(()=>null)]).then(r=>{S.online=r[4]||null;const br=r[5];S.bioReacts=Array.isArray(br)?br:(br&&br.my_bio_reactions)||[];return r});RAW.ev=list||[];RAW.staff=staff||[];S.board=board||S.board||null;S.partnersNear=pn||[];applyEvents()}
 function applyEvents(){S.events=(RAW.ev||[]).map(eventFromServer);S.staff=(RAW.staff||[]).map(x=>typeof x==='string'?x:(x.staff_events||Object.values(x)[0]))}
 function cacheSave(){try{if(!RAW.me||!RAW.cards||!API.userId())return;const u={},keep=Date.now()+900e3;
   Object.keys(URLS).forEach(k=>{if(URLS[k].exp>keep)u[k]=URLS[k]});
@@ -929,6 +929,7 @@ function renderSignup(){if(!S.editMode)setTimeout(()=>noteStep(S.step),0);
     ${pickF('c','Community (optional)','draft',{ph:d.r?'Choose or type your community':'Choose a religion first',disabled:!d.r,showBlank:!!d.r,hint:'Only used when you or a match filter by it.'})}
     <div class="panel" style="padding:4px 16px">${toggle('privacy.showC','Show my community on my profile','Turn off to keep it private. Filters still work.',d.privacy.showC)}</div>`;
   }else if(st===3){
+    if(!edit&&!d.country){const t=tzCountry();if(t)d.country=t}
     body=`${edit?'':`<div class="photo-pick">${avatar(null,'lg',true)}<div style="display:grid;gap:6px"><span class="btn ghost sm file">${ic('camera')}${d.photo?'Change photo':'Add a photo'}<input type="file" accept="image/*" data-file="photo" aria-label="Profile photo"></span><span class="hint">You can also add it later. Our team checks every photo.</span></div></div>
     ${pickF('createdBy','Profile created by','draft')}
     <div class="row2">${pickF('h','Height','draft',{ph:'Select'})}${pickF('marital','Marital status','draft')}</div>`}${pickF('country','Country you live in','draft',{ph:'Choose a country'})}
@@ -1160,7 +1161,7 @@ function renderMe(){
     ${me.photoPending?`<p class="hint">${ic('info')} Your photo is waiting for a quick check by our team.</p>`:''}
     <div class="complete"><div class="hint">Profile ${pct}% complete${pct<100?' · a complete profile builds more trust':''}</div><div class="bar"><i style="width:${pct}%"></i></div></div>
     <button class="btn ghost" data-a="edit">Edit profile</button></div>
-   <button class="likes nm-bio" data-a="shareBio"><span class="pi">${ic('send')}</span><span class="tx"><b>Family biodata</b><span>Send a private 7-day link to your parents. No phone, email or photos.</span></span>${ic('back','flipx')}</button>${S.bioUntil?`<p class="hint">Your link works until ${esc(new Date(S.bioUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short'}))}. <button class="link" data-a="stopBio">Stop link</button></p>`:''}
+   <button class="likes nm-bio" data-a="shareBio"><span class="pi">${ic('send')}</span><span class="tx"><b>Family biodata</b><span>Send a private 7-day link to your family. They can answer 👍 or 🤔. No phone, email or photos.</span></span>${ic('back','flipx')}</button>${(S.bioReacts||[]).length?`<div class="fam-r"><b>${ic('users')}Your family said</b>${S.bioReacts.slice(0,5).map(r=>`<span>${r.reaction==='good'?'👍 Looks good':'🤔 Let’s talk'}${r.who?` · ${esc(r.who)}`:''}</span>`).join('')}</div>`:''}${S.bioUntil?`<p class="hint">Your link works until ${esc(new Date(S.bioUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short'}))}. <button class="link" data-a="stopBio">Stop link</button></p>`:''}
    ${recheckCall(me)}<div class="panel"><h3>Verification</h3><div>${vr(idS[0],'Government ID',idS[1],1)}${vr(sS[0],'Live selfie',sS[1],1)}${vr(rS[0],`Roots: ${me.os}, ${me.oc}`,rS[0]==='ok'&&me.rootsAt?`Proven with a document · ${dt(me.rootsAt)}`:rS[1],2)}${vr(lS[0],`Lives in: ${myPlace()}, ${me.country}`,lS[1],3)}${me.locOk?vr('ok','Location check',`Confirmed · ${dt(me.locAt)}`):''}<div class="vrow">${ic('info','no-ic')}<span class="tx"><b>Phone number</b><small>${me.phone?esc(me.phone)+' · code checks by SMS are coming soon':'Optional · add it in Edit profile'}</small></span></div></div></div>
    ${workCard()}
    <div class="panel"><h3>Privacy</h3><div>

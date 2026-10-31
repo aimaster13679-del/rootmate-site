@@ -868,3 +868,4 @@ a.btn{text-decoration:none}
 .ws-c{flex:none;display:flex;flex-direction:column;gap:1px;border:1px solid var(--line);border-radius:14px;padding:8px 12px;background:var(--surface)}
 .ws-c b{font-size:13.5px}.ws-c small{font-size:11.5px;color:var(--muted)}
 .ws-c.on{background:var(--gold-soft);border-color:color-mix(in srgb,var(--gold) 45%,var(--line))}.ws-c.rd{background:color-mix(in srgb,var(--good) 12%,var(--surface));border-color:color-mix(in srgb,var(--good) 35%,var(--line))}
+.fam-r{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px;font-size:13px}.fam-r b{width:100%;display:flex;gap:6px;align-items:center}.fam-r b svg{width:15px;height:15px;color:var(--rose)}.fam-r span{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 10px;font-weight:700}
