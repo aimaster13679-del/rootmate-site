@@ -931,6 +931,14 @@ function collegeBox(d){if(!d.eduPick||d.eduPick==='High school'||d.eduPick==='__
   return `<div class="fld" data-f="college"><span>Where did you study?</span><input id="f-univq" data-univq placeholder="Search a college" value="${esc(S.univQ||'')}" autocomplete="off">
   ${S.univ&&S.univ.loading?'<p class="hint">Loading colleges…</p>':L.length?`<div class="ulist">${sorted.map(u=>`<button type="button" class="urow${d.college===u.n?' on':''}" data-a="univSet" data-v="${esc(u.n)}"><span>${esc(u.n)}</span><small>${esc(u.k)}</small></button>`).join('')}</div>`:''}
   <span class="hint">${d.college?`Chosen: <b>${esc(d.college)}</b> · `:''}Not in the list? <button type="button" class="linkbtn" data-a="univType">Type it</button></span>${S.univType?`<input id="f-college" data-bind="college" maxlength="80" placeholder="College or university" value="${esc(d.college||'')}" style="margin-top:6px">`:''}</div>`}
+const CELE={2:['Roots done!',d=>d.oc?`People from ${d.oc} will now show first in your matches.`:'People from your roots will now show first.','Your life now','about 60 sec',4,'about 5 min'],
+  3:['Your life is in!',d=>d.city?`Matches will show the real distance to you in ${d.city}.`:'Matches will show the real distance to you.','What matters to you','about 90 sec',3,'about 4 min'],
+  5:['Verification ready!',()=>'It goes to our team when you finish the last part. A person checks it, usually within a day.','Who you want to meet','about 30 sec',1,'about 30 sec']};
+function celeLayer(){const c=CELE[S.cele];if(!c)return '';const d=S.draft;const pct=Math.round(S.cele/6*100);
+  const cf=Array.from({length:36},(_,i)=>`<i style="left:${(i*37)%100}%;animation-delay:${(i%9)*0.06}s;background:${['#E8436B','#B8863A','#2D8A61','#FF8FA1','#E9C98D'][i%5]};--r:${(i*47)%360}deg"></i>`).join('');
+  return `<div class="cele" role="dialog" aria-live="polite"><div class="cf">${cf}</div><div class="cele-c"><div class="cele-e">🎉</div><h2>${c[0]}</h2><p>${esc(c[1](d))}</p>
+  <div class="cele-n"><b>Next: ${c[2]} · ${c[3]}</b><span>${c[4]} short part${c[4]>1?'s':''} left · ${c[5]} in total</span></div>
+  <div class="cele-bar"><i style="width:${pct}%"></i></div><button class="btn primary block" data-a="celeGo">Keep going</button><p class="hint" style="text-align:center;margin:8px 0 0">Take a break any time, we save everything.</p></div></div>`}
 function renderSignup(){if(S.suInter&&!S.editMode)return journeyScreen(S.suInter);if(!S.editMode)setTimeout(()=>noteStep(S.step),0);
   const d=S.draft,st=S.step,edit=S.editMode;let body='';const lockedId=edit&&S.me&&S.me.v.id;
   if(st===1){
@@ -1007,7 +1015,7 @@ function renderSignup(){if(S.suInter&&!S.editMode)return journeyScreen(S.suInter
   if(st===5&&d.vs)return verifyHead(d)+`<div class="scroll" id="su-scroll"><div class="form pad">${body}</div></div>`+verifyFoot(d);
   const vReady=st===5&&verifyAllReady(d,edit?S.me:null),vFirst=st===5?([1,2,3].find(n=>!['ok','wait','ready'].includes(vState(n,d,edit?S.me:null)))||1):1;
   const vAny=st===5&&[1,2,3].some(n=>vState(n,d,edit?S.me:null)!=='todo');
-  return `<div class="su-head pad"><button class="iconbtn" data-a="suBack" aria-label="${st===1&&!edit?'Back to start':'Previous step'}">${ic('back')}</button>
+  return `${S.cele&&!edit?celeLayer():''}<div class="su-head pad"><button class="iconbtn" data-a="suBack" aria-label="${st===1&&!edit?'Back to start':'Previous step'}">${ic('back')}</button>
     <div class="t"><small>${edit?'Edit profile':'Step '+st+' of 6 · saved'}</small><h2>${STEPS[st-1]}</h2>
     ${edit?`<div class="steps-nav" role="tablist">${STEPS.map((s,i)=>`<button data-a="suJump" data-n="${i+1}" class="${i+1===st?'on':''}" role="tab" aria-selected="${i+1===st}">${i+1}. ${SHORT[i]}</button>`).join('')}</div>`:`<div class="progress" aria-hidden="true">${STEPS.map((_,i)=>`<i class="${i<st?'on':''}"></i>`).join('')}</div>${S.draft&&S.draft.g!=='M'?`<p class="su-offer">${ic('crown')}<span>First 300 verified women in every country get <b>3 months of Gold free</b></span></p>`:''}`}</div></div>
   <div class="scroll" id="su-scroll"><div class="form pad">${edit?'':`<p class="su-trust">${ic('shield')}<span>${SU_TRUST[st-1]}</span></p>`}${body}</div></div>
@@ -1859,6 +1867,7 @@ const A={
     try{await API.updatePassword(a.pw);busy='';S.auth=null;toast('Password changed.','check');await afterLogin()}catch(err){busy='';fail(err);render()}},
   legal(el){sheet={type:'legal',k:el.dataset.k};render()},
   helpOpen(){sheet={type:'help'};render()},
+  celeGo(){const st=S.cele;S.cele=null;goStep(st+1)},
   suCont(){const n=S.suInter==='reward'?5:2;S.suInter=null;goStep(n)},
   chipSet(el){applyChange('draft',el.dataset.k,el.dataset.v);render()},
   traitTap(el){const d=S.draft,k=el.dataset.k;let t=(d.traits||[]).slice();const i=t.indexOf(k);if(i>=0)t.splice(i,1);else{if(t.length>=3)t.shift();t.push(k)}d.traits=t;if(!d.aboutEdited)d.about=autoAbout(d);delete S.errors.about;render()},
@@ -1869,6 +1878,7 @@ const A={
   suBack(){if(S.suInter){S.suInter=null;render();return}if(S.editMode){if(S.step>1)goStep(S.step-1);else A.suCancel();return}if(S.step>1)goStep(S.step-1);else{sheet={type:'logout'};render()}},
   suJump(el){goStep(+el.dataset.n)},
   async suNext(){const e=validateStep(S.step,S.draft);S.errors=e;if(Object.keys(e).length){showErrors();return}
+    if(!S.editMode&&(S.step===2||S.step===3||S.step===5)){S.cele=S.step;render();return}
     if(!S.editMode&&(S.step===1||S.step===4)&&!S.draft['seen'+S.step]){S.draft['seen'+S.step]=1;S.suInter=S.step===1?'journey':'reward';save();render();const sc=document.getElementById('su-scroll');if(sc)sc.scrollTop=0;return}
     if(S.step<6){goStep(S.step+1);return}
     if(busy)return;busy='save';S.saveMsg='Saving your profile';render();

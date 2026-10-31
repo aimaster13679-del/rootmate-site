@@ -878,3 +878,11 @@ a.btn{text-decoration:none}
 .qdots{display:flex;gap:5px;justify-content:center;margin-top:14px}.qdots i{width:7px;height:7px;border-radius:50%;background:var(--line)}.qdots i.on{background:var(--rose)}.qdots i.cur{background:var(--rose);width:18px;border-radius:4px}
 .ulist{max-height:260px;overflow:auto;border:1.5px solid var(--line);border-radius:14px;margin-top:6px;background:var(--surface)}.urow{display:flex;justify-content:space-between;gap:8px;width:100%;border:0;border-bottom:1px solid var(--line);background:none;padding:10px 12px;font:inherit;font-weight:700;font-size:14px;text-align:left;color:var(--ink);cursor:pointer}.urow small{color:var(--muted);font-weight:700;white-space:nowrap}.urow.on{background:var(--rose-soft);color:var(--rose-deep)}
 .linkbtn{border:0;background:none;color:var(--rose-deep);font:inherit;font-weight:800;padding:0;cursor:pointer;text-decoration:underline}
+.cele{position:fixed;inset:0;z-index:80;background:rgba(59,31,42,.38);display:flex;align-items:center;justify-content:center;padding:22px;animation:celeIn .2s ease-out}
+.cele-c{position:relative;background:var(--surface);border-radius:28px;padding:24px 20px;text-align:center;width:100%;max-width:380px;box-shadow:0 30px 70px rgba(59,31,42,.3);animation:celePop .35s cubic-bezier(.2,1.4,.4,1)}
+.cele-e{font-size:52px;line-height:1}.cele-c h2{font-family:Lora,serif;font-size:26px;margin:8px 0 6px}.cele-c p{color:var(--muted);font-size:14.5px;line-height:1.45;margin:0}
+.cele-n{background:var(--gold-soft);border-radius:16px;padding:10px 12px;margin:14px 0 10px;font-size:14px;color:#7A5418;display:grid;gap:2px}.cele-n span{font-weight:700;font-size:13px}
+.cele-bar{height:6px;border-radius:3px;background:var(--line);margin-bottom:14px}.cele-bar i{display:block;height:6px;border-radius:3px;background:var(--rose)}
+.cele .cf{position:absolute;inset:0;overflow:hidden;pointer-events:none}.cele .cf i{position:absolute;top:-20px;width:9px;height:14px;border-radius:2px;transform:rotate(var(--r));animation:celeFall 1.6s ease-in forwards}
+@keyframes celeFall{to{transform:translateY(110vh) rotate(calc(var(--r) + 540deg));opacity:.2}}@keyframes celeIn{from{opacity:0}}@keyframes celePop{from{transform:scale(.85);opacity:0}}
+@media (prefers-reduced-motion:reduce){.cele .cf{display:none}.cele,.cele-c{animation:none}}
