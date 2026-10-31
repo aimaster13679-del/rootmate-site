@@ -1010,3 +1010,4 @@ a.btn{text-decoration:none}
 .v2ring>span{width:54px;height:54px;border-radius:50%;background:conic-gradient(var(--c) var(--p),var(--line) 0);display:grid;place-items:center}
 .v2ring>span b{width:42px;height:42px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font:900 12.5px var(--f-body)}
 .v2ring em{font-style:normal;font-weight:800;font-size:12px;margin-top:4px}.v2ring small{font-size:10.5px;color:var(--muted);font-weight:700;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.v2got{border:1.5px solid var(--rose)}.v2q{font-family:var(--f-display);font-style:italic;font-size:17px;margin:0}

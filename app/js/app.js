@@ -2635,6 +2635,31 @@ function v2ringRow(p){const r=v2rings(p);if(!r)return '';
     return h.replace('<ul class="nm-why">',v2ringRow(p)+'<ul class="nm-why">')};
 })();
 
+/* ---------- Reply to a part of a profile (mock screen 15) ---------- */
+function v2replyOpts(p){const me=S.me,out=[];
+  if(p.oc===me.oc&&p.os&&p.os===me.os)out.push(`We are both from ${p.os}!`);else if(p.oc===me.oc)out.push(`Another ${p.oc} family abroad, nice to see you here`);
+  if(p.t&&p.t===me.t)out.push(`We could talk in ${p.t}`);
+  const RP={0:['We both want to stay in our city','We are both open to moving within the country','We are both open to another country'],1:['Full careers for both of us, same here','Deciding careers together sounds right to me','Same view on home and career'],
+   2:['Living with parents, same for me','A home near our parents, same here','Independent but close to family, same here'],3:['Kids early, same for me','Same pace on kids','I am also not sure yet about kids'],5:['Family weekends are my favourite too','Weekends with friends, same here','Travel weekends, same here']};
+  for(const i of [0,3,1,2,5]){if(out.length>=3)break;const a=p.ans[i];if(me.ans[i]===a&&RP[i]&&RP[i][a])out.push(RP[i][a])}
+  out.push('I would love to know more about you');return out.slice(0,4)}
+function v2noteFrom(id){const i=(RAW.ints||[]).find(x=>x.from_user===id&&x.to_user===(S.me&&S.me.id)&&x.note);return i?i.note:''}
+(function(){
+  const _pv=renderProfileView;renderProfileView=function(id,isMe){const h=_pv(id,isMe);if(!V2()||isMe)return h;const p=byId(id);if(!p)return h;
+    const k=`<div class="panel"><h3>About</h3><p class="notr">${esc(p.about)}</p></div>`;if(!h.includes(k))return h;
+    const got=v2noteFrom(id);const st=S.interests[id];const cur=(S.v2note||{})[id]||'';
+    const box=got?`<div class="panel v2 v2got"><p class="v2lb" style="margin:0 0 6px">${esc(p.first||'They')} replied to your profile</p><p class="v2q">“${esc(got)}”</p></div>`
+      :(!st||st==='none')&&!locked(p)?`<div class="panel v2"><p class="v2lb" style="margin:0 0 8px">Reply to this · one tap</p><div class="v2chips">${v2replyOpts(p).map(o=>`<button type="button" class="v2chip${cur===o?' on':''}" data-a="v2note" data-id="${id}" data-v="${esc(o)}">${esc(o)}</button>`).join('')}</div>
+        <p class="v2note" style="margin-top:8px">${ic('heart')} ${cur?'Sent together with your interest.':'Pick one, then send your interest. A reply is easier to answer than “hi”.'}</p></div>`:'';
+    return h.replace(k,k+box)};
+  const _int=A.interest;A.interest=async function(el){const id=el.dataset.id,note=V2()&&(S.v2note||{})[id];
+    if(!note||S.interests[id]==='received'||needVerified()||!isGold())return _int.call(A,el);
+    const p=byId(id);S.interests[id]='sent';S.passed=S.passed.filter(x=>x!==id);save();render();
+    try{await API.insert('interests',{from_user:S.me.id,to_user:id,note:note.slice(0,140),note_on:'About'},{returning:false});toast(`Interest and your reply sent to ${p.first}.`,'heart')}
+    catch(e){delete S.interests[id];render();fail(e)}};
+  A.v2note=function(el){S.v2note=S.v2note||{};const id=el.dataset.id;S.v2note[id]=S.v2note[id]===el.dataset.v?'':el.dataset.v;render()};
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p)}; /* used by automated tests */
 boot();
 })();
