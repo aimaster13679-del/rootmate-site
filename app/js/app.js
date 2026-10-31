@@ -2741,6 +2741,55 @@ function camSelfieRun(){let keep=null;const tick=()=>{if(!CAM.on)return;
   const _gb=goBack;goBack=function(){if(CAM.on){camStop();render();return true}return _gb()};
 })();
 
+/* ---------- Voice intro (mock screen 9): record up to 30 s, our team listens, then matches can play it ---------- */
+const VPROMPTS=['A Sunday with me looks like…','My family is…','I am proud of…','Back home, I miss…'];
+const VREC={rec:null,chunks:[],t0:0,timer:null,sec:0,blob:null,url:'',prompt:VPROMPTS[0],state:'idle',err:''};
+const VOICE={me:undefined,of:{},urls:{}};
+function vrecBox(where){const r=VREC;const has=!!r.blob;const mine=VOICE.me;
+  return `<div class="v2card v2voice" data-w="${where}"><div class="v2rowsp"><b>${ic('mic')} Say hello in your voice</b><small class="v2pill" style="background:var(--sunk);color:var(--ink)">optional · 30 sec</small></div>
+   <div class="v2chips" style="margin-top:8px">${VPROMPTS.map(p=>`<button type="button" class="v2chip${r.prompt===p?' on':''}" data-a="vPrompt" data-v="${esc(p)}">${esc(p)}</button>`).join('')}</div>
+   ${r.err?`<p class="v2note" style="margin-top:8px">${ic('info')} ${esc(r.err)}</p>`:''}
+   <div class="v2vrow">${r.state==='rec'?`<button class="v2mic on" data-a="vStop" aria-label="Stop"><i></i></button><span><b>Recording · 0:${String(r.sec).padStart(2,'0')}</b><small>Tap to stop. Stops by itself at 0:30.</small></span>`
+     :has?`<audio controls src="${esc(r.url)}" preload="metadata"></audio>`
+     :`<button class="v2mic" data-a="vStart" aria-label="Record">${ic('mic')}</button><span><b>Tap and talk</b><small>Speak about “${esc(r.prompt.replace('…',''))}”. No phone numbers or contacts.</small></span>`}</div>
+   ${has&&r.state!=='rec'?`<div class="v2rowsp" style="margin-top:8px"><button class="btn ghost sm" data-a="vRedo">${ic('refresh')}Record again</button>${where==='me'?`<button class="btn primary sm" data-a="vSend">Send for a quick check</button>`:`<small class="v2note">${ic('check')} Sent when you finish</small>`}</div>`:''}
+   ${where==='me'&&mine&&!has?`<p class="v2note" style="margin-top:8px">${mine.status==='approved'?`${ic('check')} Your voice intro is live on your profile.`:mine.status==='pending'?`${ic('clock')} Our team listens to it, usually within a day.`:`${ic('info')} Not approved${mine.note?': '+esc(mine.note):''}. Record a new one.`}</p>`:''}
+   <p class="v2note" style="margin-top:6px">${ic('lock')} Only verified members you can see will hear it. Our team listens first.</p></div>`}
+async function vStartRec(){const r=VREC;r.err='';
+  try{const st=await navigator.mediaDevices.getUserMedia({audio:true});const mt=['audio/webm;codecs=opus','audio/mp4','audio/webm'].find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))||'';
+    r.rec=new MediaRecorder(st,mt?{mimeType:mt}:undefined);r.chunks=[];r.rec.ondataavailable=e=>{if(e.data&&e.data.size)r.chunks.push(e.data)};
+    r.rec.onstop=()=>{st.getTracks().forEach(t=>t.stop());clearInterval(r.timer);r.blob=new Blob(r.chunks,{type:r.rec.mimeType||'audio/webm'});r.url=URL.createObjectURL(r.blob);r.state='idle';if(r.sec<2){r.blob=null;r.err='That was very short. Try again and talk a little longer.'}if(S.draft)S.draft.voiceBlob=r.blob;render()};
+    r.rec.start();r.state='rec';r.sec=0;r.t0=Date.now();r.timer=setInterval(()=>{r.sec=Math.floor((Date.now()-r.t0)/1000);if(r.sec>=30){r.rec.stop()}else render()},500);render()}
+  catch(e){r.err='The microphone is not allowed here. You can add a voice intro later from Me.';render()}}
+async function vUpload(blob,prompt,secs){const uid=API.userId();const ext=/mp4/.test(blob.type)?'m4a':'webm';const path=`${uid}/intro-${Date.now()}.${ext}`;
+  await API.upload('voice',path,blob);await API.rpc('voice_save',{p:path,prm:prompt,secs:Math.max(1,Math.min(40,secs||1))});VOICE.me=undefined}
+function vMeLoad(){if(VOICE.me!==undefined)return;VOICE.me=null;API.rpc('voice_of',{uid:API.userId()}).then(r=>{VOICE.me=r||null;render()}).catch(()=>{})}
+function vOfLoad(id){if(VOICE.of[id]!==undefined)return;VOICE.of[id]=null;API.rpc('voice_of',{uid:id}).then(async r=>{VOICE.of[id]=r||0;if(r&&r.path){try{const u=await API.signMany('voice',[r.path],3600);VOICE.urls[id]=u[r.path]}catch(e){}}render()}).catch(()=>{VOICE.of[id]=0})}
+(function(){
+  /* sign-up: on the photo studio step, under "Pick 3" */
+  const _su=renderSignupV2;renderSignupV2=function(){const h=_su();if(S.step===3&&(S.draft.v2b||'a')==='b'){const k='<p class="v2lb">Pick 3 that are so you</p>';return h.replace(k,vrecBox('su')+k)}return h};
+  renderSignupV2.orig=_su.orig;
+  /* after the profile is saved, send the voice intro */
+  const _nx=A.suNext;A.suNext=async function(){const vb=S.draft&&S.draft.voiceBlob,pr=VREC.prompt,sec=VREC.sec;await _nx.call(A);
+    if(vb&&S.screen==='app'){try{await vUpload(vb,pr,sec);VREC.blob=null;toast('Your voice intro is with our team for a quick listen.','check')}catch(e){}}};
+  const _me=renderMe;renderMe=function(){const h=_me();if(!V2())return h;vMeLoad();const k='<button class="likes nm-bio" data-a="shareBio">';return h.includes(k)?h.replace(k,vrecBox('me')+k):h};
+  const _pv=renderProfileView;renderProfileView=function(id,isMe){const h=_pv(id,isMe);if(!V2()||isMe)return h;vOfLoad(id);const v=VOICE.of[id],u=VOICE.urls[id];if(!v||!u)return h;
+    const box=`<div class="panel v2"><p class="v2lb" style="margin:0 0 8px">${ic('mic')} Hear ${esc((byId(id)||{}).first||'them')}${v.prompt?' · '+esc(v.prompt):''}</p><audio controls preload="none" src="${esc(u)}" style="width:100%"></audio></div>`;
+    const k='<div class="panel"><h3>About</h3>';return h.includes(k)?h.replace(k,box+k):h};
+  Object.assign(A,{
+    vPrompt(el){VREC.prompt=el.dataset.v;render()},vStart(){vStartRec()},vStop(){if(VREC.rec&&VREC.rec.state==='recording')VREC.rec.stop()},
+    vRedo(){VREC.blob=null;VREC.url='';if(S.draft)S.draft.voiceBlob=null;render()},
+    async vSend(el){if(!VREC.blob)return;el.disabled=true;try{await vUpload(VREC.blob,VREC.prompt,VREC.sec);VREC.blob=null;toast('Sent. Our team listens to it, usually within a day.','check');vMeLoad()}catch(e){el.disabled=false;toast('Could not send. Try again.','info')}render()}
+  });
+  /* team: voice intros to check, at the top of the review queue */
+  const _ra=renderAdmin;renderAdmin=function(){const h=_ra();const a=S.admin||{};if(a.voices===undefined){a.voices=null;S.admin=a;
+      API.rpc('admin_voice_queue').then(async L=>{a.voices=L||[];const u=L&&L.length?await API.signMany('voice',L.map(x=>x.path),3600).catch(()=>({})):{};a.vurls=u;render()}).catch(()=>{a.voices=[]})}
+    const L=a.voices||[];if(!L.length)return h;
+    const box=`<div class="panel v2"><h3>Voice intros to check (${L.length})</h3><p class="hint">Approve only if there is no phone number, contact, money talk or anything rude.</p>${L.map(x=>`<div class="v2card" style="margin-top:8px"><b>${esc(x.full_name)}</b> <small class="hint">${esc(x.prompt||'')} · ${x.seconds||'?'} s</small><audio controls preload="none" src="${esc((a.vurls||{})[x.path]||'')}" style="width:100%;margin-top:6px"></audio><div class="v2rowsp" style="margin-top:6px"><button class="btn ghost sm" data-a="vAdm" data-id="${x.user_id}" data-ok="0">Not ok</button><button class="btn primary sm" data-a="vAdm" data-id="${x.user_id}" data-ok="1">Approve</button></div></div>`).join('')}</div>`;
+    const k='id="view-scroll"><div class="pad" style="display:grid;gap:14px;padding-block:16px 26px">';return h.includes(k)?h.replace(k,k+box):h};
+  A.vAdm=async function(el){const ok=el.dataset.ok==='1';try{await API.rpc('admin_voice',{uid:el.dataset.id,ok,why:ok?null:'Please record again without contact details.'});S.admin.voices=S.admin.voices.filter(x=>x.user_id!==el.dataset.id);render();toast(ok?'Voice intro approved.':'Sent back.','check')}catch(e){toast('Could not save. Try again.','info')}};
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p)}; /* used by automated tests */
 boot();
 })();
