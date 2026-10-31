@@ -905,7 +905,33 @@ function tzWarn(d){const t=tzCountry();if(!t||!d.country||t===d.country||d.tzAck
   <div class="vopts"><button type="button" class="vopt" data-a="tzSwitch" data-v="${esc(t)}"><span class="rd" aria-hidden="true"></span><span class="tx"><b>I live in ${esc(t)}</b><small>Change my country to ${esc(t)}</small></span></button>
   <button type="button" class="vopt" data-a="tzKeep"><span class="rd" aria-hidden="true"></span><span class="tx"><b>I live in ${esc(d.country)}, I’m only visiting ${esc(t)}</b><small>Keep ${esc(d.country)}. You prove it with documents in step 5.</small></span></button></div>
   <p class="hint">We use only your phone’s time zone. No permission is needed.</p>`}
-function renderSignup(){if(!S.editMode)setTimeout(()=>noteStep(S.step),0);
+
+/* Fun sign-up (his ok 31 Oct 12:01/12:12): taps instead of typing, one card at a time, benefit on every part. */
+const POP_OC=[['India','🇮🇳'],['Nigeria','🇳🇬'],['Philippines','🇵🇭'],['Mexico','🇲🇽'],['Pakistan','🇵🇰'],['China','🇨🇳'],['Lebanon','🇱🇧'],['Brazil','🇧🇷'],['Kenya','🇰🇪'],['Poland','🇵🇱']];
+const RELS=['Christian','Muslim','Hindu','Sikh','Buddhist','Jewish','No religion'];
+const TRAITS=[['cook','🍳 Loves cooking','love cooking for family and friends'],['travel','✈️ Travel','love to travel'],['family','👨‍👩‍👧 Family first','put family first'],['read','📚 Reader','enjoy a good book'],['fit','🏃 Fitness','keep fit and active'],['music','🎵 Music','love music'],['faith','🙏 Faith matters','faith matters to me'],['creative','🎨 Creative','have a creative side'],['career','💼 Career-focused','work hard on my career'],['pets','🐶 Pet lover','love animals'],['outdoors','🌳 Outdoors','love nature and the outdoors'],['calm','😊 Calm and kind','am calm and kind by nature']];
+function chipRow(k,opts,cur){return `<div class="grid-c">${opts.map(([v,l])=>`<button type="button" class="cchip${String(cur)===String(v)?' on':''}" data-a="chipSet" data-k="${k}" data-v="${esc(v)}">${esc(l)}</button>`).join('')}</div>`}
+function autoAbout(d){const tr=(d.traits||[]).map(k=>(TRAITS.find(t=>t[0]===k)||[])[2]).filter(Boolean);const job=d.job&&d.job!=='Student'?d.job:'';
+  let a=(job?`${job}`:'')+(d.city?`${job?' in ':'Living in '}${d.city}`:'')+(d.oc?`, grew up in ${d.os?d.os+', ':''}${d.oc}.`:'.');
+  if(tr.length)a+=` I ${tr.slice(0,-1).join(', ')}${tr.length>1?' and ':''}${tr[tr.length-1]}.`;a+=' Looking for a kind partner for life.';return a.replace(/^\.\s*/,'').trim()}
+function journeyScreen(kind){const d=S.draft;const parts=[['👋','You','Name and birthday','',1],['🌍','Your roots','So people from your roots show first','40 sec',2],['🏙️','Your life now','City, work, study, mostly taps','60 sec',3],['💞','What matters to you','9 quick cards that build your match %','90 sec',4],['🛡️','Get verified','Your safety badge, checked by a person','3 min',5]];
+  const doneTo=kind==='reward'?4:1;
+  return `<div class="su-head pad"><div></div><div class="grow"><p class="eyebrow">${kind==='reward'?'Great progress':'Your NeuMarry journey'}</p><h1>${kind==='reward'?'Your match profile is <em>ready.</em>':'5 short parts. <em>Real people</em> at the end.'}</h1></div></div>
+  <div class="scroll" id="su-scroll"><div class="form pad"><p class="hint" style="margin-top:0">${kind==='reward'?'We now know what matters to you. One last part, then you meet only verified people.':'Mostly taps, almost no typing. Stop any time, we save every answer.'}</p>
+  <div class="jparts">${parts.map(([ic2,t,sub,tm,n])=>`<div class="jpt${n<=doneTo?' done':''}"><span class="jic">${n<=doneTo?'✓':ic2}</span><span><b>${t}</b><small>${sub}</small></span><span class="jtm">${n<=doneTo?'done':tm}</span></div>`).join('')}</div>
+  ${kind==='reward'?`<p class="su-trust">${ic('shield')}<span>After verification you see only verified people, and they see you.</span></p>`:''}
+  <button class="btn primary block" data-a="suCont" style="margin-top:16px">${kind==='reward'?'Continue: get verified':'Continue: your roots'}</button>
+  ${kind==='reward'?'<p class="hint" style="text-align:center">Do it later. Your answers are saved.</p>':''}</div></div>`}
+function univLoad(d){const want=[d.country,d.oc].filter(Boolean).join('|');if(!want||(S.univ&&S.univ.key===want))return;S.univ={key:want,loading:true,list:[]};
+  const slug=c=>c.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  Promise.all([d.country,d.oc].filter((c,i,a)=>c&&a.indexOf(c)===i).map(c=>fetch('https://neumarry.com/univ/'+slug(c)+'.json').then(r=>r.ok?r.json():[]).then(l=>l.map(u=>({n:u[0],c:u[1]||'',k:(u[1]?u[1]+', ':'')+c}))).catch(()=>[])))
+   .then(ls=>{if(!S.univ||S.univ.key!==want)return;S.univ={key:want,list:[].concat(...ls)};if(S.screen==='signup'&&S.step===3)render()})}
+function collegeBox(d){if(!d.eduPick||d.eduPick==='High school'||d.eduPick==='__o')return '';setTimeout(()=>univLoad(d),0);const L=(S.univ&&S.univ.list)||[];const q=(S.univQ||'').toLowerCase();
+  const city=(d.city||'').toLowerCase();const sorted=L.filter(u=>!q||u.n.toLowerCase().includes(q)).sort((a,b)=>(b.c&&city&&b.c.toLowerCase().includes(city)?1:0)-(a.c&&city&&a.c.toLowerCase().includes(city)?1:0)).slice(0,40);
+  return `<div class="fld" data-f="college"><span>Where did you study?</span><input id="f-univq" data-univq placeholder="Search a college" value="${esc(S.univQ||'')}" autocomplete="off">
+  ${S.univ&&S.univ.loading?'<p class="hint">Loading colleges…</p>':L.length?`<div class="ulist">${sorted.map(u=>`<button type="button" class="urow${d.college===u.n?' on':''}" data-a="univSet" data-v="${esc(u.n)}"><span>${esc(u.n)}</span><small>${esc(u.k)}</small></button>`).join('')}</div>`:''}
+  <span class="hint">${d.college?`Chosen: <b>${esc(d.college)}</b> · `:''}Not in the list? <button type="button" class="linkbtn" data-a="univType">Type it</button></span>${S.univType?`<input id="f-college" data-bind="college" maxlength="80" placeholder="College or university" value="${esc(d.college||'')}" style="margin-top:6px">`:''}</div>`}
+function renderSignup(){if(S.suInter&&!S.editMode)return journeyScreen(S.suInter);if(!S.editMode)setTimeout(()=>noteStep(S.step),0);
   const d=S.draft,st=S.step,edit=S.editMode;let body='';const lockedId=edit&&S.me&&S.me.v.id;
   if(st===1){
     const maxDob=new Date();maxDob.setFullYear(maxDob.getFullYear()-18);
@@ -926,9 +952,12 @@ function renderSignup(){if(!S.editMode)setTimeout(()=>noteStep(S.step),0);
   }else if(st===2){
     const hasStates=statesOf(d.oc).length>0;
     body=`<div class="callout">${ic('pin')}<span>Where were you born and brought up? We use this to find people from your roots.</span></div>
+    ${edit?'':`<p class="lbl-s">Tap your country, or search all countries</p>${chipRow('oc',POP_OC.map(([c,f])=>[c,f+' '+c]),d.oc)}`}
     ${pickF('oc','Country of origin','draft',{ph:'Choose a country'})}
     ${pickF('os','State / region','draft',{ph:hasStates?'Choose a state or region':'Type your region',disabled:!d.oc})}
+    ${!edit&&d.oc&&TONGUE_BY_ORIGIN[d.oc]?`<p class="lbl-s">Language at home</p>${chipRow('t',TONGUE_BY_ORIGIN[d.oc].slice(0,6).map(x=>[x,x]),d.t)}`:''}
     ${pickF('t','Mother tongue','draft',{ph:'Choose a language'})}
+    ${edit?'':`<p class="lbl-s">Faith</p>${chipRow('r',RELS.map(x=>[x,x]),d.r)}`}
     ${pickF('r','Religion','draft',{ph:'Choose a religion'})}
     ${pickF('c','Community (optional)','draft',{ph:d.r?'Choose or type your community':'Choose a religion first',disabled:!d.r,showBlank:!!d.r,hint:'Only used when you or a match filter by it.'})}
     <div class="panel" style="padding:4px 16px">${toggle('privacy.showC','Show my community on my profile','Turn off to keep it private. Filters still work.',d.privacy.showC)}</div>`;
@@ -943,10 +972,16 @@ function renderSignup(){if(!S.editMode)setTimeout(()=>noteStep(S.step),0);
     ${pickF('reloc','Open to relocating for the right person?','draft',{ph:'Choose',disabled:!d.country})}
     ${edit?inF('job','Profession','text',d.job,'maxlength="60" placeholder="e.g. Software engineer"'):pickOrOther('job','What do you do?',JOBS,'Type your profession')}
     ${edit?inF('edu','Highest education','text',d.edu,'maxlength="80" placeholder="e.g. MSc, University of Toronto"'):pickOrOther('edu','Highest study',EDUS,'Type your study')}
+    ${edit?'':collegeBox(d)}
+    ${edit?'':`<div class="fld" data-f="traits"><span>Pick 3 that are so you</span><div class="grid-c">${TRAITS.map(([k,l])=>`<button type="button" class="cchip${(d.traits||[]).includes(k)?' on':''}" data-a="traitTap" data-k="${k}">${l}</button>`).join('')}</div><span class="hint">We write your “About me” from these. You can change it.</span></div>`}
     <label class="${fldCls('about')}" data-f="about"><span>About me</span><textarea id="f-about" data-bind="about" maxlength="600" placeholder="Where you grew up, what you love, what you are looking for.">${esc(d.about)}</textarea><span class="hint">At least 40 characters. Do not add phone numbers or social handles here.</span>${errOf('about')}</label>`;
   }else if(st===4){
-    body=`<p class="hint">There are no right answers. We use these to show how your mindsets match.</p>
+    const qi=d.ans.findIndex(x=>x===null||x===undefined);
+    body=`${!edit&&qi>=0?`<div class="qcard"><p class="qn">Card ${qi+1} of ${QS.length}</p><h3>${esc(QS[qi].q)}</h3><div class="qans">${QS[qi].o.map((o,j)=>`<button type="button" class="qopt" data-a="qAns" data-i="${qi}" data-j="${j}">${esc(o)}</button>`).join('')}</div>
+      <div class="qdots">${QS.map((_,i)=>`<i class="${d.ans[i]!==null&&d.ans[i]!==undefined?'on':i===qi?'cur':''}"></i>`).join('')}</div>${qi>0?`<button type="button" class="linkbtn" data-a="qBack">Back to card ${qi}</button>`:''}</div>`:''}
+    ${!edit&&qi>=0?'':`${edit?'':`<p class="su-trust">${ic('check')}<span>All ${QS.length} cards done. Change any answer below.</span></p>`}<p class="hint">There are no right answers. We use these to show how your mindsets match.</p>
     ${QS.map((q,i)=>`<fieldset class="q${S.errors['ans.'+i]?' has-err':''}" data-f="ans.${i}"><legend>${i+1}. ${esc(q.q)}</legend><div class="opts">${q.o.map((o,j)=>`<label class="opt"><input type="radio" name="q${i}" value="${j}" data-bind="ans.${i}" data-num${d.ans[i]===j?' checked':''}><span>${esc(o)}</span></label>`).join('')}</div>${errOf('ans.'+i)}</fieldset>`).join('')}
+    `}
     <h3 class="section-t">Lifestyle</h3>
     ${pickF('diet','Diet','draft',{ph:'Choose'})}
     <div class="row2">${pickF('sm','Smoking','draft')}${pickF('dr','Drinking','draft')}</div>`;
@@ -987,7 +1022,7 @@ function validateStep(st,d){
     const a=ageFrom(d.dob);if(!d.dob)e.dob='Enter your date of birth';else if(a===null||a<18)e.dob='You must be 18 or older';else if(a>75)e.dob='Check the year';
     if(S.editMode&&!d.h)e.h='Choose your height';}
   if(st===2){if(!d.oc)e.oc='Choose your country of origin';if(!d.os)e.os='Choose your state or region';if(!d.t)e.t='Choose your mother tongue';if(!d.r)e.r='Choose your religion';}
-  if(st===3){if(!S.editMode){for(const k of ['job','edu']){const pk=d[k+'Pick'];if(pk&&pk!=='__o')d[k]=pk;else if(pk==='__o'&&d[k]&&(k==='job'?JOBS:EDUS).includes(d[k]))d[k]=''}}if(!S.editMode&&!d.h)e.h='Choose your height';if(!d.country)e.country='Choose the country you live in';else{if(statesOf(d.country).length&&!d.state)e.state='Choose one';if(!d.city)e.city='Choose or type';if(!d.res)e.res='Choose your residency status';if(!d.reloc)e.reloc='Choose one'}
+  if(st===3){if(!S.editMode){for(const k of ['job','edu']){const pk=d[k+'Pick'];if(pk&&pk!=='__o')d[k]=pk;else if(pk==='__o'&&d[k]&&(k==='job'?JOBS:EDUS).includes(d[k]))d[k]=''}}if(!S.editMode&&d.college&&d.eduPick&&d.eduPick!=='__o')d.edu=(d.eduPick+', '+d.college).slice(0,80);if(!S.editMode&&!d.h)e.h='Choose your height';if(!d.country)e.country='Choose the country you live in';else{if(statesOf(d.country).length&&!d.state)e.state='Choose one';if(!d.city)e.city='Choose or type';if(!d.res)e.res='Choose your residency status';if(!d.reloc)e.reloc='Choose one'}
     if(!d.job.trim())e.job='Add your profession';if(!d.edu.trim())e.edu='Add your education';
     const ab=d.about.trim();if(ab.length<40)e.about=`Write at least 40 characters (${ab.length} so far)`;else if(/(\+?\d[\d\s-]{8,}\d)|@[a-z0-9_.]{3,}|https?:\/\//i.test(ab))e.about='Remove phone numbers, links and social handles. You can share them after you match.';}
   if(st===4){d.ans.forEach((a,i)=>{if(a===null||a===undefined)e['ans.'+i]='Pick one answer'});if(!d.diet)e.diet='Choose your diet';}
@@ -1824,9 +1859,17 @@ const A={
     try{await API.updatePassword(a.pw);busy='';S.auth=null;toast('Password changed.','check');await afterLogin()}catch(err){busy='';fail(err);render()}},
   legal(el){sheet={type:'legal',k:el.dataset.k};render()},
   helpOpen(){sheet={type:'help'};render()},
-  suBack(){if(S.editMode){if(S.step>1)goStep(S.step-1);else A.suCancel();return}if(S.step>1)goStep(S.step-1);else{sheet={type:'logout'};render()}},
+  suCont(){const n=S.suInter==='reward'?5:2;S.suInter=null;goStep(n)},
+  chipSet(el){applyChange('draft',el.dataset.k,el.dataset.v);render()},
+  traitTap(el){const d=S.draft,k=el.dataset.k;let t=(d.traits||[]).slice();const i=t.indexOf(k);if(i>=0)t.splice(i,1);else{if(t.length>=3)t.shift();t.push(k)}d.traits=t;if(!d.aboutEdited)d.about=autoAbout(d);delete S.errors.about;render()},
+  qAns(el){const d=S.draft;d.ans[+el.dataset.i]=+el.dataset.j;delete S.errors['ans.'+el.dataset.i];save();render()},
+  qBack(){const d=S.draft;const qi=d.ans.findIndex(x=>x===null||x===undefined);if(qi>0){d.ans[qi-1]=null;render()}},
+  univSet(el){S.draft.college=el.dataset.v;S.univType=false;render()},
+  univType(){S.univType=true;render();const f=document.getElementById('f-college');if(f)f.focus()},
+  suBack(){if(S.suInter){S.suInter=null;render();return}if(S.editMode){if(S.step>1)goStep(S.step-1);else A.suCancel();return}if(S.step>1)goStep(S.step-1);else{sheet={type:'logout'};render()}},
   suJump(el){goStep(+el.dataset.n)},
   async suNext(){const e=validateStep(S.step,S.draft);S.errors=e;if(Object.keys(e).length){showErrors();return}
+    if(!S.editMode&&(S.step===1||S.step===4)&&!S.draft['seen'+S.step]){S.draft['seen'+S.step]=1;S.suInter=S.step===1?'journey':'reward';save();render();const sc=document.getElementById('su-scroll');if(sc)sc.scrollTop=0;return}
     if(S.step<6){goStep(S.step+1);return}
     if(busy)return;busy='save';S.saveMsg='Saving your profile';render();
     const d=S.draft,uid=API.userId();
@@ -2141,7 +2184,10 @@ function onBind(e){
   if(el.hasAttribute('data-rr')&&e.type==='change')render();
   save();
 }
-app.addEventListener('input',onBind);
+app.addEventListener('input',e=>{const el=e.target;
+  if(el.dataset&&el.dataset.univq!==undefined){S.univQ=el.value;clearTimeout(S._uq);S._uq=setTimeout(()=>{const pos=el.selectionStart;render();const f=document.getElementById('f-univq');if(f){f.focus();try{f.setSelectionRange(pos,pos)}catch(x){}}},180);return}
+  if(el.dataset&&el.dataset.bind==='about'&&S.draft)S.draft.aboutEdited=1;
+  onBind(e)});
 app.addEventListener('change',e=>{
   const el=e.target;
   if(el.dataset.file){const f=el.files&&el.files[0];if(!f||!S.draft)return;const d=S.draft,kind=el.dataset.file;el.value='';
