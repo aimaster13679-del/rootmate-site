@@ -2545,6 +2545,58 @@ function v2reveal(){const me=S.me;if(!me)return '';const sent=me.idCheck&&me.sel
   const _r=render;render=function(){_r();if(V2()){if(S.screen==='signup'&&S.step===1)v2wheelAfter();if(S.screen==='app'&&S.v2rev&&!app.querySelector('.v2rev'))app.insertAdjacentHTML('beforeend',v2reveal())}};
 })();
 
+/* ---------- Family Mixers v2 (his ok 1 Nov 01:01; founder preview) ---------- */
+const TALK=['Which festival food from home do you miss most, and who made it best?','What is one thing your city here taught you that home never did?',
+ 'Which song takes you straight back to where you grew up?','What would your grandmother say is the secret of a good marriage?',
+ 'Where in the world would you take your family for one perfect week?','What tradition from home do you want your own family to keep?'];
+const V2E={crowd:{},quiet:{},tt:0};
+function evNow(e){const t=Date.now(),s=e.date.getTime();const m=parseInt(e.dur)||3;return {live:t>=s-15*60e3&&t<=s+m*3600e3+30*60e3,after:t>=s}}
+function v2evHero(){const me0=S.me||{};const evs=events().filter(e=>e.status!=='cancelled');if(!evs.length)return '';
+  const near=e=>e.city&&me0.city&&e.city.toLowerCase()===String(me0.city).toLowerCase()?0:e.country===me0.country?1:2;
+  const e=evs.slice().sort((a,b)=>near(a)-near(b)||a.date-b.date)[0];const f=fmtDay(e.date,e.tz),[wc,wl,mc,ml]=e.seats;
+  const bar=(l,n,cap,c)=>`<div class="v2bar"><div><span>${l}</span><b>${n} of ${cap}</b></div><i><u style="width:${cap?Math.round(n/cap*100):0}%;background:${c}"></u></i></div>`;
+  return `<button class="v2evh v2" data-a="openEvent" data-id="${e.id}"><span class="v2evh-art">${evArt(e,true)}</span>
+   <span class="v2evh-b"><small>${near(e)===0?'Your city · ':''}${esc(e.city||e.country)}</small><b>${esc(e.title)} · ${esc(f.short||f.long)}</b><em>${e.time} · ${esc(e.dur)} · ages ${e.age}</em>
+   ${bar('Women',wc-wl,wc,'var(--rose)')}${bar('Men',mc-ml,mc,'#2E5E8C')}
+   <span class="v2evh-f"><span class="v2pill">${ic('users')} ${e.parents?'Parents welcome':'Members only'}</span><span class="v2go">See the evening ${ic('chev')}</span></span></span></button>`}
+function v2evExtras(e){const c=V2E.crowd[e.id],rv=e.my,n=evNow(e);
+  if(c===undefined){V2E.crowd[e.id]=null;API.rpc('event_crowd',{eid:e.id}).then(r=>{V2E.crowd[e.id]=r;render()}).catch(()=>{V2E.crowd[e.id]=0})}
+  const crowd=c&&c.booked?`<div class="panel v2"><p class="v2lb" style="margin:0 0 8px">Who is coming · ${c.booked} booked</p>${c.roots.length?`<div class="v2chips">${c.roots.map(x=>`<span class="v2pill">${flag(x.c)||''} ${esc(x.c)} ${x.n}</span>`).join('')}${c.others?`<span class="v2pill" style="background:var(--sunk);color:var(--ink)">+${c.others} more</span>`:''}</div>`:`<p class="v2lede" style="margin:0">Roots show here once 2 or more guests share a country.</p>`}
+   <p class="v2note" style="margin-top:8px">${ic('shield')} All verified · ages ${e.age}${c.parents?` · ${c.parents} parent${c.parents>1?'s':''} coming too`:''}. No names before the evening.</p></div>`:'';
+  const paid=rv&&rv.status==='paid';
+  const live=paid&&n.live?`<button class="v2act" data-a="v2talk"><span class="ibox">${ic('chat')}</span><span><b>Table talk cards</b><small>Easy questions for your table, from many roots</small></span>${ic('chev')}</button>`:'';
+  const quiet=paid&&n.after?`<button class="v2act" data-a="v2quiet" data-id="${e.id}"><span class="ibox">${ic('heart')}</span><span><b>Quiet yes</b><small>Say privately whom you would like to see again. Only mutual yeses are shown, next morning.</small></span>${ic('chev')}</button>`:'';
+  return live+quiet+crowd}
+function v2talkSheet(){const k=V2E.tt%TALK.length;return sheetShell('Table talk',`<div class="v2"><div class="v2tt"><small>EVERYONE ANSWERS · 1 MIN EACH</small><p>${esc(TALK[k])}</p><span>Card ${k+1} of ${TALK.length}</span></div>
+  <p class="v2note" style="margin-top:10px">${ic('info')} No scores, no wrong answers. Pass the phone around if you like.</p></div>`,`<button class="btn primary block" data-a="v2talkNext">Next card</button>`)}
+function v2quietSheet(){const q=V2E.quiet[sheet.id]||{};
+  if(q.err)return sheetShell('Quiet yes',`<div class="v2"><p class="v2lede" style="margin:0">${q.err==='not_checked_in'?'Quiet yes opens for guests who were checked in at the door.':'Quiet yes opens when the evening starts.'}</p></div>`);
+  if(!q.list)return sheetShell('Quiet yes',`<div class="v2" style="padding:20px 0;text-align:center">${spinner('Loading')}</div>`);
+  const reveal=q.list[0]&&q.list[0].reveal?new Date(q.list[0].reveal):null,open=!reveal||Date.now()<reveal.getTime();
+  const mut=q.mutual||[];
+  return sheetShell('Quiet yes',`<div class="v2"><h2 class="v2h" style="font-size:22px;margin:0">Who would you like to <em>see again?</em></h2>
+   <p class="v2lede" style="margin:6px 0 12px">Only you see your answers. If you both say yes, we show you both ${reveal?'from '+esc(fmtTime(reveal))+' '+esc(fmtDay(reveal).long):'next morning'}. Nobody learns about a "no".</p>
+   ${!open?(mut.length?`<div class="v2card" style="display:grid;gap:8px"><b>You both said yes</b>${mut.map(m=>`<button class="v2act" data-a="open" data-id="${m.id}"><span class="ibox">${ic('heart')}</span><span><b>${esc(m.first)}</b><small>Open the profile and send an interest</small></span>${ic('chev')}</button>`).join('')}</div>`:`<div class="v2card"><b>No mutual yes this time.</b><p class="v2lede" style="margin:4px 0 0">That is normal after one evening. Your matches and the next Mixer are waiting.</p></div>`):
+    (q.list.length?q.list.map(p=>`<button class="v2qp${p.yes?' on':''}" data-a="v2quietTap" data-id="${p.id}">${p.photo&&urlOf(p.photo)?`<img src="${esc(urlOf(p.photo))}" alt="">`:`<span class="v2qi">${esc(initials(p.first))}</span>`}<span><b>${esc(p.first)}, ${p.age}</b><small>${flag(p.origin)||''} ${esc(p.origin||'')}</small></span><i>${ic('heart')}</i></button>`).join(''):`<p class="v2lede">Nobody else is checked in yet.</p>`)}
+   <p class="v2note" style="margin-top:12px">${ic('lock')} Private by design. Your family sees nothing here.</p></div>`)}
+async function v2quietLoad(eid){V2E.quiet[eid]={};render();
+  try{const list=await API.rpc('quiet_people',{eid});await signPaths(list.map(x=>x.photo).filter(Boolean));let mutual=[];
+    if(list[0]&&Date.now()>=Date.parse(list[0].reveal))mutual=await API.rpc('quiet_mutual',{eid});V2E.quiet[eid]={list,mutual}}
+  catch(err){V2E.quiet[eid]={err:String((err&&(err.message||err.code))||'').includes('not_started')?'not_started':'not_checked_in'}}render()}
+(function(){
+  const _re=renderEvents;renderEvents=function(){const h=_re();if(!V2())return h;return h.replace('<div class="main-inner pad">','<div class="main-inner pad">'+v2evHero())};
+  const _rv=renderEventView;renderEventView=function(id){const h=_rv(id);if(!V2()||!h)return h;const e=evById(id);const k='<div class="pad" style="display:grid;gap:14px;padding-block:16px 26px">';
+    return h.replace(k,k+v2evExtras(e))};
+  const _rs2=renderSheet;renderSheet=function(){if(sheet&&sheet.type==='v2talk')return v2talkSheet();if(sheet&&sheet.type==='v2quiet')return v2quietSheet();return _rs2()};
+  Object.assign(A,{
+    v2talk(){sheet={type:'v2talk'};render()},
+    v2talkNext(){V2E.tt++;render()},
+    v2quiet(el){const id=el.dataset.id;sheet={type:'v2quiet',id};v2quietLoad(id)},
+    async v2quietTap(el){const eid=sheet.id,q=V2E.quiet[eid];const p=q&&q.list&&q.list.find(x=>x.id===el.dataset.id);if(!p)return;
+      p.yes=!p.yes;render();try{await API.rpc('quiet_set',{eid,to_user:p.id,yes:p.yes})}catch(err){p.yes=!p.yes;render();toast('Quiet yes is closed for this evening.','info')}}
+  });
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack}; /* used by automated tests */
 boot();
 })();
