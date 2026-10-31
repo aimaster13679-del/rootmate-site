@@ -2359,11 +2359,20 @@ function renderWelcomeV2(){
    <p class="v2brand">NEUMARRY</p>
    <h1>Your roots.<br>Your city.<br><em>Your person.</em></h1>
    <p class="v2w-lede">For people who grew up in one country and live in another. Every member is checked with an ID and a live selfie.</p>
+   ${v2near()}
    <div class="v2prom">${[['shield','Verified','every member'],['lock','Private','no number shared'],['clock','About 6 min','almost all taps']].map(([i,a,b])=>`<div>${ic(i)}<b>${a}</b><span>${b}</span></div>`).join('')}</div>
    <button class="btn block v2light" data-a="start">Create my profile</button>
    <button class="btn block v2ghost" data-a="login">I already have an account</button>
    <p class="v2w-note">By continuing you agree to our <button class="link" data-a="legal" data-k="terms">Terms</button> and <button class="link" data-a="legal" data-k="privacy">Privacy Policy</button>. 18+ only.</p>
   </div></div>`}
+
+/* live, honest count on the welcome screen (near_count: fully verified members; roots shown from 5 up) */
+const V2N={};
+function v2near(){const c=tzCountry();if(!c)return '';const n=V2N[c];
+  if(n===undefined){V2N[c]=null;API.rpc('near_count',{country_in:c}).then(r=>{V2N[c]=r;if(S.screen==='welcome')render()}).catch(()=>{V2N[c]=0})}
+  if(!n)return '';
+  return `<div class="v2near"><small>${ic('pin')} ${esc(c)} · live now</small>${n.live>=20?`<b>${n.live.toLocaleString()}</b><span>verified members live here</span>`:`<b>Be one of the first</b><span>We are new in ${esc(c)}. Join now, and you are ready the day people of your roots join near you.</span>`}
+   ${n.roots&&n.roots.length?`<div class="v2near-r">${n.roots.slice(0,5).map(x=>`<i>${flag(x.c)||''} ${esc(x.c)} ${x.n}</i>`).join('')}</div>`:''}</div>`}
 
 /* ---------- birthday wheel ---------- */
 const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
