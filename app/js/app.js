@@ -853,12 +853,12 @@ function renderVerifyBody(d,edit){const me=edit?S.me:null,vs=d.vs||0;const place
     return `<div class="vcard"><h4>${ic('id')}Government ID ${idOk?`<span class="ok">${ic('check')}Verified</span>`:''}</h4>
       <p class="hint">Passport, national ID card, or a residence card with a photo. Only our team sees it.</p>
       ${idOk?'':idC&&!d.idBlob?checkLine(idC,'ID'):''}
-      ${needId||(idC&&idC.status==='rejected')?(d.idBlob?`<p class="hint">${ic('check')} ${esc(d.idName)} ready to send</p><span class="btn ghost sm file">${ic('refresh')}Choose another<input type="file" accept="image/*,application/pdf" data-file="id" aria-label="Upload government ID"></span>`:`<span class="btn ghost sm file">${ic('plus')}Upload ID<input type="file" accept="image/*,application/pdf" data-file="id" aria-label="Upload government ID"></span>`):''}
+      ${needId||(idC&&idC.status==='rejected')?(d.idBlob?`<p class="hint">${ic('check')} ${esc(d.idName)} ready to send</p><span class="btn ghost sm file">${ic('refresh')}Choose another<input type="file" accept="image/*,application/pdf" data-file="id" aria-label="Upload government ID"></span>`:(V2()?`<button class="btn primary sm" data-a="camId">${ic('scan')}Scan with camera</button> `:'')+`<span class="btn ghost sm file">${ic('plus')}${V2()?'Upload a file':'Upload ID'}<input type="file" accept="image/*,application/pdf" data-file="id" aria-label="Upload government ID"></span>`):''}
     </div>
     <div class="vcard"><h4>${ic('camera')}Live selfie ${selfOk?`<span class="ok">${ic('check')}Verified</span>`:''}</h4>
       <p class="hint">Take a selfie now. We match it to your ID and photos so nobody can use someone else's pictures.</p>
       ${selfOk?'':sC&&!d.selfieBlob?checkLine(sC,'Selfie'):''}
-      ${needSelf||(sC&&sC.status==='rejected')?(d.selfie?`<img src="${d.selfie}" alt="Your selfie" style="width:72px;height:72px;border-radius:18px;object-fit:cover"><span class="btn ghost sm file">${ic('refresh')}Retake<input type="file" accept="image/*" capture="user" data-file="selfie" aria-label="Retake selfie"></span>`:`<span class="btn ghost sm file">${ic('camera')}Take selfie<input type="file" accept="image/*" capture="user" data-file="selfie" aria-label="Take selfie"></span>`):''}
+      ${needSelf||(sC&&sC.status==='rejected')?(d.selfie?`<img src="${d.selfie}" alt="Your selfie" style="width:72px;height:72px;border-radius:18px;object-fit:cover">${V2()?`<button class="btn ghost sm" data-a="camSelfie">${ic('refresh')}Retake</button>`:`<span class="btn ghost sm file">${ic('refresh')}Retake<input type="file" accept="image/*" capture="user" data-file="selfie" aria-label="Retake selfie"></span>`}`:(V2()?`<button class="btn primary sm" data-a="camSelfie">${ic('camera')}Start live selfie</button>`:`<span class="btn ghost sm file">${ic('camera')}Take selfie<input type="file" accept="image/*" capture="user" data-file="selfie" aria-label="Take selfie"></span>`)):''}
     </div>`}
   if(vs===2){const c=me&&me.rootsCheck,ok=me&&me.v.roots;
     return `<div class="vfact">${ic('globe')}<span class="tx"><small>Your roots on your profile</small><b>${esc(roots)}</b></span></div>
@@ -2686,6 +2686,59 @@ function famBlock(){famLoad();const L=FAM.list||[];if(!L.length)return `<div cla
   A.v2fam=async function(el){const id=el.dataset.id,on=!famHas(id);
     try{await API.rpc('family_share',{target:id,on_:on});FAM.list=null;famLoad();toast(on?'Shared with your family. Send them your biodata link from Me.':'Removed from your family circle.',on?'users':'check')}
     catch(e){toast(String((e&&(e.message||e.code))||'').includes('max_10')?'You can share up to 10 people. Remove one first.':'Could not share. Try again.','info')}};
+})();
+
+/* ---------- Live selfie ring + guided ID capture (mock screens 11 and 12) ----------
+   Selfie: front camera, three short prompts (look straight, a little right, a little left) while the ring fills;
+   the straight-ahead frame is kept. ID: back camera with a frame guide; after the tap we check light and
+   sharpness on the phone and ask for a retake if needed. Falls back to the normal file picker when the
+   camera is not allowed. Our team still checks every selfie and ID by hand. */
+const CAM={on:false,mode:'',stream:null,step:0,checks:[],err:'',shot:null,timer:null};
+const SELFIE_STEPS=['Look straight at the camera','Now turn a little to your right','Now a little to your left','Hold still…'];
+function camLayer(){if(!CAM.on)return '';const sf=CAM.mode==='selfie';const pct=sf?Math.min(100,Math.round(CAM.step/3*100)):0;
+  return `<div class="v2cam v2" role="dialog" aria-label="${sf?'Live selfie':'Scan your ID'}">
+   <div class="v2cam-top"><span class="v2pill" style="background:rgba(255,255,255,.12);color:#fff">${ic(sf?'camera':'id')} ${sf?'Stamp 1 · Live selfie':'Stamp 1 · ID'}</span><button class="iconbtn" data-a="camClose" aria-label="Close" style="color:#fff">${ic('x')}</button></div>
+   ${CAM.err?`<div class="v2cam-err"><p>${esc(CAM.err)}</p><span class="btn primary file">${ic(sf?'camera':'plus')}${sf?'Take a selfie instead':'Choose a photo instead'}<input type="file" accept="image/*" ${sf?'capture="user" data-file="selfie"':'data-file="id"'} aria-label="Choose photo"></span></div>`:
+   sf?`<div class="v2ring-wrap"><svg viewBox="0 0 240 240" class="v2ring-svg"><circle cx="120" cy="120" r="112" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="8"/><circle cx="120" cy="120" r="112" fill="none" stroke="#8FE0B5" stroke-width="8" stroke-linecap="round" stroke-dasharray="704" stroke-dashoffset="${704-704*pct/100}" transform="rotate(-90 120 120)"/></svg><video id="cam-v" playsinline muted autoplay class="v2cam-v sf"></video></div>
+     <h2 class="v2h" style="color:#fff;text-align:center;margin-top:22px">${esc(SELFIE_STEPS[Math.min(CAM.step,3)])}</h2><p class="v2cam-s">${pct}% · keep your face inside the circle</p>`
+   :`<div class="v2id-wrap"><video id="cam-v" playsinline muted autoplay class="v2cam-v"></video><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></div>
+     <h2 class="v2h" style="color:#fff;text-align:center;margin-top:18px">Hold your ID <em style="color:#FFB4C2">inside the frame</em></h2>
+     ${CAM.checks.length?`<div class="v2cam-ck">${CAM.checks.map(([ok,t])=>`<span class="${ok?'ok':'no'}">${ic(ok?'check':'x')}${esc(t)}</span>`).join('')}</div>`:'<p class="v2cam-s">Flat, all 4 corners visible, no glare</p>'}
+     <button class="v2shut" data-a="camShot" aria-label="Take photo"><i></i></button>`}
+   <p class="v2cam-f">${ic('lock')} ${sf?'Used only to match your ID. Never shown on your profile.':'Only our safety team sees it. Deleted 7 days after the check.'}</p></div>`}
+async function camOpen(mode){CAM.on=true;CAM.mode=mode;CAM.step=0;CAM.checks=[];CAM.err='';render();
+  try{if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error('none');
+    CAM.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:mode==='selfie'?'user':'environment',width:{ideal:1280}},audio:false});
+    const v=document.getElementById('cam-v');if(v){v.srcObject=CAM.stream;await v.play().catch(()=>{})}
+    if(mode==='selfie')camSelfieRun()}
+  catch(e){CAM.err=mode==='selfie'?'The camera is not allowed, so we cannot do the live check here.':'The camera is not allowed here.';render()}}
+function camStop(){clearTimeout(CAM.timer);if(CAM.stream){CAM.stream.getTracks().forEach(t=>t.stop());CAM.stream=null}CAM.on=false}
+function camFrame(maxW){const v=document.getElementById('cam-v');if(!v||!v.videoWidth)return null;const s=Math.min(1,maxW/v.videoWidth);
+  const c=document.createElement('canvas');c.width=Math.round(v.videoWidth*s);c.height=Math.round(v.videoHeight*s);const x=c.getContext('2d');
+  if(CAM.mode==='selfie'){x.translate(c.width,0);x.scale(-1,1)}x.drawImage(v,0,0,c.width,c.height);return c}
+function camQuality(c){const x=c.getContext('2d'),w=Math.min(320,c.width),h=Math.round(c.height*w/c.width);const t=document.createElement('canvas');t.width=w;t.height=h;t.getContext('2d').drawImage(c,0,0,w,h);
+  const d=t.getContext('2d').getImageData(0,0,w,h).data;let sum=0,lap=0,n=0;const g=i=>.299*d[i]+.587*d[i+1]+.114*d[i+2];
+  for(let y=1;y<h-1;y+=2)for(let xx=1;xx<w-1;xx+=2){const i=(y*w+xx)*4;const v=g(i);sum+=v;const l=4*v-g(i-4)-g(i+4)-g(i-w*4)-g(i+w*4);lap+=l*l;n++}
+  return {light:sum/n,sharp:lap/n}}
+function camGive(c,kind){c.toBlob(b=>{if(!b)return;const f=new File([b],kind==='selfie'?'selfie.jpg':'id.jpg',{type:'image/jpeg'});
+  const inp=document.createElement('input');inp.type='file';inp.dataset.file=kind;inp.style.display='none';app.appendChild(inp);
+  try{const dt=new DataTransfer();dt.items.add(f);inp.files=dt.files;inp.dispatchEvent(new Event('change',{bubbles:true}))}catch(e){toast('Could not use the camera photo. Choose a photo instead.','info')}
+  setTimeout(()=>inp.remove(),2000)},'image/jpeg',.9)}
+function camSelfieRun(){let keep=null;const tick=()=>{if(!CAM.on)return;
+  if(CAM.step===0){const c=camFrame(900);if(c)keep=c}
+  CAM.step++;render();const v=document.getElementById('cam-v');if(v&&CAM.stream&&!v.srcObject){v.srcObject=CAM.stream;v.play().catch(()=>{})}
+  if(CAM.step>=3){CAM.timer=setTimeout(()=>{if(!CAM.on)return;const c=keep||camFrame(900);camStop();render();if(c)camGive(c,'selfie')},700);return}
+  CAM.timer=setTimeout(tick,1600)};CAM.timer=setTimeout(tick,1800)}
+(function(){
+  const _r=render;render=function(){_r();if(CAM.on){app.insertAdjacentHTML('beforeend',camLayer());const v=document.getElementById('cam-v');if(v&&CAM.stream){v.srcObject=CAM.stream;v.play().catch(()=>{})}}};
+  Object.assign(A,{
+    camSelfie(){camOpen('selfie')},camId(){camOpen('id')},
+    camClose(){camStop();render()},
+    camShot(){const c=camFrame(1800);if(!c)return;const q=camQuality(c);
+      const ok=[[q.light>60&&q.light<235,q.light<=60?'Too dark: find more light':q.light>=235?'Too bright: avoid glare':'Good light'],[q.sharp>120,q.sharp>120?'Sharp':'A bit blurry: hold steady']];
+      CAM.checks=ok;if(ok.every(x=>x[0])){camStop();render();camGive(c,'id')}else render()}
+  });
+  const _gb=goBack;goBack=function(){if(CAM.on){camStop();render();return true}return _gb()};
 })();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p)}; /* used by automated tests */
