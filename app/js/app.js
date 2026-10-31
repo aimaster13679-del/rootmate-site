@@ -2597,6 +2597,29 @@ async function v2quietLoad(eid){V2E.quiet[eid]={};render();
   });
 })();
 
+/* ---------- Restaurant link (team only) and Host your city (his ok 1 Nov 01:01, screens 25 and 26) ---------- */
+(function(){
+  const _rv=renderEventView;renderEventView=function(id){const h=_rv(id);if(!h||!(S.me&&S.me.isAdmin))return h;
+    const k='<div class="pad" style="display:grid;gap:14px;padding-block:16px 26px">';
+    return h.replace(k,k+`<button class="v2act v2" data-a="v2partner" data-id="${id}"><span class="ibox">${ic('home')}</span><span><b>Restaurant link (team only)</b><small>Private page with guest numbers and dinner count, no names</small></span>${ic('chev')}</button>`)};
+  const _re=renderEvents;renderEvents=function(){const h=_re();return V2()?h.replace('data-a="hostAsk"','data-a="v2hostInfo"'):h};
+  const _rs=renderSheet;renderSheet=function(){
+    if(sheet&&sheet.type==='v2partner')return sheetShell('Restaurant link',`<div class="v2">${sheet.url?`<p class="v2lede" style="margin:0 0 10px">Send this to the restaurant. It shows only numbers: guests, parents, dinner choices and timings. It stops 2 days after the evening.</p>
+      <div class="v2card" style="word-break:break-all;font-weight:800">${esc(sheet.url)}</div>`:sheet.err?`<p class="v2lede">${esc(sheet.err)}</p>`:`<div style="text-align:center;padding:16px">${spinner('Making the link')}</div>`}</div>`,
+      sheet.url?`<button class="btn primary block" data-a="copyCode" data-k="${esc(sheet.url)}">${ic('copy')} Copy link</button>`:'');
+    if(sheet&&sheet.type==='v2host')return sheetShell('Host Family Mixers',`<div class="v2"><h2 class="v2h" style="font-size:22px;margin:0">Host Family Mixers <em>in your city</em></h2>
+      <p class="v2lede" style="margin:6px 0 12px">Warm, organised people who know their community. You welcome about 60 guests and their families, and keep the evening easy.</p>
+      <div class="v2card" style="display:grid;gap:10px">${[['clock','One evening a month','About 5 hours with setup'],['shield','You are verified first','ID, roots and city, like every member'],['users','We give you everything','Guest list, table cards and the check-in app'],['sparkle','CA$100 for every event','Training included']].map(([i,a,b])=>`<div class="v2row" style="align-items:flex-start"><span class="ibox" style="width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:var(--rose-soft);color:var(--rose-deep);flex:none">${ic(i)}</span><div><b style="font-size:14px">${a}</b><small>${b}</small></div></div>`).join('')}</div></div>`,
+      `<button class="btn primary block" data-a="hostAsk">${S.hostSent?'See my application':'Apply in 2 minutes'}</button>`);
+    return _rs()};
+  Object.assign(A,{
+    async v2partner(el){const id=el.dataset.id;sheet={type:'v2partner',id};render();
+      try{const t=await API.rpc('admin_partner_link',{eid:id});if(sheet&&sheet.type==='v2partner'){sheet.url=CFG.site+'partner.html?k='+t;render()}}
+      catch(err){if(sheet&&sheet.type==='v2partner'){sheet.err='Could not make the link. Try again.';render()}}},
+    v2hostInfo(){sheet={type:'v2host'};render()}
+  });
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack}; /* used by automated tests */
 boot();
 })();

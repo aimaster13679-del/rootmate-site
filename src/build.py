@@ -196,6 +196,8 @@ page('child-safety', 'Child safety standards', 'NeuMarry is for adults only. Our
 # Where PayPal sends members back from the phone app after paying for an event (not for search engines).
 page('paid', 'Payment done', 'Your NeuMarry event payment.')
 page('bio', 'Family biodata', 'A private NeuMarry profile card shared with family.')
+page('partner', 'Partner restaurant', 'A private page for a NeuMarry partner restaurant.')
+_tp = os.path.join(OUT, 'partner.html'); _th = open(_tp, encoding='utf-8').read().replace('content="index,follow,max-image-preview:large"', 'content="noindex,nofollow"'); open(_tp, 'w', encoding='utf-8').write(_th)
 _bp = os.path.join(OUT, 'bio.html'); _bh = open(_bp, encoding='utf-8').read().replace('content="index,follow,max-image-preview:large"', 'content="noindex,nofollow"'); open(_bp, 'w', encoding='utf-8').write(_bh)
 _pp = os.path.join(OUT, 'paid.html'); _ph = open(_pp, encoding='utf-8').read().replace('content="index,follow,max-image-preview:large"', 'content="noindex"'); open(_pp, 'w', encoding='utf-8').write(_ph)
 

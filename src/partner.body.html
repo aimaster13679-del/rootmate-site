@@ -1,0 +1,23 @@
+<h1>Your Family Mixer evening</h1>
+<p class="lede">A private page for our partner restaurant. It shows numbers only, never guest names or contact details.</p>
+<div id="pc" aria-live="polite"><p>Loading…</p></div>
+<p class="note">This link was sent by the NeuMarry team and stops working 2 days after the evening. Questions: support@neumarry.com</p>
+<style>#pc{display:grid;gap:12px;margin:16px 0}.pc-top{background:#3A1A2B;color:#fff;border-radius:22px;padding:18px}.pc-top small{display:block;font-size:12px;letter-spacing:.14em;opacity:.7;font-weight:800;text-transform:uppercase}
+.pc-top b{display:block;font-family:Lora,Georgia,serif;font-weight:600;font-size:30px;margin-top:4px}.pc-top span{opacity:.85}
+.pc-meals{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.pc-m{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;text-align:center}
+.pc-m b{display:block;font-family:Lora,Georgia,serif;font-size:28px;font-weight:600}.pc-m span{font-weight:800;color:var(--muted);font-size:13px;}
+.pc-list{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;display:grid;gap:8px;font-weight:700}.note{color:var(--muted);font-size:14px}</style>
+<script>(function(){var k=new URLSearchParams(location.search).get('k')||'',box=document.getElementById('pc');
+function esc(x){return String(x==null?'':x).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+if(!k){box.innerHTML='<p>This link is not complete. Ask the NeuMarry team for a new one.</p>';return}
+fetch('https://ndxlguuywifovqdzdvtq.supabase.co/rest/v1/rpc/partner_card',{method:'POST',headers:{'apikey':'sb_publishable_oBR1e77Tx1mNysmxcZ2cgw_qDOpS4gt','Content-Type':'application/json'},body:JSON.stringify({k:k})})
+.then(function(r){return r.json()}).then(function(d){
+ if(!d||d.error){box.innerHTML='<p>This link has ended or is not valid. Ask the NeuMarry team for a new one.</p>';return}
+ var s=new Date(d.starts_at),e=new Date(s.getTime()+d.duration_min*60000);
+ var day=s.toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'}),t=function(x){return x.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})};
+ var total=d.members+d.parents,tables=Math.ceil(total/5);
+ var ML={veg:'Vegetarian',nonveg:'Non-veg',halal:'Halal',jain:'Jain','not chosen':'Not chosen'};var meals=Object.keys(d.meals||{}).map(function(m){return '<div class="pc-m"><b>'+esc(d.meals[m])+'</b><span>'+esc(ML[m]||m)+'</span></div>'}).join('');
+ box.innerHTML='<div class="pc-top"><small>'+esc(day)+' · '+esc(t(s))+'–'+esc(t(e))+'</small><b>'+total+' guests</b><span>'+d.members+' members + '+d.parents+' parents · about '+tables+' tables of 5'+(d.venue?' · '+esc(d.venue):'')+'</span></div>'
+  +'<h2 style="margin:6px 0 0">Dinner count</h2><div class="pc-meals">'+(meals||'<p>No dinner choices yet.</p>')+'</div>'
+  +'<div class="pc-list"><span>Guests arrive from '+esc(t(s))+'</span>'+(d.host?'<span>Host: '+esc(d.host)+', arrives 45 minutes early</span>':'')+'<span>'+d.paid+' of '+d.members+' members have paid</span><span>Numbers update live. Final numbers are fixed 2 days before.</span></div>';
+}).catch(function(){box.innerHTML='<p>Could not load. Check the connection and refresh.</p>'})})();</script>
