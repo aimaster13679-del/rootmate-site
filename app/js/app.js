@@ -2308,9 +2308,8 @@ if(liveUpd.U()){try{liveUpd.U().notifyAppReady()}catch(e){}setTimeout(()=>liveUp
    Shown only to the founder accounts until he says ok for everyone. Once a founder signs in on a
    device, that device keeps the new welcome screen too (nm.v2 in localStorage). */
 const V2_FOUNDERS=['swapnilbhagatt@gmail.com','aimaster13679@gmail.com'];
-function V2(){try{if(/127\.0\.0\.1/.test(CFG.url||'')&&localStorage.getItem('nm.v2test')==='1')return true;const s=API.session(),u=s&&s.user,em=u&&String(u.email||'').toLowerCase();
-  if(em){const on=V2_FOUNDERS.includes(em);try{on?localStorage.setItem('nm.v2','1'):0}catch(e){}return on}
-  return localStorage.getItem('nm.v2')==='1'}catch(e){return false}}
+/* 1 Nov 04:34: on for everyone (his permission). Local automated tests can still turn it off with nm.v2test=0. */
+function V2(){try{if(/127\.0\.0\.1/.test(CFG.url||'')&&localStorage.getItem('nm.v2test')==='0')return false;return true}catch(e){return true}}
 Object.assign(IC,{
   brief:'<rect x="3.5" y="7.5" width="17" height="12" rx="2.5"/><path d="M9 7.5V5.5h6v2M3.5 12.5h17"/>',
   book:'<path d="M4 5.5A2.5 2.5 0 016.5 3H20v15H6.5A2.5 2.5 0 004 20.5z"/><path d="M4 20.5A2.5 2.5 0 016.5 18H20v3H6.5"/>',
