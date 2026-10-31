@@ -2506,7 +2506,7 @@ function v2cele(){const c=V2CELE[S.cele2.at];if(!c)return '';const p=V2PART[(()=
 /* ---------- screen 18: everything is saved ---------- */
 function v2leaveSheet(){const i=Math.max(0,v2pos());const left=Math.max(1,Math.round((V2SEQ.length-i)*0.8));
   return sheetShell('Everything is saved',`<div class="v2"><p class="v2lede" style="margin-top:0">You are about ${left} minute${left>1?'s':''} from your matches. Come back any time and pick up right here.</p>
-   <div class="v2card" style="margin-top:12px">${v2segs()}<p class="v2note" style="margin-top:10px">${ic('mail')} If you stop now, we send one reminder email tomorrow. Nothing more.</p></div></div>`,
+   <div class="v2card" style="margin-top:12px">${v2segs()}<p class="v2note" style="margin-top:10px">${ic('mail')} If you stop now, we email you a reminder after 1 day and once more after 3 days. Nothing more.</p></div></div>`,
    `<button class="btn primary block" data-a="closeSheet">Finish now</button><button class="btn ghost block" data-a="v2out">Log out for now</button>`)}
 
 /* ---------- screen 13: after the last part ---------- */
@@ -2815,6 +2815,22 @@ function fmtSlot(d,tz){try{return d.toLocaleString('en-US',{timeZone:tz,weekday:
       const id=sheet.id;sheet=null;render();const ci=document.getElementById('chat-in');if(ci){ci.value=x;A.send({dataset:{id}})}}
   });
 })();
+
+/* ---------- Booking and ticket, new look (mock screens 22 + 23) ---------- */
+(function(){
+  const _rs=renderSheet;renderSheet=function(){const h=_rs();if(!V2()||!sheet||sheet.type!=='book')return h;return h.replace('<div class="sheet"','<div class="sheet v2book"')};
+  const _tp=ticketPanel;ticketPanel=function(e){const h=_tp(e);if(!V2())return h;const t=TICKET&&TICKET.eid===e.id?TICKET.d:null;
+    if(!t||t.error||t.checked_in_at)return h.replace('class="panel ticket','class="panel ticket v2tk');
+    const rv=e.my||{};const meal=MEALS[rv.meal]||rv.meal||'';const par=(rv.parents||[]);
+    return `<div class="v2tkt v2"><span class="v2pill" style="background:rgba(255,255,255,.12);color:#fff">${ic('sparkle')} ${esc(fmtDay(e.date,e.tz).long)} · ${esc(e.time)}</span>
+     <h3>See you there, <em>${esc((S.me&&S.me.name||'').split(' ')[0])}</em></h3>
+     <div class="v2tkt-q">${h.match(/<div class="qrbox"[\s\S]*?<\/p>/)?h.match(/<div class="qrbox"[\s\S]*?<\/p>/)[0]:''}</div>
+     <div class="v2tkt-g">${[['Guests',par.length?`You + ${par.length}`:'You'],['Dinner',meal||'Included'],['Doors open',e.time]].map(([a,b])=>`<div><small>${a}</small><b>${esc(b)}</b></div>`).join('')}</div>
+     <p class="v2note" style="color:rgba(255,255,255,.75)">${ic('lock')} A screenshot will not work. Show this screen at the door.</p></div>`};
+})();
+
+/* host check-in, new look (mock screen 24) */
+(function(){const _h=renderHostView;renderHostView=function(eid){const h=_h(eid);return V2()?h.replace('<div class="view" role="dialog" aria-label="Check-in">','<div class="view v2host" role="dialog" aria-label="Check-in">'):h}})();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p)}; /* used by automated tests */
 boot();
