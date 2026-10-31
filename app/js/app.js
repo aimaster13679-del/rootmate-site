@@ -2308,7 +2308,7 @@ if(liveUpd.U()){try{liveUpd.U().notifyAppReady()}catch(e){}setTimeout(()=>liveUp
    Shown only to the founder accounts until he says ok for everyone. Once a founder signs in on a
    device, that device keeps the new welcome screen too (nm.v2 in localStorage). */
 const V2_FOUNDERS=['swapnilbhagatt@gmail.com','aimaster13679@gmail.com'];
-function V2(){try{const s=API.session(),u=s&&s.user,em=u&&String(u.email||'').toLowerCase();
+function V2(){try{if(/127\.0\.0\.1/.test(CFG.url||'')&&localStorage.getItem('nm.v2test')==='1')return true;const s=API.session(),u=s&&s.user,em=u&&String(u.email||'').toLowerCase();
   if(em){const on=V2_FOUNDERS.includes(em);try{on?localStorage.setItem('nm.v2','1'):0}catch(e){}return on}
   return localStorage.getItem('nm.v2')==='1'}catch(e){return false}}
 Object.assign(IC,{
@@ -2620,6 +2620,21 @@ async function v2quietLoad(eid){V2E.quiet[eid]={};render();
   });
 })();
 
-window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack}; /* used by automated tests */
+/* ---------- Match card: 3 rings Roots / Life plan / Nature with a "why" line (mock screen 14) ---------- */
+function v2rings(p){const me=S.me;if(!me||!me.ans)return null;const c=compat(p);
+  const ag=is=>is.reduce((s,i)=>{const d=Math.abs((me.ans[i]??1)-(p.ans[i]??1));return s+(d===0?1:d===1?.5:0)},0)/is.length;
+  const pc=x=>Math.max(1,Math.min(99,Math.round(x*100)));
+  return {roots:pc(c.roots*.7+c.loc*.3),life:pc(ag([0,1,2,3,8])*.8+c.pref*.2),nature:pc(ag([4,5,6,7])*.7+c.life*.3)}}
+function v2ringRow(p){const r=v2rings(p);if(!r)return '';
+  const one=(n,col,l,s)=>`<div class="v2ring"><span style="--p:${n}%;--c:${col}"><b>${n}%</b></span><em>${l}</em><small>${esc(s)}</small></div>`;
+  const me=S.me,a=i=>QS[i].o[p.ans[i]]||'';
+  const rootsSub=p.oc===me.oc?(p.t===me.t&&p.t?p.t:'Same roots'):(p.oc||'');
+  return `<div class="v2rings v2">${one(r.roots,'var(--rose)','Roots',rootsSub)}${one(r.life,'var(--gold)','Life plan',(QS[8].o[p.ans[8]]||'').replace(/^Within/,'Marry within'))}${one(r.nature,'var(--good)','Nature',me.ans[5]===p.ans[5]?'Same weekends':(QS[5].o[p.ans[5]]||''))}</div>`}
+(function(){
+  const _card=card;card=function(p){const h=_card(p);if(!V2())return h;
+    return h.replace('<ul class="nm-why">',v2ringRow(p)+'<ul class="nm-why">')};
+})();
+
+window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p)}; /* used by automated tests */
 boot();
 })();
