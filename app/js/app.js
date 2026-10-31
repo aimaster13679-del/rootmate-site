@@ -2790,6 +2790,32 @@ function vOfLoad(id){if(VOICE.of[id]!==undefined)return;VOICE.of[id]=null;API.rp
   A.vAdm=async function(el){const ok=el.dataset.ok==='1';try{await API.rpc('admin_voice',{uid:el.dataset.id,ok,why:ok?null:'Please record again without contact details.'});S.admin.voices=S.admin.voices.filter(x=>x.user_id!==el.dataset.id);render();toast(ok?'Voice intro approved.':'Sent back.','check')}catch(e){toast('Could not save. Try again.','info')}};
 })();
 
+/* ---------- Safe talk (mock screen 16): privacy line, scam shield, and plan a call in both time zones ---------- */
+function tzOfP(p){return TZCITY[p.cityName||p.city]||TZC[p.country]||undefined}
+function hourIn(d,tz){try{return +new Intl.DateTimeFormat('en-US',{timeZone:tz,hour:'numeric',hourCycle:'h23'}).format(d)}catch(e){return d.getHours()}}
+function callSlots(theirs){const out=[],now=new Date();const ok=h=>h>=9&&h<=21;
+  for(let d=1;d<=10&&out.length<6;d++){for(const h of [19,20,18,11,16,9,21,8,22,7,13]){const s=new Date(now);s.setDate(now.getDate()+d);s.setHours(h,0,0,0);
+    if(ok(s.getHours())&&(!theirs||ok(hourIn(s,theirs)))){out.push(s);break}}}
+  if(!out.length){for(let d=1;d<=6;d++){const s=new Date(now);s.setDate(now.getDate()+d);s.setHours(19,0,0,0);out.push(s)}}return out}
+function fmtSlot(d,tz){try{return d.toLocaleString('en-US',{timeZone:tz,weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})}catch(e){return d.toLocaleString('en-US',{weekday:'short',hour:'numeric',minute:'2-digit'})}}
+(function(){
+  const _cv=renderChatView;renderChatView=function(id){const h=_cv(id);if(!V2()||!canChat(id))return h;const p=byId(id);
+    const top=`<div class="v2safe v2"><span>${ic('lock')} Your numbers stay private</span><span>${ic('shield')} Scam shield on</span><button class="v2pill" data-a="callPlan" data-id="${id}">${ic('video')} Plan a call</button></div>`;
+    const k='<div class="scroll" id="chat-scroll">';return h.replace(k,top+k)};
+  const _rs=renderSheet;renderSheet=function(){if(!sheet||sheet.type!=='callPlan')return _rs();const p=byId(sheet.id);if(!p)return _rs();
+    const mine=Intl.DateTimeFormat().resolvedOptions().timeZone,theirs=tzOfP(p);const sl=callSlots(theirs);
+    return sheetShell('Plan a video call',`<div class="v2"><p class="v2lede" style="margin:0 0 10px">Times that are between 9 am and 9 pm for both of you. Pick one. We send ${esc(p.first||'them')} a message with the time in both your time zones. Share a video link only when you both are ready, and never move to a chat outside NeuMarry before you have met on video.</p>
+     <div style="display:grid;gap:8px">${sl.map((s,i)=>`<button class="v2qp${sheet.pick===i?' on':''}" data-a="callPick" data-i="${i}"><span><b>${esc(fmtSlot(s,mine))}</b><small>${theirs&&theirs!==mine?`${esc(p.first||'Them')}: ${esc(fmtSlot(s,theirs))}`:'Same time zone'}</small></span><i>${ic('check')}</i></button>`).join('')}</div></div>`,
+     `<button class="btn primary block" data-a="callSend"${sheet.pick===undefined?' disabled':''}>Send this time</button>`)};
+  Object.assign(A,{
+    callPlan(el){sheet={type:'callPlan',id:el.dataset.id};render()},
+    callPick(el){sheet.pick=+el.dataset.i;render()},
+    async callSend(){const p=byId(sheet.id);if(!p||sheet.pick===undefined)return;const mine=Intl.DateTimeFormat().resolvedOptions().timeZone,theirs=tzOfP(p);const s=callSlots(theirs)[sheet.pick];
+      const x=`Would you like a video call on ${fmtSlot(s,mine)} my time${theirs&&theirs!==mine?` (${fmtSlot(s,theirs)} your time)`:''}?`;
+      const id=sheet.id;sheet=null;render();const ci=document.getElementById('chat-in');if(ci){ci.value=x;A.send({dataset:{id}})}}
+  });
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p)}; /* used by automated tests */
 boot();
 })();
