@@ -794,7 +794,11 @@ const LEGAL={terms:['Terms of Service: the key points',[
 
 /* ---------- Signup ---------- */
 const SHORT=['About','Roots','Location','Values','Verify','Privacy'];
-const SU_TRUST=['Everyone on NeuMarry verifies, just like you. That is why every match you see is verified.','Roots are checked with a document, so “same roots” on a match is always real.','Every member proves the city they live in, so “near you” really means near you.','We match on these answers and show you the reasons on every match.','ID read by Google and checked by a person, plus a live selfie. Only fully verified members are shown.','Premium and private: your photo and full name stay hidden until you both say yes.'];
+const SU_TRUST=['30 seconds. Then we show you how many verified people fit you.','People from your roots appear first in your matches. Roots are proven with a document.','Matches show the real distance to you. Your exact address is never shown. Mostly taps, almost no typing.','Each answer makes your match % smarter, and you see the reasons on every match.','Your safety badge: only verified members can send interests and chat, so everyone you meet is real.','Last step: choose who you want to meet. You can change it any time.'];
+const JOBS=['Engineer','Doctor','Nurse','IT / Software','Teacher','Business owner','Accountant','Student','Designer','Sales','Lawyer','Pharmacist','Banking / Finance','Government job','Researcher','Manager','Marketing','Architect','Chef','Driver / Logistics'],EDUS=['High school','Diploma','Bachelor’s','Master’s','PhD','Medical degree','Law degree','Trade certificate'];
+function pickOrOther(k,label,opts,ph){const d=S.draft,cur=d[k]||'',pk=k+'Pick';if(d[pk]===undefined)d[pk]=cur?(opts.includes(cur)?cur:'__o'):'';
+  return `<div class="fld" data-f="${k}"><span>${label}</span>${radioChips(pk,opts.map(o=>({v:o,l:o})).concat([{v:'__o',l:'Other: type it'}]),d[pk],true)}${d[pk]==='__o'?`<input id="f-${k}" data-bind="${k}" maxlength="60" placeholder="${esc(ph)}" value="${esc(opts.includes(cur)?'':cur)}" style="margin-top:8px">`:''}${errOf(k)}</div>`}
+const SU_TRUST_OLD=['Everyone on NeuMarry verifies, just like you. That is why every match you see is verified.','Roots are checked with a document, so “same roots” on a match is always real.','Every member proves the city they live in, so “near you” really means near you.','We match on these answers and show you the reasons on every match.','ID read by Google and checked by a person, plus a live selfie. Only fully verified members are shown.','Premium and private: your photo and full name stay hidden until you both say yes.'];
 const STEPS=['About you','Your roots','Where you live now','Values & lifestyle','Verify you’re real','Privacy & preferences'];
 function checkLine(c,label){if(!c)return '';const st=c.status;return `<p class="hint">${st==='approved'?`${ic('check')} ${label} approved`:st==='rejected'?`<b style="color:var(--bad)">${label} not approved${c.note?': '+esc(c.note):''}.</b> Upload a new one.`:`${label} received. Our team checks it within 24 hours.`}</p>`}
 /* ---------- Verify: ID and selfie, roots, where you live now, location (owner's ok 25 Oct 2026) ---------- */
@@ -937,8 +941,8 @@ function renderSignup(){if(!S.editMode)setTimeout(()=>noteStep(S.step),0);
     <div class="row2">${pickF('state','State / province','draft',{ph:'Choose',disabled:!d.country})}${pickF('city','City','draft',{ph:'Choose or type',disabled:!d.country})}</div>
     ${pickF('res','Residency status','draft',{ph:'Choose',disabled:!d.country})}
     ${pickF('reloc','Open to relocating for the right person?','draft',{ph:'Choose',disabled:!d.country})}
-    ${inF('job','Profession','text',d.job,'maxlength="60" placeholder="e.g. Software engineer"')}
-    ${inF('edu','Highest education','text',d.edu,'maxlength="80" placeholder="e.g. MSc, University of Toronto"')}
+    ${edit?inF('job','Profession','text',d.job,'maxlength="60" placeholder="e.g. Software engineer"'):pickOrOther('job','What do you do?',JOBS,'Type your profession')}
+    ${edit?inF('edu','Highest education','text',d.edu,'maxlength="80" placeholder="e.g. MSc, University of Toronto"'):pickOrOther('edu','Highest study',EDUS,'Type your study')}
     <label class="${fldCls('about')}" data-f="about"><span>About me</span><textarea id="f-about" data-bind="about" maxlength="600" placeholder="Where you grew up, what you love, what you are looking for.">${esc(d.about)}</textarea><span class="hint">At least 40 characters. Do not add phone numbers or social handles here.</span>${errOf('about')}</label>`;
   }else if(st===4){
     body=`<p class="hint">There are no right answers. We use these to show how your mindsets match.</p>
@@ -983,7 +987,7 @@ function validateStep(st,d){
     const a=ageFrom(d.dob);if(!d.dob)e.dob='Enter your date of birth';else if(a===null||a<18)e.dob='You must be 18 or older';else if(a>75)e.dob='Check the year';
     if(S.editMode&&!d.h)e.h='Choose your height';}
   if(st===2){if(!d.oc)e.oc='Choose your country of origin';if(!d.os)e.os='Choose your state or region';if(!d.t)e.t='Choose your mother tongue';if(!d.r)e.r='Choose your religion';}
-  if(st===3){if(!S.editMode&&!d.h)e.h='Choose your height';if(!d.country)e.country='Choose the country you live in';else{if(statesOf(d.country).length&&!d.state)e.state='Choose one';if(!d.city)e.city='Choose or type';if(!d.res)e.res='Choose your residency status';if(!d.reloc)e.reloc='Choose one'}
+  if(st===3){if(!S.editMode){for(const k of ['job','edu']){const pk=d[k+'Pick'];if(pk&&pk!=='__o')d[k]=pk;else if(pk==='__o'&&d[k]&&(k==='job'?JOBS:EDUS).includes(d[k]))d[k]=''}}if(!S.editMode&&!d.h)e.h='Choose your height';if(!d.country)e.country='Choose the country you live in';else{if(statesOf(d.country).length&&!d.state)e.state='Choose one';if(!d.city)e.city='Choose or type';if(!d.res)e.res='Choose your residency status';if(!d.reloc)e.reloc='Choose one'}
     if(!d.job.trim())e.job='Add your profession';if(!d.edu.trim())e.edu='Add your education';
     const ab=d.about.trim();if(ab.length<40)e.about=`Write at least 40 characters (${ab.length} so far)`;else if(/(\+?\d[\d\s-]{8,}\d)|@[a-z0-9_.]{3,}|https?:\/\//i.test(ab))e.about='Remove phone numbers, links and social handles. You can share them after you match.';}
   if(st===4){d.ans.forEach((a,i)=>{if(a===null||a===undefined)e['ans.'+i]='Pick one answer'});if(!d.diet)e.diet='Choose your diet';}
