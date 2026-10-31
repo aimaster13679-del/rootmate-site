@@ -74,7 +74,7 @@ def guide_meta(slug):
     get = lambda k: re.search(r'<!--%s: (.*?)-->' % k, t).group(1)
     return dict(slug=slug, title=get('title'), desc=get('desc'), short=get('short'), body=re.sub(r'<!--.*?-->\n?', '', t))
 G = [guide_meta(g) for g in GUIDES]
-PAGES = ['about', 'how-matching-works', 'pricing', 'privacy-and-safety', 'faq', 'is-this-profile-real', 'sample-verified-profile', 'brampton-matrimony', 'mississauga-matrimony',
+PAGES = ['about', 'how-matching-works', 'pricing', 'privacy-and-safety', 'faq', 'is-this-profile-real', 'is-this-profile-real-hi', 'is-this-profile-real-gu', 'sample-verified-profile', 'brampton-matrimony', 'mississauga-matrimony',
          'uk-matrimony', 'usa-matrimony', 'australia-matrimony', 'uae-matrimony']
 def page_meta(slug):
     t = rd('pages/%s.html' % slug)

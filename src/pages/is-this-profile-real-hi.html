@@ -1,0 +1,38 @@
+<!--title: क्या यह मैट्रिमोनी प्रोफ़ाइल असली है? 1 मिनट का मुफ़्त चेक-->
+<!--desc: 6 आसान हाँ/ना सवालों से जानिए कि शादी वाली प्रोफ़ाइल नकली या धोखा तो नहीं। मुफ़्त, बिना साइन-अप। परिवार के साथ शेयर करें।-->
+<!--short: प्रोफ़ाइल असली है? (हिंदी)-->
+<!--kind: feature-->
+<h1>क्या यह शादी वाली प्रोफ़ाइल असली है?</h1>
+<p class="lede">जिससे आप बात कर रहे हैं, उसके बारे में 6 आसान सवालों का जवाब हाँ या ना में दीजिए। साफ़ नतीजा और आगे क्या करें, दोनों मिलेंगे। मुफ़्त, कोई साइन-अप नहीं, कुछ भी सेव नहीं होता।</p>
+<div id="sc" class="sc-box" aria-live="polite"></div>
+<noscript><p>चेक चलाने के लिए JavaScript चालू करें। चेतावनी के संकेत नीचे लिखे हैं।</p></noscript>
+<h2>चेतावनी के संकेत</h2>
+<ul class="ticks" id="sc-list"></ul>
+<h2>सिर्फ़ वेरिफ़ाइड लोगों से मिलिए</h2>
+<p>NeuMarry पर हर सदस्य सरकारी पहचान पत्र, लाइव सेल्फ़ी, अपनी जड़ें (मूल स्थान) और जिस शहर में रहते हैं, यह सब साबित करता है, और हर चीज़ एक इंसान जाँचता है। सिर्फ़ पूरी तरह वेरिफ़ाइड लोग दिखते हैं, और चैट में पैसे माँगना ब्लॉक है। जुड़ना मुफ़्त है।</p>
+<p><a class="btn primary" href="app/">मुफ़्त में शुरू करें</a></p>
+<style>
+.sc-box{background:#fff;border:1.5px solid #F3E0E1;border-radius:20px;padding:18px;margin:18px 0;box-shadow:0 10px 24px rgba(59,31,42,.06)}
+.sc-n{font-size:13px;font-weight:800;color:#8A6B75}.sc-q{font-size:19px;font-weight:800;margin:6px 0 14px;line-height:1.35}
+.sc-o{display:flex;gap:10px}.sc-o button{flex:1;border:1.5px solid #F3E0E1;background:#fff;border-radius:14px;padding:13px;font:inherit;font-weight:800;font-size:16px;cursor:pointer}.sc-o button:hover{border-color:#E8436B;background:#FFE7EC}
+.sc-bar{height:6px;border-radius:3px;background:#F3E0E1;margin-bottom:12px}.sc-bar i{display:block;height:6px;border-radius:3px;background:#E8436B}
+.sc-m{height:14px;border-radius:7px;background:linear-gradient(90deg,#2D8A61,#E9C98D,#C8384A);position:relative;margin:14px 0 6px}.sc-m i{position:absolute;top:-6px;width:6px;height:26px;border-radius:3px;background:#3B1F2A}
+.sc-f{background:#FDE6E8;border-radius:12px;padding:10px 12px;margin:8px 0;font-weight:700;color:#8C2333}.sc-ok{background:#E9F5EE;color:#1E6B4A}
+.sc-a{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.sc-a .btn{white-space:normal;text-align:center;max-width:100%;font:inherit;font-weight:800}
+</style>
+<script>(function(){
+var Q=[["क्या उन्होंने आपसे पैसे माँगे?", 3, "पैसे माँगे। यह धोखे का सबसे बड़ा संकेत है।"], ["क्या वे वीडियो कॉल से मना करते हैं?", 3, "वीडियो कॉल से मना करते हैं।"], ["क्या उन्होंने बहुत जल्दी “आई लव यू” कहा?", 2, "बहुत जल्दी “आई लव यू” कहा।"], ["क्या वे चाहते हैं कि आप यह बात परिवार से छुपाएँ?", 3, "परिवार से छुपाने को कहते हैं।"], ["क्या उनकी कहानी बार-बार बदलती है?", 2, "कहानी बार-बार बदलती है।"], ["क्या उनकी फ़ोटो किसी मॉडल जैसी बहुत परफ़ेक्ट लगती हैं?", 2, "फ़ोटो बहुत परफ़ेक्ट लगती हैं।"]];
+var el=document.getElementById('sc'),i=0,score=0,flags=[];
+document.getElementById('sc-list').innerHTML=Q.filter(function(q){return q[2]}).map(function(q){return '<li>'+q[2]+'</li>'}).join('');
+function ask(){var q=Q[i];el.innerHTML='<div class="sc-bar"><i style="width:'+Math.round(i/Q.length*100)+'%"></i></div><div class="sc-n">6 में से '+(i+1)+'</div><div class="sc-q">'+q[0]+'</div><div class="sc-o"><button data-v="1">हाँ</button><button data-v="0">ना</button></div>'}
+el.addEventListener('click',function(e){var b=e.target.closest('button[data-v]');if(!b)return;var q=Q[i],yes=b.dataset.v==='1';
+ if(q[1]>0&&yes){score+=q[1];flags.push(q[2])} 
+ i++; if(i<Q.length)ask();else done()});
+function done(){var max=9,p=Math.min(100,Math.round(score/max*100)),lvl=score>=6?['बहुत ज़्यादा ख़तरा। सावधान रहें।','#C8384A']:score>=3?['कुछ चेतावनी के संकेत।','#A86B12']:['कम चेतावनी के संकेत।','#2D8A61'];
+ var share='https://wa.me/?text='+encodeURIComponent('मुफ़्त 1 मिनट चेक: क्या यह शादी वाली प्रोफ़ाइल असली है? https://neumarry.com/is-this-profile-real-hi.html');
+ el.innerHTML='<div class="sc-q" style="color:'+lvl[1]+'">'+lvl[0]+'</div><div class="sc-m"><i style="left:calc('+p+'% - 3px)"></i></div><div style="display:flex;justify-content:space-between;font-size:12px;color:#8A6B75;font-weight:800"><span>सुरक्षित</span><span>ख़तरा</span></div>'+
+ (flags.length?flags.map(function(f){return '<div class="sc-f">⚠️ '+f+'</div>'}).join(''):'<div class="sc-f sc-ok">आपके जवाबों में कोई चेतावनी नहीं। फिर भी फ़ैसले से पहले वीडियो कॉल करें और परिवार को साथ रखें।</div>')+
+ '<p style="margin-top:12px"><b>अब क्या करें:</b> कभी पैसे या कोड न भेजें, लाइव वीडियो कॉल माँगें, परिवार को शामिल करें, और उस ऐप पर प्रोफ़ाइल की रिपोर्ट करें।</p>'+
+ '<div class="sc-a"><a class="btn primary" href="app/">सिर्फ़ वेरिफ़ाइड लोगों से मिलें</a><a class="btn" href="'+share+'" target="_blank" rel="noopener">परिवार के साथ शेयर करें</a><button class="btn" id="sc-r">दूसरी प्रोफ़ाइल चेक करें</button></div>';
+ document.getElementById('sc-r').onclick=function(){i=0;score=0;flags=[];ask()}}
+ask()})();</script>
