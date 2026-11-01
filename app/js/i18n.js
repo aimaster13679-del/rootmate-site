@@ -21,7 +21,7 @@
     'Matched on where you come from, where you live and how you think.': 'Des affinités selon vos origines, votre lieu de vie et votre façon de penser.',
     'Only real people': 'Seulement de vraies personnes',
     'Every member is checked with a government ID and a live selfie.': 'Chaque membre est vérifié avec une pièce d’identité officielle et un égoportrait en direct.',
-    'Create my profile': 'Créer mon profil', 'I already have an account': 'J’ai déjà un compte',
+    'Roots here, home there': 'Racines ici, vie là-bas', 'Where did you grow up?': 'Où avez-vous grandi ?', 'Tap your flag': 'Touchez votre drapeau', '🌍 Other': '🌍 Autre', 'Grew up in': 'A grandi en', 'lives in': 'vit à', 'Your roots:': 'Vos racines :', 'Verified people with these roots near you show first.': 'Les personnes vérifiées de ces racines près de chez vous apparaissent en premier.', 'Every country is welcome. You pick your roots in the first steps.': 'Tous les pays sont les bienvenus. Vous choisissez vos racines dans les premières étapes.', 'Create my profile': 'Créer mon profil', 'I already have an account': 'J’ai déjà un compte',
     'Lives · Toronto, 8 km': 'Vit à Toronto, à 8 km', 'Roots · Gujarat, India': 'Racines · Gujarat, Inde',
     'Choose how you want to sign in. Next you build your profile and upload an ID and a selfie, so everyone here is real.': 'Choisissez comment vous connecter. Ensuite, vous créez votre profil et envoyez une pièce d’identité et un égoportrait, pour que tout le monde ici soit réel.',
     'Continue with Google': 'Continuer avec Google', 'Email and password': 'Courriel et mot de passe',
