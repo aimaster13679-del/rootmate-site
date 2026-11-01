@@ -2299,7 +2299,7 @@ const liveUpd={id:null,v:null,hid:0,
     const cur=await fetch('bundle.json',{cache:'no-store'}).then(r=>r.json()).catch(()=>({}));
     const L=await fetch('https://neumarry.com/app-update/latest.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json());
     if(!L||!L.version||!L.url||L.version===cur.v||L.version===this.v)return;
-    const b=await U.download({url:L.url,version:L.version});await U.next({id:b.id});this.id=b.id;this.v=L.version}catch(e){}}};
+    const b=await U.download({url:L.url,version:L.version,checksum:L.checksum||''});await U.next({id:b.id});this.id=b.id;this.v=L.version}catch(e){}}};
 if(liveUpd.U()){try{liveUpd.U().notifyAppReady()}catch(e){}setTimeout(()=>liveUpd.check(),5000);setInterval(()=>liveUpd.check(),6*3600e3);
   document.addEventListener('visibilitychange',()=>{if(document.hidden)liveUpd.hid=Date.now()});
   if(Plug().App)Plug().App.addListener('pause',()=>{liveUpd.hid=Date.now()})}
@@ -2876,7 +2876,11 @@ function renderWelcomeLook2(){return renderWelcomeV2().replace(/<div class="v2w-
   });
   const _bd=blankDraft;blankDraft=function(){const d=_bd();const h=jmHint();if(h&&!d.oc)d.oc=h;return d};
   const _rw=renderWelcome;renderWelcome=function(){return V2()?renderWelcomeLook2():_rw()};
-  const _r=render;render=function(){_r();const on=LOOK2();document.documentElement.classList.toggle('look2',on);if(S.screen==='welcome')jmAfter();if(on&&S.screen==='app'){const t=app.querySelector('.topbar');if(t)t.classList.add('plum')}};
+  const _r=render;render=function(){_r();const on=LOOK2();document.documentElement.classList.toggle('look2',on);if(S.screen==='welcome')jmAfter();if(on&&S.screen==='app'){const t=app.querySelector('.topbar');if(t)t.classList.add('plum')}
+    /* phone status bar + bottom bar take the colour of the screen (his ask 1 Nov 18:30: top and bottom must match) */
+    const de=document.documentElement,pt=S.screen==='welcome'||(on&&S.screen==='app'&&!view&&!!app.querySelector('.topbar.plum'));
+    de.classList.toggle('edge-t',pt);de.classList.toggle('edge-b',S.screen==='welcome');
+    const st=pt?'DARK':'LIGHT';if(st!==render._bar){render._bar=st;try{const B=Plug().SystemBars;if(B&&B.setStyle)B.setStyle({style:st}).catch(()=>{})}catch(e){}}};
 })();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p)}; /* used by automated tests */

@@ -1106,3 +1106,11 @@ img,svg{-webkit-user-drag:none;user-drag:none}
 .look2 .nearby .nb-s b{color:#fff}.look2 .nearby .nb-s .ic{color:#FFB4C2}
 .look2 .golive .sb{background:rgba(255,255,255,.16)}
 .look2 .topbar.plum h1{color:#fff}
+
+/* status bar / bottom bar match the screen (1 Nov 2026) */
+html.edge-t{padding-top:0}
+html.edge-b{padding-bottom:0}
+html.edge-t .look2 .topbar.plum,html.edge-t.look2 .topbar.plum{padding-top:calc(var(--sat) + 16px)}
+html.edge-t .v2w-look2{padding-top:calc(var(--sat) + 34px)}
+html.edge-b .v2w-body{padding-bottom:calc(26px + var(--sab))}
+html{background:linear-gradient(#FFE8ED 50%,var(--bg) 50%)}
