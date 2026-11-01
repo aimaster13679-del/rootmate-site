@@ -490,6 +490,34 @@ BANNER_TXT = {
  'en': dict(t='This website uses Google Analytics to count visits and the Meta Pixel to measure our ads on Facebook and Instagram. We never sell your data.', ok='Accept', no='Decline', more='Privacy Policy', link='Cookie settings', href='privacy.html'),
  'fr': dict(t='Ce site utilise Google Analytics pour compter les visites et le pixel Meta pour mesurer nos publicités sur Facebook et Instagram. Nous ne vendons jamais vos données.', ok='Accepter', no='Refuser', more='Politique de confidentialité', link='Paramètres des témoins', href='../privacy.html'),
 }
+# ---------- Website v2 for inner pages (plum hero band, cards; content unchanged) ----------
+# Mock first: only when NM_V2PAGES=1 (his ok needed before it becomes the default).
+V2PAGES = os.environ.get('NM_V2PAGES') == '1'
+V2_SKIP = ('bio.html', 'partner.html', 'paid.html')
+def v2page(h):
+    m = re.search(r'<link rel="stylesheet" href="((?:\.\./)?)legal\.css">', h)
+    if not m or '<main><div class="wrap">' not in h: return h
+    h = h.replace(m.group(0), m.group(0) + f'<link rel="stylesheet" href="{m.group(1)}v2pages.css">', 1)
+    a = h.index('<main><div class="wrap">') + len('<main><div class="wrap">')
+    e = h.find('</h1>', a)
+    if e < 0 or h.find('</main>', a) < e: return h
+    e += 5
+    while True:
+        mm = re.match(r'\s*<p class="(?:meta|lede)">.*?</p>', h[e:], flags=re.S)
+        if not mm: break
+        e += mm.end()
+    hero = h[a:e]
+    return h[:a - len('<main><div class="wrap">')] + '<section class="phero"><div class="wrap">' + hero + '</div></section><main><div class="wrap">' + h[e:]
+if V2PAGES:
+    open(os.path.join(OUT, 'v2pages.css'), 'w', encoding='utf-8').write(rd('v2pages.css'))
+    for sub in ('', 'fr'):
+        d = os.path.join(OUT, sub)
+        if not os.path.isdir(d): continue
+        for fn in os.listdir(d):
+            if not fn.endswith('.html') or fn in V2_SKIP or fn == 'index.html': continue
+            fp = os.path.join(d, fn); h0 = open(fp, encoding='utf-8').read(); h1 = v2page(h0)
+            if h1 != h0: open(fp, 'w', encoding='utf-8').write(h1)
+
 def banner(lang):
     b = BANNER_TXT[lang]
     return ('<div id="nm-consent" role="dialog" aria-live="polite" aria-label="' + b['link'] + '" hidden>'
