@@ -61,6 +61,40 @@ fix = [
 for a, b in fix:
     assert a in s, 'missing: ' + a[:60]
     s = s.replace(a, b)
+# Website v2 (his ok 1 Nov 11:06 on the website mock): the app's new look on the home page hero.
+GLOBE = ('<svg class="v2globe" viewBox="0 0 312 300" aria-hidden="true"><defs><radialGradient id="wgl" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FF8FA1" stop-opacity=".35"/><stop offset="1" stop-color="#FF8FA1" stop-opacity="0"/></radialGradient></defs>'
+  '<circle cx="156" cy="160" r="130" fill="url(#wgl)"/><circle cx="156" cy="160" r="104" fill="none" stroke="#fff" stroke-opacity=".16"/>'
+  '<ellipse cx="156" cy="160" rx="104" ry="38" fill="none" stroke="#fff" stroke-opacity=".12"/><ellipse cx="156" cy="160" rx="44" ry="104" fill="none" stroke="#fff" stroke-opacity=".12"/>'
+  + ''.join(f'<path class="v2arc" d="M{a} {b}Q{(a+c)//2} {min(b,e)-70} {c} {e}" fill="none" stroke="#FFB4C2" stroke-width="1.6"/><circle cx="{a}" cy="{b}" r="3.5" fill="#FFD7A8"/>'
+            for a, b, c, e in [(78, 190, 214, 94), (96, 118, 226, 108), (238, 204, 210, 94), (150, 226, 226, 108), (60, 140, 214, 94)])
+  + '<circle cx="214" cy="94" r="6" fill="#FF8FA1"/></svg>'
+  + ''.join(f'<span class="v2flag" style="left:{x}%;top:{y}%">{f}</span>' for f, x, y in [('🇳🇬', 18, 58), ('🇵🇭', 74, 66), ('🇲🇽', 6, 42), ('🇮🇳', 40, 74), ('🇱🇧', 27, 34), ('🇰🇷', 80, 44)])
+  + '<span class="v2city">Your city</span><div id="p1" hidden></div><div id="p2" hidden></div>')
+v2fix = [
+ ('<span class="pill"><i></i>Matrimony for life abroad · Launching in Toronto, November 2026</span>', '<span class="pill"><i></i>For people who grew up in one country and live in another</span>'),
+ ('<h1>Every person here is <em>real.</em> Proven.</h1>', '<h1>Your roots. Your city. <em>Your person.</em></h1>'),
+ ('RootMate is a matrimony app for people living abroad. Meet verified people who share your roots and your mindset, in your city, with your family by your side.',
+  'Verified matrimony for every country and community. Meet people of your roots who live near you, and bring your family in, without giving up your privacy.'),
+]
+for a2, b2 in v2fix:
+    assert a2 in s, 'v2 missing: ' + a2[:60]
+    s = s.replace(a2, b2)
+_ai = s.index('<div class="art" aria-hidden="true">'); _aj = s.index('</div>\n</div></section>', _ai)
+s = s[:_ai] + '<div class="art v2art" aria-hidden="true">' + GLOBE + s[_aj:]
+s = s.replace('<div class="count" id="count"', '<div class="v2prom"><div><b>Verified</b><span>ID, selfie, roots, city</span></div><div><b>Private</b><span>no number shared</span></div><div><b>About 6 min</b><span>almost all taps</span></div></div>\n    <div class="count" id="count"', 1)
+s = s.replace('</style>', """
+.hero{background:radial-gradient(120% 80% at 70% 0%,#6A2A48 0%,#3A1A2B 55%,#24101B 100%);color:#fff}.hero::before{display:none}
+.hero h1{color:#fff;font-weight:600;letter-spacing:-.02em}.hero h1 em{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:1em;color:#FFB4C2;white-space:normal}
+.hero .lede{color:rgba(255,255,255,.85)}.hero .avail{color:rgba(255,255,255,.7)}.hero .pill{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.18)}
+.hero .btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35)}.hero .btn.primary{background:#fff;color:#2E1622;box-shadow:none}
+.hero .count{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:#fff;box-shadow:none}.hero .count .u{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.16);box-shadow:none}.hero .count .u b{color:#fff}.hero .count .lbl,.hero .count span{color:rgba(255,255,255,.75)}
+.hero .langhero .langh{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.2)}
+.v2prom{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px;max-width:520px}.v2prom div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:10px 12px;min-width:0}
+.v2prom b{display:block;font-size:14px}.v2prom span{font-size:12px;color:rgba(255,255,255,.72)}
+.v2art{position:relative;aspect-ratio:312/300;max-width:520px;width:100%;margin:0 auto}.v2globe{position:absolute;inset:0;width:100%;height:100%}
+.v2flag{position:absolute;font-size:22px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.35))}.v2city{position:absolute;left:64%;top:24%;font:800 12px var(--f-body);padding:5px 10px;border-radius:999px;background:#fff;color:#2E1622}
+@media (prefers-reduced-motion:no-preference){.v2arc{stroke-dasharray:4 5;animation:v2dash 6s linear infinite}@keyframes v2dash{to{stroke-dashoffset:-90}}}
+</style>""", 1)
 s = s.replace('RootMate', 'NeuMarry')
 s = s.replace('<title>NeuMarry Toronto</title>', '<title>NeuMarry: Matrimony &amp; Marriage App for People Living Abroad</title>')
 assert 'RootMate' not in s
