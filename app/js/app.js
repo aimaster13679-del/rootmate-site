@@ -2875,8 +2875,8 @@ function renderWelcomeLook2(){return renderWelcomeV2().replace(/<div class="v2w-
     jmFlag(el){JM.mine=false;jmShow(+el.dataset.i,false);jmLoop()}
   });
   const _bd=blankDraft;blankDraft=function(){const d=_bd();const h=jmHint();if(h&&!d.oc)d.oc=h;return d};
-  const _rw=renderWelcome;renderWelcome=function(){return V2()&&LOOK2()?renderWelcomeLook2():_rw()};
-  const _r=render;render=function(){_r();const on=LOOK2();document.documentElement.classList.toggle('look2',on);if(on&&S.screen==='welcome')jmAfter();if(on&&S.screen==='app'&&S.tab==='matches'){const t=app.querySelector('.topbar');if(t)t.classList.add('plum')}};
+  const _rw=renderWelcome;renderWelcome=function(){return V2()?renderWelcomeLook2():_rw()};
+  const _r=render;render=function(){_r();const on=LOOK2();document.documentElement.classList.toggle('look2',on);if(S.screen==='welcome')jmAfter();if(on&&S.screen==='app'){const t=app.querySelector('.topbar');if(t)t.classList.add('plum')}};
 })();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p)}; /* used by automated tests */
