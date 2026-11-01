@@ -1090,3 +1090,9 @@ a.btn{text-decoration:none}
 .look2 .panel.ticket .tk-ic{background:rgba(255,255,255,.12);color:#FFD7A8}
 .look2 .panel.ticket .link{color:#FFB4C2}
 .look2 .panel.ticket .tk-code b{color:#fff}
+
+/* No text selection / copy bar / "search" pop-up on long-press anywhere in the app (his report 1 Nov 16:49).
+   Typing fields and chat messages can still be selected and copied. */
+html,body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+input,textarea,select,[contenteditable="true"],.bub,.msg,.chat-msg{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
+img,svg{-webkit-user-drag:none;user-drag:none}
