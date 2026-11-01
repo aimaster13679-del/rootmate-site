@@ -2,6 +2,9 @@
 # Each English piece must be found (build.py checks), so a change to the English page
 # shows up as a build error instead of a half-English French page.
 # Short words carry their surrounding tags or quotes so only that exact spot changes.
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+import worldmap as _wm
 PAIRS = [
  # Header, hero
  ('Preview: forms work but are not saved yet. Sign-ups go live with the NeuMarry launch.', 'Aperçu : les formulaires fonctionnent, mais rien n’est encore enregistré. Les inscriptions ouvrent au lancement de NeuMarry.'),
@@ -17,7 +20,7 @@ PAIRS = [
  ('<b>Verified</b><span>ID, selfie, roots, city</span>', '<b>Vérifié</b><span>identité, selfie, racines, ville</span>'),
  ('<b>Private</b><span>no number shared</span>', '<b>Privé</b><span>aucun numéro partagé</span>'),
  ('<b>About 6 min</b><span>almost all taps</span>', '<b>Environ 6 min</b><span>presque tout en touches</span>'),
- ('<span class="v2city">Your city</span>', '<span class="v2city">Votre ville</span>'),
+ (_wm.html('en'), _wm.html('fr')),
  ('>Create your free profile<', '>Créer mon profil gratuit<'),
  ('>See a sample verified profile<', '>Voir un exemple de profil vérifié<'),
  ('Works now in your web browser · Android on Google Play soon, iPhone after', 'Fonctionne déjà dans votre navigateur · Android bientôt sur Google Play, iPhone ensuite'),
@@ -249,7 +252,7 @@ PAIRS = [
  # Trust strip
  ('aria-label="Trust and safety"','aria-label="Confiance et sécurité"'),
  ('<span>Sign in with Google</span>','<span>Se connecter avec Google</span>'),
- ('<small>GET IT ON</small>','<small>DISPONIBLE SUR</small>'),
+ ('<b>Mobile app</b><small>Coming soon on iOS and Android</small>','<b>Application mobile</b><small>Bientôt sur iOS et Android</small>'),
  ('<small>Event tickets</small>','<small>Billets d’événement</small>'),
  ('<b>Photos checked</b>with Google Cloud Vision','<b>Photos vérifiées</b>avec Google Cloud Vision'),
  ('<b>Every ID read by Google</b>and checked by a person','<b>Chaque pièce d’identité lue par Google</b>et vérifiée par une personne'),

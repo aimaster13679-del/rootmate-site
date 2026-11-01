@@ -62,14 +62,9 @@ for a, b in fix:
     assert a in s, 'missing: ' + a[:60]
     s = s.replace(a, b)
 # Website v2 (his ok 1 Nov 11:06 on the website mock): the app's new look on the home page hero.
-GLOBE = ('<svg class="v2globe" viewBox="0 0 312 300" aria-hidden="true"><defs><radialGradient id="wgl" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FF8FA1" stop-opacity=".35"/><stop offset="1" stop-color="#FF8FA1" stop-opacity="0"/></radialGradient></defs>'
-  '<circle cx="156" cy="160" r="130" fill="url(#wgl)"/><circle cx="156" cy="160" r="104" fill="none" stroke="#fff" stroke-opacity=".16"/>'
-  '<ellipse cx="156" cy="160" rx="104" ry="38" fill="none" stroke="#fff" stroke-opacity=".12"/><ellipse cx="156" cy="160" rx="44" ry="104" fill="none" stroke="#fff" stroke-opacity=".12"/>'
-  + ''.join(f'<path class="v2arc" d="M{a} {b}Q{(a+c)//2} {min(b,e)-70} {c} {e}" fill="none" stroke="#FFB4C2" stroke-width="1.6"/><circle cx="{a}" cy="{b}" r="3.5" fill="#FFD7A8"/>'
-            for a, b, c, e in [(78, 190, 214, 94), (96, 118, 226, 108), (238, 204, 210, 94), (150, 226, 226, 108), (60, 140, 214, 94)])
-  + '<circle cx="214" cy="94" r="6" fill="#FF8FA1"/></svg>'
-  + ''.join(f'<span class="v2flag" style="left:{x}%;top:{y}%">{f}</span>' for f, x, y in [('🇳🇬', 18, 58), ('🇵🇭', 74, 66), ('🇲🇽', 6, 42), ('🇮🇳', 40, 74), ('🇱🇧', 27, 34), ('🇰🇷', 80, 44)])
-  + '<span class="v2city">Your city</span><div id="p1" hidden></div><div id="p2" hidden></div>')
+import sys as _sys; _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import worldmap
+GLOBE = worldmap.html('en') + '<div id="p1" hidden></div><div id="p2" hidden></div>'
 v2fix = [
  ('<span class="pill"><i></i>Matrimony for life abroad · Launching in Toronto, November 2026</span>', '<span class="pill"><i></i>For people who grew up in one country and live in another</span>'),
  ('<h1>Every person here is <em>real.</em> Proven.</h1>', '<h1>Your roots. Your city. <em>Your person.</em></h1>'),
@@ -89,9 +84,12 @@ s = s.replace('</style>', """
 .hero .btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35)}.hero .btn.primary{background:#fff;color:#2E1622;box-shadow:none}
 .hero .count{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:#fff;box-shadow:none}.hero .count .u{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.16);box-shadow:none}.hero .count .u b{color:#fff}.hero .count .lbl,.hero .count span{color:rgba(255,255,255,.75)}
 .hero .langhero .langh{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.2)}
+@media (min-width:900px){.hero .wrap{grid-template-columns:1fr 1.12fr;gap:40px}}
+.near .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}.near .nearsteps{margin-top:18px}
+.hero .count{padding:12px 14px;border-radius:18px;gap:10px;align-items:center}.hero .count .lbl{padding-left:4px}
 .v2prom{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px;max-width:520px}.v2prom div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:10px 12px;min-width:0}
 .v2prom b{display:block;font-size:14px}.v2prom span{font-size:12px;color:rgba(255,255,255,.72)}
-.v2art{position:relative;aspect-ratio:312/300;max-width:520px;width:100%;margin:0 auto}.v2globe{position:absolute;inset:0;width:100%;height:100%}
+.v2art{position:relative;max-width:640px;width:100%;margin:0 auto;aspect-ratio:auto;height:auto;justify-self:stretch}""" + worldmap.CSS + """.v2globe{position:absolute;inset:0;width:100%;height:100%}
 .v2flag{position:absolute;font-size:22px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.35))}.v2city{position:absolute;left:64%;top:24%;font:800 12px var(--f-body);padding:5px 10px;border-radius:999px;background:#fff;color:#2E1622}
 @media (prefers-reduced-motion:no-preference){.v2arc{stroke-dasharray:4 5;animation:v2dash 6s linear infinite}@keyframes v2dash{to{stroke-dashoffset:-90}}}
 </style>""", 1)
