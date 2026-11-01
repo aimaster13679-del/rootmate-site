@@ -491,8 +491,8 @@ BANNER_TXT = {
  'fr': dict(t='Ce site utilise Google Analytics pour compter les visites et le pixel Meta pour mesurer nos publicités sur Facebook et Instagram. Nous ne vendons jamais vos données.', ok='Accepter', no='Refuser', more='Politique de confidentialité', link='Paramètres des témoins', href='../privacy.html'),
 }
 # ---------- Website v2 for inner pages (plum hero band, cards; content unchanged) ----------
-# Mock first: only when NM_V2PAGES=1 (his ok needed before it becomes the default).
-V2PAGES = os.environ.get('NM_V2PAGES') == '1'
+# LIVE (his ok 1 Nov 20:40 on the mock). NM_V2PAGES=0 switches it off for a test build.
+V2PAGES = os.environ.get('NM_V2PAGES', '1') != '0'
 V2_SKIP = ('bio.html', 'partner.html', 'paid.html')
 def v2page(h):
     m = re.search(r'<link rel="stylesheet" href="((?:\.\./)?)legal\.css">', h)
