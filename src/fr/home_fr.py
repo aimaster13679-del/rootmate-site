@@ -29,7 +29,7 @@ PAIRS = [
  ("'See you at the next Family Mixer'", "'À bientôt au prochain Family Mixer'"),
  # Proof
  ('<b>4 checks</b><span>on every member: government ID, live selfie, roots and the city they live in</span>', '<b>4 vérifications</b><span>pour chaque membre : pièce d’identité, selfie en direct, origines et ville de résidence</span>'),
- ('<b>0</b><span>unverified profiles shown. Only fully verified members appear to others</span>', '<b>0</b><span>profil non vérifié affiché. Seuls les membres entièrement vérifiés sont visibles</span>'),
+ ('<b>0</b><span>profiles shown without a checked ID and live selfie</span>', '<b>0</b><span>profil affiché sans pièce d’identité et égoportrait vérifiés</span>'),
  ('<b>Blocked</b><span>money requests in chat, the most common trick of romance scams</span>', '<b>Bloquées</b><span>les demandes d’argent dans le chat, l’arnaque sentimentale la plus courante</span>'),
  ('Free tool: <a href="is-this-profile-real.html">Is this matrimony profile real? Take the 1-minute check</a>', 'Outil gratuit : <a href="/is-this-profile-real.html">Ce profil matrimonial est-il réel ? Faites le test en 1 minute</a>'),
  # How it works
