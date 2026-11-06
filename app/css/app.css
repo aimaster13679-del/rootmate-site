@@ -1636,3 +1636,10 @@ html.c3.gl.gl-lt .fu-tk .fu-k{color:#7A5F00}html.c3.gl.gl-lt .fu-tk .fu-meta{col
 html.c3.gl.gl-lt .fu-date{background-image:linear-gradient(115deg,#0E7A55,#3BBF8A 40%,#C9A300 60%,#0E7A55)}
 html.c3.gl.gl-lt .fu-tka .btn.ghost{background:rgba(255,255,255,.7);color:#14231C;border-color:#fff}
 html.c3.gl.gl-lt .fu-bar i{background:rgba(255,255,255,.75)}
+/* Chats like the approved bento mock: mint safety tile, each chat its own glass row */
+html.gl .rows{display:grid;gap:8px;background:none!important;border:0!important;box-shadow:none!important}
+html.gl .rowi{border-radius:20px!important;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.11)!important;padding:12px!important}
+html.gl.gl-lt .rowi{background:rgba(255,255,255,.66);border-color:#fff!important;box-shadow:0 1px 0 #fff inset,0 14px 28px -22px rgba(30,80,60,.35)}
+html.gl .scroll .callout{border-radius:20px;background:linear-gradient(160deg,rgba(150,235,200,.14),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.12)}
+html.gl.gl-lt .scroll .callout{background:linear-gradient(160deg,rgba(222,249,237,.95),rgba(168,232,204,.5));border-color:#fff;color:#14231C}
+html.gl.gl-lt .fu-map,html.gl.gl-lt .fu-roots{filter:none}
