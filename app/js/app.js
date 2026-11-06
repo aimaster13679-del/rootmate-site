@@ -3616,7 +3616,7 @@ const RLX=(function(){
       if(!E){E=live[k]={el:document.createElement('div'),markers:[],theme,sig:'',touched:false};E.el.className='rl-map';
         Promise.all([load(),data()]).then(()=>{if(live[k]!==E)return;
           E.map=new maplibregl.Map({container:E.el,style:style(o.dark),center:o.center,zoom:o.zoom,attributionControl:{compact:true},dragRotate:false,pitchWithRotate:false,touchPitch:false,fadeDuration:0,cooperativeGestures:false});
-          ['mousedown','touchstart','wheel'].forEach(e=>E.map.on(e,()=>E.touched=true));E.map.on('move',()=>hide(E));
+          if(o.padB)E.map.setPadding({top:40,bottom:o.padB,left:0,right:0});['mousedown','touchstart','wheel'].forEach(e=>E.map.on(e,()=>E.touched=true));E.map.on('move',()=>hide(E));
           E.map.on('load',()=>{E.ready=true;E.sig='';sync(k)})}).catch(()=>{slot.classList.add('rl-off')})}
       if(E.el.parentNode!==slot){slot.appendChild(E.el);if(E.map)E.map.resize()}
       slot.classList.add('rl-on');if(E.ready)sync(k)})}
@@ -3657,7 +3657,7 @@ function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^
     it.forEach((p,i)=>{const h=pHome(p);if(h)pins.push({ll:h,html:`<i></i>${esc(p.cityName||p.country)}`,cls:'on',fly:true,go:()=>{const d=document.querySelector('.rl-cards');if(d&&d.children[i])d.scrollTo({left:d.children[i].offsetLeft-d.offsetLeft-4,behavior:'smooth'})}})});
     const h0=meHome();if(h0)pins.push({ll:h0,html:`<i></i>You · ${esc(me.city||me.country||'')}`,cls:'me'});
     const arcs=it.map(p=>[ll({country:p.oc,state:p.os}),pHome(p),'g']).concat(r&&h0?[[r,h0,'y']]:[]);
-    const c=r||h0||[20,20];return {center:[c[0],Math.max(-20,Math.min(40,c[1]))],zoom:innerWidth<500?.95:1.4,spin:-.03,arcs,roots:[me.oc].concat(it.map(p=>p.oc)).filter(Boolean),lives:[me.country].concat(it.map(p=>p.country)).filter(Boolean),pins}};
+    const c=r||h0||[20,20];return {padB:it.length?150:0,center:[c[0],Math.max(-20,Math.min(40,c[1]))],zoom:innerWidth<500?1.15:1.5,spin:-.03,arcs,roots:[me.oc].concat(it.map(p=>p.oc)).filter(Boolean),lives:[me.country].concat(it.map(p=>p.country)).filter(Boolean),pins}};
   function acts(p,lk){const st=S.interests[p.id],sl=S.shortlist.includes(p.id);
     const save=`<button class="rl-b" data-a="shortlist" data-id="${p.id}" aria-label="${sl?'Remove from saved':'Save for later'}" aria-pressed="${sl}"${sl?' data-on="1"':''}>${ic('star')}</button>`;
     if(lk)return `<button class="btn gold rl-wide" data-a="upgrade" data-r="profile" data-id="${p.id}">${ic('crown')}See profile with Gold</button>`;
@@ -3673,9 +3673,9 @@ function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^
      <div class="rl-acts">${acts(p,lk)}</div></article>`}
   const _ib3=introBlock;introBlock=function(list){const prev=_ib3(list);if(!RL())return prev;const it=introsToday(list);RLX._it=it;
     const a=prev.indexOf('<div class="pxb">'),b=prev.lastIndexOf('<div class="pxb">');const top=a>=0&&a!==b?prev.slice(a,prev.indexOf('<div class="sec-h px-sh">')>0?prev.indexOf('<div class="sec-h px-sh">'):b):'';const bot=b>=0?prev.slice(b):'';
-    const me=S.me||{};const globe=RLX.webgl()?`<div class="rl-tile"><div class="rl-slot" data-rl="home"></div><div class="rl-cap"><p class="eb">${esc(me.oc||'')} roots · worldwide</p><b>${it.length?`${it.length} introduction${it.length>1?'s':''} today`:'Your roots line'}</b></div></div>`:'';
-    const cards=it.length?`<div class="sec-h rl-sh"><h2>Today for you</h2><small>${ic('clock')}New in <span data-until="${midnight()}">${fmtLeft(midnight()-Date.now())}</span></small></div><div class="rl-cards">${it.map(card).join('')}</div>`:'';
-    return globe+top+cards+bot};
+    const me=S.me||{};const globe=RLX.webgl()?`<div class="rl-tile rl-home"><div class="rl-slot" data-rl="home"></div><div class="rl-cap"><p class="eb">${esc(me.oc||'')} roots · worldwide</p><b>${it.length?`${it.length} introduction${it.length>1?'s':''} today`:'Your roots line'}</b></div></div>`:'';
+    const cards=it.length?`<div class="rl-sheet${globe?' over':''}"><div class="sec-h rl-sh"><h2>Today for you</h2><small>${ic('clock')}New in <span data-until="${midnight()}">${fmtLeft(midnight()-Date.now())}</span></small></div><div class="rl-cards">${it.map(card).join('')}</div></div>`:'';
+    return globe+cards+top+bot};
 
   /* ===== Profile: 'What you share' rings + their local time ===== */
   const _pv=renderProfileView;renderProfileView=function(id,isMe){const html=_pv(id,isMe);if(!RL()||isMe)return html;const p=byId(id);if(!p)return html;
@@ -3685,7 +3685,8 @@ function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^
     const blk=`<section class="rl-share"><div class="rl-rings"><svg viewBox="0 0 120 120" aria-hidden="true">${ring.map((r,i)=>{const R=50-i*13;return `<circle cx="60" cy="60" r="${R}" fill="none" stroke="${col[i]}" stroke-opacity=".15" stroke-width="9"/><circle class="rl-ring" cx="60" cy="60" r="${R}" fill="none" stroke="${col[i]}" stroke-width="9" stroke-linecap="round" pathLength="1" style="--o:${(1-r.v/100).toFixed(2)};animation-delay:${.15+i*.15}s" transform="rotate(-90 60 60)"/>`}).join('')}</svg>
       <div class="rl-rl"><p class="eb">What you share</p>${ring.map((r,i)=>`<div><i style="background:${col[i]}"></i>${esc(r.l)}<span>${r.v}%</span></div>`).join('')}</div></div>
       ${tz?`<p class="rl-tz">${ic('clock')}${esc(hhmm(tz))} in ${esc(p.cityName||p.country)} now</p>`:''}</section>`;
-    const k=html.indexOf('<section');return k>0?html.slice(0,k)+blk+html.slice(k):html};
+    let h2=html,vb='';const vm=h2.match(/<div class="panel v2"><p class="v2lb"[\s\S]*?<\/audio><\/div>/);if(vm){vb=vm[0].replace('class="panel v2"','class="panel v2 rl-voice"');h2=h2.replace(vm[0],'')}
+    const k=h2.indexOf('<section');return k>0?h2.slice(0,k)+vb+blk+h2.slice(k):h2};
 
   /* ===== Bridge: both local times on top of the chat ===== */
   const _cv=renderChatView;renderChatView=function(id){const html=_cv(id);if(!RL())return html;const p=byId(id),me=S.me||{};if(!p)return html;
