@@ -2923,16 +2923,12 @@ const PM=(function(){
  return {draw,fit,pt,P,C,CSS};
 })();
 
-
 /* ---------- C3 design (his ok 6 Nov 2026 ~18:0x on mock handoff/mocks/style-c-v3, artifact Q3Mnvq886di4FtScZrHAWC) ----------
-   Preview ONLY for the admin email swapnilbhagatt@gmail.com (his rule: that email stays admin forever).
-   A device remembers it (nm.c3) after that email signed in there, so the welcome screen shows C3 after sign-out too;
-   any other signed-in email sees the normal design. Local tests can force it with localStorage nm.c3test=1. */
+   LIVE FOR EVERYONE (his ok 6 Nov 2026, 'C3 live for everyone'); before that admin-only preview.
+   Local tests can switch it off with localStorage nm.c3test=0. */
 const C3_ADMIN='swapnilbhagatt@gmail.com';
-function C3(){try{const loc=/127\.0\.0\.1/.test(CFG.url||'');if(loc&&localStorage.getItem('nm.c3test')==='1')return true;
-  const e=String((API.email&&API.email())||'').toLowerCase();
-  if(e===C3_ADMIN){try{localStorage.setItem('nm.c3','1')}catch(x){}return true}
-  if(e)return false;return localStorage.getItem('nm.c3')==='1'}catch(e){return false}}
+function C3(){try{const loc=/127\.0\.0\.1/.test(CFG.url||'');if(loc&&localStorage.getItem('nm.c3test')==='0')return false;
+  return true}catch(e){return false}}
 
 const C3CITY={lagos:[3.4,6.5,'Lagos','🇳🇬'],toronto:[-79.4,43.7,'Toronto','🇨🇦'],busan:[129,35.2,'Busan','🇰🇷'],sydney:[151.2,-33.9,'Sydney','🇦🇺'],
  guad:[-103.3,20.7,'Guadalajara','🇲🇽'],madrid:[-3.7,40.4,'Madrid','🇪🇸'],beirut:[35.5,33.9,'Beirut','🇱🇧'],montreal:[-73.6,45.5,'Montreal','🇨🇦'],
