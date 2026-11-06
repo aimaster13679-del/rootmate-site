@@ -561,4 +561,18 @@ for old, new in [('nri-matrimony-canada', 'matrimony-abroad-canada'), ('nri-matr
             '<!doctype html><html><head><meta charset="utf-8"><title>NeuMarry</title><meta name="robots" content="noindex,follow">'
             f'<link rel="canonical" href="{url}"><meta http-equiv="refresh" content="0; url={url}"></head>'
             f'<body><p><a href="{url}">This page has moved. Open the new page.</a></p></body></html>')
+
+# Glass look on every page (his ok 7 Nov 2026): glass.css loads last, so it wins over the page styles. Not in app/ (the app has its own).
+for _root, _dirs, _files in os.walk(OUT):
+    _rel = os.path.relpath(_root, OUT)
+    if _rel.split(os.sep)[0] in ('app', 'app-update', 'src', '.git', 'social', 'univ'):
+        continue
+    for _f in _files:
+        if not _f.endswith('.html'):
+            continue
+        _p = os.path.join(_root, _f); _h = open(_p, encoding='utf-8').read()
+        if 'glass.css' in _h or 'http-equiv="refresh"' in _h or '</head>' not in _h:
+            continue
+        _href = ('../' * (0 if _rel == '.' else len(_rel.split(os.sep)))) + 'glass.css'
+        open(_p, 'w', encoding='utf-8').write(_h.replace('</head>', f'<link rel="stylesheet" href="{_href}"></head>', 1))
 print('site built')
