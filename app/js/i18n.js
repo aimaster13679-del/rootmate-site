@@ -80,6 +80,19 @@
     'Interest': "Intérêt",
     'Save': "Garder",
     'Shared': "Partagé",
+    'Today for you': "Pour vous aujourd’hui",
+    "I'm interested": "Ça m’intéresse",
+    'Open the Bridge': "Ouvrir le Pont",
+    'Say yes': "Dire oui",
+    'Not now': "Pas maintenant",
+    'See profile with Gold': "Voir le profil avec Gold",
+    'Your roots line': "Votre ligne de racines",
+    'What you share': "Ce que vous partagez",
+    'Values': "Valeurs",
+    'Life plans': "Projets de vie",
+    'What you both want': "Ce que vous voulez tous les deux",
+    'Your Roots Signature': "Votre Signature de racines",
+    'A pattern only you have. It shows on your introduction card.': "Un motif que vous seul avez. Il apparaît sur votre carte de présentation.",
     'Same plans as you, in all three': "Mêmes projets que vous, les trois",
     'Same plans as you, in all of them': "Mêmes projets que vous, tous",
     'What does a family weekend look like for you?': "À quoi ressemble un week-end en famille pour vous ?",
@@ -885,7 +898,14 @@
     [/^How does your family keep (.+) traditions in (.+)\?$/, function (m) { return 'Comment votre famille garde-t-elle les traditions de ' + tr(m[1]) + ' à ' + m[2] + ' ?'; }],
     [/^Send interest to (.+)$/, function (m) { return 'Envoyer un intérêt à ' + m[1]; }],
     [/^Chat with (.+)$/, function (m) { return 'Discuter avec ' + m[1]; }],
-    [/^Accept (.+)’s interest$/, function (m) { return 'Accepter l’intérêt de ' + m[1]; }]
+    [/^Accept (.+)’s interest$/, function (m) { return 'Accepter l’intérêt de ' + m[1]; }],
+    [/^(\d+)% shared$/, function (m) { return m[1] + " % en commun"; }],
+    [/^(\d[^ ]* ?(?:am|pm)?) there$/, function (m) { return m[1] + " là-bas"; }],
+    [/^(.+) roots · worldwide$/, function (m) { return "Racines " + m[1] + " · dans le monde"; }],
+    [/^(\d+) introductions? today$/, function (m) { return m[1] + " présentations aujourd’hui"; }],
+    [/^(.+) · your roots$/, function (m) { return m[1] + " · vos racines"; }],
+    [/^(\d[^ ]* ?(?:am|pm)?) in (.+) now$/, function (m) { return m[1] + " à " + m[2] + " maintenant"; }],
+    [/^You · (.+)$/, function (m) { return "Vous · " + m[1]; }]
   ];  RX = RX.concat(RX_C3);
 
 
