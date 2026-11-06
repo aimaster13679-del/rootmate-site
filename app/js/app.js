@@ -3468,6 +3468,18 @@ if(!IC.share)Object.assign(IC,{share:'<circle cx="18" cy="5.5" r="2.5"/><circle 
     <div class="px-deckw${it.length>1?' many':''}"><div class="px-deck" onscroll="var i=Math.round(this.scrollLeft/this.clientWidth),w=this.parentNode,d=w.nextElementSibling,o=w.previousElementSibling.querySelector('.px-of');if(o)o.textContent=(i+1)+' / '+this.children.length;if(d)[].forEach.call(d.children,function(e,j){e.classList.toggle('on',j===i)})">${it.map(deckCard).join('')}</div></div>
     ${it.length>1?`<div class="nm-dots px-dots" aria-hidden="true">${it.map((_,i)=>`<i class="${i?'':'on'}"></i>`).join('')}</div>`:''}`};
 
+  /* ===== Bento Matches (his ok 7 Nov 02:42 on mock K9PGagZvdiBRTzTqNaQLzM): Today / Likes tiles above the deck, Event / Trust tiles below. Real data only. ===== */
+  const _ib2=introBlock;introBlock=function(list){const deck=_ib2(list);if(!PX())return deck;
+    const it=introsToday(list),recv=PROFILES.filter(p=>S.interests[p.id]==='received');const me=S.me||{v:{}};
+    let vp=0;try{vp=[photoOk(),me.v.id,me.v.selfie,me.v.roots,me.v.lives].filter(Boolean).length}catch(e){}
+    let ev=null;try{ev=(S.events||[]).filter(e=>e&&e.date&&new Date(e.date)>Date.now()).sort((a,b)=>new Date(a.date)-new Date(b.date))[0]||null}catch(e){}
+    const evDay=ev?(()=>{try{return new Date(ev.date).toLocaleDateString(RM_I18N.locale,{weekday:'short',day:'numeric',month:'short'})}catch(e){return ''}})():'';
+    const top=`<div class="pxb"><div class="pxt lemon"><p class="eb">Today</p><b class="pxn">${it.length}</b><p class="pxs">introductions · new in <span data-until="${midnight()}">${fmtLeft(midnight()-Date.now())}</span></p></div>
+     ${recv.length?`<button class="pxt mint" data-a="goLikes"><p class="eb">Likes you</p><b class="pxn">${recv.length}</b><p class="pxs">say yes to start chatting</p></button>`
+      :`<button class="pxt mint" data-a="tab" data-k="connections"><p class="eb">Saved</p><b class="pxn">${(S.shortlist||[]).length}</b><p class="pxs">people you saved</p></button>`}</div>`;
+    const bot=`<div class="pxb">${ev?`<button class="pxt leaf" data-a="tab" data-k="events"><span class="pxi">${ic('cal')}</span><b class="pxh">${esc(ev.name||'Family Mixer')}</b><p class="pxs">${esc(ev.city||'')}${evDay?' · '+esc(evDay):''}</p></button>`:''}
+     <button class="pxt" data-a="tab" data-k="me"><span class="pxr" style="--p:${vp*20}%"><b>${vp*20}%</b></span><b class="pxh">Trust Passport</b><p class="pxs">${vp>=5?'All stamps done':(5-vp)+' stamp'+(5-vp===1?'':'s')+' left'}</p></button></div>`;
+    return (deck?top+deck:top)+bot};
   /* ===== 8. Both said yes ===== */
   const qs=p=>{const me=S.me,out=[];if(p.oc===me.oc&&p.os&&p.os===me.os)out.push(`What do you miss most about ${p.os}?`);else if(p.oc===me.oc)out.push(`How does your family keep ${p.oc} traditions in ${p.cityName}?`);
     if(same(p,5))out.push(['What does a family weekend look like for you?','Where do you like to go out with friends?','Where is the next trip you dream of?'][p.ans[5]]);

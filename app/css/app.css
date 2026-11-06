@@ -1594,3 +1594,23 @@ html.gl .px-ph .px-gc{position:relative;left:auto;right:auto;bottom:auto;margin:
 html.gl .px-tph{height:min(118vw,470px)}
 html.gl .px-float{margin-top:-36px}
 html.gl .px-tph .px-fade{background:linear-gradient(180deg,rgba(10,12,11,.35),rgba(10,12,11,0) 18%,rgba(10,12,11,0) 88%,var(--bg) 100%)}
+/* bento tiles on Matches (approved mock) */
+html.gl .pxb{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 14px}
+html.gl .pxt{position:relative;display:block;text-align:left;font:inherit;color:var(--ink);padding:16px;border-radius:24px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.11);-webkit-backdrop-filter:blur(22px) saturate(160%);backdrop-filter:blur(22px) saturate(160%);box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 22px 44px -28px rgba(0,0,0,.8);overflow:hidden;cursor:pointer}
+html.gl.gl-lt .pxt{background:rgba(255,255,255,.62);border-color:#fff;box-shadow:0 1px 0 #fff inset,0 18px 36px -24px rgba(30,80,60,.38)}
+html.gl .pxt.lemon{background:linear-gradient(160deg,rgba(255,226,120,.16),rgba(255,255,255,.04))}html.gl.gl-lt .pxt.lemon{background:linear-gradient(160deg,rgba(255,248,206,.9),rgba(255,234,140,.55))}
+html.gl .pxt.mint{background:linear-gradient(160deg,rgba(150,235,200,.14),rgba(255,255,255,.04))}html.gl.gl-lt .pxt.mint{background:linear-gradient(160deg,rgba(222,249,237,.92),rgba(168,232,204,.55))}
+html.gl .pxt.leaf{background:linear-gradient(160deg,rgba(200,240,160,.12),rgba(255,255,255,.04))}html.gl.gl-lt .pxt.leaf{background:linear-gradient(160deg,rgba(238,250,226,.92),rgba(203,238,172,.55))}
+html.gl .pxt .eb{font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#8DEBC3;margin:0}html.gl.gl-lt .pxt .eb{color:#0E5B43}
+html.gl .pxn{display:block;font-size:44px;line-height:1.05;font-weight:800;color:#8DEBC3;font-variant-numeric:tabular-nums;margin:4px 0 2px}html.gl.gl-lt .pxn{color:#0E5B43}
+html.gl .pxs{font-size:13px;color:var(--muted);margin:0;line-height:1.4}
+html.gl .pxh{display:block;font-size:16px;font-weight:800;margin-top:8px}
+html.gl .pxi{width:46px;height:46px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(150deg,#FFE37A,#E0A800);color:#fff}html.gl .pxi svg,html.gl .pxi .ic{width:24px;height:24px}
+html.gl .pxr{width:58px;height:58px;border-radius:50%;display:grid;place-content:center;background:radial-gradient(closest-side,#121615 76%,transparent 78% 100%),conic-gradient(#5FD3A2 var(--p),rgba(255,255,255,.12) 0)}
+html.gl.gl-lt .pxr{background:radial-gradient(closest-side,#fff 76%,transparent 78% 100%),conic-gradient(#0E9F6E var(--p),#E3EDE7 0)}html.gl .pxr b{font-size:15px}
+html.gl .main-inner>.likes{display:none}
+html.gl.gl-lt .px-ph .px-gc{background:rgba(255,255,255,.82);border-color:#fff;color:#14231C;box-shadow:0 14px 30px -20px rgba(30,80,60,.45)}
+html.gl.gl-lt .px-ph .px-gc .px-nm small{color:#4E5E57}html.gl.gl-lt .px-facts span{background:#F1F5F2;border-color:#E3E9E5;color:#14231C}
+html.gl.gl-lt .px-facts span.s{background:linear-gradient(150deg,#D6F7E8,#A6E9CB);color:#0B4D36;border-color:transparent}
+html.gl.gl-lt .px-same{color:#0E7A55}html.gl.gl-lt .px-ok{color:#0E7A55;background:#E3F7EE;border-color:#BFEFD9}
+html.gl .px-ph{color:var(--ink)}
