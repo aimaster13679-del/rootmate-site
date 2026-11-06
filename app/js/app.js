@@ -691,7 +691,7 @@ function forMe(e){return audOk(e,S.me)}
 function ageOk(e){return S.me.age>=e.ageMin&&S.me.age<=e.ageMax}
 function evMine(e){const f=S.me&&S.me.g==='F',[wc,wl,mc,ml]=e.seats,w=e.wait||[0,0,0,0];return {seatsLeft:f?wl:ml,waitLeft:f?w[1]:w[3],waitCap:f?w[0]:w[2],who:f?'women':'men'}}
 function evStat(e){return {n:e.have,confirmed:e.status==='confirmed',left:Math.max(0,e.need-e.have),deadline:e.deadline}}
-function evArt(e,hero){const up=hero?'0':'-40';const g={family:['#FFC2A6','#FF8399','#E8436B'],speed:['#FFA9BA','#EE4D74','#B8325F'],festive:['#FFD69E','#FF9C7E','#E2586E'],brunch:['#FFD3B0','#FF9AA8','#E8436B'],online:['#D9C2FF','#B98AF0','#8E5BD8']}[e.kind]||['#FFC2A6','#FF8399','#E8436B'];const id='ea'+String(e.id).slice(0,8);
+function evArt(e,hero){const up=hero?'0':'-40';const g={family:['#FFF1B0','#9FE6C6','#0E7A55'],speed:['#E9F8D6','#5FD3A2','#0E5B43'],festive:['#FFF1B0','#F2C94C','#0E7A55'],brunch:['#FFF6CF','#BDF2DA','#0E9F6E'],online:['#E3F7EE','#8DEBC3','#0E5B43']}[e.kind]||['#FFF1B0','#9FE6C6','#0E7A55'];const id='ea'+String(e.id).slice(0,8);
   let s=`<svg class="art" viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${g[0]}"/><stop offset=".55" stop-color="${g[1]}"/><stop offset="1" stop-color="${g[2]}"/></linearGradient><radialGradient id="${id}l"><stop offset="0" stop-color="#FFF6D8"/><stop offset="1" stop-color="#FFF6D8" stop-opacity="0"/></radialGradient></defs><rect width="400" height="250" fill="url(#${id})"/>`;
   [[60,190,40],[330,70,55],[250,205,30],[140,40,24]].forEach(([x,y,r])=>{s+=`<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" opacity=".12"/>`});
   [[-10,24,410,34,92],[-10,62,410,52,128]].forEach(([x1,y1,x2,y2,cy])=>{s+=`<path d="M${x1} ${y1} Q200 ${cy} ${x2} ${y2}" stroke="#7A2040" stroke-opacity=".3" stroke-width="1.5" fill="none"/>`;
@@ -706,7 +706,7 @@ function renderWelcome(){
   return `<div class="scroll"><div class="welcome pad">
     <div class="wtop"><div class="brand"><svg class="mark" viewBox="0 0 32 22" aria-hidden="true"><path class="c1" d="M11.60 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/><path class="c2" d="M20.40 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/></svg>NeuMarry</div><button class="lang-sw notr" data-a="lang" aria-label="Language / Langue">${ic('globe')}${esc((LANGS_ALL.find(x=>x[0]===RM_I18N.lang)||LANGS_ALL[0])[1])}</button></div>
     <div class="hero" aria-hidden="true">
-      <div class="hero-pair"><span class="av a1"><span class="av-art">${portrait(11,'F',{tone:0})}</span></span><span class="av a2"><span class="av-art">${portrait(42,'M',{tone:2})}</span></span><span class="match">${ic('sparkle')}96% match</span></div>
+      <div class="hero-pair"><span class="av a1"><span class="av-art"></span></span><span class="av a2"><span class="av-art"></span></span><span class="match">${ic('sparkle')}96% match</span></div>
       <div class="hero-tags"><span>Roots · Gujarat, India</span><span>Lives · Toronto, 8 km</span></div>
     </div>
     <h1>Your person from <em>back home</em> might live ten minutes away.</h1>
@@ -935,7 +935,7 @@ const CELE={2:['Roots done!',d=>d.oc?`People from ${d.oc} will now show first in
   3:['Your life is in!',d=>d.city?`Matches will show the real distance to you in ${d.city}.`:'Matches will show the real distance to you.','What matters to you','about 90 sec',3,'about 4 min'],
   5:['Verification ready!',()=>'It goes to our team when you finish the last part. A person checks it, usually within a day.','Who you want to meet','about 30 sec',1,'about 30 sec']};
 function celeLayer(){const c=CELE[S.cele];if(!c)return '';const d=S.draft;const pct=Math.round(S.cele/6*100);
-  const cf=Array.from({length:36},(_,i)=>`<i style="left:${(i*37)%100}%;animation-delay:${(i%9)*0.06}s;background:${['#E8436B','#B8863A','#2D8A61','#FF8FA1','#E9C98D'][i%5]};--r:${(i*47)%360}deg"></i>`).join('');
+  const cf=Array.from({length:36},(_,i)=>`<i style="left:${(i*37)%100}%;animation-delay:${(i%9)*0.06}s;background:${['#0E9F6E','#B8863A','#2D8A61','#8DEBC3','#E9C98D'][i%5]};--r:${(i*47)%360}deg"></i>`).join('');
   return `<div class="cele" role="dialog" aria-live="polite"><div class="cf">${cf}</div><div class="cele-c"><div class="cele-e">🎉</div><h2>${c[0]}</h2><p>${esc(c[1](d))}</p>
   <div class="cele-n"><b>Next: ${c[2]} · ${c[3]}</b><span>${c[4]} short part${c[4]>1?'s':''} left · ${c[5]} in total</span></div>
   <div class="cele-bar"><i style="width:${pct}%"></i></div><button class="btn primary block" data-a="celeGo">Keep going</button><p class="hint" style="text-align:center;margin:8px 0 0">Take a break any time, we save everything.</p></div></div>`}
@@ -2348,11 +2348,11 @@ function v2gain(icn,t){return `<div class="v2gain">${ic(icn)}<span>${t}</span></
 function renderWelcomeV2(){
   const arcs=[[78,200,214,104],[96,128,226,118],[238,214,210,104],[150,236,226,118],[60,150,214,104]];
   return `<div class="scroll v2 v2w"><div class="v2w-sky" aria-hidden="true">
-   <svg viewBox="0 0 312 300"><defs><radialGradient id="v2gl" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FF8FA1" stop-opacity=".35"/><stop offset="1" stop-color="#FF8FA1" stop-opacity="0"/></radialGradient></defs>
+   <svg viewBox="0 0 312 300"><defs><radialGradient id="v2gl" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#8DEBC3" stop-opacity=".35"/><stop offset="1" stop-color="#8DEBC3" stop-opacity="0"/></radialGradient></defs>
    <circle cx="156" cy="170" r="130" fill="url(#v2gl)"/><circle cx="156" cy="170" r="104" fill="none" stroke="#fff" stroke-opacity=".14"/>
    <ellipse cx="156" cy="170" rx="104" ry="38" fill="none" stroke="#fff" stroke-opacity=".1"/><ellipse cx="156" cy="170" rx="44" ry="104" fill="none" stroke="#fff" stroke-opacity=".1"/>
-   ${arcs.map(([a,b,c,e])=>`<path class="v2arc" d="M${a} ${b}Q${(a+c)/2} ${Math.min(b,e)-70} ${c} ${e}" fill="none" stroke="#FFB4C2" stroke-width="1.6"/><circle cx="${a}" cy="${b}" r="3.5" fill="#FFD7A8"/>`).join('')}
-   <circle cx="214" cy="104" r="6" fill="#FF8FA1"/></svg>
+   ${arcs.map(([a,b,c,e])=>`<path class="v2arc" d="M${a} ${b}Q${(a+c)/2} ${Math.min(b,e)-70} ${c} ${e}" fill="none" stroke="#A8F0CF" stroke-width="1.6"/><circle cx="${a}" cy="${b}" r="3.5" fill="#FFD7A8"/>`).join('')}
+   <circle cx="214" cy="104" r="6" fill="#8DEBC3"/></svg>
    ${[['🇳🇬',18,58],['🇵🇭',74,70],['🇲🇽',4,45],['🇮🇳',40,77],['🇱🇧',27,37],['🇰🇷',80,48]].map(([f,x,y])=>`<span class="v2flag" style="left:${x}%;top:${y}%">${f}</span>`).join('')}
    <span class="v2cityp">${ic('pin')} Your city</span></div>
   <div class="v2w-body pad">
@@ -2397,12 +2397,12 @@ function v2wheelAfter(){const w=document.querySelector('.v2wheel');if(!w)return;
 function v2house(a){const kids=a[3]===0||a[3]===1,both=a[1]===0,move=a[0]===2,par=a[2]===0||a[2]===1;
   const n=[a[0],a[1],a[2],a[3]].filter(x=>x!==null&&x!==undefined).length;
   return `<svg viewBox="0 0 300 168" class="v2house" aria-hidden="true"><circle cx="250" cy="34" r="16" fill="#FFD7A8"/><path d="M0 150C80 136 220 136 300 150V168H0z" fill="#CDE7D6"/>
-  <path d="M80 82L150 30 220 82" fill="#C42E57"/><rect x="92" y="80" width="116" height="74" rx="4" fill="#fff"/><rect x="138" y="112" width="24" height="42" rx="12" fill="#3A1A2B"/>
+  <path d="M80 82L150 30 220 82" fill="#C42E57"/><rect x="92" y="80" width="116" height="74" rx="4" fill="#fff"/><rect x="138" y="112" width="24" height="42" rx="12" fill="#142520"/>
   <rect x="104" y="92" width="26" height="22" rx="4" fill="#FFE6EC"/><rect x="170" y="92" width="26" height="22" rx="4" fill="#FFE6EC"/>
-  ${kids?'<g fill="#E8436B"><circle cx="112" cy="100" r="3.5"/><rect x="108.5" y="104" width="7" height="8" rx="3"/><circle cx="122" cy="101" r="3"/><rect x="119" y="104.5" width="6" height="7.5" rx="3"/></g>':''}
+  ${kids?'<g fill="#0E9F6E"><circle cx="112" cy="100" r="3.5"/><rect x="108.5" y="104" width="7" height="8" rx="3"/><circle cx="122" cy="101" r="3"/><rect x="119" y="104.5" width="6" height="7.5" rx="3"/></g>':''}
   ${both?'<g fill="#B8863A"><rect x="174" y="102" width="9" height="7" rx="1.5"/><rect x="185" y="102" width="9" height="7" rx="1.5"/></g>':''}
   ${par?'<g fill="#86697A"><circle cx="232" cy="122" r="4"/><rect x="228" y="127" width="8" height="14" rx="3"/><circle cx="246" cy="123" r="4"/><rect x="242" y="128" width="8" height="13" rx="3"/></g>':''}
-  ${move?'<g transform="translate(40 34) rotate(-12)"><path d="M0 8l26-11-7 21-5-8z" fill="#3A1A2B"/></g>':''}
+  ${move?'<g transform="translate(40 34) rotate(-12)"><path d="M0 8l26-11-7 21-5-8z" fill="#142520"/></g>':''}
   <g transform="translate(40 112)"><path d="M0 40V10" stroke="#24845A" stroke-width="3"/><circle cx="0" cy="8" r="12" fill="#7CCB9E"/></g>
   <text x="150" y="20" text-anchor="middle" font-family="Nunito Sans,sans-serif" font-weight="900" font-size="10" fill="#C42E57" letter-spacing="1.5">${n} OF 4 ADDED</text></svg>`}
 const HOME_Q=[[3,'kid'],[1,'brief'],[2,'users'],[0,'plane']];
@@ -2417,7 +2417,7 @@ function renderSignupV2(){if(!S.editMode)setTimeout(()=>noteStep(S.step),0);
     const pass=v2passport(d);h=h.replace('<div class="form pad">','<div class="form pad">'+pass).replace(/Step 5 of 6 · saved/,'Part 5 of 5 · last part');
     return `<div class="v2 v2col">${h}</div>${S.cele2?v2cele():''}`}
   if(st===1){const gn=v2gname();if(!d.name&&gn)d.name=gn;
-    const tile=(g,l,s,seed)=>`<button type="button" class="v2gt${d.g===g?' on':''}" data-a="v2g" data-v="${g}"><span class="v2gt-a">${portrait(seed,g,{tone:g==='F'?0:2})}</span><b>${l}</b><small>${s}</small></button>`;
+    const tile=(g,l,s,seed)=>`<button type="button" class="v2gt${d.g===g?' on':''}" data-a="v2g" data-v="${g}"><span class="v2gt-a">${`<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="ng${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${g==='F'?'#FFE9A0':'#BDF2DA'}"/><stop offset="1" stop-color="${g==='F'?'#F2C94C':'#3BBF8A'}"/></linearGradient></defs><rect width="64" height="64" rx="20" fill="url(#ng${g})"/>${g==='F'?'<circle cx="32" cy="26" r="11" fill="none" stroke="#fff" stroke-width="5"/><path d="M32 37v15M25 45h14" stroke="#fff" stroke-width="5" stroke-linecap="round"/>':'<circle cx="28" cy="36" r="11" fill="none" stroke="#fff" stroke-width="5"/><path d="M36 28l11-11M38 17h9v9" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>'}</svg>`}</span><b>${l}</b><small>${s}</small></button>`;
     body=`<h1 class="v2h">${d.name?`Hi ${esc(d.name.split(' ')[0])}.`:'Hi there.'} <em>Who are you</em> looking for?</h1>
     ${S.v2name||!d.name?inF('name','Your full name','text',d.name,'autocomplete="name" maxlength="60"','Others see only your first name and last initial until you both say yes.')
       :`<div class="v2card v2row">${avatar(null,'sm',true)}<div class="grow"><b>${esc(d.name)}</b><small>${gn?'From your Google account':'Your name'}</small></div><button type="button" class="v2pill" data-a="v2name">Change</button></div>`}
@@ -2498,7 +2498,7 @@ function v2passport(d){const me=null;const s1=vState(1,d,me),s2=vState(2,d,me),s
 
 /* ---------- celebration between parts ---------- */
 function v2cele(){const c=V2CELE[S.cele2.at];if(!c)return '';const p=V2PART[(()=>{const [s,b]=V2SEQ[S.cele2.next];return s===3||s===4?s+(b||'a'):String(s)})()]||[5];
-  const cf=Array.from({length:30},(_,i)=>`<i style="left:${(i*37)%100}%;animation-delay:${(i%9)*0.06}s;background:${['#E8436B','#B8863A','#2D8A61','#FF8FA1','#E9C98D'][i%5]};--r:${(i*47)%360}deg"></i>`).join('');
+  const cf=Array.from({length:30},(_,i)=>`<i style="left:${(i*37)%100}%;animation-delay:${(i%9)*0.06}s;background:${['#0E9F6E','#B8863A','#2D8A61','#8DEBC3','#E9C98D'][i%5]};--r:${(i*47)%360}deg"></i>`).join('');
   return `<div class="cele v2" role="dialog" aria-live="polite"><div class="cf">${cf}</div><div class="cele-c"><div class="v2seal">${ic('check')}</div><h2>${c[0]}</h2><p>${esc(c[1])}</p>
   <div class="cele-n"><b>Next: ${c[2]} · ${c[3]}</b><span>Part ${p[0]} of 5</span></div>
   ${v2segs().replace('v2segs','v2segs v2segs-c')}<button class="btn primary block" data-a="v2celeGo">Keep going</button><p class="hint" style="text-align:center;margin:8px 0 0">Take a break any time, we save everything.</p></div></div>`}
@@ -2511,12 +2511,12 @@ function v2leaveSheet(){const i=Math.max(0,v2pos());const left=Math.max(1,Math.r
 
 /* ---------- screen 13: after the last part ---------- */
 function v2reveal(){const me=S.me;if(!me)return '';const sent=me.idCheck&&me.selfieCheck;
-  const cf=Array.from({length:22},(_,k)=>`<i style="left:${(k*47)%96+2}%;top:${(k*71)%22+4}%;background:${['#E8436B','#FFD7A8','#B8863A','#8FE0B5','#C2B2F4'][k%5]};transform:rotate(${k*37}deg)"></i>`).join('');
+  const cf=Array.from({length:22},(_,k)=>`<i style="left:${(k*47)%96+2}%;top:${(k*71)%22+4}%;background:${['#0E9F6E','#FFD7A8','#B8863A','#8FE0B5','#C2B2F4'][k%5]};transform:rotate(${k*37}deg)"></i>`).join('');
   return `<div class="v2rev v2" role="dialog" aria-modal="true"><div class="v2rev-cf" aria-hidden="true">${cf}</div>
    <div class="v2rev-c pad"><div class="v2rev-seal">${ic('shield')}</div>
    <h1 class="v2h" style="text-align:center">${sent?'You’re <em>nearly live.</em>':'Your profile is <em>saved.</em>'}</h1>
    <p class="v2lede" style="text-align:center">${sent?'A person on our team checks your Trust Passport, usually within a day. Then you see only verified people, and they see you.':'Finish your Trust Passport from Me. Then you see only verified people, and they see you.'}</p>
-   <div class="v2rev-p">${[[11,'F',0],[42,'M',2],[7,'F',1],[23,'M',3]].map(([s,g,t],i)=>`<span style="--r:${[-6,-2,3,7][i]}deg">${portrait(s,g,{tone:t})}</span>`).join('')}</div>
+   <div class="v2rev-p">${['shield','badge','users','heart'].map((k,i)=>`<span class="nf" style="--r:${[-6,-2,3,7][i]}deg">${ic(k)}</span>`).join('')}</div>
    <button class="btn primary block" data-a="v2revGo">${sent?'See my profile':'Finish my Trust Passport'}</button></div></div>`}
 
 /* ---------- actions and hooks ---------- */
@@ -2702,7 +2702,7 @@ function camLayer(){if(!CAM.on)return '';const sf=CAM.mode==='selfie';const pct=
    sf?`<div class="v2ring-wrap"><svg viewBox="0 0 240 240" class="v2ring-svg"><circle cx="120" cy="120" r="112" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="8"/><circle cx="120" cy="120" r="112" fill="none" stroke="#8FE0B5" stroke-width="8" stroke-linecap="round" stroke-dasharray="704" stroke-dashoffset="${704-704*pct/100}" transform="rotate(-90 120 120)"/></svg><video id="cam-v" playsinline muted autoplay class="v2cam-v sf"></video></div>
      <h2 class="v2h" style="color:#fff;text-align:center;margin-top:22px">${esc(SELFIE_STEPS[Math.min(CAM.step,3)])}</h2><p class="v2cam-s">${pct}% · keep your face inside the circle</p>`
    :`<div class="v2id-wrap"><video id="cam-v" playsinline muted autoplay class="v2cam-v"></video><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></div>
-     <h2 class="v2h" style="color:#fff;text-align:center;margin-top:18px">Hold your ID <em style="color:#FFB4C2">inside the frame</em></h2>
+     <h2 class="v2h" style="color:#fff;text-align:center;margin-top:18px">Hold your ID <em style="color:#A8F0CF">inside the frame</em></h2>
      ${CAM.checks.length?`<div class="v2cam-ck">${CAM.checks.map(([ok,t])=>`<span class="${ok?'ok':'no'}">${ic(ok?'check':'x')}${esc(t)}</span>`).join('')}</div>`:'<p class="v2cam-s">Flat, all 4 corners visible, no glare</p>'}
      <button class="v2shut" data-a="camShot" aria-label="Take photo"><i></i></button>`}
    <p class="v2cam-f">${ic('lock')} ${sf?'Used only to match your ID. Never shown on your profile.':'Only our safety team sees it. Deleted 7 days after the check.'}</p></div>`}
@@ -2939,9 +2939,9 @@ function c3km(a,b){const R=6371,r=Math.PI/180,[l1,p1]=[C3CITY[a][0]*r,C3CITY[a][
   return Math.round(2*R*Math.asin(Math.sqrt(Math.sin((p2-p1)/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin((l2-l1)/2)**2))/10)*10}
 const C3SEQ=[['lagos','toronto'],['busan','sydney'],['guad','madrid']];
 function c3map(){return PM.draw({vb:[0,30,1000,440],fsr:.03,label:'World map: where members grew up and where they live now',seq:[
-  {hl:{'566':'#FFC93C','124':'#E2136E'},arcs:[['lagos','toronto']],pins:[['lagos','🇳🇬 Lagos','#FFC93C',0,1.8],['toronto','🇨🇦 Toronto','#E2136E']]},
-  {hl:{'410':'#FFC93C','036':'#E2136E'},arcs:[['busan','sydney']],pins:[['busan','🇰🇷 Busan','#FFC93C'],['sydney','🇦🇺 Sydney','#E2136E',0,1.8]]},
-  {hl:{'484':'#FFC93C','724':'#E2136E'},arcs:[['guad','madrid']],pins:[['guad','🇲🇽 Guadalajara','#FFC93C',0,1.8],['madrid','🇪🇸 Madrid','#E2136E']]}]})}
+  {hl:{'566':'#FFC93C','124':'#0E9F6E'},arcs:[['lagos','toronto']],pins:[['lagos','🇳🇬 Lagos','#FFC93C',0,1.8],['toronto','🇨🇦 Toronto','#0E9F6E']]},
+  {hl:{'410':'#FFC93C','036':'#0E9F6E'},arcs:[['busan','sydney']],pins:[['busan','🇰🇷 Busan','#FFC93C'],['sydney','🇦🇺 Sydney','#0E9F6E',0,1.8]]},
+  {hl:{'484':'#FFC93C','724':'#0E9F6E'},arcs:[['guad','madrid']],pins:[['guad','🇲🇽 Guadalajara','#FFC93C',0,1.8],['madrid','🇪🇸 Madrid','#0E9F6E']]}]})}
 const c3cyc=(arr,cls)=>`<span class="c3cyc ${cls||''}"><span>${arr.concat(arr[0]).map(t=>`<b>${esc(t)}</b>`).join('')}</span></span>`;
 function renderWelcomeC3(){
   return `<div class="scroll c3w"><div class="c3topl"><p class="c3kick">NeuMarry · verified matrimony</p><button class="c3lang notr" data-a="lang" aria-label="Language">${ic('globe')}<span>${esc((LANGS_ALL.find(x=>x[0]===RM_I18N.lang)||LANGS_ALL[0])[1])}</span></button></div>
@@ -3028,7 +3028,7 @@ function a3home(){if(A3.list)return a3list();const o=A3.ov;if(!o)return `<div cl
     o.reports_open>0?['flag',`${o.reports_open} open report${o.reports_open>1?'s':''}`,'Answer within 24 h','checks']:null,
     o.help_open>0?['chat',`${o.help_open} member${o.help_open>1?'s':''} asked for help`,'Help inbox','help']:null,
     ...failed.map(b=>['alert',`${b.bot} failed`,b.summary||'','robots'])].filter(Boolean);
-  return `<div class="a3g">${a3kpi(o.signups_today,'Sign-ups today',d?`${d>0?'▲':'▼'} ${Math.abs(d)} vs yesterday`:'same as yesterday','#FF5C9E','today')}${a3kpi(o.live,'Live members','fully verified','#12A36B','live')}${a3kpi(o.checks_waiting,'Waiting for checks',o.oldest_wait_hours!=null?`oldest ${o.oldest_wait_hours} h`:'','#FFC93C','tab:checks')}${a3kpi(o.reports_open,'Open reports','','#FF6B6B','tab:checks')}</div>
+  return `<div class="a3g">${a3kpi(o.signups_today,'Sign-ups today',d?`${d>0?'▲':'▼'} ${Math.abs(d)} vs yesterday`:'same as yesterday','#3BBF8A','today')}${a3kpi(o.live,'Live members','fully verified','#12A36B','live')}${a3kpi(o.checks_waiting,'Waiting for checks',o.oldest_wait_hours!=null?`oldest ${o.oldest_wait_hours} h`:'','#FFC93C','tab:checks')}${a3kpi(o.reports_open,'Open reports','','#FF6B6B','tab:checks')}</div>
    ${need.length?`<div class="a3c"><div class="a3h"><b>Needs you now</b><span>${need.length}</span></div>${need.map(([i,t,s,go])=>`<button class="a3n" data-a="a3tab" data-k="${go}">${ic(i)}<span><b>${esc(t)}</b><small>${esc(s)}</small></span><em>Open</em></button>`).join('')}</div>`:`<div class="a3c a3ok">${ic('check')} Nothing needs you right now.</div>`}
    ${f.accounts?`<div class="a3c"><div class="a3h"><b>Sign-up journey</b><span>last 7 days</span></div>${[['Made an account',f.accounts,'f0'],['Started the profile',f.profiles,'f1'],['Sent documents',f.documents,'f2'],['Live',f.live,'f3']].map(([t,n,k])=>`<div class="a3f a3fb" role="button" tabindex="0" data-a="a3go" data-k="${k}"><span>${t}</span><div><i style="width:${Math.max(2,Math.round(n/f.accounts*100))}%"></i></div><b>${n}</b></div>`).join('')}</div>`:''}
    ${tot?`<div class="a3c"><div class="a3h"><b>Sign-ups per day</b><span>${tot} in 30 days</span></div>${a3bars(vals)}</div>`:''}
@@ -3116,9 +3116,9 @@ function a3members(){const L=A3.mlist;if(L===undefined){A3.mlist=null;a3search('
 async function a3search(q){A3.mq=q;A3.mlist=null;render();try{A3.mlist=await API.rpc('admin_members',{p_q:q||null,p_limit:100})}catch(e){A3.mlist=[]}render()}
 function a3activity(){const w=a3need();if(w)return w;const a=A3.st.activity;const d=a.days_14||[];const mx=Math.max(1,...d.map(x=>x.active));const mm=Math.max(1,...d.map(x=>x.messages));
   const k=(n,l,s,c,go)=>`<button class="a3k" style="--c:${c}" ${go?`data-a="a3go" data-k="${go}"`:'data-a="a3tab" data-k="members"'}><b>${n}</b><span>${l}</span>${s?`<small>${s}</small>`:''}<em class="a3more">Details ›</em></button>`;
-  return `<div class="a3g">${k(a.active_today,'Active today','opened the app','#12A36B')}${k(a.active_7d,'Active, 7 days','',  '#9D7CFF')}${k(a.messages_today,'Messages today',`${a.messages_7d} in 7 days`,'#FF5C9E')}${k(a.chats_7d,'Chats, 7 days','pairs talking','#FFC93C')}${k(a.interests_7d,'Interests, 7 days',`${a.accepted_7d} accepted`,'#FF8A3D')}${k(a.matches_all,'Matches','all time','#12A36B')}</div>
+  return `<div class="a3g">${k(a.active_today,'Active today','opened the app','#12A36B')}${k(a.active_7d,'Active, 7 days','',  '#9D7CFF')}${k(a.messages_today,'Messages today',`${a.messages_7d} in 7 days`,'#3BBF8A')}${k(a.chats_7d,'Chats, 7 days','pairs talking','#FFC93C')}${k(a.interests_7d,'Interests, 7 days',`${a.accepted_7d} accepted`,'#FF8A3D')}${k(a.matches_all,'Matches','all time','#12A36B')}</div>
    <div class="a3c"><div class="a3h"><b>Active members per day</b><span>14 days</span></div><div class="a3bars">${d.map(x=>`<i style="height:${Math.max(3,Math.round(x.active/mx*100))}%" title="${x.active}"></i>`).join('')}</div></div>
-   <div class="a3c"><div class="a3h"><b>Messages per day</b><span>14 days</span></div><div class="a3bars">${d.map(x=>`<i style="height:${Math.max(3,Math.round(x.messages/mm*100))}%;background:#FF5C9E" title="${x.messages}"></i>`).join('')}</div></div>
+   <div class="a3c"><div class="a3h"><b>Messages per day</b><span>14 days</span></div><div class="a3bars">${d.map(x=>`<i style="height:${Math.max(3,Math.round(x.messages/mm*100))}%;background:#3BBF8A" title="${x.messages}"></i>`).join('')}</div></div>
    <div class="a3c"><div class="a3h"><b>Day by day</b></div>${d.slice().reverse().map(x=>`<div class="a3kv"><span>${esc(new Date(x.d).toLocaleDateString([], {weekday:'short',day:'numeric',month:'short'}))}</span><b>${x.active} active · ${x.messages} messages · ${x.interests} interests</b></div>`).join('')}</div>
    ${a.flagged_7d?`<button class="a3c a3n" data-a="a3tab" data-k="checks">${ic('alert')}<span><b>${a.flagged_7d} warned message${a.flagged_7d>1?'s':''} in 7 days</b><small>Money or scam words; see Checks</small></span><em>Open</em></button>`:''}`}
 function a3money(){const w=a3need();if(w)return w;const M=A3.st.money;const T=M.tickets||[];
@@ -3132,10 +3132,10 @@ function a3events(){const w=a3need();if(w)return w;const E=A3.st.events||[];if(!
   if(A3.ev){const e=E.find(x=>x.id===A3.ev);if(e){const row=(k,v)=>`<div class="a3kv"><span>${k}</span><b>${esc(String(v))}</b></div>`;
     return `<button class="a3back" data-a="a3up">${ic('back')} All events</button><div class="a3c"><div class="a3h"><b>${esc(e.title)}</b><span>${esc(e.status)}</span></div>
      ${row('When',new Date(e.starts_at).toLocaleString([], {weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}))}${row('Where',[e.city,e.country].filter(Boolean).join(', '))}
-     ${a3kv2('Women',e.women,e.seats_women,'#FF5C9E')}${a3kv2('Men',e.men,e.seats_men,'#9D7CFF')}
+     ${a3kv2('Women',e.women,e.seats_women,'#3BBF8A')}${a3kv2('Men',e.men,e.seats_men,'#9D7CFF')}
      ${row('Seats',`${e.women}/${e.seats_women} women · ${e.men}/${e.seats_men} men`)}${row('Paid tickets',e.paid)}${row('Money (before tax)',money(e.cents,e.currency))}${row('Checked in at the door',e.checked_in)}</div>`}}
   return E.map(e=>`<button class="a3c a3ev" data-a="a3ev" data-k="${esc(e.id)}"><span class="a3h"><b>${esc(e.title)}</b><span>${esc(e.status)}</span></span><small>${esc(new Date(e.starts_at).toLocaleDateString([], {day:'numeric',month:'short'}))} · ${esc(e.city||'')}</small>
-    <span class="a3seat"><i style="width:${Math.round(e.women/Math.max(1,e.seats_women)*100)}%;background:#FF5C9E"></i></span><span class="a3seat"><i style="width:${Math.round(e.men/Math.max(1,e.seats_men)*100)}%;background:#9D7CFF"></i></span>
+    <span class="a3seat"><i style="width:${Math.round(e.women/Math.max(1,e.seats_women)*100)}%;background:#3BBF8A"></i></span><span class="a3seat"><i style="width:${Math.round(e.men/Math.max(1,e.seats_men)*100)}%;background:#9D7CFF"></i></span>
     <small>${e.women}/${e.seats_women} women · ${e.men}/${e.seats_men} men · ${money(e.cents,e.currency)}</small><em class="a3more">Details ›</em></button>`).join('')}
 (function(){
   Object.assign(A,{
@@ -3346,8 +3346,8 @@ function FUN(){try{if(/127\.0\.0\.1/.test(CFG.url||'')){const t=localStorage.get
     if(!o||!d)return '';const k1='fo'+p.id.slice(0,6),k2='fd'+p.id.slice(0,6);
     PM.C[k1]=[o[1],o[0],p.os||p.oc,''];PM.C[k2]=[d[1],d[0],p.cityName,''];
     const vb=PM.fit([k1,k2],390/(h||170),70);const far=Math.round(dist(o[0],o[1],d[0],d[1]));
-    const svg=PM.draw({vb,fsr:.045,grid:false,label:`Map: ${p.os||p.oc} to ${p.cityName}`,arcs:[[k1,k2,'#E2136E']],
-      pins:[[k1,`${flagOf(p.oc)} ${p.os||p.oc}`,'#FFC93C',0,1.9],[k2,`${flagOf(p.country)} ${p.cityName}`,'#E2136E']]});
+    const svg=PM.draw({vb,fsr:.045,grid:false,label:`Map: ${p.os||p.oc} to ${p.cityName}`,arcs:[[k1,k2,'#0E9F6E']],
+      pins:[[k1,`${flagOf(p.oc)} ${p.os||p.oc}`,'#FFC93C',0,1.9],[k2,`${flagOf(p.country)} ${p.cityName}`,'#0E9F6E']]});
     return {svg,far}}
   const dist=(a,b,c,d)=>{const R=6371,t=x=>x*Math.PI/180,x=Math.sin(t(c-a)/2)**2+Math.cos(t(a))*Math.cos(t(c))*Math.sin(t(d-b)/2)**2;return 2*R*Math.asin(Math.sqrt(x))};
 
@@ -3411,7 +3411,7 @@ function GLASS(){try{if(/127\.0\.0\.1/.test(CFG.url||'')){const t=localStorage.g
   const apply=()=>{const on=GLASS();const h=document.documentElement;h.classList.toggle('gl',on);
     let lt=false;try{const t=localStorage.getItem('nm.glassmode');lt=t?t==='light':!!(mq&&mq.matches)}catch(e){}
     h.classList.toggle('gl-lt',on&&lt);
-    const m=document.querySelector('meta[name=theme-color]');if(m&&on)m.setAttribute('content',lt?'#FBF8FC':'#0E0B12')};
+    const m=document.querySelector('meta[name=theme-color]');if(m&&on)m.setAttribute('content',lt?'#F7F8F5':'#0A0C0B')};
   const _r=render;render=function(){apply();_r()};
   try{mq&&mq.addEventListener&&mq.addEventListener('change',()=>{apply()})}catch(e){}
   apply();
@@ -3484,13 +3484,13 @@ if(!IC.share)Object.assign(IC,{share:'<circle cx="18" cy="5.5" r="2.5"/><circle 
   /* ===== 10. Two journeys: her roots line and yours on a real map ===== */
   function journeys(p){const me=S.me;const o1=ll({country:p.oc,state:p.os}),d1=(p.lat!=null?[p.lat,p.lng]:null)||ll({country:p.country,state:p.state,city:p.cityName});
     const o2=ll({country:me.oc,state:me.os}),d2=(me.lat!=null?[me.lat,me.lng]:null)||ll({country:me.country,state:me.state,city:me.city});if(!o1||!d1||!o2||!d2)return '';
-    const k=p.id.slice(0,6),K=['px1'+k,'px2'+k,'px3'+k,'px4'+k];const one=sameCity(p);const L=lt();const cityCol=L?'#141018':'#FFFFFF';
+    const k=p.id.slice(0,6),K=['px1'+k,'px2'+k,'px3'+k,'px4'+k];const one=sameCity(p);const L=lt();const cityCol=L?'#14231C':'#FFFFFF';
     PM.C[K[0]]=[o1[1],o1[0],'',''];PM.C[K[1]]=[d1[1],d1[0],'',''];PM.C[K[2]]=[o2[1],o2[0],'',''];PM.C[K[3]]=[d2[1],d2[0],'',''];
     const sameRoots=km2(o1,o2)<30,myCity=(me.city||me.state||'').split(',')[0];
-    const pins=[[K[0],`${fl(p.oc)} ${p.os||p.oc}${sameRoots?' · both':''}`,'#E2136E',0,1.9]];if(!sameRoots)pins.push([K[2],`${fl(me.oc)} ${me.os||me.oc}`,'#FFC93C',0,1.9]);
-    pins.push([K[1],`${one?'':fl(p.country)+' '}${p.cityName}`,one?cityCol:'#E2136E']);if(!one)pins.push([K[3],`${fl(me.country)} ${myCity}`,'#FFC93C']);
+    const pins=[[K[0],`${fl(p.oc)} ${p.os||p.oc}${sameRoots?' · both':''}`,'#0E9F6E',0,1.9]];if(!sameRoots)pins.push([K[2],`${fl(me.oc)} ${me.os||me.oc}`,'#FFC93C',0,1.9]);
+    pins.push([K[1],`${one?'':fl(p.country)+' '}${p.cityName}`,one?cityCol:'#0E9F6E']);if(!one)pins.push([K[3],`${fl(me.country)} ${myCity}`,'#FFC93C']);
     const vb=PM.fit(K,326/210,80);
-    const svg=PM.draw({vb,theme:L?'light':'dark',fsr:.042,grid:false,label:`Map: ${p.os||p.oc} to ${p.cityName}, and ${me.os||me.oc} to ${myCity}`,arcs:[[K[0],K[1],'#E2136E'],[K[2],K[3],'#FFC93C']],pins});
+    const svg=PM.draw({vb,theme:L?'light':'dark',fsr:.042,grid:false,label:`Map: ${p.os||p.oc} to ${p.cityName}, and ${me.os||me.oc} to ${myCity}`,arcs:[[K[0],K[1],'#0E9F6E'],[K[2],K[3],'#FFC93C']],pins});
     const a=km2(o1,d1),b=km2(o2,d2);
     const fact=(i,k,v)=>v?`<div class="px-fct">${ic(i)}<span><small>${k}</small><b>${esc(v)}</b></span></div>`:'';
     return `<section class="px-sec" id="px-roots"><div class="px-h"><h2>${one?'Two journeys, one city':'Two journeys'}</h2>${one?`<span class="px-chip r">${ic('pin')}${esc(p.cityName)}</span>`:`<span class="px-chip">${esc(distLabel(p))}</span>`}</div>
