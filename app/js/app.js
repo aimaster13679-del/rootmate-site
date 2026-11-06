@@ -3191,6 +3191,75 @@ function langSheet(){const av=['en','fr'].concat(window.NM_AVAIL||[]);const cur=
    <p class="hint">Translated by AI. Names, about text and chats are never translated.</p>`)}
 (function(){const _rs=renderSheet;renderSheet=function(){return sheet&&sheet.type==='lang'?langSheet():_rs()}})();
 
+
+/* ---------- Easy join (his ok 6 Nov 2026 on the Easy Join mock, built 7 Nov) ----------
+   A member goes LIVE with an approved photo + ID + live selfie (each checked by a person).
+   Roots and city become trust badges (shown on profiles, members with all badges are introduced first);
+   EVENTS still need ID + selfie + roots + city. The server decides who is on the new rule (rpc my_join_rule:
+   admin first, then everyone once app_flags.easy_join is on); the app only follows it. */
+(function(){
+  const EJ=()=>!!(S.join&&S.join.easy);
+  const basicV=()=>{const v=S.me&&S.me.v;return !!v&&!!v.id&&!!v.selfie};
+  const canBrowse=()=>verified()||(EJ()&&basicV());
+  const seenKey=()=>'nm.liveSeen.'+(S.me&&S.me.id||'');
+  const _lm=loadMe;loadMe=async function(){const r=await _lm();
+    if(r){try{S.join=await API.rpc('my_join_rule')}catch(e){S.join=null}
+      try{localStorage.setItem('nm.easy',EJ()?'1':'0')}catch(e){}}
+    return r};
+  isLive=function(){return canBrowse()&&photoOk()};
+  const _nv=needVerified;needVerified=function(ev){if(!ev&&canBrowse())return false;return _nv(ev)};
+
+  const badge=(ok,t)=>`<span class="ej-chip ${ok?'y':'n'}">${ok?ic('check'):'+'} ${esc(t)}</span>`;
+  /* Matches while not live: 2 steps (photo, ID + selfie); roots and city shown as optional badges */
+  const _nl=renderNotLive;renderNotLive=function(){if(!EJ())return _nl();
+    const me=S.me,n=S.fitN||0,who=me.lookingFor==='F'?'women':'men';
+    const ph=photoOk()?'ok':me.photoPending?'wait':(me.rejectedPhoto?'rej':'todo');
+    const id=vState(1,{},me),st=[ph,id],done=st.filter(x=>x==='ok').length,allIn=st.every(x=>x==='ok'||x==='wait');
+    const r=vState(2,{},me),c=vState(3,{},me);
+    return `<div class="topbar pad"><div class="grow"><div class="hello">${greet()}, <em>${esc(me.name.split(' ')[0])}</em></div><div class="sub">2 steps and you are live</div></div></div>
+  <div class="scroll" id="main"><div class="main-inner pad">
+   <div class="nearby golive">${n?`<div class="nb-n"><b>${n}</b><span>verified ${who} already fit what you are looking for</span></div>`:`<span class="gl-h">${ic('shield')}<b>Every member is checked by a person</b></span>`}
+    <div class="seats"><span>${done} of 2 steps done</span><span class="sb"><i style="width:${done*50}%"></i></span></div></div>
+   <div class="vsteps">
+    ${vStep(1,st[0],'Profile photo','A clear photo of you, checked by our team','goPhoto')}
+    ${vStep(2,st[1],'ID and live selfie','Passport or national ID + a 30-second selfie','goVerify')}</div>
+   ${allIn?`<div class="callout">${ic('clock')}<span><b>Everything is with our team.</b> We check within 24 hours. Your profile goes live the moment the last check is approved.</span></div>`:
+     `<button class="btn primary block" data-a="${st[0]==='ok'||st[0]==='wait'?'goVerify':'goPhoto'}">${ic('shield')}${st[0]==='ok'||st[0]==='wait'?'Verify ID and selfie':'Add your photo'}</button>`}
+   <div class="sec-h"><h2>Trust badges</h2><small>Add any time</small></div>
+   <div class="ej-badges">
+    <button type="button" class="ej-bdg${r==='ok'?' ok':''}" data-a="goVerify" data-n="2">${ic('globe')}<b>Roots</b><small>${r==='ok'?'Proven':r==='wait'?'With our team':'A document that shows where you come from'}</small></button>
+    <button type="button" class="ej-bdg${c==='ok'?' ok':''}" data-a="goVerify" data-n="3">${ic('pin')}<b>City</b><small>${c==='ok'?'Proven':c==='wait'?'With our team':'Proof of where you live now'}</small></button></div>
+   <p class="note">Needed for events. Members with all badges are introduced first.</p>
+   ${C3()?`<button class="btn ghost block h3btn" data-a="h3open">${ic('chat')} Need help? Ask our team</button>`:''}
+  </div></div>`};
+
+  /* Live but roots / city not proven yet: one calm card on Matches (first time), then a small reminder */
+  const _vb=verifyBanner;verifyBanner=function(){if(!EJ()||verified()||!basicV())return _vb();const me=S.me;
+    const r=vState(2,{},me),c=vState(3,{},me);let seen=false;try{seen=localStorage.getItem(seenKey())==='1'}catch(e){}
+    const chips=badge(true,'ID')+badge(true,'Live selfie')+badge(true,'Photo')+badge(r==='ok','Roots')+badge(c==='ok','City');
+    if(!seen)return `<div class="ej-live"><div class="ej-ring">${ic('check')}</div><b>Your profile is live</b><small>Verified members who fit you can now see you, and you can see them.</small>
+      <div class="ej-chips">${chips}</div>
+      <button class="btn primary block" data-a="goVerify" data-n="${r==='ok'?3:2}">Add roots and city · 2 min</button>
+      <button class="link" data-a="ejSeen">Later</button>
+      <small>Optional now. With all 5 badges you can book events and you are introduced first.</small></div>`;
+    if(r==='wait'&&(c==='wait'||c==='ok')||c==='wait'&&r==='ok')return `<div class="callout">${ic('clock')}<span>Your documents are with our team, usually within 24 hours.</span></div>`;
+    return `<div class="callout">${ic('shield')}<span>Add your roots and city badges to book events and be introduced first. <button class="link" data-a="goVerify" data-n="${r==='ok'?3:2}">Add now</button></span></div>`};
+
+  /* "Send interest" gate while the basic check is not done yet */
+  const _rs=renderSheet;renderSheet=function(){if(!sheet||sheet.type!=='verifyGate'||sheet.ev||!EJ())return _rs();const me=S.me;
+    const st=vState(1,{},me),wait=st==='ok'||st==='wait';
+    return sheetShell('Verify to send interests',`<div class="callout">${ic('shield')}<span>Every member you write to has shown a real ID and a live selfie. They expect the same from you.</span></div>
+     <div class="vsteps">${vStep(1,st,'ID and live selfie','Passport or national ID + a 30-second selfie','goVerify')}</div>
+     ${wait?'<p class="hint">Your ID and selfie are with our team, usually within 24 hours.</p>':`<p class="hint">${esc(WHY_LINE)}</p>`}`,
+     `<button class="btn ghost" data-a="closeSheet">Not now</button>${wait?'':`<button class="btn primary" data-a="goVerify" data-n="1">Continue</button>`}`)};
+
+  /* Welcome promise follows the rule this device last saw (honest for each rule) */
+  const _rw=renderWelcome;renderWelcome=function(){const h=_rw();let on=false;try{on=localStorage.getItem('nm.easy')==='1'}catch(e){}
+    return on?h.replace('🪪 Every member checked','🪪 ID + live selfie, every member').replace('👪 Family can join','🌍 Roots and city badges'):h};
+
+  Object.assign(A,{ejSeen(){try{localStorage.setItem(seenKey(),'1')}catch(e){}render()}});
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()}}; /* used by automated tests */
 boot();
 })();

@@ -1290,3 +1290,15 @@ button.a3k{border:0;border-top:3px solid var(--c);text-align:left;width:100%;col
 .c3w>.c3topl>.c3kick{padding:0;opacity:.85;min-width:0}
 .c3lang{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.06);color:inherit;border-radius:999px;padding:6px 11px;font:700 12.5px var(--f-body);cursor:pointer}
 .c3lang svg{width:15px;height:15px}
+/* Easy join (7 Nov 2026): live card + trust badges */
+.ej-badges{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ej-bdg{display:grid;gap:3px;justify-items:start;text-align:left;background:var(--surface);border:1.5px dashed var(--line);border-radius:16px;padding:12px;color:var(--ink);font:inherit;cursor:pointer}
+.ej-bdg .ic{color:var(--rose-deep)}.ej-bdg b{font-size:15px}.ej-bdg small{color:var(--muted);font-size:12.5px;line-height:1.35}
+.ej-bdg.ok{border-style:solid;border-color:var(--good)}.ej-bdg.ok .ic{color:var(--good)}
+.ej-live{display:grid;gap:8px;justify-items:center;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px 16px;margin-bottom:12px}
+.ej-live>b{font-size:18px;color:var(--ink)}.ej-live>small{color:var(--muted);font-size:13px;line-height:1.45}
+.ej-ring{width:56px;height:56px;border-radius:50%;background:var(--good);color:#fff;display:grid;place-items:center}.ej-ring .ic{width:28px;height:28px}
+.ej-chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:2px 0 4px}
+.ej-chip{display:inline-flex;align-items:center;gap:3px;padding:4px 8px;border-radius:999px;font-weight:700;font-size:12px}
+.ej-chip .ic{width:14px;height:14px}.ej-chip.y{background:#DDF5EA;color:#0B6E48}.ej-chip.n{border:1.5px dashed var(--rose);color:var(--rose-deep);background:transparent}
+.ej-live .link{font-size:14px}
