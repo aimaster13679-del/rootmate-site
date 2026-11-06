@@ -3417,6 +3417,135 @@ function GLASS(){try{if(/127\.0\.0\.1/.test(CFG.url||'')){const t=localStorage.g
   apply();
 })();
 
+
+/* ---------- Inside premium: screens 7-11 of mock handoff/mocks/inside-premium (his ok: live for everyone) ----------
+   7 Today's introductions as a deck of glass cards, 8 'Both said yes' moment, 9 profile top with a floating glass card,
+   10 'Two journeys' real map, 11 story (marriage plan path, family, nature stars).
+   Real member data only: photos stay locked/blurred exactly as before (avatar()), no invented numbers;
+   'Active today' shows only when the server says so (active_today). Follows the glass look (needs C3 + GLASS).
+   Styles: 'Inside premium' block at the end of app/css/app.css. Local tests: localStorage nm.pxtest = '1' / '0'. */
+function PX(){try{if(/127\.0\.0\.1/.test(CFG.url||'')){const t=localStorage.getItem('nm.pxtest');if(t)return t==='1'}
+  return C3()&&GLASS()}catch(e){return false}}
+if(!IC.share)Object.assign(IC,{share:'<circle cx="18" cy="5.5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="18.5" r="2.5"/><path d="M8.2 10.8l7.6-4.1M8.2 13.2l7.6 4.1"/>'});
+(function(){
+  const LOGO=`<svg class="px-logo" viewBox="0 0 32 22" aria-hidden="true"><path class="c1" d="M11.60 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/><path class="c2" d="M20.40 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/></svg>`;
+  const fl=n=>{try{return flag(n)||''}catch(e){return ''}};
+  const her=p=>p.g==='F'?'Her':'His',she=p=>p.g==='F'?'her':'his';
+  const has=(p,i)=>p&&p.ans&&p.ans[i]!==undefined&&p.ans[i]!==null&&!isNaN(p.ans[i])&&QS[i]&&QS[i].o[p.ans[i]]!==undefined;
+  const same=(p,i)=>has(p,i)&&S.me&&S.me.ans&&S.me.ans[i]===p.ans[i];
+  const lt=()=>document.documentElement.classList.contains('gl-lt');
+  const fmt=n=>Math.round(n).toLocaleString(RM_I18N.locale);
+  const km2=(a,b)=>{const R=6371,t=x=>x*Math.PI/180,x=Math.sin(t(b[0]-a[0])/2)**2+Math.cos(t(a[0]))*Math.cos(t(b[0]))*Math.sin(t(b[1]-a[1])/2)**2;return 2*R*Math.asin(Math.sqrt(x))};
+  const ll=o=>{try{return coordsOf(o)}catch(e){return null}};
+  /* short labels for answers (same order as QS[i].o) */
+  const SH={8:['Marry within a year','Marry in 1–2 years','Marry when it feels right'],2:['With parents','Near parents','Independent'],
+    1:['Two careers','Decide together','Home-focused'],5:['Family weekends','Out with friends','Travel lover'],6:['Saver','Balanced','Enjoys now'],
+    7:['Talks it out','Space, then talk','Lets it pass'],3:['Kids early','Kids, no rush','Kids: not sure'],4:['Daily faith','Festivals','Personal faith']};
+  const settle=p=>[`Stay in ${p.cityName}`,'Open to moving','Open to abroad'][p.ans[0]];
+
+  /* ===== 7. Today's introductions: deck of full-photo glass cards ===== */
+  function facts(p){const out=[];if(has(p,8))out.push(['rings',SH[8][p.ans[8]],same(p,8)]);if(has(p,0))out.push(['city',settle(p),same(p,0)]);if(has(p,2))out.push(['users',SH[2][p.ans[2]],same(p,2)]);return out}
+  function fit(n){return `<span class="px-fit" style="--p:${n}%" aria-label="${n}% fit"><b>${n}%</b><small>fit</small></span>`}
+  function deckActs(p,lk){const st=S.interests[p.id],sl=S.shortlist.includes(p.id);
+    const save=`<button class="px-rb" data-a="shortlist" data-id="${p.id}" aria-label="${sl?'Remove from saved':'Save for later'}" aria-pressed="${sl}"${sl?' data-on="1"':''}>${ic('star')}</button>`;
+    if(lk)return `<button class="btn gold px-wide" data-a="upgrade" data-r="profile" data-id="${p.id}">${ic('crown')}See ${she(p)} profile</button>`;
+    if(st==='mutual')return `${save}<button class="px-big" data-a="openchat" data-id="${p.id}" aria-label="Chat with ${esc(shown(p))}">${ic('chat')}</button><span class="px-rb px-ghost" aria-hidden="true"></span>`;
+    if(st==='received')return `<button class="px-rb" data-a="decline" data-id="${p.id}" aria-label="Decline">${ic('x')}</button><button class="px-big" data-a="accept" data-id="${p.id}" aria-label="Accept ${esc(shown(p))}'s interest">${ic('heart')}</button>${save}`;
+    if(st==='sent')return `<span class="px-sent">${ic('check')}Interest sent</span>${save}`;
+    return `<button class="px-rb" data-a="pass" data-id="${p.id}" aria-label="Not for me">${ic('x')}</button><button class="px-big" data-a="interest" data-id="${p.id}" aria-label="Send interest to ${esc(shown(p))}">${ic('heart')}</button>${save}`}
+  function deckCard(p){const c=compat(p),st=S.interests[p.id],lk=locked(p)&&!(st==='received'&&p.gold);const f=facts(p),n=f.filter(x=>x[2]).length,ok=checksDone(p);
+    return `<div class="px-slide"><article class="mcard px-card${lk?' lockd':''}">
+     <button class="px-ph" data-a="open" data-id="${p.id}" aria-label="${lk?`See this ${c.total}% match with Gold`:`Open ${esc(shown(p))}'s profile`}">${avatar(p,'cover')}<span class="px-fade"></span>
+      <span class="px-route">${fl(p.oc)} ${esc(p.os||p.oc)} <i>→</i> ${fl(p.country)} ${esc(p.cityName)}</span>${fit(c.total)}
+      ${st==='received'?`<span class="px-likes">${ic('heart')}Likes you</span>`:''}
+      <span class="px-gc"><span class="px-nm"><b>${esc(shown(p))}, ${p.age}</b><small>${lk?`${ic('lock')} Name and photos with Gold`:`${esc(p.job||'')}${p.job?' · ':''}${esc(distLabel(p))}`}</small></span>
+       <span class="px-ok${ok===5?'':' part'}">${ic('shield')}${ok} of 5</span>
+       ${f.length?`<span class="px-facts">${f.map(([i,t,s])=>`<span class="${s?'s':''}">${ic(i)}${esc(t)}</span>`).join('')}</span>`:''}
+       ${n?`<span class="px-same">${ic('sparkle')}${n===f.length&&n>1?`Same plans as you, in all ${n===3?'three':'of them'}`:`Same as you in ${n} of ${f.length}`}</span>`:''}</span></button>
+     <div class="px-acts">${deckActs(p,lk)}</div></article></div>`}
+  const _ib=introBlock;introBlock=function(list){if(!PX())return _ib(list);const it=introsToday(list);if(!it.length)return '';
+    return `<div class="sec-h px-sh"><h2>Today’s introductions${it.length>1?` <span class="px-of" aria-hidden="true">1 / ${it.length}</span>`:''}</h2><small>${ic('clock')}New in <span data-until="${midnight()}">${fmtLeft(midnight()-Date.now())}</span></small></div>
+    <div class="px-deckw${it.length>1?' many':''}"><div class="px-deck" onscroll="var i=Math.round(this.scrollLeft/this.clientWidth),w=this.parentNode,d=w.nextElementSibling,o=w.previousElementSibling.querySelector('.px-of');if(o)o.textContent=(i+1)+' / '+this.children.length;if(d)[].forEach.call(d.children,function(e,j){e.classList.toggle('on',j===i)})">${it.map(deckCard).join('')}</div></div>
+    ${it.length>1?`<div class="nm-dots px-dots" aria-hidden="true">${it.map((_,i)=>`<i class="${i?'':'on'}"></i>`).join('')}</div>`:''}`};
+
+  /* ===== 8. Both said yes ===== */
+  const qs=p=>{const me=S.me,out=[];if(p.oc===me.oc&&p.os&&p.os===me.os)out.push(`What do you miss most about ${p.os}?`);else if(p.oc===me.oc)out.push(`How does your family keep ${p.oc} traditions in ${p.cityName}?`);
+    if(same(p,5))out.push(['What does a family weekend look like for you?','Where do you like to go out with friends?','Where is the next trip you dream of?'][p.ans[5]]);
+    out.push(`What made you move to ${p.cityName}?`);out.push('What do you enjoy most about your work?');return [...new Set(out)].slice(0,2)};
+  const _cel=renderCelebrate;renderCelebrate=function(){if(!PX())return _cel();const p=byId(celebrate.id);if(!p)return '';const chat=canChat(p.id);
+    const conf=Array.from({length:18},(_,i)=>`<i style="left:${(i*37+11)%96}%;animation-delay:${(i*.17).toFixed(2)}s;animation-duration:${(3.2+i%5*.4).toFixed(1)}s"></i>`).join('');
+    return `<div class="celebrate px-cel" role="dialog" aria-label="It’s a match"><div class="px-conf" aria-hidden="true">${conf}</div>
+     <div class="px-pair"><span class="px-glow" aria-hidden="true"></span><span class="px-a l">${avatar(null,'cel',true)}</span><span class="px-a r">${avatar(p,'cel')}</span><span class="px-heart">${LOGO}</span></div>
+     <p class="px-kick">It’s a match</p><h2>You and ${esc(p.first||'your match')} both said yes</h2>
+     <p class="px-sub">Photos are unlocked${chat?' and chat is open':''}. Your phone numbers stay private.</p>
+     ${chat?`<div class="px-qs"><small>Start with a question</small>${qs(p).map(q=>`<button class="px-q" data-a="pxAsk" data-id="${p.id}" data-t="${esc(q)}"><span>${esc(q)}</span>${ic('send')}</button>`).join('')}</div>`:''}
+     <div class="btns"><button class="btn primary px-cta" data-a="celChat" data-id="${p.id}">${ic('chat')}Say hello${p.first?' to '+esc(p.first):''}</button><button class="btn ghost px-later" data-a="celClose">Keep looking</button></div></div>`};
+
+  /* ===== 10. Two journeys: her roots line and yours on a real map ===== */
+  function journeys(p){const me=S.me;const o1=ll({country:p.oc,state:p.os}),d1=(p.lat!=null?[p.lat,p.lng]:null)||ll({country:p.country,state:p.state,city:p.cityName});
+    const o2=ll({country:me.oc,state:me.os}),d2=(me.lat!=null?[me.lat,me.lng]:null)||ll({country:me.country,state:me.state,city:me.city});if(!o1||!d1||!o2||!d2)return '';
+    const k=p.id.slice(0,6),K=['px1'+k,'px2'+k,'px3'+k,'px4'+k];const one=sameCity(p);const L=lt();const cityCol=L?'#141018':'#FFFFFF';
+    PM.C[K[0]]=[o1[1],o1[0],'',''];PM.C[K[1]]=[d1[1],d1[0],'',''];PM.C[K[2]]=[o2[1],o2[0],'',''];PM.C[K[3]]=[d2[1],d2[0],'',''];
+    const sameRoots=km2(o1,o2)<30,myCity=(me.city||me.state||'').split(',')[0];
+    const pins=[[K[0],`${fl(p.oc)} ${p.os||p.oc}${sameRoots?' · both':''}`,'#E2136E',0,1.9]];if(!sameRoots)pins.push([K[2],`${fl(me.oc)} ${me.os||me.oc}`,'#FFC93C',0,1.9]);
+    pins.push([K[1],`${one?'':fl(p.country)+' '}${p.cityName}`,one?cityCol:'#E2136E']);if(!one)pins.push([K[3],`${fl(me.country)} ${myCity}`,'#FFC93C']);
+    const vb=PM.fit(K,326/210,80);
+    const svg=PM.draw({vb,theme:L?'light':'dark',fsr:.042,grid:false,label:`Map: ${p.os||p.oc} to ${p.cityName}, and ${me.os||me.oc} to ${myCity}`,arcs:[[K[0],K[1],'#E2136E'],[K[2],K[3],'#FFC93C']],pins});
+    const a=km2(o1,d1),b=km2(o2,d2);
+    const fact=(i,k,v)=>v?`<div class="px-fct">${ic(i)}<span><small>${k}</small><b>${esc(v)}</b></span></div>`:'';
+    return `<section class="px-sec" id="px-roots"><div class="px-h"><h2>${one?'Two journeys, one city':'Two journeys'}</h2>${one?`<span class="px-chip r">${ic('pin')}${esc(p.cityName)}</span>`:`<span class="px-chip">${esc(distLabel(p))}</span>`}</div>
+     <div class="px-map">${svg}</div>
+     <div class="px-roads"><div class="px-road h"><small>${her(p)} road</small><b>${fmt(a)} km</b><span>${esc(p.os||p.oc)} → ${esc(p.cityName)}</span></div><div class="px-road y"><small>Your road</small><b>${fmt(b)} km</b><span>${esc(me.os||me.oc)} → ${esc(myCity)}</span></div></div>
+     <div class="px-fcts">${fact('globe','Roots',[p.os,p.oc].filter(Boolean).join(', '))}${fact('talk','Mother tongue',p.t)}${fact('home','Lives',[p.cityName,p.res].filter(Boolean).join(' · '))}${fact('book','Studied',p.edu)}</div></section>`}
+
+  /* ===== 11. Story: marriage plan path, family, nature stars ===== */
+  function plan(p){if(!has(p,8))return '';const st=[['Now','Getting to know',1]];
+    st.push([['Within a year','In 1–2 years','When it feels right'][p.ans[8]],'Marriage',1]);
+    if(has(p,0))st.push(['Then',settle(p).replace(/^Open to /,'Open to '),0]);if(has(p,3))st.push(['Later',['Kids early','Kids, no rush','Kids: not sure'][p.ans[3]],0]);
+    return `<section class="px-sec px-card2" id="px-plan"><div class="px-h"><h3>Marriage plan</h3>${same(p,8)?`<span class="px-chip r">Same as you</span>`:''}</div>
+     <ol class="px-path" style="--n:${st.length}">${st.map(([a,b,on],i)=>`<li class="${on?'on':''}${i===1?' now':''}"><i></i><b>${esc(a)}</b><span>${esc(b)}</span></li>`).join('')}</ol></section>`}
+  function family(p){const t=[];if(has(p,2))t.push(['home','Family home',SH[2][p.ans[2]],same(p,2)]);if(has(p,3))t.push(['kid','Children',['Early','No rush','Not sure'][p.ans[3]],same(p,3)]);
+    if(has(p,4))t.push(['sun','Faith',SH[4][p.ans[4]],same(p,4)]);if(p.createdBy)t.push(['users','Profile by',String(p.createdBy),false]);if(!t.length)return '';
+    return `<section class="px-sec px-card2" id="px-fam"><div class="px-h"><h3>Family</h3>${t.some(x=>x[3])?`<span class="px-lg">${ic('heart')}also you</span>`:''}</div>
+     <div class="px-fam">${t.map(([i,k,v,s])=>`<div class="${s?'s':''}"><span class="px-ib">${ic(i)}</span><b>${esc(v)}</b><small>${k}</small></div>`).join('')}</div></section>`}
+  function nature(p){const n=[];for(const i of [5,1,6,7])if(has(p,i))n.push([SH[i][p.ans[i]],same(p,i),QS[i].k]);
+    if(p.diet)n.push([p.diet,!!S.me.diet&&dietGroup(S.me.diet)===dietGroup(p.diet),'Food']);if(n.length<2)return '';
+    const pos=n.map((_,i)=>[i%2?172:16,22+i*27]);const H=pos[pos.length-1][1]+20;
+    const line=pos.map((q,i)=>(i?'L':'M')+q[0]+' '+q[1]).join('');
+    return `<section class="px-sec px-card2" id="px-nat"><div class="px-h"><h3>${her(p)} nature</h3>${n.some(x=>x[1])?`<span class="px-lg"><i></i>also you</span>`:''}</div>
+     <svg class="px-stars" viewBox="0 0 326 ${H}" width="100%" aria-hidden="true"><path d="${line}" class="ln"/>${n.map(([t,s],i)=>{const [x,y]=pos[i];return `<g class="${s?'s':''}" style="animation-delay:${(i*.35).toFixed(2)}s"><circle cx="${x}" cy="${y}" r="${s?7:5}" class="st"/><text x="${x+14}" y="${y+4.5}">${esc(t)}</text></g>`}).join('')}</svg>
+     <ul class="sr">${n.map(([t,s,k])=>`<li>${esc(k)}: ${esc(t)}${s?', same as you':''}</li>`).join('')}</ul></section>`}
+
+  /* ===== 9. Profile top: full photo, glass buttons, floating glass card, 3 round tiles ===== */
+  function famOk(p){return typeof V2==='function'&&V2()&&!locked(p)&&p.v&&p.v.id&&p.v.selfie&&p.v.roots&&p.v.lives}
+  function tiles(p){const st=S.interests[p.id],sl=S.shortlist.includes(p.id),lk=locked(p)&&!(st==='received'&&p.gold);let fo=false;try{fo=famOk(p)&&famHas(p.id)}catch(e){}
+    const t=(a,i,l,on,x)=>`<button class="px-tile${on?' on':''}" data-a="${a}" data-id="${p.id}"${x||''}>${ic(i)}<span>${l}</span></button>`;
+    const first=lk?t('upgrade','crown','Gold',1,' data-r="profile"'):st==='mutual'?t('openchat','chat','Chat',1):st==='received'?t('accept','heart','Accept',1):st==='sent'?`<span class="px-tile done" role="status">${ic('check')}<span>Sent</span></span>`:t('interest','heart','Interest',1);
+    const fam=famOk(p)?t('v2fam','users',fo?'Shared':'Family',fo,` aria-label="${fo?'Shared with your family. Tap to remove':'Share with family'}"`):`<button class="px-tile" data-a="pxGo" data-k="#px-fam,#px-chk">${ic('users')}<span>Family</span></button>`;
+    return `<div class="px-tiles">${first}${fam}${t('shortlist','star',sl?'Saved':'Save',sl,` aria-pressed="${sl}"`)}</div>`}
+  function top(p){const c=compat(p),nm=shown(p);const meta=[p.job,p.r,p.t].filter(Boolean).join(' · ');
+    return `<div class="px-top"><div class="px-tph">${avatar(p,'xl')}<span class="px-fade"></span></div>
+     <div class="px-tb"><button class="px-cb" data-a="closeView" aria-label="Back">${ic('back')}</button><span class="grow"></span>
+      ${famOk(p)?`<button class="px-cb" data-a="v2fam" data-id="${p.id}" aria-label="Share with family">${ic('share')}</button>`:''}<button class="px-cb" data-a="more" data-id="${p.id}" aria-label="More options">${ic('more')}</button></div>
+     <div class="px-float"><div class="px-fh"><h2>${esc(nm)}, ${p.age}</h2>${fit(c.total)}</div>
+      <div class="px-meta">${p.activeToday?`<span class="px-on"><i></i>Active today</span>`:''}<span>${ic('pin')}${esc(distLabel(p))}</span>${checksSeal(p)}</div>
+      ${meta?`<p class="px-job">${esc(meta)}</p>`:''}${tiles(p)}
+      <nav class="px-tabs" aria-label="Profile sections"><button data-a="pxGo" data-k="#px-roots">Journeys</button><button data-a="pxGo" data-k="#px-plan,#px-fam">Story</button><button data-a="pxGo" data-k="#px-nat">Nature</button><button data-a="pxGo" data-k="#px-chk">Checks</button></nav></div></div>`}
+  const _pv=renderProfileView;renderProfileView=function(id,isMe){const h=_pv(id,isMe);if(!PX()||isMe)return h;const p=byId(id);if(!p)return h;
+    const a=h.indexOf('<div class="pv-top">'),k='<div class="pad" style="display:grid;gap:14px;padding-block:16px 26px">',b=h.indexOf(k);if(a<0||b<a)return h;
+    let rest=h.slice(b+k.length);const rl=`<div class="panel">${routeLine(p)}</div>`;rest=rest.replace(rl,'');const tp=timelinePill(p);if(tp)rest=rest.replace(tp,'');
+    rest=rest.replace('<div class="panel"><h3>Checked by NeuMarry</h3>','<div class="panel" id="px-chk"><h3>Checked by NeuMarry</h3>');
+    let j='';try{j=journeys(p)}catch(e){j=''}
+    return h.slice(0,a).replace('class="view"','class="view px-view"')+top(p)+k.replace('class="pad"','class="pad px-body"')+j+plan(p)+family(p)+nature(p)+rest};
+
+  /* real 'active today' from the server when it sends it; nothing shown otherwise */
+  const _cfs=cardFromServer;cardFromServer=function(c){const o=_cfs(c);o.activeToday=c.active_today===true;return o};
+
+  Object.assign(A,{
+    pxGo(el){const sel=(el.dataset.k||'').split(',');for(const s of sel){const x=document.querySelector(s.trim());if(x){x.scrollIntoView({behavior:'smooth',block:'start'});return}}},
+    pxAsk(el){const t=el.dataset.t;A.celChat(el);setTimeout(()=>{const i=document.getElementById('chat-in');if(i){i.value=t;i.focus()}},60)}});
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()}}; /* used by automated tests */
 boot();
 })();
