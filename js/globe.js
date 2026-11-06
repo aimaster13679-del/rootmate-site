@@ -29,7 +29,7 @@ void main(){ vec3 n=normalize(vN); float d=dot(n,normalize(sun)); float k=smooth
  vec3 v=normalize(-vW); float rim=pow(1.0-max(dot(n,v),0.0),3.0);
  c+=vec3(0.35,0.6,1.0)*rim*0.35*(0.35+0.65*k);
  // light theme: brighter, softer night
- c=mix(c, day*(0.62+0.5*max(d,0.0))+vec3(0.35,0.6,1.0)*rim*0.35, lt);
+ vec3 sea=vec3(0.16,0.36,0.46)*(1.0-smoothstep(0.05,0.3,lu)); c=mix(c, (pow(day,vec3(0.8))*1.05+sea)*(0.78+0.35*max(d,0.0))+vec3(0.55,0.85,0.8)*rim*0.45, lt);
  vec3 h=normalize(normalize(sun)+v); float water=1.0-smoothstep(0.08,0.25,lu); float spec=pow(max(dot(n,h),0.0),60.0)*0.55*k*water;
  gl_FragColor=vec4(c+spec*vec3(0.8,0.9,1.0),1.0); }`;
 const AVS = `varying vec3 vN; varying vec3 vW; void main(){ vN=normalize(normalMatrix*normal); vec4 w=modelViewMatrix*vec4(position,1.); vW=w.xyz; gl_Position=projectionMatrix*w; }`;
@@ -41,7 +41,7 @@ void main(){ if(vt>draw) discard; float head=fract(time*0.35); float g=smoothste
 
 export function mountGlobe(el, o = {}) {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const lt = () => (o.light || matchMedia('(prefers-color-scheme: light)').matches) ? 1 : 0;
+  const lt = () => { const th = document.documentElement.dataset.theme; if (th) return th === 'light' ? 1 : 0; return (o.light || matchMedia('(prefers-color-scheme: light)').matches) ? 1 : 0; };
   const W = () => el.clientWidth, H = () => el.clientHeight;
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2)); renderer.setSize(W(), H());
