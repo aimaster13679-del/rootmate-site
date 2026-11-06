@@ -2883,6 +2883,105 @@ function renderWelcomeLook2(){return renderWelcomeV2().replace(/<div class="v2w-
     const st=S.screen==='welcome'?'DARK':'LIGHT';/* header B (his ok 6 Nov 15:40): blush header, dark status icons */if(st!==render._bar){render._bar=st;try{const B=Plug().SystemBars;if(B&&B.setStyle)B.setStyle({style:st}).catch(()=>{})}catch(e){}}};
 })();
 
-window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p)}; /* used by automated tests */
+
+/* ---------- C3 design (his ok 6 Nov 2026 ~18:0x on mock handoff/mocks/style-c-v3, artifact Q3Mnvq886di4FtScZrHAWC) ----------
+   Preview ONLY for the admin email swapnilbhagatt@gmail.com (his rule: that email stays admin forever).
+   A device remembers it (nm.c3) after that email signed in there, so the welcome screen shows C3 after sign-out too;
+   any other signed-in email sees the normal design. Local tests can force it with localStorage nm.c3test=1. */
+const C3_ADMIN='swapnilbhagatt@gmail.com';
+function C3(){try{const loc=/127\.0\.0\.1/.test(CFG.url||'');if(loc&&localStorage.getItem('nm.c3test')==='1')return true;
+  const e=String((API.email&&API.email())||'').toLowerCase();
+  if(e===C3_ADMIN){try{localStorage.setItem('nm.c3','1')}catch(x){}return true}
+  if(e)return false;return localStorage.getItem('nm.c3')==='1'}catch(e){return false}}
+const C3LAND={"na":[[-168,66],[-162,70],[-140,70],[-125,70],[-95,72],[-80,73],[-62,67],[-60,55],[-55,52],[-66,45],[-70,42],[-76,35],[-81,31],[-80,25],[-82,27],[-84,30],[-90,29],[-97,26],[-97,22],[-105,20],[-110,23],[-115,30],[-118,34],[-124,40],[-124,48],[-130,55],[-140,60],[-152,58],[-158,56],[-165,60]],"ca":[[-105,20],[-97,16],[-92,15],[-86,12],[-83,9],[-77,8],[-78,10],[-83,15],[-87,21],[-90,21],[-97,22]],"sa":[[-77,8],[-72,12],[-62,10],[-52,5],[-50,0],[-35,-5],[-35,-9],[-39,-15],[-41,-22],[-48,-26],[-53,-33],[-57,-38],[-63,-41],[-65,-45],[-68,-50],[-70,-53],[-74,-50],[-73,-40],[-71,-30],[-70,-18],[-76,-14],[-81,-5],[-80,0]],"gl":[[-55,60],[-44,60],[-38,66],[-22,70],[-20,77],[-50,78],[-60,76],[-56,70],[-53,66]],"is":[[-24,64],[-14,64],[-15,66.5],[-22,66.5]],"eu":[[-10,36],[-9,43],[-2,44],[-5,48],[2,51],[8,54],[10,57],[5,58],[5,62],[12,66],[20,70],[30,71],[42,68],[60,69],[60,55],[48,45],[40,42],[35,42],[28,41],[26,38],[23,36],[20,40],[18,40],[16,38],[12,42],[8,44],[3,43],[-2,37],[-6,36]],"as":[[60,69],[70,73],[80,73],[100,77],[115,74],[130,71],[150,71],[170,70],[180,68],[180,65],[172,62],[163,60],[157,52],[142,59],[137,54],[140,48],[135,43],[129,42],[127,38],[126,35],[121,40],[118,38],[122,31],[120,25],[110,20],[106,17],[109,12],[105,9],[101,13],[100,7],[103,1],[98,8],[98,16],[94,20],[90,22],[86,21],[80,15],[77,8],[73,16],[72,21],[67,25],[62,25],[57,26],[56,24],[59,22],[52,17],[44,12],[43,15],[39,22],[35,28],[34,31],[35,36],[28,37],[26,41],[35,42],[40,42],[48,45],[60,55]],"af":[[-17,21],[-17,15],[-12,8],[-8,4],[-2,5],[8,4],[10,0],[12,-6],[13,-12],[12,-18],[15,-27],[18,-33],[20,-35],[26,-34],[33,-28],[35,-22],[40,-15],[40,-10],[40,-3],[43,0],[51,11],[43,12],[38,18],[33,30],[25,32],[20,31],[10,34],[10,37],[-1,36],[-6,36],[-10,30]],"mg":[[44,-25],[47,-25],[50,-15],[49,-12],[44,-17]],"uk":[[-6,50],[2,51],[0,54],[-2,57],[-3,59],[-6,58],[-5,55],[-3,54],[-5,52]],"ie":[[-10,52],[-6,52],[-6,55],[-8,55.3],[-10,54]],"jp":[[130,31],[135,34],[140,35],[142,40],[141,45],[145,44],[140,41],[136,37],[131,34]],"ph":[[120,18.5],[122.5,18.5],[126,7],[125,5.5],[122,7.5],[119.5,11]],"su":[[95,5.5],[98,4],[106,-6],[104,-6],[100,-2]],"jv":[[106,-5.8],[114.5,-7],[114.5,-8.7],[106,-7.8]],"bo":[[109,1],[115,5],[119,6.5],[118,0],[116,-4],[110,-3]],"ng":[[131,-1],[141,-3],[150,-10],[147,-9.5],[141,-9],[137,-5]],"au":[[114,-22],[114,-34],[118,-35],[124,-34],[131,-31],[138,-35],[141,-38],[146,-39],[150,-37],[153,-31],[153,-25],[146,-19],[142,-11],[141,-17],[136,-12],[130,-12],[126,-14],[122,-18]],"nz":[[172,-35],[175,-37],[178,-38],[175,-41.5],[171,-46],[167,-46],[171,-42]],"lk":[[80,10],[82,7],[81,6],[80,7]]};
+
+const C3CITY={lagos:[3.4,6.5,'Lagos','🇳🇬'],toronto:[-79.4,43.7,'Toronto','🇨🇦'],busan:[129,35.2,'Busan','🇰🇷'],sydney:[151.2,-33.9,'Sydney','🇦🇺'],
+ guad:[-103.3,20.7,'Guadalajara','🇲🇽'],madrid:[-3.7,40.4,'Madrid','🇪🇸'],beirut:[35.5,33.9,'Beirut','🇱🇧'],montreal:[-73.6,45.5,'Montreal','🇨🇦'],
+ ahmd:[72.6,23,'Ahmedabad','🇮🇳'],london:[-0.1,51.5,'London','🇬🇧'],manila:[121,14.6,'Manila','🇵🇭'],dubai:[55.3,25.2,'Dubai','🇦🇪'],
+ nairobi:[36.8,-1.3,'Nairobi','🇰🇪'],berlin:[13.4,52.5,'Berlin','🇩🇪'],sao:[-46.6,-23.5,'São Paulo','🇧🇷'],warsaw:[21,52.2,'Warsaw','🇵🇱'],chicago:[-87.6,41.9,'Chicago','🇺🇸'],auck:[174.8,-36.8,'Auckland','🇳🇿']};
+const c3in=(x,y,p)=>{let c=false;for(let i=0,j=p.length-1;i<p.length;j=i++){const[xi,yi]=p[i],[xj,yj]=p[j];if((yi>y)!==(yj>y)&&x<(xj-xi)*(y-yi)/(yj-yi)+xi)c=!c}return c};
+let C3DOTS=null;
+function c3dots(){if(C3DOTS)return C3DOTS;const out=[];for(let lat=80;lat>-58;lat-=3.2)for(let lon=-178;lon<180;lon+=3.2){if(Object.values(C3LAND).some(p=>c3in(lon,lat,p)))out.push(`M${(lon+180).toFixed(1)} ${(90-lat).toFixed(1)}h0`)}return C3DOTS=out.join('')}
+const c3pt=k=>[C3CITY[k][0]+180,90-C3CITY[k][1]];
+function c3km(a,b){const R=6371,r=Math.PI/180,[l1,p1]=[C3CITY[a][0]*r,C3CITY[a][1]*r],[l2,p2]=[C3CITY[b][0]*r,C3CITY[b][1]*r];
+  return Math.round(2*R*Math.asin(Math.sqrt(Math.sin((p2-p1)/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin((l2-l1)/2)**2))/10)*10}
+function c3arc(a,b,lift){const[x1,y1]=c3pt(a),[x2,y2]=c3pt(b),d=Math.hypot(x2-x1,y2-y1);return `M${x1} ${y1} Q${(x1+x2)/2} ${(y1+y2)/2-d*(lift||.32)} ${x2} ${y2}`}
+const C3SEQ=[['lagos','toronto'],['busan','sydney'],['guad','madrid']];
+const C3FAINT=[['ahmd','london'],['manila','dubai'],['beirut','montreal'],['nairobi','berlin'],['warsaw','chicago'],['sao','london'],['ahmd','auck'],['manila','toronto']];
+function c3map(){const vb=[0,4,360,150],ls=2.3,n=C3SEQ.length;
+  const lab=(k,role,i)=>{const[x,y]=c3pt(k),t=C3CITY[k],hw=(t[2].length*1.55+8)*ls,cx=Math.min(Math.max(x,vb[0]+hw),vb[0]+vb[2]-hw),c=role?'#E2136E':'#FFC93C';
+    return `<circle cx="${x}" cy="${y}" r="3.3" fill="${c}"/><circle class="c3ping" cx="${x}" cy="${y}" r="3.3" fill="none" stroke="${c}" stroke-width=".8" style="transform-origin:${x}px ${y}px"/>
+    <g transform="translate(${cx} ${y-5.5*ls}) scale(${ls})"><rect x="-${t[2].length*1.55+7}" y="-6.5" width="${t[2].length*3.1+14}" height="9" rx="4.5" fill="${c}"/><text x="0" y=".6" text-anchor="middle" fill="${role?'#fff':'#141018'}" style="font:800 5px var(--f-body)">${t[3]} ${t[2]}</text></g>`};
+  return `<svg class="c3map-svg" viewBox="${vb.join(' ')}" aria-hidden="true"><path d="${c3dots()}" stroke="rgba(190,170,255,.34)" stroke-width="2.6" stroke-linecap="round"/>
+   ${C3FAINT.map(([a,b])=>`<path class="c3faint" d="${c3arc(a,b,.28)}"/>`).join('')}
+   ${C3SEQ.map(([a,b],i)=>{const d=c3arc(a,b),st=`animation-delay:${(i-n)*3}s`;return `<g class="c3seq" style="${st}"><path class="c3glow" d="${d}" pathLength="1" style="${st}"/><path class="c3line" d="${d}" pathLength="1" style="${st}"/>${lab(a,0,i)}${lab(b,1,i)}</g>`}).join('')}</svg>`}
+const c3cyc=(arr,cls)=>`<span class="c3cyc ${cls||''}"><span>${arr.concat(arr[0]).map(t=>`<b>${esc(t)}</b>`).join('')}</span></span>`;
+function renderWelcomeC3(){
+  return `<div class="scroll c3w"><p class="c3kick">NeuMarry · verified matrimony</p>
+   <div class="c3map">${c3map()}<span class="c3dist">✈ ${c3cyc(C3SEQ.map(([a,b])=>c3km(a,b).toLocaleString('en-US')+' km from home'))}</span></div>
+   <div class="c3w-body pad">
+    <h1 class="c3h1">Born in ${c3cyc(['Lagos.','Busan.','Guadalajara.'],'y')}Living in ${c3cyc(['Toronto.','Sydney.','Madrid.'],'p')}Ready to marry.</h1>
+    <p class="c3lede">Verified matrimony for marrying someone of your roots, in the country you live in now.</p>
+    ${v2near()}
+    <div class="c3chips">${['💍 Marriage only','🪪 Every member checked','👪 Family can join'].map(t=>`<span>${t}</span>`).join('')}</div>
+    <button class="btn block c3cta" data-a="start">Draw your roots line →</button>
+    <button class="btn block c3ghost" data-a="login">I already have an account</button>
+    <p class="c3note">Lines on the map are examples. By continuing you agree to our <button class="link" data-a="legal" data-k="terms">Terms</button> and <button class="link" data-a="legal" data-k="privacy">Privacy Policy</button>. 18+ only.</p>
+   </div></div>`}
+
+/* introduction card: marriage facts first, photo smaller, 3 scores, why we introduced you */
+function c3facts(p){const me=S.me||{},ma=me.ans||[],pa=p.ans||[];const rows=[[8,'💍'],[0,'🏡'],[2,'👪'],[3,'👶']];
+  return rows.filter(([i])=>pa[i]!==undefined&&pa[i]!==null&&QS[i].o[pa[i]]).slice(0,4).map(([i,e])=>{const same=ma[i]===pa[i];
+    return `<div class="c3fact"><b>${e} ${esc(QS[i].o[pa[i]])}</b><small class="${same?'ok':''}">${same?'Same as you':esc(i===8?'When to marry':QS[i].k)}</small></div>`}).join('')}
+function c3card(p){const c=compat(p),st=S.interests[p.id],lk=locked(p)&&!(st==='received'&&p.gold),r=v2rings(p);
+  const why=whyChips(p).slice(0,3).map(w=>w.t);const ok=checksDone(p)===5;
+  return `<article class="mcard nm-card c3card${lk?' lockd':''}" id="card-${p.id}">
+   <button class="c3ph" data-a="open" data-id="${p.id}" aria-label="${lk?`See this ${c.total}% match with Gold`:`Open ${esc(shown(p))}'s profile`}">${avatar(p,'cover')}
+    <span class="c3tags"><span class="c3route">${flag(p.oc)} ${esc(p.os||p.oc)} → ${esc(p.cityName)}</span>${ok?`<span class="c3ok">${ic('check')}Verified</span>`:''}${st==='received'?`<span class="c3ok rose">${ic('heart')}Sent you interest</span>`:''}</span></button>
+   <div class="c3body">
+    <div class="c3nm"><b>${esc(shown(p))}, ${p.age}</b><small>${lk?`${ic('lock')} Name, photos and profile with Gold`:`${esc(p.job||'')}${p.job?' · ':''}${esc(distLabel(p))}`}</small></div>
+    <div class="c3facts">${c3facts(p)}</div>
+    ${r?`<div class="c3sc"><div><b class="r">${r.roots}%</b><small>Roots</small></div><div><b class="l">${r.life}%</b><small>Life plan</small></div><div><b class="n">${r.nature}%</b><small>Nature</small></div></div>`:''}
+    ${why.length?`<div class="c3why"><b>Why we introduced you</b><span>${why.map(esc).join(' · ')}</span></div>`:''}
+    <div class="mact">${lk?`<button class="btn gold" data-a="upgrade" data-r="profile" data-id="${p.id}">${ic('crown')}See ${p.g==='F'?'her':'his'} profile</button>`:actionBar(p)}</div>
+   </div></article>`}
+
+/* interest accepted: calm rings, no confetti, the path shown, no timer */
+const C3STEPS=['Introduced','Talking','Video call','Families','Meet'];
+function c3pathMini(now){return `<div class="c3pm">${C3STEPS.map((t,i)=>`<div class="${i<now?'d':i===now?'n':''}"><i>${i<now?'✓':i+1}</i><span>${t}</span></div>`).join('')}</div>`}
+function renderCelebrateC3(){const p=byId(celebrate.id);if(!p)return '';
+  return `<div class="celebrate c3cel" role="dialog" aria-label="Interest accepted">
+   <div class="c3rings"><svg viewBox="0 0 250 150" aria-hidden="true"><circle cx="92" cy="75" r="68"/><circle cx="158" cy="75" r="68"/></svg>${avatar(null,'cel',true)}${avatar(p,'cel')}</div>
+   <p class="c3kick g">✓ Interest accepted</p>
+   <h2>You and ${esc(p.first||'your match')}<br>both said yes.</h2>
+   <p>Take your time: there is no timer here. Photos are unlocked${canChat(p.id)?' and chat is open':''}.</p>
+   ${c3pathMini(1)}
+   <div class="btns"><button class="btn c3cta" data-a="celChat" data-id="${p.id}">${ic('chat')}Start talking</button><button class="btn c3ghost dk" data-a="celClose">Later</button></div></div>`}
+
+/* marriage path for one match (from chat): every step comes from real data, nothing invented */
+function c3path(id){const p=byId(id);if(!p)return '';famLoad();const m=S.chats[id]||[];
+  const talk=m.some(x=>x.f==='me')&&m.some(x=>x.f!=='me'&&x.f!=='sys'),fam=famHas(id);
+  const st=[['done','Introduced','You were introduced on NeuMarry',''],['done','Interest accepted','You both said yes',''],
+   [talk?'done':'now','Talking','Safe chat, numbers stay private',talk?'':'Open chat'],
+   [talk?'now':'','First video call','At a time good for you both','Plan a call'],
+   [fam?'done':'','Families talk',fam?'Shared with your family':'Share with family, they reply on your private link',fam?'':'Share'],
+   ['','Meet in person','Meet in a public place, or at a Family Mixer',''],['','Decide together','Only when you both feel ready','']];
+  const act={'Open chat':`data-a="closeSheet"`,'Plan a call':`data-a="callPlan" data-id="${id}"`,'Share':`data-a="v2fam" data-id="${id}"`};
+  return sheetShell('Your path with '+(p.first||'your match'),`<div class="c3path">${st.map(([c,t,s,a],i)=>`<div class="c3step ${c}"><i>${c==='done'?'✓':i+1}</i><div><b>${t}</b><small>${esc(s)}</small></div>${a?`<button class="v2pill" ${act[a]}>${a}</button>`:''}</div>`).join('')}
+   <p class="c3calm"><b>No pressure.</b> Move to a step only when you both choose it. Either of you can pause or end kindly at any time.</p></div>`)}
+
+(function(){
+  const _rw=renderWelcome;renderWelcome=function(){return C3()?renderWelcomeC3():_rw()};
+  const _card=card;card=function(p){return C3()?c3card(p):_card(p)};
+  const _cel=renderCelebrate;renderCelebrate=function(){return C3()?renderCelebrateC3():_cel()};
+  const _rm=renderMatches;renderMatches=function(){const h=_rm();return C3()?h.replace('<h2>Today’s introductions</h2>','<h2><span class="c3kick r">Today</span>Introduced to you</h2>'):h};
+  const _cv=renderChatView;renderChatView=function(id){const h=_cv(id);if(!C3())return h;
+    return h.replace(`<button class="iconbtn" data-a="more" data-id="${id}" data-chat="1"`,`<button class="v2pill c3pbtn" data-a="c3path" data-id="${id}">Your path</button><button class="iconbtn" data-a="more" data-id="${id}" data-chat="1"`)};
+  const _rs=renderSheet;renderSheet=function(){return sheet&&sheet.type==='c3path'?c3path(sheet.id):_rs()};
+  Object.assign(A,{c3path(el){sheet={type:'c3path',id:el.dataset.id};render()}});
+  const _r=render;render=function(){const on=C3();document.documentElement.classList.toggle('c3',on);_r()};
+})();
+
+window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()}}; /* used by automated tests */
 boot();
 })();
