@@ -2880,7 +2880,7 @@ function renderWelcomeLook2(){return renderWelcomeV2().replace(/<div class="v2w-
     /* phone status bar + bottom bar take the colour of the screen (his ask 1 Nov 18:30: top and bottom must match) */
     const de=document.documentElement,pt=S.screen==='welcome'||(on&&S.screen==='app'&&!view&&!!app.querySelector('.topbar.plum'));
     de.classList.toggle('edge-t',pt);de.classList.toggle('edge-b',S.screen==='welcome');
-    const st=pt?'DARK':'LIGHT';if(st!==render._bar){render._bar=st;try{const B=Plug().SystemBars;if(B&&B.setStyle)B.setStyle({style:st}).catch(()=>{})}catch(e){}}};
+    const st=S.screen==='welcome'?'DARK':'LIGHT';/* header B (his ok 6 Nov 15:40): blush header, dark status icons */if(st!==render._bar){render._bar=st;try{const B=Plug().SystemBars;if(B&&B.setStyle)B.setStyle({style:st}).catch(()=>{})}catch(e){}}};
 })();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p)}; /* used by automated tests */

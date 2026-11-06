@@ -1114,3 +1114,10 @@ html.edge-t .look2 .topbar.plum,html.edge-t.look2 .topbar.plum{padding-top:calc(
 html.edge-t .v2w-look2{padding-top:calc(var(--sat) + 34px)}
 html.edge-b .v2w-body{padding-bottom:calc(26px + var(--sab))}
 html{background:linear-gradient(#FFE8ED 50%,var(--bg) 50%)}
+
+/* Header B 'blush band' (his ok 6 Nov 2026 15:40, mock handoff/mocks/header-calm) */
+.look2 .topbar.plum{background:linear-gradient(180deg,#FBE4EA 0%,#FFF3F4 100%);color:var(--ink);border-radius:0 0 26px 26px;box-shadow:inset 0 -1px 0 #F6DCE2}
+.look2 .topbar.plum .hello,.look2 .topbar.plum h1{color:var(--ink)}
+.look2 .topbar.plum .hello em{color:var(--rose-deep)}
+.look2 .topbar.plum .sub{color:var(--muted)}
+.look2 .topbar.plum .iconbtn.soft{background:#fff;border-color:var(--line);color:var(--ink)}
