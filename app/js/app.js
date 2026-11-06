@@ -2900,8 +2900,8 @@ const PM=(function(){
   warsaw:[21,52.2,'Warsaw','616'],chicago:[-87.6,41.9,'Chicago','840'],houston:[-95.4,29.8,'Houston','840'],auck:[174.8,-36.8,'Auckland','554'],
   singapore:[103.8,1.35,'Singapore','702'],gujarat:[71.2,22.3,'Gujarat','356']};
  const P=k=>pt(C[k][0],C[k][1]);
- const TH={dark:{land:'#2A2233',edge:'#3A3145',border:'#16111B',grid:'rgba(255,255,255,.05)',txt:'#fff',soft:'rgba(255,255,255,.14)'},
-          light:{land:'#ECE6F2',edge:'#DCD3E6',border:'#FFFFFF',grid:'rgba(20,16,24,.05)',txt:'#141018',soft:'rgba(20,16,24,.08)'}};
+ const TH={dark:{land:'#22352C',edge:'#2E463A',border:'#0A0C0B',grid:'rgba(255,255,255,.05)',txt:'#fff',soft:'rgba(255,255,255,.14)'},
+          light:{land:'#E2EEDC',edge:'#D0E3C9',border:'#FFFFFF',grid:'rgba(20,16,24,.05)',txt:'#141018',soft:'rgba(20,16,24,.08)'}};
  let uid=0;
  function arc(a,b){const[x1,y1]=P(a),[x2,y2]=P(b),d=Math.hypot(x2-x1,y2-y1);return `M${x1.toFixed(1)} ${y1.toFixed(1)} Q${((x1+x2)/2).toFixed(1)} ${((y1+y2)/2-d*.3).toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`}
  function layer(g,t,fs,id,anim,dur,vb,part){const hl=g.hl||{};
@@ -3692,7 +3692,10 @@ function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^
   const _cv=renderChatView;renderChatView=function(id){const html=_cv(id);if(!RL())return html;const p=byId(id),me=S.me||{};if(!p)return html;
     const tz1=(typeof TZCITY!=='undefined'&&TZCITY[me.city])||(typeof TZC!=='undefined'&&TZC[me.country])||undefined,tz2=tzOf(p)||undefined;
     const bar=`<div class="rl-bridge"><div><b>${esc(hhmm(tz1))}</b><small>You · ${esc(me.city||me.country||'')}</small></div><span aria-hidden="true">${ic('globe')}</span><div class="r"><b>${esc(hhmm(tz2))}</b><small>${esc(p.first||shown(p))} · ${esc(p.cityName||p.country||'')}</small></div></div>`;
-    const k=html.indexOf('id="chat-scroll"');if(k<0)return html;const s=html.lastIndexOf('<',k);return html.slice(0,s)+bar+html.slice(s)};
+    let fam='';try{famLoad();const on=famHas(id);const tz3=(typeof TZC!=='undefined'&&TZC[me.oc])||null;
+      fam=`<div class="rl-fam"><span class="rl-fi">${ic('users')}</span><div class="rl-ft"><b>Family Room</b><small>${on?'Shared with your family. They see safe facts and react, never photos or contacts.':'Let your family read along: safe facts only, never photos or contacts.'}</small>${tz3?`<small class="rl-ftz">${esc(me.os||me.oc)} · ${esc(hhmm(tz3))}</small>`:''}</div>
+       <button class="rl-fb2${on?' on':''}" data-a="v2fam" data-id="${id}">${on?ic('check')+'Shared':'Invite family'}</button></div>`}catch(e){}
+    const k=html.indexOf('id="chat-scroll"');if(k<0)return html;const s=html.lastIndexOf('<',k);return html.slice(0,s)+bar+fam+html.slice(s)};
 
   /* ===== Me: your Roots Signature ===== */
   const _me=renderMe;renderMe=function(){const html=_me();if(!RL())return html;const me=S.me||{};
