@@ -3558,6 +3558,154 @@ if(!IC.share)Object.assign(IC,{share:'<circle cx="18" cy="5.5" r="2.5"/><circle 
     pxAsk(el){const t=el.dataset.t;A.celChat(el);setTimeout(()=>{const i=document.getElementById('chat-in');if(i){i.value=t;i.focus()}},60)}});
 })();
 
+/* ---------- Roots Live (his ok 7 Nov 2026 04:26 "ok for all", mock handoff/mocks/roots-live, artifact DAiRLchNmUvmqK6xe971qJ) ----------
+   A live 3D globe (MapLibre GL, free; map imagery Natural Earth relief from tiles.openfreemap.org, country shapes world-atlas 110m)
+   on Welcome and at the top of Matches; introductions as glass cards led by each member's Roots Signature (a living pattern made
+   from their id, never a face); 'What you share' rings + their local time on the profile; Bridge clocks in chat; signature on Me.
+   Real data only. The map lives in ONE persistent element per place and is re-attached after every render (no reload, no flicker).
+   No WebGL / offline: the old SVG map stays. Local tests: localStorage nm.rltest = '1' / '0'. Styles: 'Roots Live' block in app.css. */
+function RL(){try{if(/127\.0\.0\.1/.test(CFG.url||'')){const t=localStorage.getItem('nm.rltest');if(t)return t==='1'}return PX()}catch(e){return false}}
+const RLX=(function(){
+  const lt=()=>document.documentElement.classList.contains('gl-lt');
+  let loading=null,CJ=null,GL=null;
+  function webgl(){if(GL!==null)return GL;try{const c=document.createElement('canvas');GL=!!(c.getContext('webgl2')||c.getContext('webgl'))}catch(e){GL=false}return GL}
+  function load(){if(window.maplibregl)return Promise.resolve();if(loading)return loading;
+    loading=new Promise((res,rej)=>{const l=document.createElement('link');l.rel='stylesheet';l.href='js/vendor/maplibre-gl.css';document.head.appendChild(l);
+      const s=document.createElement('script');s.src='js/vendor/maplibre-gl.js';s.onload=res;s.onerror=()=>{loading=null;rej()};document.head.appendChild(s)});return loading}
+  function data(){return CJ?Promise.resolve(CJ):fetch('js/vendor/countries110.json').then(r=>r.json()).then(j=>CJ=j)}
+  const ALIAS={'United States':'United States of America','Dominican Republic':'Dominican Rep.','Bosnia and Herzegovina':'Bosnia and Herz.','Czech Republic':'Czechia','Ivory Coast':"Côte d'Ivoire",'DR Congo':'Dem. Rep. Congo','Korea':'South Korea'};
+  const nm=n=>ALIAS[n]||n;
+  function gc(a,b,n=80){const r=x=>x*Math.PI/180,d=x=>x*180/Math.PI;const[l1,p1]=a.map(r),[l2,p2]=b.map(r);
+    const D=2*Math.asin(Math.sqrt(Math.sin((p2-p1)/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin((l2-l1)/2)**2));if(!D)return [a,b];const out=[];
+    for(let i=0;i<=n;i++){const f=i/n,A=Math.sin((1-f)*D)/Math.sin(D),B=Math.sin(f*D)/Math.sin(D);const x=A*Math.cos(p1)*Math.cos(l1)+B*Math.cos(p2)*Math.cos(l2),y=A*Math.cos(p1)*Math.sin(l1)+B*Math.cos(p2)*Math.sin(l2),z=A*Math.sin(p1)+B*Math.sin(p2);
+      let lon=d(Math.atan2(y,x));if(out.length){const pl=out[out.length-1][0];while(lon-pl>180)lon-=360;while(lon-pl<-180)lon+=360}out.push([lon,d(Math.atan2(z,Math.sqrt(x*x+y*y)))])}return out}
+  function style(dk){const L=dk?false:lt();return {version:8,projection:{type:'globe'},sky:{'atmosphere-blend':['interpolate',['linear'],['zoom'],0,1,5,.6,7,0]},
+    sources:{relief:{type:'raster',tiles:['https://tiles.openfreemap.org/natural_earth/ne2sr/{z}/{x}/{y}.png'],tileSize:512,maxzoom:6,attribution:'© Natural Earth · OpenFreeMap'},
+      cc:{type:'geojson',data:CJ.c},bb:{type:'geojson',data:CJ.b},arcs:{type:'geojson',data:{type:'FeatureCollection',features:[]}},com:{type:'geojson',data:{type:'FeatureCollection',features:[]}}},
+    layers:[{id:'bg',type:'background',paint:{'background-color':L?'#CFE9DE':'#0A1410'}},
+      {id:'relief',type:'raster',source:'relief',paint:L?{'raster-saturation':.1,'raster-contrast':.08,'raster-hue-rotate':-22}:{'raster-saturation':-.3,'raster-brightness-max':.45,'raster-contrast':.15,'raster-hue-rotate':-18}},
+      {id:'land',type:'fill',source:'cc',paint:{'fill-color':L?'#9FDCBE':'#3E6B55','fill-opacity':L?.32:.18}},
+      {id:'hl',type:'fill',source:'cc',filter:['in',['get','n'],['literal',[]]],paint:{'fill-color':['coalesce',['get','hc'],L?'#FFD23F':'#FFD95C'],'fill-opacity':L?.5:.4}},
+      {id:'hl2',type:'fill',source:'cc',filter:['in',['get','n'],['literal',[]]],paint:{'fill-color':L?'#2FBF86':'#5FD3A2','fill-opacity':L?.4:.32}},
+      {id:'bd',type:'line',source:'bb',paint:{'line-color':L?'rgba(255,255,255,.85)':'rgba(200,255,230,.16)','line-width':['interpolate',['linear'],['zoom'],0,.4,4,1]}},
+      {id:'arcG',type:'line',source:'arcs',layout:{'line-cap':'round'},paint:{'line-color':['get','c'],'line-width':7,'line-blur':6,'line-opacity':.45}},
+      {id:'arc',type:'line',source:'arcs',layout:{'line-cap':'round'},paint:{'line-color':['get','c'],'line-width':2,'line-opacity':.95}},
+      {id:'comG',type:'circle',source:'com',paint:{'circle-radius':10,'circle-color':['get','c'],'circle-blur':1,'circle-opacity':.7}},
+      {id:'com',type:'circle',source:'com',paint:{'circle-radius':3.5,'circle-color':'#FFFFFF','circle-stroke-color':['get','c'],'circle-stroke-width':2}}]}}
+  const live={};/* key -> {el,map,sig,theme,markers,anim,touched} */
+  const reduce=()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}};
+  function ang(a,b){const r=x=>x*Math.PI/180;return Math.acos(Math.min(1,Math.sin(r(a[1]))*Math.sin(r(b[1]))+Math.cos(r(a[1]))*Math.cos(r(b[1]))*Math.cos(r(a[0]-b[0]))))*180/Math.PI}
+  function apply(E,o){const m=E.map;const L=o.dark?false:lt();const g=L?'#0E9F6E':'#5FD3A2',y=L?'#D9A800':'#FFD95C';
+    const fs=(o.arcs||[]).filter(a=>a[0]&&a[1]).map(([a,b,c],i)=>({type:'Feature',properties:{c:c==='y'?y:g},geometry:{type:'LineString',coordinates:gc(a,b)}}));
+    m.getSource('arcs').setData({type:'FeatureCollection',features:fs});
+    m.setFilter('hl',['in',['get','n'],['literal',(o.roots||[]).map(nm)]]);m.setFilter('hl2',['in',['get','n'],['literal',(o.lives||[]).map(nm)]]);
+    E.markers.forEach(x=>x.remove());E.markers=(o.pins||[]).filter(p=>p.ll).map(p=>{const el=document.createElement('button');el.type='button';el.className='rl-mk'+(p.cls?' '+p.cls:'');el.innerHTML=p.html;
+      if(p.a){el.dataset.a=p.a;if(p.k)el.dataset.k=p.k;if(p.id)el.dataset.id=p.id}
+      el.addEventListener('click',ev=>{E.touched=true;if(p.fly)m.flyTo({center:p.ll,zoom:Math.max(m.getZoom(),2.2),duration:1400});if(p.go)p.go(ev)});
+      return new maplibregl.Marker({element:el,anchor:p.anchor||'bottom'}).setLngLat(p.ll).addTo(m)});
+    hide(E);cancelAnimationFrame(E.anim);if(reduce())return;
+    let t0=performance.now();const step=now=>{if(!E.map)return;if(!E.el.isConnected||document.hidden||(E.fr=(E.fr||0)+1)%2){E.anim=requestAnimationFrame(step);return}const f=((now-t0)/2600)%1;
+      m.getSource('com').setData({type:'FeatureCollection',features:fs.map((F,i)=>{const cs=F.geometry.coordinates;return{type:'Feature',properties:{c:F.properties.c},geometry:{type:'Point',coordinates:cs[Math.floor(((f+i*.17)%1)*(cs.length-1))]}}})});
+      if(o.spin&&!E.touched&&!m.isMoving()&&E.el.isConnected){const c=m.getCenter();m.setCenter([c.lng+o.spin,c.lat])}E.anim=requestAnimationFrame(step)};E.anim=requestAnimationFrame(step)}
+  function hide(E){if(!E.map)return;const c=E.map.getCenter();E.markers.forEach(x=>{const l=x.getLngLat();x.getElement().style.visibility=ang([c.lng,c.lat],[l.lng,l.lat])>72?'hidden':'visible'})}
+  function kill(k){const E=live[k];if(!E)return;cancelAnimationFrame(E.anim);try{E.map&&E.map.remove()}catch(e){}delete live[k]}
+  /* place the persistent map for `key` into every .rl-slot[data-rl=key] after a render */
+  function attach(){if(!webgl())return;const here=new Set([...document.querySelectorAll('.rl-slot[data-rl]')].map(x=>x.dataset.rl));Object.keys(live).forEach(k=>{if(!here.has(k)&&k==='welcome')kill(k)});
+    document.querySelectorAll('.rl-slot[data-rl]').forEach(slot=>{const k=slot.dataset.rl,o=OPTS[k]&&OPTS[k]();if(!o)return;
+      const theme=o.dark?'d':lt()?'l':'d';let E=live[k];if(E&&E.theme!==theme){kill(k);E=null}
+      if(!E){E=live[k]={el:document.createElement('div'),markers:[],theme,sig:'',touched:false};E.el.className='rl-map';
+        Promise.all([load(),data()]).then(()=>{if(live[k]!==E)return;
+          E.map=new maplibregl.Map({container:E.el,style:style(o.dark),center:o.center,zoom:o.zoom,attributionControl:{compact:true},dragRotate:false,pitchWithRotate:false,touchPitch:false,fadeDuration:0,cooperativeGestures:false});
+          ['mousedown','touchstart','wheel'].forEach(e=>E.map.on(e,()=>E.touched=true));E.map.on('move',()=>hide(E));
+          E.map.on('load',()=>{E.ready=true;E.sig='';sync(k)})}).catch(()=>{slot.classList.add('rl-off')})}
+      if(E.el.parentNode!==slot){slot.appendChild(E.el);if(E.map)E.map.resize()}
+      slot.classList.add('rl-on');if(E.ready)sync(k)})}
+  function sync(k){const E=live[k];if(!E||!E.ready)return;const o=OPTS[k]();const s=JSON.stringify([o.arcs,o.roots,o.lives,(o.pins||[]).map(p=>[p.ll,p.html,p.cls])]);if(s===E.sig)return;E.sig=s;apply(E,o)}
+  const OPTS={};
+  return {attach,OPTS,kill,live,webgl,fly:(k,ll,z)=>{const E=live[k];if(E&&E.map){E.touched=true;E.map.flyTo({center:ll,zoom:z||2.4,duration:1400})}}};
+})();
+/* ---------- Roots Signature: a living pattern from a member's id (shown where a face would be; never a face) ---------- */
+function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}let a=h>>>0;
+  const R=()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+  const d=!document.documentElement.classList.contains('gl-lt');const id='rs'+(h%1e7)+(layers||4);
+  const pal=d?[['#7EE7BC','#FFE27A'],['#B8F08A','#5FD3A2'],['#FFE27A','#9FE6C6'],['#5FD3A2','#D4F2B6']]:[['#0E9F6E','#E8B800'],['#5DBB2E','#0E9F6E'],['#E8B800','#3CC28C'],['#0E7A55','#9BD86A']];
+  let defs='',lay='';const n=layers||4;
+  for(let L=0;L<n;L++){const k=3+Math.floor(R()*6),ph=R()*6.28,A=26+L*7+R()*6,B=10+R()*14,C=R()*.35;const p=pal[L%4];let path='';
+    for(let i=0;i<=200;i++){const t=i/200*Math.PI*2;const r=A+B*Math.cos(k*t+ph)+C*B*Math.cos((k*2+1)*t);path+=(i?'L':'M')+(100+r*Math.cos(t)).toFixed(1)+' '+(100+r*Math.sin(t)).toFixed(1)}
+    defs+=`<linearGradient id="${id}g${L}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${p[0]}"/><stop offset="1" stop-color="${p[1]}"/></linearGradient>`;
+    lay+=`<g class="rl-r" style="animation-duration:${40+L*18}s;animation-direction:${L%2?'reverse':'normal'}"><path d="${path}Z" fill="url(#${id}g${L})" fill-opacity="${d?.10:.13}" stroke="url(#${id}g${L})" stroke-width="${L===n-1?1.6:1.1}"/></g>`}
+  const dots=Array.from({length:16},(_,i)=>{const t=i/16*6.28,r=84+R()*8;return `<circle cx="${(100+r*Math.cos(t)).toFixed(1)}" cy="${(100+r*Math.sin(t)).toFixed(1)}" r="${(1+R()*1.6).toFixed(1)}" fill="${pal[i%4][0]}" opacity=".7"/>`}).join('');
+  return `<svg class="rl-sig" viewBox="0 0 200 200" aria-hidden="true"><defs>${defs}</defs><g class="rl-br">${lay}<g class="rl-r" style="animation-duration:120s">${dots}</g></g>${ini?`<circle cx="100" cy="100" r="19" fill="${d?'#13201A':'#FFFFFF'}" stroke="${d?'rgba(255,255,255,.18)':'#E6F3EC'}" stroke-width="2"/><text x="100" y="105.5" text-anchor="middle" font-weight="800" font-size="14" fill="${d?'#E2FFF2':'#0B4D36'}">${esc(ini)}</text>`:''}</svg>`}
+(function(){
+  const fl=n=>{try{return flag(n)||''}catch(e){return ''}};
+  const ll=o=>{try{const c=coordsOf(o);return c?[c[1],c[0]]:null}catch(e){return null}};
+  const tzOf=p=>(typeof TZCITY!=='undefined'&&TZCITY[p.cityName||p.city])||(typeof TZC!=='undefined'&&TZC[p.country])||null;
+  const hhmm=tz=>{try{return fmtTime(new Date(),tz)}catch(e){return ''}};
+  const meRoot=()=>{const me=S.me||{};return ll({country:me.oc,state:me.os})};
+  const meHome=()=>{const me=S.me||{};return (me.lat!=null?[me.lng,me.lat]:null)||ll({country:me.country,state:me.state,city:me.city})};
+  const pHome=p=>(p.lat!=null?[p.lng,p.lat]:null)||ll({country:p.country,state:p.state,city:p.cityName});
+
+  /* ===== Welcome: live globe instead of the flat map ===== */
+  const W=[[[3.38,6.52],[-79.38,43.65],'Nigeria','Canada'],[[129.07,35.18],[151.21,-33.87],'South Korea','Australia'],[[-103.35,20.66],[-3.7,40.42],'Mexico','Spain'],
+    [[72.57,23.02],[-0.12,51.5],'India','United Kingdom'],[[120.98,14.6],[55.27,25.2],'Philippines','United Arab Emirates'],[[35.5,33.89],[-46.63,-23.55],'Lebanon','Brazil']];
+  RLX.OPTS.welcome=()=>({dark:!!document.querySelector('.c3w'),center:[60,20],zoom:innerWidth<500?1.25:1.6,spin:.035,arcs:W.map((w,i)=>[w[0],w[1],i%2?'y':'g']),roots:W.filter((_,i)=>i%2).map(w=>w[2]),lives:W.filter((_,i)=>!(i%2)).map(w=>w[3]),pins:[]});
+  const _c3m=c3map;c3map=function(){return RL()&&RLX.webgl()?`<div class="rl-slot rl-wel" data-rl="welcome"><div class="rl-fb">${_c3m()}</div></div>`:_c3m()};
+
+  /* ===== Matches: globe tile + introductions as signature cards ===== */
+  RLX.OPTS.home=()=>{const it=(RLX._it||[]);const r=meRoot(),me=S.me||{};
+    const pins=[];if(r)pins.push({ll:r,html:`<i></i>${esc(me.os||me.oc||'')} · your roots`,cls:'root'});
+    it.forEach((p,i)=>{const h=pHome(p);if(h)pins.push({ll:h,html:`<i></i>${esc(p.cityName||p.country)}`,cls:'on',fly:true,go:()=>{const d=document.querySelector('.rl-cards');if(d&&d.children[i])d.scrollTo({left:d.children[i].offsetLeft-d.offsetLeft-4,behavior:'smooth'})}})});
+    const h0=meHome();if(h0)pins.push({ll:h0,html:`<i></i>You · ${esc(me.city||me.country||'')}`,cls:'me'});
+    const arcs=it.map(p=>[ll({country:p.oc,state:p.os}),pHome(p),'g']).concat(r&&h0?[[r,h0,'y']]:[]);
+    const c=r||h0||[20,20];return {center:[c[0],Math.max(-20,Math.min(40,c[1]))],zoom:innerWidth<500?.95:1.4,spin:-.03,arcs,roots:[me.oc].concat(it.map(p=>p.oc)).filter(Boolean),lives:[me.country].concat(it.map(p=>p.country)).filter(Boolean),pins}};
+  function acts(p,lk){const st=S.interests[p.id],sl=S.shortlist.includes(p.id);
+    const save=`<button class="rl-b" data-a="shortlist" data-id="${p.id}" aria-label="${sl?'Remove from saved':'Save for later'}" aria-pressed="${sl}"${sl?' data-on="1"':''}>${ic('star')}</button>`;
+    if(lk)return `<button class="btn gold rl-wide" data-a="upgrade" data-r="profile" data-id="${p.id}">${ic('crown')}See profile with Gold</button>`;
+    if(st==='mutual')return `${save}<button class="rl-go" data-a="openchat" data-id="${p.id}">${ic('chat')}Open the Bridge</button>`;
+    if(st==='received')return `<button class="rl-b" data-a="decline" data-id="${p.id}" aria-label="Not now">${ic('x')}</button><button class="rl-go" data-a="accept" data-id="${p.id}">${ic('heart')}Say yes</button>${save}`;
+    if(st==='sent')return `<span class="rl-sent">${ic('check')}Interest sent</span>${save}`;
+    return `<button class="rl-b" data-a="pass" data-id="${p.id}" aria-label="Not now">${ic('x')}</button><button class="rl-go" data-a="interest" data-id="${p.id}">${ic('heart')}I'm interested</button>${save}`}
+  function card(p){const c=compat(p),st=S.interests[p.id],lk=locked(p)&&!(st==='received'&&p.gold);const tz=tzOf(p);
+    return `<article class="rl-card"><button class="rl-top" data-a="open" data-id="${p.id}" aria-label="${lk?`See this ${c.total}% match with Gold`:`Open ${esc(shown(p))}'s profile`}">
+      <span class="rl-sgw">${rlSig(p.id,'',4)}${st==='received'?`<span class="rl-likes">${ic('heart')}Likes you</span>`:''}</span>
+      <span class="rl-who"><b>${esc(shown(p))}, ${p.age}</b><small>${fl(p.oc)} ${esc(p.os||p.oc||'')} → ${fl(p.country)} ${esc(p.cityName||'')}</small>
+       ${tz?`<small>${ic('clock')}${esc(hhmm(tz))} there</small>`:''}<span class="rl-fit">${c.total}% shared</span></span></button>
+     <div class="rl-acts">${acts(p,lk)}</div></article>`}
+  const _ib3=introBlock;introBlock=function(list){const prev=_ib3(list);if(!RL())return prev;const it=introsToday(list);RLX._it=it;
+    const a=prev.indexOf('<div class="pxb">'),b=prev.lastIndexOf('<div class="pxb">');const top=a>=0&&a!==b?prev.slice(a,prev.indexOf('<div class="sec-h px-sh">')>0?prev.indexOf('<div class="sec-h px-sh">'):b):'';const bot=b>=0?prev.slice(b):'';
+    const me=S.me||{};const globe=RLX.webgl()?`<div class="rl-tile"><div class="rl-slot" data-rl="home"></div><div class="rl-cap"><p class="eb">${esc(me.oc||'')} roots · worldwide</p><b>${it.length?`${it.length} introduction${it.length>1?'s':''} today`:'Your roots line'}</b></div></div>`:'';
+    const cards=it.length?`<div class="sec-h rl-sh"><h2>Today for you</h2><small>${ic('clock')}New in <span data-until="${midnight()}">${fmtLeft(midnight()-Date.now())}</span></small></div><div class="rl-cards">${it.map(card).join('')}</div>`:'';
+    return globe+top+cards+bot};
+
+  /* ===== Profile: 'What you share' rings + their local time ===== */
+  const _pv=renderProfileView;renderProfileView=function(id,isMe){const html=_pv(id,isMe);if(!RL()||isMe)return html;const p=byId(id);if(!p)return html;
+    let c;try{c=compat(p)}catch(e){return html}const tz=tzOf(p);const cl=v=>{v=+v||0;if(v<=1)v*=100;return Math.max(0,Math.min(100,Math.round(v)))};
+    const ring=[['Values',c.values],['Life plans',c.life],['What you both want',c.pref]].filter(x=>typeof x[1]==='number').map(([l,v])=>({l,v:cl(v)}));if(!ring.length)ring.push({l:'Overall',v:cl(c.total)});
+    const col=['#0E9F6E','#E2B500','#7CCB3E'];
+    const blk=`<section class="rl-share"><div class="rl-rings"><svg viewBox="0 0 120 120" aria-hidden="true">${ring.map((r,i)=>{const R=50-i*13;return `<circle cx="60" cy="60" r="${R}" fill="none" stroke="${col[i]}" stroke-opacity=".15" stroke-width="9"/><circle class="rl-ring" cx="60" cy="60" r="${R}" fill="none" stroke="${col[i]}" stroke-width="9" stroke-linecap="round" pathLength="1" style="--o:${(1-r.v/100).toFixed(2)};animation-delay:${.15+i*.15}s" transform="rotate(-90 60 60)"/>`}).join('')}</svg>
+      <div class="rl-rl"><p class="eb">What you share</p>${ring.map((r,i)=>`<div><i style="background:${col[i]}"></i>${esc(r.l)}<span>${r.v}%</span></div>`).join('')}</div></div>
+      ${tz?`<p class="rl-tz">${ic('clock')}${esc(hhmm(tz))} in ${esc(p.cityName||p.country)} now</p>`:''}</section>`;
+    const k=html.indexOf('<section');return k>0?html.slice(0,k)+blk+html.slice(k):html};
+
+  /* ===== Bridge: both local times on top of the chat ===== */
+  const _cv=renderChatView;renderChatView=function(id){const html=_cv(id);if(!RL())return html;const p=byId(id),me=S.me||{};if(!p)return html;
+    const tz1=(typeof TZCITY!=='undefined'&&TZCITY[me.city])||(typeof TZC!=='undefined'&&TZC[me.country])||undefined,tz2=tzOf(p)||undefined;
+    const bar=`<div class="rl-bridge"><div><b>${esc(hhmm(tz1))}</b><small>You · ${esc(me.city||me.country||'')}</small></div><span aria-hidden="true">${ic('globe')}</span><div class="r"><b>${esc(hhmm(tz2))}</b><small>${esc(p.first||shown(p))} · ${esc(p.cityName||p.country||'')}</small></div></div>`;
+    const k=html.indexOf('id="chat-scroll"');if(k<0)return html;const s=html.lastIndexOf('<',k);return html.slice(0,s)+bar+html.slice(s)};
+
+  /* ===== Me: your Roots Signature ===== */
+  const _me=renderMe;renderMe=function(){const html=_me();if(!RL())return html;const me=S.me||{};
+    const t=`<div class="rl-mesig"><span class="rl-sgw">${rlSig(me.id||me.name||'me',initials(me.name)||'',4)}</span><div><p class="eb">Your Roots Signature</p><b>${esc(me.os||me.oc||'')} → ${esc(me.city||me.country||'')}</b><small>A pattern only you have. It shows on your introduction card.</small></div></div>`;
+    const k=html.indexOf('<div class="scroll');if(k<0)return html;const e=html.indexOf('>',k)+1;return html.slice(0,e)+t+html.slice(e)};
+
+
+  /* ===== Sign-up: your Roots Signature grows with every part (zero typing; seed = your own answers) ===== */
+  const _vh=v2head;v2head=function(sub){const h=_vh(sub);if(!RL())return h;const d=S.draft||{};const [pp]=V2PART[v2key()]||[1];
+    const seed=[d.name,d.oc,d.os,d.country,d.city,(d.ans||[]).join('')].join('|');
+    return h.replace('<div class="grow">',`<span class="rl-hsig" title="Your Roots Signature">${rlSig(seed,'',Math.max(1,Math.min(4,pp)))}</span><div class="grow">`)};
+  const _are=afterRenderEvents;afterRenderEvents=function(){const r=_are.apply(this,arguments);try{if(RL())RLX.attach()}catch(e){}return r};
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()}}; /* used by automated tests */
 boot();
 })();
