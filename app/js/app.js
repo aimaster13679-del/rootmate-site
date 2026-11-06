@@ -2982,6 +2982,94 @@ function c3path(id){const p=byId(id);if(!p)return '';famLoad();const m=S.chats[i
   const _r=render;render=function(){const on=C3();document.documentElement.classList.toggle('c3',on);_r()};
 })();
 
+/* ---------- Admin panel v3 (his ok 6 Nov on mock handoff/mocks/admin-panel) ----------
+   For the admin email only (C3()). Home = command center from admin_overview(); Robots = robot diary (bot_runs);
+   Help = help inbox (help_requests) + members who stopped (admin_signups) with a ready email; Checks = the existing review queue.
+   Every number is real; a box with no data is hidden. */
+const A3={tab:'home',ov:null,help:null,bot:null,runs:null,open:null,busy:false};
+const A3HELP=['A bank statement, a utility bill or a lease from the last 3 months, with your name and address, works. You can hide account numbers.',
+ 'Stand facing a window, hold the phone at eye level and follow the 3 prompts. It takes 30 seconds.',
+ 'Thank you for writing. We fixed it on our side; please try again and tell us if it works.'];
+const A3MAIL={'Signed up, did not start the form':['Your NeuMarry profile is waiting','start your profile: it takes about 6 minutes, almost all taps.'],
+ default:['Can we help you finish?','finish your profile. If anything is unclear, just reply to this email and our team will help.']};
+async function a3load(){if(A3.busy)return;A3.busy=true;try{const [ov,hl]=await Promise.all([API.rpc('admin_overview').catch(()=>null),API.rpc('admin_help_list').catch(()=>[])]);A3.ov=ov;A3.help=hl||[]}finally{A3.busy=false;render()}}
+function a3kpi(n,l,s,c){return n===null||n===undefined?'':`<div class="a3k" style="--c:${c}"><b>${esc(String(n))}</b><span>${esc(l)}</span>${s?`<small>${esc(s)}</small>`:''}</div>`}
+function a3bars(vals){const m=Math.max(1,...vals);return `<div class="a3bars" aria-label="Sign-ups per day, last 30 days">${vals.map((v,i)=>`<i style="height:${Math.max(3,Math.round(v/m*100))}%;${i===vals.length-1?'background:#FFC93C':''}" title="${v}"></i>`).join('')}</div>`}
+function a3home(){const o=A3.ov;if(!o)return `<div class="a3c">${spinner('Loading')}</div>`;const f=o.funnel_7d||{};const bots=o.bots||[];const failed=bots.filter(b=>b.status==='failed');
+  const d=o.signups_today-o.signups_yesterday;const vals=o.signups_30d||[];const tot=vals.reduce((a,b)=>a+b,0);const src=Object.entries(o.sources_30d||{}).sort((a,b)=>b[1]-a[1]);
+  const need=[o.checks_waiting>0?['shield',`${o.checks_waiting} waiting for checks`,o.oldest_wait_hours!=null?`Oldest ${o.oldest_wait_hours} h · promise 24 h`:'','checks']:null,
+    o.reports_open>0?['flag',`${o.reports_open} open report${o.reports_open>1?'s':''}`,'Answer within 24 h','checks']:null,
+    o.help_open>0?['chat',`${o.help_open} member${o.help_open>1?'s':''} asked for help`,'Help inbox','help']:null,
+    ...failed.map(b=>['alert',`${b.bot} failed`,b.summary||'','robots'])].filter(Boolean);
+  return `<div class="a3g">${a3kpi(o.signups_today,'Sign-ups today',d?`${d>0?'▲':'▼'} ${Math.abs(d)} vs yesterday`:'same as yesterday','#FF5C9E')}${a3kpi(o.live,'Live members','fully verified','#12A36B')}${a3kpi(o.checks_waiting,'Waiting for checks',o.oldest_wait_hours!=null?`oldest ${o.oldest_wait_hours} h`:'','#FFC93C')}${a3kpi(o.reports_open,'Open reports','','#FF6B6B')}</div>
+   ${need.length?`<div class="a3c"><div class="a3h"><b>Needs you now</b><span>${need.length}</span></div>${need.map(([i,t,s,go])=>`<button class="a3n" data-a="a3tab" data-k="${go}">${ic(i)}<span><b>${esc(t)}</b><small>${esc(s)}</small></span><em>Open</em></button>`).join('')}</div>`:`<div class="a3c a3ok">${ic('check')} Nothing needs you right now.</div>`}
+   ${f.accounts?`<div class="a3c"><div class="a3h"><b>Sign-up journey</b><span>last 7 days</span></div>${[['Made an account',f.accounts],['Started the profile',f.profiles],['Sent documents',f.documents],['Live',f.live]].map(([t,n])=>`<div class="a3f"><span>${t}</span><div><i style="width:${Math.max(2,Math.round(n/f.accounts*100))}%"></i></div><b>${n}</b></div>`).join('')}</div>`:''}
+   ${tot?`<div class="a3c"><div class="a3h"><b>Sign-ups per day</b><span>${tot} in 30 days</span></div>${a3bars(vals)}</div>`:''}
+   ${src.length?`<div class="a3c"><div class="a3h"><b>Where they came from</b><span>30 days</span></div>${src.slice(0,6).map(([k,n])=>`<div class="a3f"><span>${esc(k)}</span><div><i style="width:${Math.round(n/src[0][1]*100)}%;background:#9D7CFF"></i></div><b>${n}</b></div>`).join('')}</div>`:''}`}
+function a3ago(ts){if(!ts)return '';const m=Math.round((Date.now()-new Date(ts).getTime())/60000);return m<60?`${m} min ago`:m<1440?`${Math.round(m/60)} h ago`:`${Math.round(m/1440)} d ago`}
+function a3robots(){const o=A3.ov;if(!o)return `<div class="a3c">${spinner('Loading')}</div>`;const bots=o.bots||[];
+  if(A3.bot){const runs=A3.runs;return `<button class="a3back" data-a="a3bot" data-k="">${ic('back')} All robots</button><div class="a3c"><div class="a3h"><b>${esc(A3.bot)}</b><span>last runs</span></div>
+   ${runs===null?spinner('Loading'):runs.length?`<div class="a3tl">${runs.slice(0,14).reverse().map(r=>`<i class="${r.status}" title="${esc(r.status)}"></i>`).join('')}</div>${runs.map(r=>`<div class="a3r"><span class="a3d ${r.status}"></span><span><b>${esc(r.job||'')} · ${r.status==='ok'?'OK':r.status==='failed'?'Failed':'Running'}</b><small>${esc(r.summary||'')}</small><small>${esc(a3ago(r.finished_at))}</small></span>${r.run_url?`<a class="a3lnk" href="${esc(r.run_url)}" target="_blank" rel="noopener">Log</a>`:''}</div>`).join('')}`:'<p class="a3m">No runs yet.</p>'}</div>`}
+  if(!bots.length)return `<div class="a3c"><p class="a3m">Each robot writes here after its next run (social posts, reports, Play, event mails, Search Console, photo check). Nothing has run since this panel started.</p></div>`;
+  return bots.map(b=>`<button class="a3c a3bt ${b.status}" data-a="a3bot" data-k="${esc(b.bot)}"><span class="a3h"><span class="a3d ${b.status}"></span><b>${esc(b.bot)}</b><span>${b.status==='ok'?'OK':b.status==='failed'?'Failed':'Running'}</span></span><small>${esc(b.summary||'')}</small><small>${esc(a3ago(b.finished_at))}</small></button>`).join('')}
+function a3help(){const L=A3.help;const su=(S.admin&&S.admin.signups)||[];
+  const stuck=su.filter(x=>x.step&&!/live/i.test(x.step)&&x.email&&(Date.now()-new Date(x.created_at).getTime())>864e5);
+  const groups={};stuck.forEach(x=>{(groups[x.step]=groups[x.step]||[]).push(x)});
+  const open=A3.open&&(L||[]).find(x=>x.id===A3.open);
+  return `${open?`<div class="a3c"><div class="a3h"><b>${esc(open.name||'Member')}</b><span>${esc(open.step||'')}</span></div><div class="a3q">${esc(open.message)}</div>${open.answer?`<div class="a3a">${esc(open.answer)}</div>`:''}
+    <div class="a3chips">${A3HELP.map((t,i)=>`<button data-a="a3ready" data-i="${i}">${['Documents','Selfie tips','Fixed it'][i]}</button>`).join('')}</div>
+    <textarea id="a3ans" rows="3" maxlength="1000" aria-label="Your answer" placeholder="Write your answer">${esc(open.answer||'')}</textarea>
+    <div class="a3btns"><button class="btn primary sm" data-a="a3send" data-solved="0">Send</button><button class="btn ghost sm" data-a="a3send" data-solved="1">Send and mark solved</button></div></div>`:''}
+   <div class="a3c"><div class="a3h"><b>Help inbox</b><span>${(L||[]).filter(x=>x.status==='open').length} open</span></div>
+    ${L===null?spinner('Loading'):(L.length?L.slice(0,30).map(x=>`<button class="a3r a3hl ${x.status}" data-a="a3open" data-k="${x.id}"><span class="a3d ${x.status==='open'?'run':'ok'}"></span><span><b>${esc(x.name||'Member')} · ${esc(x.step||'')}</b><small>${esc(x.message)}</small><small>${esc(a3ago(x.created_at))}</small></span></button>`).join(''):'<p class="a3m">No questions yet. Members ask from the "Need help?" button.</p>')}</div>
+   <div class="a3c"><div class="a3h"><b>Members who stopped</b><span>1+ day, last 30 days</span></div>
+    ${Object.keys(groups).length?Object.entries(groups).map(([st,arr])=>`<details class="a3grp"><summary><b>${esc(st)}</b><em>${arr.length}</em></summary>${arr.slice(0,25).map(x=>{const t=A3MAIL[st]||A3MAIL.default;const nm=(x.full_name||x.google_name||'').split(' ')[0]||'there';
+      const body=`Hi ${nm},\n\nThank you for joining NeuMarry. We noticed you have not had a chance to ${t[1]}\n\nOpen the app: https://neumarry.com/app\n\nSwapnil, NeuMarry team\nsupport@neumarry.com`;
+      return `<div class="a3r"><span><b>${esc(x.full_name||x.google_name||x.email)}</b><small>${esc(x.city||'')}${x.city?' · ':''}${esc(a3ago(x.created_at))}${x.reminded_at?' · auto reminder sent':''}</small></span><a class="a3lnk" href="mailto:${esc(x.email)}?subject=${encodeURIComponent(t[0])}&body=${encodeURIComponent(body)}">Email</a></div>`}).join('')}</details>`).join(''):'<p class="a3m">Nobody is stuck for more than a day.</p>'}
+    <p class="a3m">Automatic emails already go after 1 and 3 days. "Email" opens your mail app with a ready message; you press send. Keep it to 2 messages a week per person.</p></div>`}
+function a3tabsHtml(){const o=A3.ov;const t=A3.tab;const chk=o?o.checks_waiting+o.reports_open:0;
+  return `<div class="a3tabs pad" role="tablist">${[['home','Home'],['robots','Robots'],['help','Help'],['checks','Checks']].map(([k,l])=>`<button role="tab" aria-selected="${t===k}" class="${t===k?'on':''}" data-a="a3tab" data-k="${k}">${l}${k==='checks'&&chk?` <em>${chk}</em>`:''}${k==='help'&&o&&o.help_open?` <em>${o.help_open}</em>`:''}${k==='robots'&&o&&(o.bots||[]).some(b=>b.status==='failed')?' <em class="r">!</em>':''}</button>`).join('')}</div>`}
+function renderAdmin3(){const t=A3.tab;
+  return `<div class="view a3v" role="dialog" aria-label="Admin panel"><div class="a3top pad"><button class="iconbtn" data-a="closeView" aria-label="Back">${ic('back')}</button><div class="grow"><p class="a3kick">NeuMarry admin · <span>● live</span></p><h2>${{home:'Command center',robots:'Robots',help:'Help members'}[t]||'Command center'}</h2></div><button class="iconbtn" data-a="a3reload" aria-label="Refresh">${ic('refresh')}</button></div>
+   ${a3tabsHtml()}
+   <div class="scroll"><div class="a3body pad">${t==='robots'?a3robots():t==='help'?a3help():a3home()}</div></div></div>`}
+(function(){
+  if(!IC.refresh)Object.assign(IC,{refresh:'<path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/>',alert:'<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17h.01"/>'});
+  if(!IC.alert)IC.alert='<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17h.01"/>';
+  const _ra=renderAdmin;renderAdmin=function(){if(!C3()||A3.tab==='checks'){const h=_ra();return C3()?h.replace(/^(\s*<div class="view)([^>]*>)/,'$1 a3chk$2<div class="a3chkbar">'+a3tabsHtml()+'</div>'):h}return renderAdmin3()};
+  Object.assign(A,{
+    a3tab(el){A3.tab=el.dataset.k;A3.open=null;if(A3.tab!=='robots')A3.bot=null;render();if(A3.tab==='checks'){const s=document.querySelector('.view .scroll');if(s)s.scrollTop=0}},
+    a3reload(){A3.ov=null;A3.help=null;render();a3load()},
+    async a3bot(el){A3.bot=el.dataset.k||null;A3.runs=null;render();if(A3.bot){try{A3.runs=await API.rpc('admin_bot_runs',{p_bot:A3.bot,p_limit:30})}catch(e){A3.runs=[]}render()}},
+    a3open(el){A3.open=+el.dataset.k;render();const s=document.querySelector('.a3v .scroll');if(s)s.scrollTop=0},
+    a3ready(el){const t=document.getElementById('a3ans');if(t){t.value=A3HELP[+el.dataset.i];t.focus()}},
+    async a3send(el){const t=document.getElementById('a3ans');const v=(t&&t.value||'').trim();if(!v){toast('Write an answer first','x');return}
+      try{await API.rpc('admin_help_answer',{p_id:A3.open,p_answer:v,p_solved:el.dataset.solved==='1'});toast('Answer sent','check');A3.open=null;a3load()}catch(e){fail(e)}}
+  });
+  const _oa=A.openAdmin;A.openAdmin=function(){A3.tab='home';A3.bot=null;A3.open=null;_oa.apply(this,arguments);if(C3())a3load()};
+})();
+
+/* member side: "Need help?" sheet (C3 preview first). The question goes to the team's help inbox; answers show here. */
+const H3={mine:null};
+function h3sheet(){const mine=H3.mine;const topics=['Which document works?','My upload failed','I cannot take a selfie','Something else'];
+  return sheetShell('Need help? Ask our team',`<p class="hint">A real person answers, usually within a few hours. Your question stays private.</p>
+   <div class="a3chips lt">${topics.map((t,i)=>`<button data-a="h3topic" data-k="${esc(t)}" class="${(sheet.topic||topics[0])===t?'on':''}">${esc(t)}</button>`).join('')}</div>
+   <textarea id="h3msg" rows="3" maxlength="500" aria-label="Your question" placeholder="Write your question"></textarea>
+   <button class="btn primary block" data-a="h3send">Send to the team</button>
+   ${mine&&mine.length?`<div class="h3list"><p class="v2lb">Your questions</p>${mine.slice(0,5).map(x=>`<div class="h3it"><b>${esc(x.message)}</b>${x.answer?`<p>${esc(x.answer)}</p>`:'<small>Waiting for the team</small>'}</div>`).join('')}</div>`:''}`)}
+(function(){
+  const _rs=renderSheet;renderSheet=function(){return sheet&&sheet.type==='h3help'?h3sheet():_rs()};
+  Object.assign(A,{
+    async h3open(){sheet={type:'h3help',step:S.screen==='app'?(S.tab||''):'Sign-up'};render();try{H3.mine=await API.select('help_requests',{select:'message,answer,status,created_at',user_id:'eq.'+API.userId(),order:'created_at.desc',limit:5})}catch(e){H3.mine=[]}render()},
+    h3topic(el){sheet.topic=el.dataset.k;const v=(document.getElementById('h3msg')||{}).value;render();const t=document.getElementById('h3msg');if(t&&v)t.value=v},
+    async h3send(){const t=document.getElementById('h3msg');const v=(t&&t.value||'').trim();if(!v){toast('Write your question first','x');return}
+      try{await API.rpc('help_ask',{p_step:String(sheet.step||'').slice(0,60),p_topic:String(sheet.topic||'Which document works?').slice(0,60),p_message:v});sheet=null;render();toast('Sent. Our team will answer here.','check')}
+      catch(e){if(/too_many/.test(String(e&&e.message||e)))toast('You have sent 5 questions today. We will answer them soon.','x');else fail(e)}}
+  });
+  /* the button: on Matches while not live, and on Me (admin preview only) */
+  const _nl=renderNotLive;renderNotLive=function(){const h=_nl();return C3()?h.replace(/<\/div><\/div>\s*$/,`<button class="btn ghost block h3btn" data-a="h3open">${ic('chat')} Need help? Ask our team</button></div></div>`):h};
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()}}; /* used by automated tests */
 boot();
 })();
