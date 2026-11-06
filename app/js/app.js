@@ -704,7 +704,7 @@ function evArt(e,hero){const up=hero?'0':'-40';const g={family:['#FFC2A6','#FF83
 function renderBoot(){return `<div class="boot"><div class="brand"><svg class="mark" viewBox="0 0 32 22" aria-hidden="true"><path class="c1" d="M11.60 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/><path class="c2" d="M20.40 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/></svg>NeuMarry</div>${S.bootError?`<p class="hint">${esc(S.bootError)}</p><button class="btn primary" data-a="retryBoot">Try again</button>`:spinner('Opening NeuMarry')}</div>`}
 function renderWelcome(){
   return `<div class="scroll"><div class="welcome pad">
-    <div class="wtop"><div class="brand"><svg class="mark" viewBox="0 0 32 22" aria-hidden="true"><path class="c1" d="M11.60 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/><path class="c2" d="M20.40 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/></svg>NeuMarry</div><button class="lang-sw notr" data-a="lang" aria-label="Language / Langue">${ic('globe')}${RM_I18N.lang==='fr'?'English':'Français'}</button></div>
+    <div class="wtop"><div class="brand"><svg class="mark" viewBox="0 0 32 22" aria-hidden="true"><path class="c1" d="M11.60 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/><path class="c2" d="M20.40 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/></svg>NeuMarry</div><button class="lang-sw notr" data-a="lang" aria-label="Language / Langue">${ic('globe')}${esc((LANGS_ALL.find(x=>x[0]===RM_I18N.lang)||LANGS_ALL[0])[1])}</button></div>
     <div class="hero" aria-hidden="true">
       <div class="hero-pair"><span class="av a1"><span class="av-art">${portrait(11,'F',{tone:0})}</span></span><span class="av a2"><span class="av-art">${portrait(42,'M',{tone:2})}</span></span><span class="match">${ic('sparkle')}96% match</span></div>
       <div class="hero-tags"><span>Roots · Gujarat, India</span><span>Lives · Toronto, 8 km</span></div>
@@ -1226,7 +1226,7 @@ function renderMe(){
    <div class="panel"><h3>Safety centre</h3><ul class="hint" style="margin:0;padding-left:18px;display:grid;gap:5px">
     <li>Report anyone who asks for money, gifts or visa help.</li><li>Keep chats in the app until you trust the person.</li><li>Do a video call before meeting, and meet in public.</li><li>Every report is reviewed by a person within 24 hours.</li></ul></div>
    <div class="panel"><h3>Help and legal</h3>
-    <button class="rowi" data-a="lang">${ic('globe')}<span class="tx"><b>Language</b><span class="notr">${RM_I18N.lang==='fr'?'Français · switch to English':'English · passer au français'}</span></span></button>
+    <button class="rowi" data-a="lang">${ic('globe')}<span class="tx"><b>Language</b><span class="notr">${esc((LANGS_ALL.find(x=>x[0]===RM_I18N.lang)||LANGS_ALL[0])[1])}</span></span></button>
     <button class="rowi" data-a="helpOpen">${ic('mail')}<span class="tx"><b>Help and contact</b><span>Questions, complaints and our Grievance Officer</span></span></button>
     <button class="rowi" data-a="legal" data-k="terms">${ic('info')}<span class="tx"><b>Terms of Service</b><span>What you agree to, and what we are responsible for</span></span></button>
     <button class="rowi" data-a="legal" data-k="privacy">${ic('lock')}<span class="tx"><b>Privacy Policy</b><span>What we collect, why, and your rights</span></span></button>
@@ -1838,7 +1838,8 @@ API.onSignedOut=()=>signedOut('Please log in again.');
 /* ---------- Actions ---------- */
 const A={
   retryBoot(){boot()},
-  lang(){RM_I18N.set(RM_I18N.lang==='fr'?'en':'fr');render()},
+  lang(){sheet={type:'lang'};render()},
+  setLang(el){const l=el.dataset.k;sheet=null;render();RM_I18N.set(l);render()},
   start(){S.auth={mode:'signup'};S.errors={};S.screen='auth';sheet=null;render()},
   login(){S.auth={mode:'login'};S.errors={};S.screen='auth';sheet=null;render()},
   authMode(el){S.auth={mode:el.dataset.k};S.errors={};render()},
@@ -2943,7 +2944,7 @@ function c3map(){return PM.draw({vb:[0,30,1000,440],fsr:.03,label:'World map: wh
   {hl:{'484':'#FFC93C','724':'#E2136E'},arcs:[['guad','madrid']],pins:[['guad','🇲🇽 Guadalajara','#FFC93C',0,1.8],['madrid','🇪🇸 Madrid','#E2136E']]}]})}
 const c3cyc=(arr,cls)=>`<span class="c3cyc ${cls||''}"><span>${arr.concat(arr[0]).map(t=>`<b>${esc(t)}</b>`).join('')}</span></span>`;
 function renderWelcomeC3(){
-  return `<div class="scroll c3w"><p class="c3kick">NeuMarry · verified matrimony</p>
+  return `<div class="scroll c3w"><div class="c3topl"><p class="c3kick">NeuMarry · verified matrimony</p><button class="c3lang notr" data-a="lang" aria-label="Language">${ic('globe')}<span>${esc((LANGS_ALL.find(x=>x[0]===RM_I18N.lang)||LANGS_ALL[0])[1])}</span></button></div>
    <div class="c3map">${c3map()}<span class="c3dist">✈ ${c3cyc(C3SEQ.map(([a,b])=>c3km(a,b).toLocaleString('en-US')+' km from home'))}</span></div>
    <div class="c3w-body pad">
     <h1 class="c3h1">Born in ${c3cyc(['Lagos.','Busan.','Guadalajara.'],'y')}Living in ${c3cyc(['Toronto.','Sydney.','Madrid.'],'p')}Ready to marry.</h1>
@@ -3177,6 +3178,18 @@ function h3sheet(){const mine=H3.mine;const topics=['Which document works?','My 
   /* the button: on Matches while not live, and on Me (admin preview only) */
   const _nl=renderNotLive;renderNotLive=function(){const h=_nl();return C3()?h.replace(/<\/div><\/div>\s*$/,`<button class="btn ghost block h3btn" data-a="h3open">${ic('chat')} Need help? Ask our team</button></div></div>`):h};
 })();
+
+
+/* ---------- Language picker (his ok 6 Nov 2026: 18 languages, Rs 0 forever) ----------
+   Only languages whose fixed file ships with the app are listed (window.NM_AVAIL from index.html, plus English and French).
+   Names are shown in their own script and never translated (notr). */
+const LANGS_ALL=[['en','English','English'],['fr','Français','French'],['es','Español','Spanish'],['ar','العربية','Arabic'],['hi','हिन्दी','Hindi'],
+ ['pt','Português','Portuguese'],['zh','中文 (简体)','Chinese'],['bn','বাংলা','Bengali'],['ur','اردو','Urdu'],['ru','Русский','Russian'],['id','Bahasa Indonesia','Indonesian'],
+ ['de','Deutsch','German'],['ja','日本語','Japanese'],['tr','Türkçe','Turkish'],['ko','한국어','Korean'],['vi','Tiếng Việt','Vietnamese'],['fil','Filipino','Filipino'],['sw','Kiswahili','Swahili']];
+function langSheet(){const av=['en','fr'].concat(window.NM_AVAIL||[]);const cur=RM_I18N.lang;
+  return sheetShell('Language',`<div class="lgl notr">${LANGS_ALL.filter(x=>av.indexOf(x[0])>=0).map(([k,n,e])=>`<button class="lgr${k===cur?' on':''}" data-a="setLang" data-k="${k}" lang="${k}" aria-pressed="${k===cur}"><span><b>${esc(n)}</b><small>${esc(e)}</small></span>${k===cur?ic('check'):''}</button>`).join('')}</div>
+   <p class="hint">Translated by AI. Names, about text and chats are never translated.</p>`)}
+(function(){const _rs=renderSheet;renderSheet=function(){return sheet&&sheet.type==='lang'?langSheet():_rs()}})();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()}}; /* used by automated tests */
 boot();

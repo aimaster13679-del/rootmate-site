@@ -1282,3 +1282,11 @@ button.a3k{border:0;border-top:3px solid var(--c);text-align:left;width:100%;col
 .a3seat{display:block;height:7px;border-radius:9px;background:#2B2433;margin-top:7px;overflow:hidden}.a3seat i{display:block;height:100%;border-radius:9px}
 .a3ev .a3more{display:block;margin-top:6px;font:700 11px var(--f-body);font-style:normal;color:#C9B8FF}
 .a3c>.a3step{justify-self:start;margin:0}
+/* language picker */
+.lgl{display:grid;gap:0;max-height:56vh;overflow-y:auto}
+.lgr{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;background:transparent;border:0;border-bottom:1px solid var(--line,#E8E1EA);padding:11px 4px;text-align:start;color:inherit;font:inherit;cursor:pointer}
+.lgr b{display:block;font-size:16px}.lgr small{color:var(--mu,#6B6474);font-size:12px}.lgr.on b{color:var(--mag,#E2136E)}.lgr svg{width:20px;height:20px;color:var(--mag,#E2136E)}
+.c3topl{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px 0 22px}
+.c3w>.c3topl>.c3kick{padding:0;opacity:.85;min-width:0}
+.c3lang{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.06);color:inherit;border-radius:999px;padding:6px 11px;font:700 12.5px var(--f-body);cursor:pointer}
+.c3lang svg{width:15px;height:15px}

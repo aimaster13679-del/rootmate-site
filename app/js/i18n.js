@@ -7,7 +7,15 @@
   var KEY = 'rm.lang';
   function stored() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
   var nav = ((navigator.languages && navigator.languages[0]) || navigator.language || 'en').toLowerCase();
-  var lang = stored() || (nav.indexOf('fr') === 0 ? 'fr' : 'en');
+  /* 18 languages (his ok 6 Nov 2026). English is the source; French is built in; every other language is one fixed
+     file js/l/<code>.js (window.NM_L[code] = {X: exact phrases, RX: [[regex, template, scope]], EM: [[regex, html]]}),
+     loaded by index.html before this file. Rs 0 to run: no translation service is ever called. */
+  var SUP = ['en', 'fr', 'es', 'ar', 'hi', 'pt', 'zh', 'bn', 'ur', 'ru', 'id', 'de', 'ja', 'tr', 'ko', 'vi', 'fil', 'sw'];
+  var RTL = { ar: 1, ur: 1 };
+  function pick(l) { l = String(l || '').toLowerCase(); if (l === 'tl') l = 'fil'; if (SUP.indexOf(l) >= 0) return l; var b = l.split('-')[0]; if (b === 'tl') b = 'fil'; return SUP.indexOf(b) >= 0 ? b : null; }
+  var lang = pick(stored()) || pick(nav) || 'en';
+  window.NM_L = window.NM_L || {};
+  if (lang !== 'en' && lang !== 'fr' && !window.NM_L[lang]) lang = 'en'; // file missing: stay in English
 
   /* ---------- Exact phrases ---------- */
   var FR = {
@@ -588,6 +596,9 @@
    ['Montreal', 'Montréal'], ['Quebec City', 'Québec (ville)']
   ].forEach(function (p) { FR[p[0]] = p[1]; });
 
+  /* C3 design texts (6 Nov 2026) */
+  Object.assign(FR, {"A Sunday with me looks like…": "Un dimanche avec moi, c’est…", "About 6 min": "Environ 6 min", "Back home, I miss…": "De chez moi, il me manque…", "Born in": "Né·e à", "Busan": "Busan", "Draw your roots line →": "Tracez votre ligne de racines →", "Family circle": "Cercle familial", "For people who grew up in one country and live in another. Every member is checked with an ID and a live selfie.": "Pour les personnes qui ont grandi dans un pays et vivent dans un autre. Chaque membre est vérifié avec une pièce d’identité et un égoportrait en direct.", "Free video evening on Google Meet for verified members in your country. We email the date.": "Soirée vidéo gratuite sur Google Meet pour les membres vérifiés de votre pays. Nous vous envoyons la date par courriel.", "Guadalajara": "Guadalajara", "I am proud of…": "Je suis fier·ère de…", "Introduced to you": "Présenté·e à vous", "Lagos": "Lagos", "Language": "Langue", "Life plan": "Projet de vie", "Lines on the map are examples. By continuing you agree to our": "Les lignes sur la carte sont des exemples. En continuant, vous acceptez nos", "Living in": "Vit à", "Madrid": "Madrid", "Men": "Hommes", "My family is…": "Ma famille est…", "NeuMarry · verified matrimony": "NeuMarry · mariage vérifié", "Only verified members you can see will hear it. Our team listens first.": "Seuls les membres vérifiés que vous voyez l’entendront. Notre équipe l’écoute d’abord.", "Ready to marry in 1–2 years": "Prêt·e à se marier d’ici 1 à 2 ans", "Ready to marry.": "Prêt·e à se marier.", "Same as you": "Comme vous", "Same weekends": "Mêmes fins de semaine", "Say hello in your voice": "Dites bonjour avec votre voix", "Search languages": "Rechercher une langue", "See the evening": "Voir la soirée", "Send a private 7-day link to your family. They can answer 👍 or 🤔. No phone, email or photos.": "Envoyez à votre famille un lien privé valable 7 jours. Elle peut répondre 👍 ou 🤔. Sans téléphone, courriel ni photos.", "Share with family": "Partager avec la famille", "Speak about “A Sunday with me looks like”. No phone numbers or contacts.": "Parlez de « Un dimanche avec moi, c’est ». Pas de numéros ni de coordonnées.", "Sydney": "Sydney", "Tap and talk": "Touchez et parlez", "Toronto": "Toronto", "Translated by AI. Names, about text and chats are never translated.": "Traduit par IA. Les noms, les présentations et les discussions ne sont jamais traduits.", "Verified matrimony for marrying someone of your roots, in the country you live in now.": "Le mariage vérifié pour épouser quelqu’un de vos racines, dans le pays où vous vivez aujourd’hui.", "Why we introduced you": "Pourquoi nous vous présentons", "Women": "Femmes", "World map: where members grew up and where they live now": "Carte du monde : où les membres ont grandi et où ils vivent aujourd’hui", "Your city.": "Votre ville.", "Your person.": "Votre personne.", "Your roots.": "Vos racines.", "almost all taps": "presque tout en touchant", "every member": "chaque membre", "no number shared": "aucun numéro partagé", "on anyone in your matches. Your family sees them on your private link and tells you 👍 or 🤔. They never talk to your matches.": "sur n’importe qui parmi vos profils compatibles. Votre famille les voit sur votre lien privé et vous répond 👍 ou 🤔. Elle ne parle jamais à vos profils.", "optional · 30 sec": "facultatif · 30 s", "🏡 Stay in the city I live in now": "🏡 Rester dans ma ville actuelle", "👪 Close to parents, own home": "👪 Près des parents, chez nous", "👪 Family can join": "👪 La famille peut participer", "👶 After we settle, no rush": "👶 Une fois installés, sans hâte", "💍 In 1–2 years": "💍 D’ici 1 à 2 ans", "💍 Marriage only": "💍 Mariage seulement", "🪪 Every member checked": "🪪 Chaque membre vérifié"});
+  var RX_C3 = [[/^([\d,.\s]+) km from home$/, function (m) { return m[1].replace(/,/g, ' ') + ' km de chez soi'; }], [/^(Lagos|Busan|Guadalajara|Toronto|Sydney|Madrid)\.$/, function (m) { return m[1] + '.'; }], [/^per member, dinner included · parents (.+)$/, function (m) { return 'par membre, souper compris · parents ' + m[1]; }]];
   /* Countries: French names from the browser, by ISO code */
   var CFR = {};
   try {
@@ -793,7 +804,8 @@
     [/^(.+) ready to send$/, function (m) { return m[1] + ' prêt à envoyer'; }],
     [/^(.+) not approved: (.+)\.$/, function (m) { return tr(m[1]) + ' non approuvé : ' + tr(m[2]) + '.'; }],
     [/^(.+) not approved\.$/, function (m) { return tr(m[1]) + ' non approuvé.'; }]
-  ];
+  ];  RX = RX.concat(RX_C3);
+
 
   /* Headings with a highlighted word, translated as a whole */
   var EM = [
@@ -816,6 +828,22 @@
   /* Punctuation spacing in French: a no-break space before ! ? : ; */
   function typo(s) { return s.replace(/ ([!?:;»])/g, ' $1').replace(/« /g, '« '); }
   Object.keys(FR).forEach(function (k) { FR[k] = typo(FR[k]); });
+  /* the English source of every table, for the translation tool (tools/i18n_export.js) */
+  var SRC = { X: Object.keys(FR), RX: RX.map(function (r) { return [r[0].source, r[2] || '']; }), EM: EM.map(function (r) { return r[0].source; }) };
+  if (lang !== 'fr' && lang !== 'en' && window.NM_L[lang]) {
+    var L = window.NM_L[lang];
+    FR = L.X || {};
+    /* template: $1..$9 = the matched text as is; @1..@9 = the matched text translated (country, language, word) */
+    var fill = function (t, m) { return t.replace(/([$@])(\d)/g, function (_, k, d) { var v = m[+d] || ''; return k === '@' ? (FR[v] || CFR[v] || v) : v; }); };
+    RX = (L.RX || []).map(function (r) { var t = r[1]; return [new RegExp(r[0]), function (m) { return fill(t, m); }, r[2] || undefined]; });
+    EM = (L.EM || []).map(function (r) { var t = r[1]; return [new RegExp(r[0]), function () { return fill(t, Array.prototype.slice.call(arguments, 0, -2)); }]; });
+    typo = function (x) { return x; };
+    CFR = {};
+    try {
+      var dn2 = new Intl.DisplayNames([lang], { type: 'region' });
+      ((typeof COUNTRIES !== 'undefined' && COUNTRIES) || window.COUNTRIES || []).forEach(function (c) { var n = dn2.of(c[1]); if (n && n !== c[1]) CFR[c[0]] = n; });
+    } catch (e) {}
+  }
 
   function norm(s) { return s.replace(/\s+/g, ' ').trim(); }
   function translate(s, scope) {
@@ -880,8 +908,9 @@
 
   var obs = null;
   function start() {
-    if (lang !== 'fr' || obs) return;
-    document.documentElement.lang = 'fr';
+    if (lang === 'en' || obs) return;
+    document.documentElement.lang = lang;
+    if (RTL[lang]) document.documentElement.dir = 'rtl';
     walk(document.body);
     obs = new MutationObserver(function (ms) {
       for (var i = 0; i < ms.length; i++) {
@@ -893,13 +922,17 @@
     });
     obs.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ATTRS });
   }
-  function stop() { if (obs) { obs.disconnect(); obs = null; } document.documentElement.lang = 'en'; }
+  function stop() { if (obs) { obs.disconnect(); obs = null; } document.documentElement.lang = 'en'; document.documentElement.dir = 'ltr'; }
 
   window.RM_I18N = {
     get lang() { return lang; },
-    get locale() { return lang === 'fr' ? 'fr-CA' : 'en-GB'; },
-    set: function (l) { lang = l === 'fr' ? 'fr' : 'en'; try { localStorage.setItem(KEY, lang); } catch (e) {} if (lang === 'fr') start(); else stop(); },
-    t: function (s) { return lang === 'fr' ? (translate(s, 'T') || s) : s; },
+    get locale() { return lang === 'fr' ? 'fr-CA' : lang === 'en' ? 'en-GB' : lang === 'fil' ? 'fil-PH' : lang; },
+    get rtl() { return !!RTL[lang]; },
+    langs: SUP,
+    /* a language change reloads the page once, so the right table (and right-to-left) loads cleanly */
+    set: function (l) { var n = pick(l) || 'en'; try { localStorage.setItem(KEY, n); } catch (e) {} if (n === lang) return; if ((n === 'fr' || n === 'en') && (lang === 'fr' || lang === 'en')) { lang = n; if (lang === 'fr') start(); else stop(); return; } location.reload(); },
+    t: function (s) { return lang !== 'en' ? (translate(s, 'T') || s) : s; },
+    src: function () { return SRC; },
     start: start
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
