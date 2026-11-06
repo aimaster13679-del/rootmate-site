@@ -3401,12 +3401,11 @@ function FUN(){try{if(/127\.0\.0\.1/.test(CFG.url||'')){const t=localStorage.get
 
 
 /* ---------- Glass look (his ok 7 Nov 2026 on mock Dkp9Rekpj8aCetG37FxU8G: 'ab live kar do', wants it today) ----------
-   Admin first: only for swapnilbhagatt@gmail.com (and the device it signed in on) until he says ok for everyone.
+   Live for everyone since his 'Ok for all' (8 Nov 2026); before that admin-only.
    Dark glass by default, light glass when the phone is set to light (html.gl + html.gl-lt). Styles: 'Glass look' block at the end of app/css/app.css.
    Local tests: localStorage nm.glasstest = '1' / '0'. */
 function GLASS(){try{if(/127\.0\.0\.1/.test(CFG.url||'')){const t=localStorage.getItem('nm.glasstest');if(t)return t==='1'}
-  const e=String((API.email&&API.email())||'').toLowerCase();if(e===C3_ADMIN){try{localStorage.setItem('nm.glass','1')}catch(x){}return true}
-  if(e)return false;return localStorage.getItem('nm.glass')==='1'}catch(e){return false}}
+  return true}catch(e){return true}}  /* LIVE FOR EVERYONE (his 'Ok for all', 8 Nov 2026) */
 (function(){
   const mq=window.matchMedia?matchMedia('(prefers-color-scheme: light)'):null;
   const apply=()=>{const on=GLASS();const h=document.documentElement;h.classList.toggle('gl',on);
