@@ -3260,6 +3260,164 @@ function langSheet(){const av=['en','fr'].concat(window.NM_AVAIL||[]);const cur=
   Object.assign(A,{ejSeen(){try{localStorage.setItem(seenKey(),'1')}catch(e){}render()}});
 })();
 
+/* ---------- Trust Passport (his ok 7 Nov 2026): 5 stamps x 20% = "% verified", shown on every profile,
+   with what is still left. Numbers come only from real checks. Only where easy join is on (EJ). ---------- */
+(function(){
+  const EJ=()=>!!(S.join&&S.join.easy);
+  const ST=[['photo','Photo','camera'],['id','ID','id'],['selfie','Live selfie','scan'],['roots','Roots','globe'],['lives','City','pin']];
+  const stOf=p=>{const v=p.v||{};return {photo:true,id:!!v.id,selfie:!!v.selfie,roots:!!v.roots,lives:!!v.lives}};
+  const meSt=()=>{const me=S.me,ph=photoOk()?'ok':me.photoPending?'wait':me.rejectedPhoto?'rej':'todo';
+    const ck=(c,ok)=>ok?'ok':(c&&c.status==='pending')?'wait':(c&&c.status==='rejected')?'rej':'todo';
+    return {photo:ph,id:ck(me.idCheck,me.v.id),selfie:ck(me.selfieCheck,me.v.selfie),roots:vState(2,{},me)==='ok'?'ok':vState(2,{},me),lives:vState(3,{},me)==='ok'?'ok':vState(3,{},me)}};
+  const pctOf=o=>Object.values(o).filter(x=>x===true||x==='ok').length*20;
+  window.NM_TP={pctOf,stOf};
+  const ring=(pct,sz,lab)=>{const r=sz/2-5,c=2*Math.PI*r;return `<span class="tp-ring${pct===100?' full':''}" style="width:${sz}px;height:${sz}px" role="img" aria-label="${pct}% verified">
+    <svg viewBox="0 0 ${sz} ${sz}" aria-hidden="true"><circle cx="${sz/2}" cy="${sz/2}" r="${r}" class="bg"/><circle cx="${sz/2}" cy="${sz/2}" r="${r}" class="fg" style="stroke-dasharray:${c.toFixed(1)};--o:${(c*(1-pct/100)).toFixed(1)};--c:${c.toFixed(1)}"/></svg>
+    <b>${pct}%</b>${lab?`<small>${lab}</small>`:''}</span>`};
+  const stamps=(o,dark)=>`<div class="tp-st${dark?'':' lt'}">${ST.map(([k,t,i],n)=>{const s=o[k]===true?'ok':o[k]===false?'todo':o[k];
+    return `<span class="tp-s ${s}" style="--d:${n*.14}s"><i>${s==='ok'?ic('check'):s==='wait'?ic('clock'):ic(i)}</i><small>${t}</small></span>`}).join('')}</div>`;
+  const left=o=>ST.filter(([k])=>!(o[k]===true||o[k]==='ok')).map(([,t])=>t);
+  function pass(o,title,sub,foot){const pct=pctOf(o);
+    return `<div class="tpp"><div class="tp-top"><div class="tp-tx"><small>TRUST PASSPORT</small><b>${title}</b><span>${sub}</span></div>${ring(pct,84,'verified')}</div>${stamps(o,true)}${foot||''}</div>`}
+  const tile=(k,o,why)=>{const [,t,i]=ST.find(x=>x[0]===k),s=o[k],lab={ok:'Done',wait:'Checking',rej:'Upload again',todo:'Start'}[s]||'Start';
+    const act=k==='photo'?'goPhoto':'goVerify',n={id:1,selfie:1,roots:2,lives:3}[k]||'';
+    return `<button type="button" class="tp-tile ${s}" data-a="${act}" data-n="${n}"><i>${s==='ok'?ic('check'):ic(i)}</i><span><b>${t}</b><small>${why}</small></span><em>${lab}${s==='todo'||s==='rej'?' →':''}</em></button>`};
+  const WHY={photo:'A clear photo of you, checked by a person',id:'Passport or national ID',selfie:'A 30-second live selfie',roots:'A document from where you grew up',lives:'Proof of the city you live in now'};
+
+  /* Matches while not live */
+  const _nl=renderNotLive;renderNotLive=function(){if(!EJ())return _nl();const me=S.me,o=meSt(),n=S.fitN||0,who=me.lookingFor==='F'?'women':'men';
+    const need=['photo','id','selfie'].filter(k=>o[k]!=='ok'),allIn=need.every(k=>o[k]==='wait'),nx=need.find(k=>o[k]!=='wait');
+    const sub=allIn?'With our team · usually within 24 hours':need.length+(need.length===1?' stamp':' stamps')+' and you are live';
+    return `<div class="topbar pad"><div class="grow"><div class="hello">${greet()}, <em>${esc(me.name.split(' ')[0])}</em></div><div class="sub">${sub}</div></div></div>
+  <div class="scroll" id="main"><div class="main-inner pad tp-page">
+   ${pass(o,pctOf(o)+'% verified',allIn?'Your stamps are with our team':'Live at 60%. Events at 100%.',n?`<div class="tp-foot">${ic('heart')}<span><b>${n}</b> verified ${who} already fit what you are looking for</span></div>`:'')}
+   ${nx?`<button type="button" class="tp-next" data-a="${nx==='photo'?'goPhoto':'goVerify'}" data-n="1"><small>YOUR NEXT STAMP</small><b>${nx==='photo'?'Add your photo':'ID and live selfie'}</b><span>${nx==='photo'?'About 1 minute':'About 2 minutes · checked by a person'}</span><i>${ic('back','flipx')}</i></button>`:
+     `<div class="callout">${ic('clock')}<span><b>Everything is with our team.</b> We check within 24 hours. Your profile goes live the moment the last check is approved.</span></div>`}
+   <div class="sec-h"><h2>To go live</h2><small>60%</small></div>
+   <div class="tp-tiles">${['photo','id','selfie'].map(k=>tile(k,o,WHY[k])).join('')}</div>
+   <div class="sec-h"><h2>For 100%</h2><small>events · introduced first</small></div>
+   <div class="tp-tiles">${['roots','lives'].map(k=>tile(k,o,WHY[k])).join('')}</div>
+   <p class="note">Every member sees your % and which stamps you have. Your documents are never shown.</p>
+   ${C3()?`<button class="btn ghost block h3btn" data-a="h3open">${ic('chat')} Need help? Ask our team</button>`:''}
+  </div></div>`};
+
+  /* Live, not 100% yet */
+  const _vb=verifyBanner;verifyBanner=function(){if(!EJ()||verified()||!(S.me.v.id&&S.me.v.selfie))return _vb();const o=meSt(),pct=pctOf(o),l=left(o);
+    let seen=false;try{seen=localStorage.getItem('nm.liveSeen.'+S.me.id)==='1'}catch(e){}
+    const wait=['roots','lives'].filter(k=>o[k]==='wait').length,todo=['roots','lives'].filter(k=>o[k]!=='ok'&&o[k]!=='wait');
+    if(!seen)return `<div class="tp-live">${pass(o,'You are live','Verified members who fit you can now see you',
+      `<div class="tp-foot col"><span>${l.length?`${l.join(' + ')} left for 100%: book events and be introduced first.`:''}</span>
+      ${todo.length?`<button class="btn primary block" data-a="goVerify" data-n="${todo[0]==='roots'?2:3}">Get to 100% · about 2 min</button>`:''}<button class="link tp-later" data-a="ejSeen">Later</button></div>`)}</div>`;
+    return `<button type="button" class="tp-strip" data-a="${todo.length?'goVerify':'tab'}" data-n="${todo[0]==='lives'?3:2}" data-k="me">${ring(pct,48)}<span><b>${pct}% verified</b><small>${wait&&!todo.length?'Your documents are with our team':l.join(' + ')+' left · 100% gets events'}</small></span>${todo.length?`<em>Add →</em>`:''}</button>`};
+
+  /* Event gate: passport + what is missing */
+  const _rs=renderSheet;renderSheet=function(){if(!sheet||sheet.type!=='verifyGate'||!sheet.ev||!EJ())return _rs();const o=meSt(),miss=ST.map(x=>x[0]).filter(k=>o[k]!=='ok');
+    return sheetShell('Events need 100%',`${pass(o,pctOf(o)+'% verified','Everyone in the room is 100% verified')}
+     <div class="tp-tiles">${miss.map(k=>tile(k,o,WHY[k])).join('')}</div><p class="hint">${esc(WHY_LINE)}</p>`,`<button class="btn ghost" data-a="closeSheet">Not now</button>`)};
+
+  /* Other members: % on cards, passport on the profile */
+  const _cs=checksSeal;checksSeal=function(p){if(!EJ())return _cs(p);const pct=pctOf(stOf(p));return `<span class="nm-seal${pct===100?'':' part'}">${ic('check')}${pct}% verified</span>`};
+  const _cr=checksRow;checksRow=function(p){if(!EJ())return _cr(p);const o=stOf(p),pct=pctOf(o),l=left(o);
+    return `<div class="tp-mini">${ring(pct,64)}<span><b>${pct===100?'100% verified':pct+'% verified'}</b><small>${l.length?'Not proven yet: '+l.join(', '):'Every stamp proven with documents'}</small></span></div>${stamps(o,false)}`};
+  const _c3=c3card;c3card=function(p){const h=_c3(p);if(!EJ())return h;const pct=pctOf(stOf(p));
+    return h.replace(/<span class="c3ok">[\s\S]*?Verified<\/span>/,'').replace('<span class="c3tags">',`<span class="tp-badge${pct===100?' full':''}">${ring(pct,30)}<b>${pct===100?'100% verified':pct+'%'}</b></span><span class="c3tags">`)};
+
+  /* Me: passport at the top */
+  const _me=renderMe;renderMe=function(){const h=_me();if(!EJ())return h;const o=meSt(),pct=pctOf(o),l=left(o),k='<div class="panel"><div class="me-card">';
+    const nx=ST.map(x=>x[0]).find(x=>o[x]==='todo'||o[x]==='rej');
+    return h.replace(k,pass(o,pct+'% verified',l.length?l.join(' + ')+' left':'Every stamp done',nx?`<div class="tp-foot col"><button class="btn primary block" data-a="${nx==='photo'?'goPhoto':'goVerify'}" data-n="${{id:1,selfie:1,roots:2,lives:3}[nx]||''}">Add ${ST.find(x=>x[0]===nx)[1]}</button></div>`:'')+k)};
+
+  const _rw=renderWelcome;renderWelcome=function(){const h=_rw();return h.replace('🪪 ID + live selfie, every member','🪪 % verified on every profile')};
+})();
+
+
+/* ---------- Fun inside (his ask 7 Nov 2026: inside as fun as the C3 + full-redesign mocks) ----------
+   Admin first: only for swapnilbhagatt@gmail.com (and the device it signed in on) until he says ok for everyone.
+   Profile: real map with the roots line; Me: avatar ring + 4 colour tiles; Events: ticket card; Chats: stage pills + roots line. */
+function FUN(){try{if(/127\.0\.0\.1/.test(CFG.url||'')){const t=localStorage.getItem('nm.funtest');if(t)return t==='1'}
+  const e=String((API.email&&API.email())||'').toLowerCase();if(e===C3_ADMIN){try{localStorage.setItem('nm.fun','1')}catch(x){}return true}
+  if(e)return false;return localStorage.getItem('nm.fun')==='1'}catch(e){return false}}
+(function(){
+  const ll=o=>{try{return coordsOf(o)}catch(e){return null}};
+  const ctryLL=n=>{const c=(typeof COUNTRIES!=='undefined'?COUNTRIES:[]).find(x=>x[0]===n);return c?[c[4],c[5]]:null};
+  const flagOf=n=>{try{return flag(n)}catch(e){return ''}};
+  /* a real map with one roots line: where p grew up -> where p lives */
+  function rootsMap(p,h){const o=ll({country:p.oc,state:p.os})||ctryLL(p.oc),d=(p.lat!=null?[p.lat,p.lng]:null)||ll({country:p.country,state:p.state,city:p.cityName})||ctryLL(p.country);
+    if(!o||!d)return '';const k1='fo'+p.id.slice(0,6),k2='fd'+p.id.slice(0,6);
+    PM.C[k1]=[o[1],o[0],p.os||p.oc,''];PM.C[k2]=[d[1],d[0],p.cityName,''];
+    const vb=PM.fit([k1,k2],390/(h||170),70);const far=Math.round(dist(o[0],o[1],d[0],d[1]));
+    const svg=PM.draw({vb,fsr:.045,grid:false,label:`Map: ${p.os||p.oc} to ${p.cityName}`,arcs:[[k1,k2,'#E2136E']],
+      pins:[[k1,`${flagOf(p.oc)} ${p.os||p.oc}`,'#FFC93C',0,1.9],[k2,`${flagOf(p.country)} ${p.cityName}`,'#E2136E']]});
+    return {svg,far}}
+  const dist=(a,b,c,d)=>{const R=6371,t=x=>x*Math.PI/180,x=Math.sin(t(c-a)/2)**2+Math.cos(t(a))*Math.cos(t(c))*Math.sin(t(d-b)/2)**2;return 2*R*Math.asin(Math.sqrt(x))};
+
+  const _rl=routeLine;routeLine=function(p){if(!FUN())return _rl(p);const m=rootsMap(p,170);if(!m)return _rl(p);const me=S.me||{};
+    const same=p.oc===me.oc&&p.os===me.os,sameC=p.oc===me.oc;
+    return `<div class="fu-map"><div class="fu-mapsvg">${m.svg}</div><div class="fu-mapft"><span>${p.g==='F'?'Her':'His'} roots line · ${m.far.toLocaleString(RM_I18N.locale)} km from home</span><b class="${same||sameC?'ok':''}">${same?'Same roots as you':sameC?'Roots like yours':esc(distLabel(p))}</b></div></div>`};
+
+  /* Me: avatar ring + 4 colour tiles */
+  const _me=renderMe;renderMe=function(){const h=_me();if(!FUN())return h;const me=S.me,pct=completeness(me),tp=window.NM_TP?window.NM_TP:null;
+    const vp=[photoOk(),me.v.id,me.v.selfie,me.v.roots,me.v.lives].filter(Boolean).length;const fam=(typeof FAM!=='undefined'&&FAM.list)?FAM.list.length:0;
+    const r=40,c=2*Math.PI*r;const parts=me.name.trim().split(/\s+/);
+    const hero=`<div class="fu-me"><span class="fu-av"><svg viewBox="0 0 90 90" aria-hidden="true"><circle cx="45" cy="45" r="${r}" class="bg"/><circle cx="45" cy="45" r="${r}" class="fg" style="stroke-dasharray:${c.toFixed(1)};--o:${(c*(1-pct/100)).toFixed(1)};--c:${c.toFixed(1)}"/></svg>${avatar(null,'md',true)}</span>
+      <span class="fu-mtx"><b>${esc(parts[0])}${parts[1]?' '+esc(parts[1][0])+'.':''}, ${me.age}</b><small>${flagOf(me.oc)} ${esc(me.os||me.oc)} → ${flagOf(me.country)} ${esc(myPlace())}</small><em>Profile ${pct}%${pct<100?' · make it 100%':''}</em></span></div>
+     <div class="fu-tiles">
+      <button type="button" class="fu-t v" data-a="${vp<5?'goVerify':'funGo'}" data-n="${me.v.id&&me.v.selfie?(me.v.roots?3:2):1}" data-k=".vrow"><span>${ic('shield')}<small>${vp} / 5</small></span><b>Trust Passport</b><em>${vp===5?'All stamps done':(5-vp)+(5-vp===1?' stamp left':' stamps left')}</em></button>
+      <button type="button" class="fu-t y" data-a="funGo" data-k=".v2card,.panel.v2"><span>${ic('users')}<small>${fam?fam+' shared':''}</small></span><b>Family circle</b><em>${fam?'Your family sees them':'Share a match with family'}</em></button>
+      <button type="button" class="fu-t k" data-a="funGo" data-k=".v2voice"><span>${ic('mic')}</span><b>Voice intro</b><em>30 s · optional</em></button>
+      <button type="button" class="fu-t p" data-a="${isGold()?'funGo':'upgrade'}" data-k=".likes" data-r="me"><span>${ic('crown')}</span><b>Gold</b><em>${isGold()?'Gold is on':'See who likes you'}</em></button></div>`;
+    let out=h.replace(/<div class="panel"><div class="me-card">[\s\S]*?<\/div><\/div>/,hero+'<div class="panel fu-mepanel">');
+    const a=out.indexOf('<div class="tpp">'),b=out.indexOf('<div class="fu-me">');if(a>=0&&b>a)out=out.slice(0,a)+out.slice(b);return out};
+
+  /* Events: ticket look */
+  const _ec=evCard;evCard=function(e){if(!FUN())return _ec(e);const f=fmtDay(e.date,e.tz),[wc,wl,mc,ml]=e.seats,rv=e.my,mine=evMine(e);
+    const bar=(t,a,b,cls)=>`<span class="fu-bar ${cls}"><span>${t}</span><i><s style="width:${b?Math.round(a/b*100):0}%"></s></i><small>${a} / ${b}</small></span>`;
+    return `<div class="fu-tk"><button class="fu-tkm" data-a="openEvent" data-id="${e.id}" aria-label="${esc(e.title)}, ${esc(f.long)}">
+      <small class="fu-k">${esc(e.title)} · ${esc(e.city||e.area)}</small><b class="fu-date">${f.wd} ${f.day} ${f.mon}</b>
+      <span class="fu-meta">${esc(e.time)} · ${esc(e.area)} · ages ${esc(e.age)}${e.parents?' · parents welcome':''}</span>
+      <span class="fu-price"><b>${money(e.priceM,e.cur)}</b><small>dinner incl.</small></span></button>
+     <div class="fu-perf" aria-hidden="true"></div>
+     <div class="fu-tkb">${bar('Women',wc-wl,wc,'w')}${bar('Men',mc-ml,mc,'m')}
+      <div class="fu-tka">${rv?`<span class="fu-own">${ic('check')}${rv.status==='paid'?'Booked':rv.wait?'Waiting list':'Reserved'}</span>`:mine.seatsLeft||mine.waitLeft?`<button class="btn primary sm" data-a="openEvent" data-id="${e.id}">${mine.seatsLeft?'Reserve':'Join waiting list'}</button>`:`<span class="fu-own off">Full</span>`}<button class="btn ghost sm" data-a="openEvent" data-id="${e.id}">See the evening</button></div></div></div>`};
+  const feat=()=>`<div class="fu-feat"><span>${ic('eye')}<b>See the real person</b></span><span>${ic('users')}<b>Families meet</b></span><span>${ic('shield')}<b>Only verified</b></span></div>`;
+  let heroEv=null;
+  const _vh=v2evHero;v2evHero=function(){if(!FUN())return _vh();const me0=S.me||{};const evs=events().filter(e=>e.status!=='cancelled');if(!evs.length)return '';
+    const near=e=>e.city&&me0.city&&e.city.toLowerCase()===String(me0.city).toLowerCase()?0:e.country===me0.country?1:2;
+    const e=evs.slice().sort((a,b)=>near(a)-near(b)||a.date-b.date)[0];heroEv=evCard(e);
+    return `<div class="fu-evh"><small>EVENTS · DINNER INCLUDED</small><b>Meet in real life</b></div>${heroEv}${feat()}`};
+  const _re=renderEvents;renderEvents=function(){heroEv=null;let h=_re();if(!FUN())return h;
+    if(heroEv){const a=h.indexOf(heroEv),b=h.lastIndexOf(heroEv);if(b>a)h=h.slice(0,b)+h.slice(b+heroEv.length)}
+    return h.replace('<div class="sec-h"><h2>Upcoming events</h2></div>','<div class="sec-h"><h2>More events</h2></div>')};
+
+  /* Chats: where each match stands on the path + my roots line */
+  const stageOf=p=>{const m=(S.chats||{})[p.id]||[];const talk=m.some(x=>x.f==='me')&&m.some(x=>x.f!=='me'&&x.f!=='sys');let fam=false;try{fam=famHas(p.id)}catch(e){}
+    return fam?['Families talk','y']:talk?['Talking','p']:m.length?['Said hello','v']:['New match','k']};
+  const _rc=renderConnections;renderConnections=function(){let h=_rc();if(!FUN())return h;
+    h=h.replace(/(data-a="openchat" data-id="([^"]+)">[\s\S]*?<\/b>)/g,(m,a,id)=>{const p=byId(id);if(!p)return m;const [t,c]=stageOf(p);return a+`<span class="fu-stage ${c}">${t}</span>`});const me=S.me;const m=rootsMap({id:'me0000',oc:me.oc,os:me.os,country:me.country,state:me.state,cityName:myPlace().split(',')[0],lat:me.lat,lng:me.lng,g:me.g},150);
+    return m?h.replace(/<\/div><\/div>\s*$/,`<div class="fu-myline"><div class="fu-mapsvg">${m.svg}</div><p>Your roots line · ${m.far.toLocaleString(RM_I18N.locale)} km. Every chat is a step towards someone who knows both places.</p></div></div></div>`):h};
+
+  Object.assign(A,{funGo(el){const sel=el&&el.dataset&&el.dataset.k;const x=sel&&document.querySelector('#main '+sel.split(',').join(',#main '));if(x)x.scrollIntoView({behavior:'smooth',block:'start'})}});
+})();
+
+
+/* ---------- Glass look (his ok 7 Nov 2026 on mock Dkp9Rekpj8aCetG37FxU8G: 'ab live kar do', wants it today) ----------
+   Admin first: only for swapnilbhagatt@gmail.com (and the device it signed in on) until he says ok for everyone.
+   Dark glass by default, light glass when the phone is set to light (html.gl + html.gl-lt). Styles: 'Glass look' block at the end of app/css/app.css.
+   Local tests: localStorage nm.glasstest = '1' / '0'. */
+function GLASS(){try{if(/127\.0\.0\.1/.test(CFG.url||'')){const t=localStorage.getItem('nm.glasstest');if(t)return t==='1'}
+  const e=String((API.email&&API.email())||'').toLowerCase();if(e===C3_ADMIN){try{localStorage.setItem('nm.glass','1')}catch(x){}return true}
+  if(e)return false;return localStorage.getItem('nm.glass')==='1'}catch(e){return false}}
+(function(){
+  const mq=window.matchMedia?matchMedia('(prefers-color-scheme: light)'):null;
+  const apply=()=>{const on=GLASS();const h=document.documentElement;h.classList.toggle('gl',on);
+    let lt=false;try{const t=localStorage.getItem('nm.glassmode');lt=t?t==='light':!!(mq&&mq.matches)}catch(e){}
+    h.classList.toggle('gl-lt',on&&lt);
+    const m=document.querySelector('meta[name=theme-color]');if(m&&on)m.setAttribute('content',lt?'#FBF8FC':'#0E0B12')};
+  const _r=render;render=function(){apply();_r()};
+  try{mq&&mq.addEventListener&&mq.addEventListener('change',()=>{apply()})}catch(e){}
+  apply();
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()}}; /* used by automated tests */
 boot();
 })();
