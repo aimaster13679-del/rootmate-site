@@ -1,660 +1,450 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Verified matrimony for people living away from the country they grew up in, from every country and community. Match on roots, city and values. Free to join."><meta name="keywords" content="matrimony, matrimonial, marriage app, matrimony abroad, expat matrimony, expat marriage, immigrant matrimony, verified matrimony app, matrimony Canada, matrimony USA, matrimony UK, matrimony UAE, Dubai matrimony, matrimony Australia, Indian matrimony Canada, shaadi, marriage, rishta, life partner, bride, groom, Toronto matrimony, Brampton matrimony, Gujarati matrimony, Punjabi matrimony, matrimony app"><link rel="canonical" href="https://neumarry.com/"><meta name="robots" content="index,follow,max-image-preview:large"><meta property="og:type" content="website"><meta property="og:site_name" content="NeuMarry"><meta property="og:locale" content="en_CA"><meta property="og:title" content="NeuMarry: Matrimony &amp; Marriage App for People Living Abroad"><meta property="og:description" content="Verified matrimony for people living away from the country they grew up in, from every country and community. Match on roots, city and values. Free to join."><meta property="og:url" content="https://neumarry.com/"><meta property="og:image" content="https://neumarry.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="NeuMarry, verified matrimony for people living abroad"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="NeuMarry: Matrimony &amp; Marriage App for People Living Abroad"><meta name="twitter:description" content="Verified matrimony for people living away from the country they grew up in, from every country and community. Match on roots, city and values. Free to join."><meta name="twitter:image" content="https://neumarry.com/og-image.png"><link rel="icon" href="icon-192.png" sizes="192x192"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#FFF8F6"><link rel="alternate" hreflang="en" href="https://neumarry.com/"><link rel="alternate" hreflang="fr" href="https://neumarry.com/fr/"><link rel="alternate" hreflang="x-default" href="https://neumarry.com/"><title>NeuMarry: Matrimony &amp; Marriage App for People Living Abroad</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,500&family=Nunito+Sans:wght@400;500;600;700;800&family=Great+Vibes&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap">
 <style>
-/* Layout: a warm single-theme landing page. Wide hero split (words left, portrait pair right), then proof, steps, the first event, the waitlist form and FAQ. Same rose system as the app. */
-:root{
-  --bg:#FFF8F6; --band:#FFF0EE; --surface:#FFFFFF; --sunk:#FDF0EE; --ink:#3B1F2A; --muted:#86666F; --line:#F3E0E1;
-  --rose:#E8436B; --rose-2:#FF8DA0; --rose-deep:#C8325A; --rose-soft:#FFE7EC; --gold:#B8863A; --gold-soft:#FCF1DE; --good:#2D8A61; --bad:#C8384A;
-  --grad:linear-gradient(135deg,#FF8FA1 0%,#EE4D74 52%,#D3385F 100%);
-  --grad-warm:linear-gradient(135deg,#FFC9AE 0%,#FF93A6 50%,#EE4D74 100%);
-  --shadow:0 1px 2px rgba(120,30,60,.05),0 14px 34px -18px rgba(200,50,90,.32);
-  --shadow-rose:0 12px 26px -10px rgba(232,67,107,.55);
-  --f-display:"Lora","Iowan Old Style",Georgia,serif;
-  --f-body:"Nunito Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --f-script:"Great Vibes","Snell Roundhand","Apple Chancery",cursive;
-  color-scheme:light;
-}
-*,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
-button,input,select,textarea{font:inherit;color:inherit}
-button{cursor:pointer}
-a{color:var(--rose-deep)}
-:focus-visible{outline:2px solid var(--rose);outline-offset:3px;border-radius:6px}
-h1,h2,h3{margin:0;text-wrap:balance}
-p{margin:0}
-.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
-.wrap{max-width:1120px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
-.serif{font-family:var(--f-display);font-weight:500;letter-spacing:-.015em}
-
-/* Preview strip */
-.strip{background:var(--ink);color:#FCE9EE;font-size:13px;font-weight:600}
-.strip .wrap{padding-block:8px;display:flex;gap:8px;align-items:center;justify-content:center;text-align:center}
-.strip .ic{width:16px;height:16px;color:var(--rose-2)}
-
-/* Nav */
-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(255,248,246,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .2s}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:21;background:var(--bg)}
-header.scrolled{border-bottom-color:var(--line)}
-header .wrap{display:flex;align-items:center;gap:16px;padding-block:12px}
-.brand{display:flex;align-items:center;gap:9px;font-family:var(--f-display);font-weight:600;font-size:22px;letter-spacing:-.01em;color:var(--ink);text-decoration:none}
-.mark{width:32px;height:22px}
-.mark circle,.mark path{fill:none;stroke-width:2.2;stroke-linejoin:round}
-.mark .c1{stroke:var(--rose)}.mark .c2{stroke:var(--gold)}
-nav.links{display:flex;gap:22px;margin-left:auto;font-weight:600;font-size:14.5px}
-nav.links a{color:var(--muted);text-decoration:none}
-nav.links a:hover{color:var(--ink)}
-@media (max-width:760px){nav.links{display:none}}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:999px;padding:12px 22px;font-weight:700;font-size:15px;background:var(--surface);color:var(--ink);min-height:48px;text-decoration:none;transition:transform .1s,box-shadow .15s}
-.btn:active{transform:scale(.97)}
-.btn.primary{background:var(--grad);color:#fff;box-shadow:var(--shadow-rose)}
-.btn.ghost{border-color:var(--line)}
-.btn.sm{min-height:40px;padding:8px 16px;font-size:14px}
-.btn[disabled]{opacity:.5;cursor:not-allowed}
-header .btn{margin-left:auto}
-@media (min-width:761px){header .btn{margin-left:0}}
-
-/* Hero */
-.hero{position:relative;overflow:hidden}
-.hero::before{content:"";position:absolute;width:780px;height:780px;right:-260px;top:-300px;border-radius:50%;background:radial-gradient(circle,#FFD3DD 0%,rgba(255,211,221,0) 65%);pointer-events:none}
-.hero .wrap{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;padding-block:56px 64px}
-.hero .wrap>*{min-width:0}
-@media (max-width:900px){.hero .wrap{grid-template-columns:1fr;gap:36px;padding-block:32px 48px}}
-.pill{display:inline-flex;align-items:center;gap:8px;padding:7px 13px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:13.5px;font-weight:700;color:var(--rose-deep);box-shadow:var(--shadow)}
-.pill i{width:8px;height:8px;border-radius:50%;background:var(--rose);box-shadow:0 0 0 0 rgba(232,67,107,.5);animation:dot 1.8s infinite}
-@keyframes dot{70%{box-shadow:0 0 0 8px rgba(232,67,107,0)}100%{box-shadow:0 0 0 0 rgba(232,67,107,0)}}
-.hero h1{font-family:var(--f-display);font-weight:500;font-size:clamp(40px,6vw,68px);line-height:1.02;letter-spacing:-.03em;margin-top:20px}
-.hero h1 em{font-family:var(--f-script);font-style:normal;font-weight:400;font-size:1.32em;line-height:.8;letter-spacing:0;color:var(--rose);white-space:nowrap}
-.hero .lede{font-size:18.5px;color:var(--muted);max-width:44ch;margin-top:20px}
-.hero .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
-.avail{margin-top:14px;font-size:13.5px;font-weight:600;color:var(--muted)}
-.count{display:flex;gap:10px;margin-top:28px;flex-wrap:wrap;align-items:center}
-.count .u{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:8px 12px;text-align:center;min-width:64px;box-shadow:var(--shadow)}
-.count .u b{display:block;font-family:var(--f-display);font-weight:500;font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
-.count .u span{font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--muted)}
-.count .lbl{font-size:14px;color:var(--muted);font-weight:600;margin-left:4px}
-.art{position:relative;aspect-ratio:1/1;max-width:480px;width:100%;justify-self:center}
-.art .card{position:absolute;width:52%;aspect-ratio:3/3.7;border-radius:32px;overflow:hidden;border:5px solid #fff;box-shadow:0 26px 50px -22px rgba(120,10,50,.5)}
-.art .card svg{width:100%;height:100%;display:block}
-.art .c-a{left:4%;top:10%;transform:rotate(-7deg)}
-.art .c-b{right:4%;top:20%;transform:rotate(6deg)}
-.art .chip{position:absolute;display:flex;align-items:center;gap:7px;background:#fff;border-radius:999px;padding:9px 14px;font-weight:800;font-size:14px;box-shadow:0 12px 26px -12px rgba(120,10,50,.45);white-space:nowrap}
-.art .chip .ic{width:16px;height:16px}
-.art .m{left:50%;top:44%;transform:translateX(-50%);color:var(--rose-deep);z-index:2}
-.art .r{left:0;bottom:12%;color:var(--ink)}
-.art .l{right:0;bottom:4%;color:var(--ink)}
-.art .r .ic,.art .l .ic{color:var(--rose)}
-@media (prefers-reduced-motion:no-preference){.art .card{animation:float 6s ease-in-out infinite}.art .c-b{animation-delay:-3s}}
-@keyframes float{0%,100%{translate:0 0}50%{translate:0 -8px}}
-
-/* Proof band */
-.proof{background:var(--band);border-block:1px solid var(--line)}
-.proof .wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding-block:28px}
-.proof .wrap>*{min-width:0}
-@media (max-width:760px){.proof .wrap{grid-template-columns:1fr;gap:18px}}
-.proof b{display:block;font-family:var(--f-display);font-weight:500;font-size:34px;line-height:1.1;letter-spacing:-.01em;color:var(--rose-deep);font-variant-numeric:tabular-nums}
-.proof span{font-size:14.5px;color:var(--muted)}
-.proof .src{grid-column:1/-1;font-size:12.5px;color:var(--muted)}
-
-/* Sections */
-section.sec{padding-block:72px}
-@media (max-width:760px){section.sec{padding-block:52px}}
-.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--rose)}
-.sec h2{font-family:var(--f-display);font-weight:500;font-size:clamp(30px,4vw,44px);line-height:1.08;letter-spacing:-.01em;margin-top:10px;max-width:22ch}
-.sec .sub{color:var(--muted);font-size:17px;max-width:56ch;margin-top:14px}
-.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:36px 0 0;padding:0;list-style:none;counter-reset:s}
-.steps>*{min-width:0}
-@media (max-width:900px){.steps{grid-template-columns:1fr 1fr}}
-@media (max-width:560px){.steps{grid-template-columns:1fr}}
-.steps.del{grid-template-columns:repeat(3,1fr)}
-@media (max-width:900px){.steps.del{grid-template-columns:1fr}}
-.steps li{background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:22px;box-shadow:var(--shadow);display:grid;gap:10px;align-content:start;counter-increment:s}
-.steps li::before{content:counter(s);width:36px;height:36px;border-radius:50%;background:var(--rose-soft);color:var(--rose-deep);display:grid;place-items:center;font-weight:800}
-.steps b{font-size:17px}
-.steps span{color:var(--muted);font-size:14.5px}
-.usp{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:36px}
-.usp>*{min-width:0}
-@media (max-width:760px){.usp{grid-template-columns:1fr}}
-.usp div{display:grid;grid-template-columns:52px 1fr;gap:16px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:22px;box-shadow:var(--shadow)}
-.usp .pi{width:52px;height:52px;border-radius:16px;background:var(--grad-warm);color:#fff;display:grid;place-items:center}
-.usp .pi .ic{width:24px;height:24px}
-.usp b{display:block;font-size:17px}
-.usp p{color:var(--muted);font-size:14.5px;margin-top:4px}
-.usp em{font-style:normal;font-size:12px;font-weight:800;color:var(--gold);background:var(--gold-soft);padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:2px}
-
-/* Event */
-.event{display:grid;grid-template-columns:1fr 1fr;border-radius:34px;overflow:hidden;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);margin-top:36px}
-.event>*{min-width:0}
-@media (max-width:860px){.event{grid-template-columns:1fr}}
-.event .pic{position:relative;min-height:320px;color:#fff;overflow:hidden}
-.event .pic svg{position:absolute;inset:0;width:100%;height:100%}
-.event .date{position:absolute;left:22px;top:22px;background:#fff;color:var(--ink);border-radius:18px;padding:8px 14px;text-align:center;line-height:1.05;box-shadow:0 8px 18px -10px rgba(60,10,30,.5)}
-.event .date b{display:block;font-family:var(--f-display);font-weight:500;font-size:30px}
-.event .date span{font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--rose)}
-.event .tag{position:absolute;right:22px;top:22px;background:rgba(255,255,255,.94);color:var(--rose-deep);padding:7px 12px;border-radius:999px;font-size:13px;font-weight:800;display:flex;gap:6px;align-items:center}
-.event .tag .ic{width:15px;height:15px}
-.event .info{padding:30px;display:grid;gap:16px;align-content:start}
-.event h3{font-family:var(--f-display);font-weight:500;font-size:32px;letter-spacing:-.01em;line-height:1.1}
-.meta{display:flex;flex-wrap:wrap;gap:6px 16px;color:var(--muted);font-size:14.5px}
-.meta span{display:inline-flex;gap:6px;align-items:center}
-.meta .ic{width:17px;height:17px}
-.incl{margin:0;padding:0;list-style:none;display:grid;gap:8px}
-.incl li{display:flex;gap:10px;font-size:15px}
-.incl .ic{color:var(--rose);width:18px;height:18px;margin-top:3px}
-.prices{display:flex;flex-wrap:wrap;gap:12px}
-.matchteaser{display:flex;gap:12px;align-items:flex-start;background:var(--blush,#FFF0F3);border-radius:18px;padding:14px 16px;font-size:14.5px;line-height:1.5;color:var(--ink)}
-.matchteaser .ic{width:20px;height:20px;flex:none;margin-top:2px;color:var(--rose)}
-.matchteaser b{font-weight:800}
-.appbox{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:34px;padding:44px;box-shadow:var(--shadow)}
-.appbox>*{min-width:0}
-@media (max-width:860px){.appbox{grid-template-columns:1fr;padding:28px 22px;gap:28px}}
-.near{padding:26px 0 6px}.nearbox{display:grid;grid-template-columns:1.2fr 1fr;gap:22px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:26px}
-.near h2{margin:4px 0 8px}.nearcount{font-weight:700;color:var(--good);margin:6px 0 0}
-.nearsteps{list-style:none;margin:0;padding:0;display:grid;gap:10px}.nearsteps li{display:flex;gap:12px;align-items:center;background:var(--band);border-radius:16px;padding:12px 14px}
-.nearsteps b{flex:none;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--rose);color:#fff;font-size:14px}
-.nearsteps span{font-size:13.5px;color:var(--muted);line-height:1.3}.nearsteps strong{display:block;color:var(--ink);font-size:14.5px}
-@media(max-width:820px){.nearbox{grid-template-columns:1fr;padding:20px}}
-.trust{padding:26px 0 8px}
-.trust .wrap{display:grid;gap:16px}
-.tr-brands{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center}
-.gsi{display:inline-flex;align-items:center;gap:10px;height:42px;padding:0 14px 0 12px;background:#fff;border:1px solid #747775;border-radius:21px;color:#1F1F1F;font:500 14px/1 Roboto,Arial,sans-serif;text-decoration:none}
-.gsi svg{width:20px;height:20px}
-.gplay{display:inline-flex;align-items:center;gap:9px;height:42px;padding:0 14px 0 12px;background:#000;border:1px solid #A6A6A6;border-radius:9px;color:#fff;text-decoration:none}
-.gplay svg{width:20px;height:22px}.gplay span{display:flex;flex-direction:column;line-height:1}.gplay small{font:600 8.5px/1 Arial,sans-serif;letter-spacing:.06em}.gplay b{font:500 17px/1.1 Arial,sans-serif}
-.ppm.soon{height:auto;min-height:42px;padding:6px 14px}.soon-t{display:flex;flex-direction:column;gap:2px;line-height:1.15;text-align:left}.ppm .soon-t b{font:700 13px/1.15 var(--f-body,inherit);color:var(--ink)}.ppm .soon-t small{font-size:11px;color:var(--muted);margin:0;padding:0;border:0}
-.ppm{display:inline-flex;align-items:center;gap:7px;height:42px;padding:0 14px;background:#fff;border:1px solid var(--line);border-radius:12px}
-.ppm svg{width:18px;height:18px}.ppm b{font:italic 800 17px/1 Verdana,Arial,sans-serif}.pp1{color:#003087}.pp2{color:#009CDE}.ppm small{color:var(--muted);font-size:12px;margin-left:4px;padding-left:8px;border-left:1px solid var(--line)}
-.tr-checks{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.tr-checks li{display:flex;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px}
-.tr-checks .ic{flex:none;width:34px;height:34px;padding:7px;border-radius:10px;background:var(--rose-soft);stroke:var(--rose-deep);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.tr-checks span{font-size:13px;color:var(--muted);line-height:1.3}.tr-checks b{display:block;color:var(--ink);font-size:14px}
-@media(max-width:820px){.tr-checks{grid-template-columns:1fr 1fr}}
-@media(max-width:380px){.tr-checks{grid-template-columns:1fr}}
-.stores{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
-.store{display:inline-flex;align-items:center;gap:10px;background:#2B1620;color:#fff;border-radius:16px;padding:10px 18px 10px 14px;text-decoration:none;min-width:170px;transition:transform .15s}
-.store:hover{transform:translateY(-2px)}
-.store svg{width:26px;height:26px;flex:none}
-.store span{display:grid;line-height:1.15}
-.store small{font-size:11px;font-weight:600;opacity:.8}
-.store b{font-size:18px;font-weight:700}
-.appbox .note{margin-top:14px}
-.appfeat{list-style:none;display:grid;gap:14px;padding:0;margin:0}
-.appfeat li{display:flex;gap:10px;align-items:flex-start;font-size:15.5px;line-height:1.45}
-.appfeat .ic{width:20px;height:20px;flex:none;color:var(--rose);margin-top:1px}
-.price{flex:1;min-width:140px;border:1px solid var(--line);border-radius:18px;padding:12px 14px;background:var(--bg)}
-.price b{font-family:var(--f-display);font-weight:500;font-size:28px}
-.price span{display:block;color:var(--muted);font-size:13px}
-.seatbar{display:grid;gap:6px;font-size:13.5px;color:var(--muted);font-weight:600}
-.seatbar .sb{height:8px;border-radius:8px;background:var(--sunk);overflow:hidden}
-.seatbar .sb i{display:block;height:100%;width:0;background:var(--grad)}
-.note{font-size:13px;color:var(--muted)}
-
-/* Form */
-.joinbox{display:grid;grid-template-columns:.9fr 1.1fr;gap:40px;align-items:start}
-.joinbox>*{min-width:0}
-@media (max-width:900px){.joinbox{grid-template-columns:1fr}}
-.perks{margin:24px 0 0;padding:0;list-style:none;display:grid;gap:14px}
-.perks li{display:flex;gap:12px;align-items:flex-start;font-size:15.5px}
-.perks .ic{color:var(--rose);margin-top:3px}
-form.card{background:var(--surface);border:1px solid var(--line);border-radius:30px;padding:28px;box-shadow:var(--shadow);display:grid;gap:16px}
-@media (max-width:560px){form.card{padding:20px}}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.row2>*{min-width:0}
-@media (max-width:460px){.row2{grid-template-columns:1fr}}
-.fld{display:grid;gap:6px;min-width:0}
-.fld>span{font-size:13px;font-weight:700;color:var(--muted)}
-.fld input,.fld select{width:100%;min-height:50px;border:1.5px solid var(--line);border-radius:14px;padding:11px 14px;background:var(--surface);font-size:16px}
-.fld input:focus,.fld select:focus{outline:none;border-color:var(--rose);box-shadow:0 0 0 4px var(--rose-soft)}
-.fld.bad input,.fld.bad select,.seg.bad label span{border-color:var(--bad)}
-.err,.fld>.err{color:var(--bad);font-size:13px;font-weight:700}
-.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.seg.three{grid-template-columns:repeat(3,1fr)}
-.seg label{position:relative}
-.seg input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
-.seg span{display:block;text-align:center;padding:12px 8px;border:1.5px solid var(--line);border-radius:14px;font-weight:600;font-size:14.5px;background:var(--surface)}
-.seg input:checked+span{border-color:var(--rose);background:var(--rose-soft);color:var(--ink);font-weight:800}
-.seg input:focus-visible+span{outline:2px solid var(--rose);outline-offset:2px}
-.check{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--muted)}
-.check input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--rose);flex:none}
-.check.bad{color:var(--bad)}
-.done{display:grid;gap:12px;justify-items:center;text-align:center;padding:20px 8px}
-.done .big{width:72px;height:72px;border-radius:50%;background:var(--grad);color:#fff;display:grid;place-items:center;box-shadow:var(--shadow-rose)}
-.done .big .ic{width:34px;height:34px;stroke-width:2.2}
-.done h3{font-family:var(--f-display);font-weight:500;font-size:28px}
-.done p{color:var(--muted);max-width:38ch}
-.code{font-family:ui-monospace,Menlo,monospace;background:var(--sunk);padding:4px 10px;border-radius:8px;font-weight:700;user-select:all}
-
-/* Communities */
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
-.chips span{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-weight:700;font-size:14px;box-shadow:var(--shadow)}
-.chips span.all{background:var(--grad);color:#fff;border-color:transparent}
-.cities{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:22px;font-size:14px;color:var(--muted)}
-.cities b{width:100%;font-weight:700;color:var(--ink)}
-.cities span{border:1px dashed var(--line);border-radius:999px;padding:6px 12px;background:var(--bg)}
-.legal-links{display:flex;gap:16px}
-.legal-links .link{font-size:13.5px;background:none;border:0;padding:0;color:var(--rose-deep);font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
-.legal-b{padding:14px 22px 24px;display:grid;gap:10px}
-.legal-b li{color:var(--ink);font-size:15px;line-height:1.5}
-.legal-b ul{margin:0;padding-left:20px;display:grid;gap:8px}
-/* FAQ */
-.faq{margin-top:28px;display:grid;gap:10px;max-width:820px}
-.faq details{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:4px 20px;box-shadow:var(--shadow)}
-.faq summary{list-style:none;cursor:pointer;padding:16px 0;font-weight:700;font-size:16.5px;display:flex;justify-content:space-between;gap:12px}
+:root{--bg:#0E0B12;--bg2:#15101A;--tx:#F7F3FA;--mt:rgba(247,243,250,.7);--ln:rgba(255,255,255,.1);--gl1:rgba(255,255,255,.12);--gl2:rgba(255,255,255,.04);--gb:rgba(255,255,255,.13);
+ --card:#17121C;--field:rgba(255,255,255,.06);--fieldb:rgba(255,255,255,.18);--rose:#E2136E;--rose2:#FF5C9E;--rosetx:#FFB3D2;--gold:#FFC93C;--goldtx:#FFE08A;--good:#9AF0CB;--bad:#FF8FA8;
+ --hero:radial-gradient(90% 70% at 75% 10%,#4A1438,#0E0B12 65%);--navbg:rgba(14,11,18,.62);--sh:0 24px 50px -26px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.12);
+ --cardsh:none;--ring:var(--bg);--mapbg:radial-gradient(120% 100% at 50% 0%,#241A2E,#120E17);color-scheme:dark}
+@media (prefers-color-scheme:light){:root{--bg:#FBF8FC;--bg2:#F3EEF6;--tx:#141018;--mt:#564F62;--ln:#E6E0EE;--gl1:rgba(255,255,255,.92);--gl2:rgba(255,255,255,.72);--gb:rgba(255,255,255,.95);
+ --card:#fff;--field:#fff;--fieldb:#DCD4E6;--rosetx:#B80E58;--goldtx:#8A6100;--good:#0F8A5A;--bad:#B3123F;
+ --hero:radial-gradient(90% 70% at 75% 10%,#FBE3F0,#FBF8FC 65%);--navbg:rgba(251,248,252,.78);--sh:0 24px 50px -28px rgba(60,20,120,.35),inset 0 1px 0 #fff;
+ --cardsh:0 14px 34px -24px rgba(60,20,120,.35);--mapbg:radial-gradient(120% 100% at 50% 0%,#F6F1FA,#ECE5F3);color-scheme:light}}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0;background:var(--bg);color:var(--tx);font:500 16px/1.6 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:0;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.w{max-width:1160px;margin:0 auto;padding:0 20px}
+.glass{background:linear-gradient(160deg,var(--gl1),var(--gl2));border:1px solid var(--gb);-webkit-backdrop-filter:blur(22px) saturate(140%);backdrop-filter:blur(22px) saturate(140%);box-shadow:var(--sh)}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:24px;box-shadow:var(--cardsh)}
+.eb{font:800 12.5px/1.4 "Plus Jakarta Sans",system-ui,sans-serif;text-transform:uppercase;letter-spacing:.1em;color:var(--rosetx);margin:0}
+h1,h2,h3{margin:0;font-weight:800;line-height:1.15;text-wrap:balance;letter-spacing:0}
+h1{font-size:clamp(36px,6.4vw,64px)}h2{font-size:clamp(28px,4vw,42px)}h3{font-size:19px;line-height:1.3}
+p{margin:0}.mt{color:var(--mt)}.sub{color:var(--mt);font-size:17px}
+.ic{width:22px;height:22px;flex:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 24px;border-radius:999px;font:800 16px "Plus Jakarta Sans",system-ui,sans-serif;background:linear-gradient(150deg,#F0287F,#D10F65 55%,#A80C50);color:#fff;box-shadow:0 16px 30px -12px rgba(226,19,110,.7);position:relative;overflow:hidden;white-space:nowrap;border:0;cursor:pointer;text-align:center}
+.btn::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.3) 50%,transparent 65%);transform:translateX(-100%);animation:sheen 3.8s ease-in-out infinite;pointer-events:none}
+.btn.gh{background:transparent;border:1px solid var(--fieldb);box-shadow:none;color:var(--tx)}.btn.gh::after{display:none}
+.btn:focus-visible,a:focus-visible,summary:focus-visible,button:focus-visible{outline:3px solid var(--rose2);outline-offset:3px}
+.btn[disabled]{opacity:.7;cursor:wait}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;font:700 14px "Plus Jakarta Sans",system-ui,sans-serif;background:var(--gl2);border:1px solid var(--ln);white-space:nowrap}
+.chip .ic{width:17px;height:17px}
+.tl{color:var(--rosetx);font-weight:800;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+/* nav */
+.nav{position:sticky;top:0;z-index:50;background:var(--navbg);border-bottom:1px solid var(--ln);-webkit-backdrop-filter:blur(20px) saturate(140%);backdrop-filter:blur(20px) saturate(140%)}
+.nav .w{display:flex;align-items:center;gap:20px;height:68px}
+.brand{display:flex;align-items:center;gap:9px;font:800 20px "Plus Jakarta Sans",system-ui,sans-serif;white-space:nowrap}
+.brand svg{flex:none}
+.links{display:flex;gap:24px;font-weight:700;font-size:15px;color:var(--mt);margin-left:auto}
+.links a:hover{color:var(--tx)}
+.langh{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--fieldb);font-weight:800;font-size:14px;color:var(--rosetx);white-space:nowrap}
+.nav .btn{min-height:44px;padding:0 18px;font-size:14.5px}
+.menu{display:none;width:44px;height:44px;border-radius:50%;place-items:center;border:1px solid var(--gb);background:transparent;color:var(--tx);padding:0;cursor:pointer;flex:none}
+.langhero{display:none}
+/* hero */
+.hero{background:var(--hero);position:relative;overflow:hidden}
+.hero .w{display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:center;padding-top:56px;padding-bottom:64px}
+.hero h1{margin-top:14px}
+.hero h1 em{font-style:normal;background:linear-gradient(100deg,#FF5C9E,#FFC93C);-webkit-background-clip:text;background-clip:text;color:transparent}
+@media (prefers-color-scheme:light){.hero h1 em{background-image:linear-gradient(100deg,#D10F65,#B07A00)}}
+.lead{font-size:18px;margin-top:18px;max-width:34em;color:var(--mt)}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.gbtn svg{background:#fff;border-radius:50%;padding:2px;width:24px;height:24px}
+.avail{margin-top:14px;font-size:14px;color:var(--mt)}
+.trust{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.stage{position:relative;height:520px}
+.stage .map{position:absolute;inset:0 -40px 40px -40px;opacity:.95}
+.stage .map svg,.mapcard svg{display:block;width:100%;height:100%}
+.face{position:absolute;border-radius:50%;overflow:hidden;box-shadow:0 0 0 3px var(--bg),0 0 0 5.5px var(--rose2),0 18px 30px -12px rgba(0,0,0,.6);animation:floaty 5s ease-in-out infinite}
+.face.g{box-shadow:0 0 0 3px var(--bg),0 0 0 5.5px var(--gold),0 18px 30px -12px rgba(0,0,0,.6)}
+.face img{width:100%;height:100%;object-fit:cover;display:block;animation:breathe2 6s ease-in-out infinite}
+.hi{position:absolute;padding:7px 12px;border-radius:16px;background:#fff;color:#141018;font:700 13.5px "Plus Jakarta Sans",system-ui,sans-serif;white-space:nowrap;box-shadow:0 12px 24px -10px rgba(0,0,0,.5);opacity:0;animation:bub 9s ease-in-out infinite}
+.hi b{color:#C20F5F}
+.hi::after{content:"";position:absolute;bottom:-5px;left:18px;width:12px;height:12px;background:#fff;transform:rotate(45deg);border-radius:2px}
+.phone{position:absolute;right:30px;bottom:0;width:250px;height:510px;border-radius:38px;background:#0B080D;padding:8px;box-shadow:0 40px 80px -30px rgba(0,0,0,.8),inset 0 0 0 1.5px #2E2833;animation:floaty 7s ease-in-out infinite}
+.phone .sc{width:100%;height:100%;border-radius:31px;overflow:hidden;position:relative;background:#14101A}
+.phone .sc img{width:100%;height:62%;object-fit:cover;display:block;animation:breathe2 6s ease-in-out infinite}
+.phone .gc{position:absolute;left:10px;right:10px;bottom:12px;border-radius:20px;padding:13px;color:#F7F3FA;background:linear-gradient(160deg,rgba(255,255,255,.14),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.16)}
+.phone .gc b{font-size:17px}.phone .gc .from{font-size:12.5px;color:rgba(247,243,250,.78)}
+.phone .gc .chips{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}.phone .gc .chip{padding:4px 9px;font-size:11.5px;color:#F7F3FA;background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)}
+.ex{display:inline-block;font:700 11px/1.3 "Plus Jakarta Sans",system-ui,sans-serif;padding:3px 8px;border-radius:7px;background:rgba(0,0,0,.55);color:#fff;border:1px solid rgba(255,255,255,.2)}
+.phone .ex{position:absolute;right:16px;top:16px}
+.stage .exs{position:absolute;left:0;bottom:-30px}
+/* sections */
+section{padding:84px 0}
+.band{background:var(--bg2)}
+.head{display:grid;gap:12px;max-width:760px;margin-bottom:34px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:0;padding:0;list-style:none}
+.step{padding:22px;border-radius:24px;display:grid;gap:12px;align-content:start;position:relative;overflow:hidden}
+.step .n{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font:800 17px "Plus Jakarta Sans",system-ui,sans-serif;background:linear-gradient(150deg,#F0287F,#C20F5F);color:#fff}
+.step .bar{height:4px;border-radius:4px;background:var(--ln);overflow:hidden}.step .bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#FF5C9E,#FFC93C);animation:fill 3s ease-in-out infinite}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}
+.split.top{align-items:start}
+.stack{display:grid;gap:16px;align-content:start}
+.mapcard{border-radius:28px;overflow:hidden;height:380px;position:relative;background:var(--mapbg);border:1px solid var(--ln)}
+.chips{display:flex;gap:10px;flex-wrap:wrap}
+.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.feat .card{padding:24px;display:grid;gap:10px;align-content:start}
+.fi{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;background:rgba(226,19,110,.16);color:var(--rosetx)}
+.checks{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:18px 0 0;padding:0;list-style:none}
+.checks li{display:flex;gap:10px;align-items:flex-start;padding:14px;border-radius:18px;font-size:14px;font-weight:700;line-height:1.45}
+.checks .ic{color:var(--good);width:20px;height:20px;margin-top:1px}
+.row{display:flex;gap:14px 20px;flex-wrap:wrap;align-items:center;margin-top:24px}
+/* gold pass */
+.pass{border-radius:28px;padding:2px;background:linear-gradient(115deg,#8A6100,#FFD978 28%,#FFF3C4 40%,#C99227 55%,#FFE29A 72%,#8A6100);background-size:300% 100%;animation:shim 6s linear infinite;max-width:440px;width:100%}
+.pass>div{border-radius:26px;background:linear-gradient(160deg,#1E1A14,#0E0B0A);padding:24px;color:#F7F3FA;position:relative;overflow:hidden}
+.pass .top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.pass .adm{display:flex;gap:8px;align-items:center;color:#fff}.pass .adm .eb{color:#FFE08A}
+.pass .pchip{color:#FFE08A;border-color:rgba(255,201,60,.4);background:rgba(255,201,60,.12)}
+.pass .t{font:800 44px/1.05 "Plus Jakarta Sans",system-ui,sans-serif;background:linear-gradient(115deg,#C99227,#FFE29A 40%,#FFF3C4 50%,#C99227);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shim 6s linear infinite;margin-top:14px}
+.pass dl{display:flex;gap:22px;margin:12px 0 0;flex-wrap:wrap}.pass dt{font-size:11px;color:rgba(247,243,250,.65);font-weight:800;text-transform:uppercase;letter-spacing:.06em}.pass dd{margin:0;font-weight:800}
+.cd{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px}
+.cd div{text-align:center;border:1px solid rgba(255,217,120,.25);border-radius:14px;padding:8px 0;background:rgba(255,255,255,.05);min-width:0}
+.cd b{display:block;font:800 24px "Plus Jakarta Sans",system-ui,sans-serif;font-variant-numeric:tabular-nums}.cd span{font:700 10.5px "Plus Jakarta Sans",system-ui,sans-serif;text-transform:uppercase;letter-spacing:.06em;color:rgba(247,243,250,.68)}
+.cdl{font-size:13px;margin-top:10px;text-align:center;color:var(--mt)}
+.price{display:flex;gap:12px;flex-wrap:wrap}
+.price .card{padding:16px 18px;flex:1;min-width:180px}
+.price b{font-size:26px;display:block;line-height:1.3}
+.price .k{font-size:14px;color:var(--mt)}.price .s{font-size:13px;color:var(--mt)}
+.note{font-size:13.5px;color:var(--mt)}
+.nearcount{font-weight:800;color:var(--good)}
+.cities{margin-top:18px;color:var(--mt);font-size:15px}.cities b{color:var(--tx);font-weight:700}
+.cities .chips{margin-top:12px}
+/* app + forms */
+.stores{display:flex;gap:12px;flex-wrap:wrap}
+.store{display:inline-flex;align-items:center;gap:12px;min-height:58px;padding:8px 18px;border-radius:16px;border:1px solid var(--fieldb);background:var(--gl2)}
+.store svg{width:26px;height:26px;flex:none}.store small{display:block;font-size:12px;color:var(--mt);line-height:1.2}.store b{display:block;font-size:16px;line-height:1.3}
+.store.live,#st-web{border-color:var(--rose2)}
+.ticks{display:grid;gap:12px;margin:0;padding:24px;list-style:none;border-radius:24px}
+.ticks li{display:flex;gap:12px;align-items:flex-start;font-weight:600}
+.ticks .ic{color:var(--good);margin-top:1px}
+.perks{display:grid;gap:12px;margin:8px 0 0;padding:0;list-style:none}
+.perks li{display:flex;gap:12px;align-items:flex-start;color:var(--mt)}.perks li b{color:var(--tx)}
+.perks .ic{color:var(--rosetx);margin-top:1px}
+form.card{padding:26px;display:grid;gap:16px;border-radius:28px}
+.fld{display:grid;gap:7px;min-width:0;margin:0;padding:0;border:0}
+.fld>span,.fld legend{font-weight:800;font-size:14.5px;padding:0}
+.fld input,.fld select{width:100%;min-height:50px;padding:0 14px;border-radius:14px;border:1px solid var(--fieldb);background:var(--field);color:var(--tx);font:600 16px "Plus Jakarta Sans",system-ui,sans-serif}
+.fld select option{color:#141018;background:#fff}
+.fld input::placeholder{color:var(--mt);opacity:.8;font-size:14.5px}
+.fld input:focus,.fld select:focus{outline:2px solid var(--rose2);outline-offset:1px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}.seg.three{grid-template-columns:repeat(3,1fr)}
+.seg label{position:relative;min-width:0}.seg input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.seg span{display:flex;align-items:center;justify-content:center;text-align:center;min-height:48px;padding:6px 10px;border-radius:14px;border:1px solid var(--fieldb);font-weight:700;font-size:14.5px;line-height:1.25;background:var(--field)}
+.seg input:checked+span{background:rgba(226,19,110,.18);border-color:var(--rose2);color:var(--tx)}
+.seg input:focus-visible+span{outline:3px solid var(--rose2);outline-offset:2px}
+.check{display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--mt);flex-wrap:wrap;cursor:pointer}
+.check input{width:20px;height:20px;margin:2px 0 0;accent-color:#E2136E;flex:none}
+.check>span:not(.err){flex:1 1 0;min-width:0}
+.err{color:var(--bad);font-size:13.5px;font-weight:700}
+.check .err{flex-basis:100%;padding-left:32px}
+.bad input,.bad select,.bad .seg span{border-color:var(--bad)}
+.done{display:grid;gap:10px;justify-items:start;outline:none}.done .big{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:rgba(15,138,90,.18);color:var(--good)}
+.done .code{font-weight:800;color:var(--rosetx)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:70;background:#141018;color:#fff;padding:12px 18px;border-radius:14px;font-weight:700;max-width:calc(100% - 32px);box-shadow:0 14px 30px rgba(0,0,0,.4)}
+/* faq */
+.faq{display:grid;gap:12px;max-width:860px}
+.faq details{border-radius:20px;padding:18px 22px;background:linear-gradient(160deg,var(--gl1),var(--gl2));border:1px solid var(--gb);box-shadow:var(--sh)}
+.faq summary{cursor:pointer;font-weight:800;font-size:17px;list-style:none;display:flex;justify-content:space-between;gap:16px}
 .faq summary::-webkit-details-marker{display:none}
-.faq summary .ic{transition:transform .2s;color:var(--rose)}
-.faq details[open] summary .ic{transform:rotate(45deg)}
-.faq details p{padding:0 0 18px;color:var(--muted)}
-
-/* CTA band + footer */
-.links a.hl{background:#FFF3DC;border:1px solid #E7C27A;color:#8A5A12;border-radius:999px;padding:6px 12px;font-weight:700}.ctaband{background:var(--grad);color:#fff;border-radius:34px;padding:44px 36px;display:grid;gap:18px;justify-items:start;position:relative;overflow:hidden}
-.ctaband::after{content:"";position:absolute;right:-80px;top:-80px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.14)}
-.ctaband h2{font-family:var(--f-display);font-weight:500;font-size:clamp(28px,4vw,40px);letter-spacing:-.01em;max-width:20ch;line-height:1.1;position:relative}
-.ctaband .btn{background:#fff;color:var(--rose-deep);position:relative}
-footer{border-top:1px solid var(--line);margin-top:72px}
-footer .wrap{padding-block:28px;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;font-size:13.5px;color:var(--muted)}
-footer .brand{font-size:18px}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:16px;font-size:14px;font-weight:600;z-index:50;box-shadow:0 14px 30px -10px rgba(30,8,16,.45);max-width:calc(100% - 32px)}
-dialog{border:0;padding:0;border-radius:30px;max-width:560px;width:calc(100% - 24px);background:var(--bg);color:var(--ink);box-shadow:0 30px 60px -20px rgba(60,10,30,.5)}
-dialog::backdrop{background:rgba(40,10,20,.45)}
-dialog .dh{display:flex;align-items:center;justify-content:space-between;padding:20px 22px 0}
-dialog .dh h3{font-family:var(--f-display);font-weight:500;font-size:26px}
-dialog .x{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center}
-dialog form.card{border:0;box-shadow:none;background:transparent;padding:16px 22px 24px}
-.stepper{display:flex;align-items:center;gap:12px}
-.stepper button{width:42px;height:42px;border-radius:50%;border:1.5px solid var(--line);background:var(--surface);font-size:20px;font-weight:700}
-.stepper button[disabled]{opacity:.35;cursor:not-allowed}
-.stepper b{min-width:24px;text-align:center;font-size:18px;font-variant-numeric:tabular-nums}
-.sum{display:grid;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px;font-variant-numeric:tabular-nums}
-.sum div{display:flex;justify-content:space-between;gap:10px;font-size:14.5px}
-.sum .t{font-weight:800;border-top:1px dashed var(--line);padding-top:8px;margin-top:2px}
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
-
-.hero{background:radial-gradient(120% 80% at 70% 0%,#6A2A48 0%,#3A1A2B 55%,#24101B 100%);color:#fff}.hero::before{display:none}
-.hero h1{color:#fff;font-weight:600;letter-spacing:-.02em}.hero h1 em{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:1em;color:#FFB4C2;white-space:normal}
-.hero .lede{color:rgba(255,255,255,.85)}.hero .avail{color:rgba(255,255,255,.7)}.hero .pill{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.18)}
-.hero .btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35)}.hero .btn.primary{background:#fff;color:#2E1622;box-shadow:none}
-.hero .count{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:#fff;box-shadow:none}.hero .count .u{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.16);box-shadow:none}.hero .count .u b{color:#fff}.hero .count .lbl,.hero .count span{color:rgba(255,255,255,.75)}
-.hero .langhero .langh{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.2)}
-@media (min-width:900px){.hero .wrap{grid-template-columns:1fr 1.12fr;gap:40px}}
-.near .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}.near .nearsteps{margin-top:18px}
-.hero .count{padding:12px 14px;border-radius:18px;gap:10px;align-items:center}.hero .count .lbl{padding-left:4px}
-.v2prom{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px;max-width:520px}.v2prom div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:10px 12px;min-width:0}
-.v2prom b{display:block;font-size:14px}.v2prom span{font-size:12px;color:rgba(255,255,255,.72)}
-.v2art{position:relative;max-width:640px;width:100%;margin:0 auto;aspect-ratio:auto;height:auto;justify-self:stretch}
-.wm{position:relative;width:100%;max-width:640px;margin:0 auto;padding:14px 14px 16px;border-radius:24px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12)}
-.wm-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:0 2px 10px;font-size:11.5px;white-space:nowrap;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.62)}
-.wm-head b{color:#FFB4C2;font-weight:800}
-.wm-box{position:relative;aspect-ratio:700/260}
-.wm-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.wm-land{stroke:rgba(255,255,255,.26);stroke-width:2.6;stroke-linecap:round;fill:none}
-.wm-arc{fill:none;stroke:#FFB4C2;stroke-opacity:.28;stroke-width:1.1;transition:stroke-opacity .5s,stroke-width .5s}
-.wm-arc.on{stroke:#FFD7A8;stroke-opacity:1;stroke-width:2.2;stroke-dasharray:5 5;animation:wmdash 1.4s linear infinite}
-@keyframes wmdash{to{stroke-dashoffset:-20}}
-.wm-to{fill:#FF8FA1;opacity:.55;transition:opacity .5s}.wm-to.on{opacity:1;fill:#FFD7A8;filter:drop-shadow(0 0 6px #FFD7A8)}
-.wm-flag{position:absolute;transform:translate(-50%,-50%);font-size:clamp(11px,2.6vw,17px);line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.45));transition:transform .4s;z-index:1}
-.wm-flag.on{transform:translate(-50%,-50%) scale(1.55);z-index:2}
-.wm-cap{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:12px;min-height:40px;padding:9px 14px;border-radius:999px;background:rgba(255,255,255,.1);font-size:14px;font-weight:700;color:#fff;text-align:center}
-.wm-cap small{font-weight:600;color:rgba(255,255,255,.65)}
-.wm-cap .ar{color:#FFD7A8}
-.wm-note{margin:8px 0 0;font-size:11.5px;color:rgba(255,255,255,.5);text-align:center}
-@media (prefers-reduced-motion:reduce){.wm-arc.on{animation:none;stroke-dasharray:none}.wm-flag{transition:none}}
-.v2globe{position:absolute;inset:0;width:100%;height:100%}
-.v2flag{position:absolute;font-size:22px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.35))}.v2city{position:absolute;left:64%;top:24%;font:800 12px var(--f-body);padding:5px 10px;border-radius:999px;background:#fff;color:#2E1622}
-@media (prefers-reduced-motion:no-preference){.v2arc{stroke-dasharray:4 5;animation:v2dash 6s linear infinite}@keyframes v2dash{to{stroke-dashoffset:-90}}}
-.guides{margin-top:22px;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}.guides a{display:block;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;font-weight:700;color:var(--ink);text-decoration:none;box-shadow:var(--shadow)}.guides a:hover{border-color:var(--rose);color:var(--rose-deep)}.check{flex-wrap:wrap}.check>span:not(.err){flex:1 1 0;min-width:0}.check .err{flex-basis:100%;padding-left:30px}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://neumarry.com/#org","name":"NeuMarry","url":"https://neumarry.com/","logo":"https://neumarry.com/icon-512.png","email":"support@neumarry.com","description":"Verified matrimony app for people living away from the country they grew up in.","sameAs":["https://www.instagram.com/neumarry_match","https://www.facebook.com/profile.php?id=61595614954211","https://www.linkedin.com/company/144030892/"]},{"@type":"WebSite","@id":"https://neumarry.com/#site","url":"https://neumarry.com/","name":"NeuMarry","publisher":{"@id":"https://neumarry.com/#org"},"inLanguage":"en"},{"@type":"MobileApplication","name":"NeuMarry","operatingSystem":"ANDROID","applicationCategory":"LifestyleApplication","description":"Verified matrimony for people living away from the country they grew up in, from every country and community. Match on roots, city and values. Free to join.","url":"https://neumarry.com/","publisher":{"@id":"https://neumarry.com/#org"},"offers":{"@type":"Offer","price":"0","priceCurrency":"CAD"}},{"@type":"WebApplication","name":"NeuMarry","operatingSystem":"Any web browser","applicationCategory":"LifestyleApplication","browserRequirements":"Requires JavaScript","description":"Verified matrimony for people living away from the country they grew up in, from every country and community. Match on roots, city and values. Free to join.","url":"https://neumarry.com/app/","publisher":{"@id":"https://neumarry.com/#org"},"offers":{"@type":"Offer","price":"0","priceCurrency":"CAD"}},{"@type":"Event","name":"NeuMarry Family Mixer, Toronto","startDate":"2026-11-28T17:30:00-05:00","endDate":"2026-11-28T20:30:00-05:00","eventStatus":"https://schema.org/EventScheduled","eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode","description":"An evening of conversation and dinner for verified singles aged 18 to 38 looking for marriage. Parents welcome.","image":["https://neumarry.com/og-image.png"],"url":"https://neumarry.com/matrimony-events-toronto.html","location":{"@type":"Place","name":"Partner restaurant in the Greater Toronto Area","address":{"@type":"PostalAddress","addressLocality":"Toronto","addressRegion":"ON","addressCountry":"CA"}},"organizer":{"@id":"https://neumarry.com/#org"},"offers":{"@type":"Offer","price":"99","priceCurrency":"CAD","availability":"https://schema.org/InStock","validFrom":"2026-10-22T00:00:00-04:00","url":"https://neumarry.com/matrimony-events-toronto.html"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is NeuMarry free?","acceptedAnswer":{"@type":"Answer","text":"Joining is free: create your profile, verify, see how many people fit what you are looking for and your match % with each, and reply when a Gold member writes to you. NeuMarry Gold unlocks names and photos, interests, chat, daily picks and event guest lists, from CA$80 a month. Event tickets are separate and include the meal."}},{"@type":"Question","name":"Who can join?","acceptedAnswer":{"@type":"Answer","text":"Anyone 18 or older who lives away from the country they grew up in and is looking for marriage. We start in the Greater Toronto Area and open other cities when each has enough members."}},{"@type":"Question","name":"Is there an income or salary requirement?","acceptedAnswer":{"@type":"Answer","text":"No. NeuMarry has no income, salary or wealth requirement for anyone, men or women. Every member is checked the same way: ID and selfie, roots and the city they live in. Matching is based on roots, values and life plans, not money."}},{"@type":"Question","name":"How do you stop fake profiles?","acceptedAnswer":{"@type":"Answer","text":"Every member verifies a government ID and a live selfie before they can send interests or messages, and every report is reviewed by a person."}},{"@type":"Question","name":"Who sees my photos and details?","acceptedAnswer":{"@type":"Answer","text":"Only verified members. Photos stay blurred and only your first name and last initial show until you both accept. Your phone number is never shown unless you both choose to share it. Religion and community are optional."}},{"@type":"Question","name":"Can my parents be involved?","acceptedAnswer":{"@type":"Answer","text":"Yes. Parents can sign up on your behalf and come to family events with their own ticket. A Family Circle where they can suggest profiles is coming soon. They cannot message anyone as you."}},{"@type":"Question","name":"What if an event does not fill?","acceptedAnswer":{"@type":"Answer","text":"Nobody pays. Reserving in the app is free, and we ask for payment only after enough people reserve to confirm the event. If it is not confirmed in time, it is cancelled or moved to a new date, and you keep your free reservation."}},{"@type":"Question","name":"Can I use NeuMarry on the website?","acceptedAnswer":{"@type":"Answer","text":"Yes. Open neumarry.com/app in any web browser, on your phone or computer, to create your profile, get verified, see your matches and chat. The Android app uses the same account."}},{"@type":"Question","name":"Can my parents join from another country?","acceptedAnswer":{"@type":"Answer","text":"Yes. From Me in the app you can share a private family biodata link: your parents open it in any country, on a phone or computer, without installing anything. The link lasts 7 days and you can stop it at any time. A NeuMarry host can join to make the introductions."}},{"@type":"Question","name":"What is NeuMarry responsible for?","acceptedAnswer":{"@type":"Answer","text":"We verify members, suggest matches, and host events where you can meet. Decisions after an introduction, and any relationship or marriage, belong to the two people and their families. We do not run criminal background checks, so please follow our safety advice and never send money to anyone you meet."}},{"@type":"Question","name":"When does my city open?","acceptedAnswer":{"@type":"Answer","text":"Toronto opens first, in November 2026. Join the waitlist from anywhere and choose your city; we open the next cities based on where the waitlist grows fastest."}}]}]}</script><style>header .langh{margin-left:auto;font-weight:700;font-size:14px;color:var(--rose-deep);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:7px 11px;line-height:1;white-space:nowrap}header .langh:hover{border-color:var(--rose)}header .langh~.btn{margin-left:0}@media (min-width:761px){header .langh{margin-left:0}}.langhero{display:none}@media (max-width:420px){header .langh{display:none}header .langh~.btn{margin-left:auto}.langhero{display:flex;justify-content:flex-end;margin:0 0 12px}.langhero .langh{margin:0;font-weight:700;font-size:14px;color:var(--rose-deep);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:7px 12px;line-height:1;background:var(--surface)}}</style><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',region:["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE", "IS", "LI", "NO", "GB", "CH"]});gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'granted'});try{var nmC=localStorage.getItem('nm.analytics');if(nmC==='granted'||nmC==='denied')gtag('consent','update',{analytics_storage:nmC})}catch(e){}gtag('js',new Date());gtag('config','G-N3V0JG9X0D',{allow_google_signals:false,allow_ad_personalization_signals:false});</script><script async src="https://www.googletagmanager.com/gtag/js?id=G-N3V0JG9X0D"></script><script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');(function(){var tz='',c=null;try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';c=localStorage.getItem('nm.ads')}catch(e){}var eu=/^(Europe\/|Atlantic\/(Reykjavik|Canary|Madeira|Faroe|Azores))/.test(tz);window.nmEU=eu;var gpc=navigator.globalPrivacyControl===true;window.nmGPC=gpc;if(c==='denied'||((eu||gpc)&&c!=='granted'))fbq('consent','revoke');fbq('init','1427089529012759');fbq('track','PageView');document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a[href]');if(a&&/(^|\/)app\/?(\?|#|$)/.test(a.getAttribute('href')))fbq('track','Lead')},true)})();</script><link rel="stylesheet" href="glass.css"></head><body>
-
-<div class="strip" id="preview-strip"><div class="wrap"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.6v.2"/></svg><span>Preview: forms work but are not saved yet. Sign-ups go live with the NeuMarry launch.</span></div></div>
-
-<header id="top"><div class="wrap">
-  <a class="brand" href="#hero" aria-label="NeuMarry home"><svg class="mark" viewBox="0 0 32 22" aria-hidden="true"><path class="c1" d="M11.60 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/><path class="c2" d="M20.40 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/></svg>NeuMarry</a>
-  <nav class="links" aria-label="Sections"><a href="#how">How it works</a><a href="#event">Events</a><a class="hl" href="work-with-us.html">Work with us</a><a href="#faq">FAQ</a></nav>
-  <a class="langh" href="fr/" hreflang="fr" lang="fr" aria-label="Lire en français" onclick="try{localStorage.setItem('rm.lang','fr')}catch(e){}">FR</a><a class="btn primary sm" href="app/">Open the app</a>
+.faq summary::after{content:"+";color:var(--rosetx);font-size:22px;line-height:1;flex:none}
+.faq details[open] summary::after{content:"\2013"}
+.faq p{margin-top:10px;color:var(--mt)}
+/* closing, delete, guides, footer */
+.close{border-radius:32px;padding:44px;text-align:center;display:grid;gap:16px;justify-items:center;background:radial-gradient(100% 120% at 50% 0%,#5B1748,#1E0B1A);color:#fff}
+.close h2{color:#fff;max-width:760px}.close .eb{color:#FFB3D2}
+.del{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:0;padding:0;list-style:none}
+.del li{padding:22px;display:grid;gap:8px;align-content:start}.del b{font-size:17px}.del span{color:var(--mt);font-size:15px}
+.guides{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:6px}
+.guides a{display:flex;align-items:center;justify-content:space-between;gap:10px;border-radius:16px;padding:14px 16px;font-weight:700;background:linear-gradient(160deg,var(--gl1),var(--gl2));border:1px solid var(--gb);box-shadow:var(--sh)}
+.guides a::after{content:"\2192";color:var(--rosetx);flex:none}
+.guides a:hover{border-color:var(--rose2)}
+footer.foot{padding:44px 0 34px;border-top:1px solid var(--ln);color:var(--mt);font-size:14.5px}
+.foot .wrap{max-width:1160px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1fr;gap:24px}
+.foot b{color:var(--tx);display:block;margin-bottom:8px}.foot a{display:block;padding:4px 0}.foot a:hover{color:var(--tx)}
+.foot .brand{color:var(--tx);margin-bottom:10px}.foot p{margin-top:6px}
+.foot .nm-alink{grid-column:1/-1;justify-self:start;color:var(--mt);font-size:14px}
+/* motion */
+@keyframes sheen{0%,55%{transform:translateX(-100%)}80%,100%{transform:translateX(100%)}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes breathe2{0%,100%{transform:scale(1.02)}50%{transform:scale(1.06)}}
+@keyframes bub{0%,10%{opacity:0;transform:translateY(8px) scale(.7)}14%,38%{opacity:1;transform:none}43%,100%{opacity:0}}
+@keyframes shim{0%{background-position:-160% 0}100%{background-position:260% 0}}
+@keyframes fill{0%{width:0}60%,100%{width:100%}}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.r{animation:rise .9s cubic-bezier(.2,.8,.2,1) both}.r1{animation-delay:.12s}.r2{animation-delay:.24s}.r3{animation-delay:.36s}
+@media (max-width:1060px){.links{gap:18px;font-size:14.5px}.checks{grid-template-columns:repeat(3,1fr)}.foot .wrap{grid-template-columns:1fr 1fr 1fr}.foot .wrap>div:first-child{grid-column:1/-1}}
+@media (max-width:900px){
+ .links{display:none;position:absolute;top:68px;left:12px;right:12px;flex-direction:column;gap:0;padding:8px;border-radius:20px;background:var(--card);border:1px solid var(--ln);box-shadow:0 24px 50px -20px rgba(0,0,0,.6);margin:0}
+ .links a{padding:13px 14px;border-radius:12px;color:var(--tx)}
+ .nav.open .links{display:flex}
+ .nav .w{gap:10px}.nav .btn{margin-left:auto}.nav .langh{display:none}.menu{display:grid}
+ .langhero{display:flex;justify-content:flex-end;margin:0 0 6px}
+ .hero .w{grid-template-columns:1fr;padding-top:18px;padding-bottom:40px;gap:10px}
+ .stage{height:400px;order:-1;margin-bottom:34px}.phone{right:4px;width:184px;height:380px}.stage .exs{bottom:-28px}.stage .map{inset:0 -20px 30px -20px}
+ .steps{grid-template-columns:1fr 1fr}.feat{grid-template-columns:1fr}.split{grid-template-columns:1fr;gap:28px}.del{grid-template-columns:1fr}
+ section{padding:60px 0}.close{padding:32px 22px}.mapcard{height:300px}
+}
+@media (max-width:620px){.checks{grid-template-columns:1fr 1fr}.row2{grid-template-columns:1fr}.foot .wrap{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.steps{grid-template-columns:1fr}.lead{font-size:16.5px}.cta .btn{flex:1 1 100%}.seg.three{grid-template-columns:1fr}
+ .stage{height:360px}.phone{width:172px;height:350px}.phone .gc{padding:10px}
+ .stage .f1{left:2%!important;top:6%!important;width:76px!important;height:76px!important}.stage .f2{left:27%!important;top:30%!important;width:56px!important;height:56px!important}.stage .h2b{left:20%!important;top:21%!important}
+ .stage .f3{left:2%!important;top:50%!important;width:68px!important;height:68px!important}.stage .f4{left:24%!important;top:72%!important;width:58px!important;height:58px!important}.fld input::placeholder{font-size:13.5px}.checks{grid-template-columns:1fr}.pass .t{font-size:38px}.nav .btn{padding:0 14px;font-size:14px}.brand{font-size:19px}
+ form.card{padding:20px}.store{flex:1 1 100%}}
+@media (prefers-color-scheme:light){.phone .gc{background:linear-gradient(160deg,rgba(20,16,24,.62),rgba(20,16,24,.42));border-color:rgba(255,255,255,.22)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important}.hi{opacity:1}}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://neumarry.com/#org","name":"NeuMarry","url":"https://neumarry.com/","logo":"https://neumarry.com/icon-512.png","email":"support@neumarry.com","description":"Verified matrimony app for people living away from the country they grew up in.","sameAs":["https://www.instagram.com/neumarry_match","https://www.facebook.com/profile.php?id=61595614954211","https://www.linkedin.com/company/144030892/"]},{"@type":"WebSite","@id":"https://neumarry.com/#site","url":"https://neumarry.com/","name":"NeuMarry","publisher":{"@id":"https://neumarry.com/#org"},"inLanguage":"en"},{"@type":"MobileApplication","name":"NeuMarry","operatingSystem":"ANDROID","applicationCategory":"LifestyleApplication","description":"Verified matrimony for people living away from the country they grew up in, from every country and community. Match on roots, city and values. Free to join.","url":"https://neumarry.com/","publisher":{"@id":"https://neumarry.com/#org"},"offers":{"@type":"Offer","price":"0","priceCurrency":"CAD"}},{"@type":"WebApplication","name":"NeuMarry","operatingSystem":"Any web browser","applicationCategory":"LifestyleApplication","browserRequirements":"Requires JavaScript","description":"Verified matrimony for people living away from the country they grew up in, from every country and community. Match on roots, city and values. Free to join.","url":"https://neumarry.com/app/","publisher":{"@id":"https://neumarry.com/#org"},"offers":{"@type":"Offer","price":"0","priceCurrency":"CAD"}},{"@type":"Event","name":"NeuMarry Family Mixer, Toronto","startDate":"2026-11-28T17:30:00-05:00","endDate":"2026-11-28T20:30:00-05:00","eventStatus":"https://schema.org/EventScheduled","eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode","description":"An evening of conversation and dinner for verified singles aged 18 to 38 looking for marriage. Parents welcome.","image":["https://neumarry.com/og-image.png"],"url":"https://neumarry.com/matrimony-events-toronto.html","location":{"@type":"Place","name":"Partner restaurant in the Greater Toronto Area","address":{"@type":"PostalAddress","addressLocality":"Toronto","addressRegion":"ON","addressCountry":"CA"}},"organizer":{"@id":"https://neumarry.com/#org"},"offers":{"@type":"Offer","price":"99","priceCurrency":"CAD","availability":"https://schema.org/InStock","validFrom":"2026-10-22T00:00:00-04:00","url":"https://neumarry.com/matrimony-events-toronto.html"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is there an income or salary requirement?","acceptedAnswer":{"@type":"Answer","text":"No. NeuMarry has no income, salary or wealth requirement for anyone, men or women. Every member is checked the same way: ID and selfie, roots and the city they live in. Matching is based on roots, values and life plans, not money."}},{"@type":"Question","name":"Is NeuMarry free?","acceptedAnswer":{"@type":"Answer","text":"Joining is free: create your profile, verify, see how many people fit what you are looking for and your match % with each, and reply when a Gold member writes to you. NeuMarry Gold unlocks names and photos, interests, chat, daily picks and event guest lists, from CA$80 a month. Event tickets are separate and include the meal."}},{"@type":"Question","name":"Who can join?","acceptedAnswer":{"@type":"Answer","text":"Anyone 18 or older who lives away from the country they grew up in and is looking for marriage. We start in the Greater Toronto Area and open other cities when each has enough members."}},{"@type":"Question","name":"How do you stop fake profiles?","acceptedAnswer":{"@type":"Answer","text":"Every member verifies a government ID and a live selfie before they can send interests or messages, and every report is reviewed by a person."}},{"@type":"Question","name":"Who sees my photos and details?","acceptedAnswer":{"@type":"Answer","text":"Only verified members. Photos stay blurred and only your first name and last initial show until you both accept. Your phone number is never shown unless you both choose to share it. Religion and community are optional."}},{"@type":"Question","name":"Can my parents be involved?","acceptedAnswer":{"@type":"Answer","text":"Yes. Parents can sign up on your behalf and come to family events with their own ticket. A Family Circle where they can suggest profiles is coming soon. They cannot message anyone as you."}},{"@type":"Question","name":"What if an event does not fill?","acceptedAnswer":{"@type":"Answer","text":"Nobody pays. Reserving in the app is free, and we ask for payment only after enough people reserve to confirm the event. If it is not confirmed in time, it is cancelled or moved to a new date, and you keep your free reservation."}},{"@type":"Question","name":"Can I use NeuMarry on the website?","acceptedAnswer":{"@type":"Answer","text":"Yes. Open neumarry.com/app in any web browser, on your phone or computer, to create your profile, get verified, see your matches and chat. The Android app uses the same account."}},{"@type":"Question","name":"Can my parents join from another country?","acceptedAnswer":{"@type":"Answer","text":"Yes. From Me in the app you can share a private family biodata link: your parents open it in any country, on a phone or computer, without installing anything. The link lasts 7 days and you can stop it at any time. A NeuMarry host can join to make the introductions."}},{"@type":"Question","name":"What is NeuMarry responsible for?","acceptedAnswer":{"@type":"Answer","text":"We verify members, suggest matches, and host events where you can meet. Decisions after an introduction, and any relationship or marriage, belong to the two people and their families. We do not run criminal background checks, so please follow our safety advice and never send money to anyone you meet."}},{"@type":"Question","name":"When does my city open?","acceptedAnswer":{"@type":"Answer","text":"Toronto opens first, in November 2026. Join the waitlist from anywhere and choose your city; we open the next cities based on where the waitlist grows fastest."}},{"@type":"Question","name":"Can I delete my account?","acceptedAnswer":{"@type":"Answer","text":"Yes, at any time. In the app, open Me, then Delete my account. Without the app, follow the steps on our delete-account page."}}]}]}</script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',region:["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE", "IS", "LI", "NO", "GB", "CH"]});gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'granted'});try{var nmC=localStorage.getItem('nm.analytics');if(nmC==='granted'||nmC==='denied')gtag('consent','update',{analytics_storage:nmC})}catch(e){}gtag('js',new Date());gtag('config','G-N3V0JG9X0D',{allow_google_signals:false,allow_ad_personalization_signals:false});</script><script async src="https://www.googletagmanager.com/gtag/js?id=G-N3V0JG9X0D"></script><script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');(function(){var tz='',c=null;try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';c=localStorage.getItem('nm.ads')}catch(e){}var eu=/^(Europe\/|Atlantic\/(Reykjavik|Canary|Madeira|Faroe|Azores))/.test(tz);window.nmEU=eu;var gpc=navigator.globalPrivacyControl===true;window.nmGPC=gpc;if(c==='denied'||((eu||gpc)&&c!=='granted'))fbq('consent','revoke');fbq('init','1427089529012759');fbq('track','PageView');document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a[href]');if(a&&/(^|\/)app\/?(\?|#|$)/.test(a.getAttribute('href')))fbq('track','Lead')},true)})();</script></head><body class="nm-home">
+<header class="nav" id="top"><div class="w">
+ <a class="brand" href="./" aria-label="NeuMarry home"><svg width="30" height="30" viewBox="0 0 64 64" aria-hidden="true"><path d="M25 50S8 40 8 26c0-7 5-11 10.5-11 3.6 0 6 2 7.5 4.5" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><path d="M39 50s17-10 17-24c0-7-5-11-10.5-11-6 0-10 5-13.5 10.5C28.5 31 25 35 25 39" fill="none" stroke="#FFC93C" stroke-width="6" stroke-linecap="round"/></svg>NeuMarry</a>
+ <nav class="links" id="mnav" aria-label="Sections"><a href="#how">How it works</a><a href="#event">Events</a><a href="#safety">Safety</a><a href="#faq">FAQ</a><a href="work-with-us.html">Work with us</a></nav>
+ <a class="langh" href="fr/" hreflang="fr" lang="fr" aria-label="Lire en français" onclick="try{localStorage.setItem('rm.lang','fr')}catch(e){}">Français</a>
+ <a class="btn" href="app/">Open the app</a>
+ <button class="menu" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Menu"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
 </div></header>
 
 <main>
-<section class="hero" id="hero"><div class="wrap">
-  <div><p class="langhero"><a class="langh" href="fr/" hreflang="fr" lang="fr" aria-label="Lire en français" onclick="try{localStorage.setItem('rm.lang','fr')}catch(e){}">Français</a></p>
-    <span class="pill"><i></i>For people who grew up in one country and live in another</span>
-    <h1>Your roots. Your city. <em>Your person.</em></h1>
-    <p class="lede">Verified matrimony for every country and community. Meet people of your roots who live near you, and bring your family in, without giving up your privacy.</p>
-    <div class="ctas"><a class="btn primary" href="app/">Create your free profile</a><a class="btn ghost" href="/sample-verified-profile.html">See a sample verified profile</a></div>
-    <p class="avail">Works now in your web browser · Android on Google Play soon, iPhone after</p>
-    <div class="v2prom"><div><b>Verified</b><span>ID, selfie, roots, city</span></div><div><b>Private</b><span>no number shared</span></div><div><b>About 6 min</b><span>almost all taps</span></div></div>
-    <div class="count" id="count" aria-live="off"><div class="u"><b id="cd-d">–</b><span>days</span></div><div class="u"><b id="cd-h">–</b><span>hours</span></div><div class="u"><b id="cd-m">–</b><span>min</span></div><span class="lbl" id="cd-l">until the first Family Mixer</span></div>
-  </div>
-  <div class="art v2art" aria-hidden="true"><div class="wm" id="wm"><div class="wm-head"><span>Roots here, home there</span><b>16 journeys</b></div><div class="wm-box"><svg class="wm-svg" viewBox="0 0 700 260" aria-hidden="true"><path class="wm-land" d="M221.0 9.2h0M226.2 9.2h0M231.4 9.2h0M236.6 9.2h0M241.8 9.2h0M247.0 9.2h0M252.2 9.2h0M257.4 9.2h0M262.6 9.2h0M267.8 9.2h0M273.0 9.2h0M278.2 9.2h0M283.4 9.2h0M288.6 9.2h0M293.8 9.2h0M299.0 9.2h0M527.8 9.2h0M533.0 9.2h0M538.2 9.2h0M543.4 9.2h0M548.6 9.2h0M553.8 9.2h0M176.8 14.4h0M228.8 14.4h0M234.0 14.4h0M239.2 14.4h0M244.4 14.4h0M249.6 14.4h0M254.8 14.4h0M260.0 14.4h0M265.2 14.4h0M270.4 14.4h0M275.6 14.4h0M280.8 14.4h0M286.0 14.4h0M291.2 14.4h0M296.4 14.4h0M483.6 14.4h0M488.8 14.4h0M494.0 14.4h0M499.2 14.4h0M504.4 14.4h0M509.6 14.4h0M514.8 14.4h0M520.0 14.4h0M525.2 14.4h0M530.4 14.4h0M535.6 14.4h0M540.8 14.4h0M546.0 14.4h0M551.2 14.4h0M556.4 14.4h0M561.6 14.4h0M566.8 14.4h0M572.0 14.4h0M577.2 14.4h0M96.2 19.6h0M101.4 19.6h0M106.6 19.6h0M111.8 19.6h0M117.0 19.6h0M122.2 19.6h0M127.4 19.6h0M132.6 19.6h0M137.8 19.6h0M143.0 19.6h0M148.2 19.6h0M153.4 19.6h0M158.6 19.6h0M163.8 19.6h0M169.0 19.6h0M174.2 19.6h0M179.4 19.6h0M184.6 19.6h0M189.8 19.6h0M195.0 19.6h0M231.4 19.6h0M236.6 19.6h0M241.8 19.6h0M247.0 19.6h0M252.2 19.6h0M257.4 19.6h0M262.6 19.6h0M267.8 19.6h0M273.0 19.6h0M278.2 19.6h0M283.4 19.6h0M288.6 19.6h0M293.8 19.6h0M387.4 19.6h0M392.6 19.6h0M397.8 19.6h0M403.0 19.6h0M470.6 19.6h0M475.8 19.6h0M481.0 19.6h0M486.2 19.6h0M491.4 19.6h0M496.6 19.6h0M501.8 19.6h0M507.0 19.6h0M512.2 19.6h0M517.4 19.6h0M522.6 19.6h0M527.8 19.6h0M533.0 19.6h0M538.2 19.6h0M543.4 19.6h0M548.6 19.6h0M553.8 19.6h0M559.0 19.6h0M564.2 19.6h0M569.4 19.6h0M574.6 19.6h0M579.8 19.6h0M585.0 19.6h0M590.2 19.6h0M595.4 19.6h0M600.6 19.6h0M605.8 19.6h0M611.0 19.6h0M616.2 19.6h0M621.4 19.6h0M626.6 19.6h0M631.8 19.6h0M637.0 19.6h0M642.2 19.6h0M647.4 19.6h0M652.6 19.6h0M657.8 19.6h0M663.0 19.6h0M668.2 19.6h0M10.4 24.8h0M15.6 24.8h0M20.8 24.8h0M26.0 24.8h0M31.2 24.8h0M36.4 24.8h0M41.6 24.8h0M46.8 24.8h0M52.0 24.8h0M57.2 24.8h0M62.4 24.8h0M67.6 24.8h0M72.8 24.8h0M78.0 24.8h0M83.2 24.8h0M88.4 24.8h0M93.6 24.8h0M98.8 24.8h0M104.0 24.8h0M109.2 24.8h0M114.4 24.8h0M119.6 24.8h0M124.8 24.8h0M130.0 24.8h0M135.2 24.8h0M140.4 24.8h0M145.6 24.8h0M150.8 24.8h0M156.0 24.8h0M161.2 24.8h0M166.4 24.8h0M171.6 24.8h0M176.8 24.8h0M182.0 24.8h0M187.2 24.8h0M192.4 24.8h0M197.6 24.8h0M202.8 24.8h0M208.0 24.8h0M234.0 24.8h0M239.2 24.8h0M244.4 24.8h0M249.6 24.8h0M254.8 24.8h0M260.0 24.8h0M265.2 24.8h0M270.4 24.8h0M275.6 24.8h0M374.4 24.8h0M379.6 24.8h0M384.8 24.8h0M390.0 24.8h0M395.2 24.8h0M400.4 24.8h0M405.6 24.8h0M410.8 24.8h0M416.0 24.8h0M421.2 24.8h0M426.4 24.8h0M431.6 24.8h0M436.8 24.8h0M442.0 24.8h0M447.2 24.8h0M452.4 24.8h0M457.6 24.8h0M462.8 24.8h0M468.0 24.8h0M473.2 24.8h0M478.4 24.8h0M483.6 24.8h0M488.8 24.8h0M494.0 24.8h0M499.2 24.8h0M504.4 24.8h0M509.6 24.8h0M514.8 24.8h0M520.0 24.8h0M525.2 24.8h0M530.4 24.8h0M535.6 24.8h0M540.8 24.8h0M546.0 24.8h0M551.2 24.8h0M556.4 24.8h0M561.6 24.8h0M566.8 24.8h0M572.0 24.8h0M577.2 24.8h0M582.4 24.8h0M587.6 24.8h0M592.8 24.8h0M598.0 24.8h0M603.2 24.8h0M608.4 24.8h0M613.6 24.8h0M618.8 24.8h0M624.0 24.8h0M629.2 24.8h0M634.4 24.8h0M639.6 24.8h0M644.8 24.8h0M650.0 24.8h0M655.2 24.8h0M660.4 24.8h0M665.6 24.8h0M670.8 24.8h0M676.0 24.8h0M681.2 24.8h0M686.4 24.8h0M691.6 24.8h0M696.8 24.8h0M7.8 30.0h0M13.0 30.0h0M18.2 30.0h0M23.4 30.0h0M28.6 30.0h0M33.8 30.0h0M39.0 30.0h0M44.2 30.0h0M49.4 30.0h0M54.6 30.0h0M59.8 30.0h0M65.0 30.0h0M70.2 30.0h0M75.4 30.0h0M80.6 30.0h0M85.8 30.0h0M91.0 30.0h0M96.2 30.0h0M101.4 30.0h0M106.6 30.0h0M111.8 30.0h0M117.0 30.0h0M122.2 30.0h0M127.4 30.0h0M132.6 30.0h0M137.8 30.0h0M143.0 30.0h0M148.2 30.0h0M153.4 30.0h0M158.6 30.0h0M163.8 30.0h0M169.0 30.0h0M174.2 30.0h0M179.4 30.0h0M184.6 30.0h0M189.8 30.0h0M195.0 30.0h0M200.2 30.0h0M205.4 30.0h0M210.6 30.0h0M215.8 30.0h0M236.6 30.0h0M241.8 30.0h0M247.0 30.0h0M252.2 30.0h0M257.4 30.0h0M293.8 30.0h0M299.0 30.0h0M304.2 30.0h0M309.4 30.0h0M361.4 30.0h0M366.6 30.0h0M371.8 30.0h0M377.0 30.0h0M382.2 30.0h0M387.4 30.0h0M392.6 30.0h0M397.8 30.0h0M403.0 30.0h0M408.2 30.0h0M413.4 30.0h0M418.6 30.0h0M423.8 30.0h0M429.0 30.0h0M434.2 30.0h0M439.4 30.0h0M444.6 30.0h0M449.8 30.0h0M455.0 30.0h0M460.2 30.0h0M465.4 30.0h0M470.6 30.0h0M475.8 30.0h0M481.0 30.0h0M486.2 30.0h0M491.4 30.0h0M496.6 30.0h0M501.8 30.0h0M507.0 30.0h0M512.2 30.0h0M517.4 30.0h0M522.6 30.0h0M527.8 30.0h0M533.0 30.0h0M538.2 30.0h0M543.4 30.0h0M548.6 30.0h0M553.8 30.0h0M559.0 30.0h0M564.2 30.0h0M569.4 30.0h0M574.6 30.0h0M579.8 30.0h0M585.0 30.0h0M590.2 30.0h0M595.4 30.0h0M600.6 30.0h0M605.8 30.0h0M611.0 30.0h0M616.2 30.0h0M621.4 30.0h0M626.6 30.0h0M631.8 30.0h0M637.0 30.0h0M642.2 30.0h0M647.4 30.0h0M652.6 30.0h0M657.8 30.0h0M663.0 30.0h0M668.2 30.0h0M673.4 30.0h0M678.6 30.0h0M683.8 30.0h0M689.0 30.0h0M694.2 30.0h0M699.4 30.0h0M10.4 35.2h0M15.6 35.2h0M20.8 35.2h0M26.0 35.2h0M31.2 35.2h0M36.4 35.2h0M41.6 35.2h0M46.8 35.2h0M52.0 35.2h0M57.2 35.2h0M62.4 35.2h0M67.6 35.2h0M72.8 35.2h0M78.0 35.2h0M83.2 35.2h0M88.4 35.2h0M93.6 35.2h0M98.8 35.2h0M104.0 35.2h0M109.2 35.2h0M114.4 35.2h0M119.6 35.2h0M124.8 35.2h0M130.0 35.2h0M135.2 35.2h0M140.4 35.2h0M145.6 35.2h0M150.8 35.2h0M156.0 35.2h0M161.2 35.2h0M166.4 35.2h0M171.6 35.2h0M176.8 35.2h0M182.0 35.2h0M187.2 35.2h0M192.4 35.2h0M197.6 35.2h0M202.8 35.2h0M208.0 35.2h0M213.2 35.2h0M234.0 35.2h0M239.2 35.2h0M244.4 35.2h0M249.6 35.2h0M254.8 35.2h0M353.6 35.2h0M358.8 35.2h0M364.0 35.2h0M369.2 35.2h0M374.4 35.2h0M379.6 35.2h0M384.8 35.2h0M390.0 35.2h0M395.2 35.2h0M400.4 35.2h0M405.6 35.2h0M410.8 35.2h0M416.0 35.2h0M421.2 35.2h0M426.4 35.2h0M431.6 35.2h0M436.8 35.2h0M442.0 35.2h0M447.2 35.2h0M452.4 35.2h0M457.6 35.2h0M462.8 35.2h0M468.0 35.2h0M473.2 35.2h0M478.4 35.2h0M483.6 35.2h0M488.8 35.2h0M494.0 35.2h0M499.2 35.2h0M504.4 35.2h0M509.6 35.2h0M514.8 35.2h0M520.0 35.2h0M525.2 35.2h0M530.4 35.2h0M535.6 35.2h0M540.8 35.2h0M546.0 35.2h0M551.2 35.2h0M556.4 35.2h0M561.6 35.2h0M566.8 35.2h0M572.0 35.2h0M577.2 35.2h0M582.4 35.2h0M587.6 35.2h0M592.8 35.2h0M598.0 35.2h0M603.2 35.2h0M608.4 35.2h0M613.6 35.2h0M618.8 35.2h0M624.0 35.2h0M629.2 35.2h0M634.4 35.2h0M639.6 35.2h0M644.8 35.2h0M650.0 35.2h0M655.2 35.2h0M660.4 35.2h0M665.6 35.2h0M670.8 35.2h0M676.0 35.2h0M681.2 35.2h0M13.0 40.4h0M18.2 40.4h0M23.4 40.4h0M28.6 40.4h0M33.8 40.4h0M39.0 40.4h0M44.2 40.4h0M49.4 40.4h0M54.6 40.4h0M65.0 40.4h0M70.2 40.4h0M75.4 40.4h0M80.6 40.4h0M85.8 40.4h0M91.0 40.4h0M96.2 40.4h0M101.4 40.4h0M106.6 40.4h0M111.8 40.4h0M117.0 40.4h0M122.2 40.4h0M127.4 40.4h0M132.6 40.4h0M137.8 40.4h0M143.0 40.4h0M148.2 40.4h0M153.4 40.4h0M158.6 40.4h0M163.8 40.4h0M169.0 40.4h0M174.2 40.4h0M179.4 40.4h0M184.6 40.4h0M189.8 40.4h0M195.0 40.4h0M200.2 40.4h0M205.4 40.4h0M210.6 40.4h0M215.8 40.4h0M351.0 40.4h0M356.2 40.4h0M361.4 40.4h0M366.6 40.4h0M371.8 40.4h0M377.0 40.4h0M382.2 40.4h0M387.4 40.4h0M392.6 40.4h0M397.8 40.4h0M403.0 40.4h0M408.2 40.4h0M413.4 40.4h0M418.6 40.4h0M423.8 40.4h0M429.0 40.4h0M434.2 40.4h0M439.4 40.4h0M444.6 40.4h0M449.8 40.4h0M455.0 40.4h0M460.2 40.4h0M465.4 40.4h0M470.6 40.4h0M475.8 40.4h0M481.0 40.4h0M486.2 40.4h0M491.4 40.4h0M496.6 40.4h0M501.8 40.4h0M507.0 40.4h0M512.2 40.4h0M517.4 40.4h0M522.6 40.4h0M527.8 40.4h0M533.0 40.4h0M538.2 40.4h0M543.4 40.4h0M548.6 40.4h0M553.8 40.4h0M559.0 40.4h0M564.2 40.4h0M569.4 40.4h0M574.6 40.4h0M579.8 40.4h0M585.0 40.4h0M590.2 40.4h0M595.4 40.4h0M600.6 40.4h0M605.8 40.4h0M611.0 40.4h0M616.2 40.4h0M621.4 40.4h0M626.6 40.4h0M631.8 40.4h0M637.0 40.4h0M642.2 40.4h0M647.4 40.4h0M652.6 40.4h0M657.8 40.4h0M663.0 40.4h0M20.8 45.6h0M26.0 45.6h0M31.2 45.6h0M72.8 45.6h0M78.0 45.6h0M83.2 45.6h0M88.4 45.6h0M93.6 45.6h0M98.8 45.6h0M104.0 45.6h0M109.2 45.6h0M114.4 45.6h0M119.6 45.6h0M124.8 45.6h0M130.0 45.6h0M135.2 45.6h0M140.4 45.6h0M145.6 45.6h0M150.8 45.6h0M156.0 45.6h0M161.2 45.6h0M166.4 45.6h0M171.6 45.6h0M176.8 45.6h0M182.0 45.6h0M187.2 45.6h0M192.4 45.6h0M197.6 45.6h0M202.8 45.6h0M208.0 45.6h0M213.2 45.6h0M218.4 45.6h0M332.8 45.6h0M358.8 45.6h0M364.0 45.6h0M369.2 45.6h0M374.4 45.6h0M379.6 45.6h0M384.8 45.6h0M390.0 45.6h0M395.2 45.6h0M400.4 45.6h0M405.6 45.6h0M410.8 45.6h0M416.0 45.6h0M421.2 45.6h0M426.4 45.6h0M431.6 45.6h0M436.8 45.6h0M442.0 45.6h0M447.2 45.6h0M452.4 45.6h0M457.6 45.6h0M462.8 45.6h0M468.0 45.6h0M473.2 45.6h0M478.4 45.6h0M483.6 45.6h0M488.8 45.6h0M494.0 45.6h0M499.2 45.6h0M504.4 45.6h0M509.6 45.6h0M514.8 45.6h0M520.0 45.6h0M525.2 45.6h0M530.4 45.6h0M535.6 45.6h0M540.8 45.6h0M546.0 45.6h0M551.2 45.6h0M556.4 45.6h0M561.6 45.6h0M566.8 45.6h0M572.0 45.6h0M577.2 45.6h0M582.4 45.6h0M587.6 45.6h0M592.8 45.6h0M598.0 45.6h0M603.2 45.6h0M608.4 45.6h0M613.6 45.6h0M618.8 45.6h0M634.4 45.6h0M639.6 45.6h0M644.8 45.6h0M650.0 45.6h0M655.2 45.6h0M660.4 45.6h0M85.8 50.8h0M91.0 50.8h0M96.2 50.8h0M101.4 50.8h0M106.6 50.8h0M111.8 50.8h0M117.0 50.8h0M122.2 50.8h0M127.4 50.8h0M132.6 50.8h0M137.8 50.8h0M143.0 50.8h0M148.2 50.8h0M153.4 50.8h0M158.6 50.8h0M163.8 50.8h0M169.0 50.8h0M174.2 50.8h0M179.4 50.8h0M184.6 50.8h0M189.8 50.8h0M195.0 50.8h0M200.2 50.8h0M205.4 50.8h0M210.6 50.8h0M215.8 50.8h0M221.0 50.8h0M325.0 50.8h0M335.4 50.8h0M361.4 50.8h0M366.6 50.8h0M371.8 50.8h0M377.0 50.8h0M382.2 50.8h0M387.4 50.8h0M392.6 50.8h0M397.8 50.8h0M403.0 50.8h0M408.2 50.8h0M413.4 50.8h0M418.6 50.8h0M423.8 50.8h0M429.0 50.8h0M434.2 50.8h0M439.4 50.8h0M444.6 50.8h0M449.8 50.8h0M455.0 50.8h0M460.2 50.8h0M465.4 50.8h0M470.6 50.8h0M475.8 50.8h0M481.0 50.8h0M486.2 50.8h0M491.4 50.8h0M496.6 50.8h0M501.8 50.8h0M507.0 50.8h0M512.2 50.8h0M517.4 50.8h0M522.6 50.8h0M527.8 50.8h0M533.0 50.8h0M538.2 50.8h0M543.4 50.8h0M548.6 50.8h0M553.8 50.8h0M559.0 50.8h0M564.2 50.8h0M569.4 50.8h0M574.6 50.8h0M579.8 50.8h0M585.0 50.8h0M590.2 50.8h0M595.4 50.8h0M600.6 50.8h0M605.8 50.8h0M611.0 50.8h0M647.4 50.8h0M652.6 50.8h0M657.8 50.8h0M88.4 56.0h0M93.6 56.0h0M98.8 56.0h0M104.0 56.0h0M109.2 56.0h0M114.4 56.0h0M119.6 56.0h0M124.8 56.0h0M130.0 56.0h0M135.2 56.0h0M140.4 56.0h0M145.6 56.0h0M150.8 56.0h0M156.0 56.0h0M161.2 56.0h0M166.4 56.0h0M171.6 56.0h0M176.8 56.0h0M182.0 56.0h0M187.2 56.0h0M192.4 56.0h0M197.6 56.0h0M202.8 56.0h0M208.0 56.0h0M213.2 56.0h0M218.4 56.0h0M223.6 56.0h0M228.8 56.0h0M322.4 56.0h0M327.6 56.0h0M332.8 56.0h0M338.0 56.0h0M348.4 56.0h0M353.6 56.0h0M358.8 56.0h0M364.0 56.0h0M369.2 56.0h0M374.4 56.0h0M379.6 56.0h0M384.8 56.0h0M390.0 56.0h0M395.2 56.0h0M400.4 56.0h0M405.6 56.0h0M410.8 56.0h0M416.0 56.0h0M421.2 56.0h0M426.4 56.0h0M431.6 56.0h0M436.8 56.0h0M442.0 56.0h0M447.2 56.0h0M452.4 56.0h0M457.6 56.0h0M462.8 56.0h0M468.0 56.0h0M473.2 56.0h0M478.4 56.0h0M483.6 56.0h0M488.8 56.0h0M494.0 56.0h0M499.2 56.0h0M504.4 56.0h0M509.6 56.0h0M514.8 56.0h0M520.0 56.0h0M525.2 56.0h0M530.4 56.0h0M535.6 56.0h0M540.8 56.0h0M546.0 56.0h0M551.2 56.0h0M556.4 56.0h0M561.6 56.0h0M566.8 56.0h0M572.0 56.0h0M577.2 56.0h0M582.4 56.0h0M587.6 56.0h0M592.8 56.0h0M598.0 56.0h0M603.2 56.0h0M608.4 56.0h0M613.6 56.0h0M91.0 61.2h0M96.2 61.2h0M101.4 61.2h0M106.6 61.2h0M111.8 61.2h0M117.0 61.2h0M122.2 61.2h0M127.4 61.2h0M132.6 61.2h0M137.8 61.2h0M143.0 61.2h0M148.2 61.2h0M153.4 61.2h0M158.6 61.2h0M163.8 61.2h0M169.0 61.2h0M174.2 61.2h0M179.4 61.2h0M184.6 61.2h0M189.8 61.2h0M195.0 61.2h0M200.2 61.2h0M205.4 61.2h0M210.6 61.2h0M215.8 61.2h0M221.0 61.2h0M340.6 61.2h0M345.8 61.2h0M351.0 61.2h0M356.2 61.2h0M361.4 61.2h0M366.6 61.2h0M371.8 61.2h0M377.0 61.2h0M382.2 61.2h0M387.4 61.2h0M392.6 61.2h0M397.8 61.2h0M403.0 61.2h0M408.2 61.2h0M413.4 61.2h0M418.6 61.2h0M423.8 61.2h0M429.0 61.2h0M434.2 61.2h0M439.4 61.2h0M444.6 61.2h0M449.8 61.2h0M455.0 61.2h0M460.2 61.2h0M465.4 61.2h0M470.6 61.2h0M475.8 61.2h0M481.0 61.2h0M486.2 61.2h0M491.4 61.2h0M496.6 61.2h0M501.8 61.2h0M507.0 61.2h0M512.2 61.2h0M517.4 61.2h0M522.6 61.2h0M527.8 61.2h0M533.0 61.2h0M538.2 61.2h0M543.4 61.2h0M548.6 61.2h0M553.8 61.2h0M559.0 61.2h0M564.2 61.2h0M569.4 61.2h0M574.6 61.2h0M579.8 61.2h0M585.0 61.2h0M590.2 61.2h0M595.4 61.2h0M600.6 61.2h0M605.8 61.2h0M611.0 61.2h0M616.2 61.2h0M93.6 66.4h0M98.8 66.4h0M104.0 66.4h0M109.2 66.4h0M114.4 66.4h0M119.6 66.4h0M124.8 66.4h0M130.0 66.4h0M135.2 66.4h0M140.4 66.4h0M145.6 66.4h0M150.8 66.4h0M156.0 66.4h0M161.2 66.4h0M166.4 66.4h0M171.6 66.4h0M176.8 66.4h0M182.0 66.4h0M187.2 66.4h0M192.4 66.4h0M197.6 66.4h0M202.8 66.4h0M208.0 66.4h0M213.2 66.4h0M332.8 66.4h0M338.0 66.4h0M343.2 66.4h0M348.4 66.4h0M353.6 66.4h0M358.8 66.4h0M364.0 66.4h0M369.2 66.4h0M374.4 66.4h0M379.6 66.4h0M384.8 66.4h0M390.0 66.4h0M395.2 66.4h0M400.4 66.4h0M405.6 66.4h0M410.8 66.4h0M416.0 66.4h0M421.2 66.4h0M426.4 66.4h0M431.6 66.4h0M436.8 66.4h0M442.0 66.4h0M447.2 66.4h0M452.4 66.4h0M457.6 66.4h0M462.8 66.4h0M468.0 66.4h0M473.2 66.4h0M478.4 66.4h0M483.6 66.4h0M488.8 66.4h0M494.0 66.4h0M499.2 66.4h0M504.4 66.4h0M509.6 66.4h0M514.8 66.4h0M520.0 66.4h0M525.2 66.4h0M530.4 66.4h0M535.6 66.4h0M540.8 66.4h0M546.0 66.4h0M551.2 66.4h0M556.4 66.4h0M561.6 66.4h0M566.8 66.4h0M572.0 66.4h0M577.2 66.4h0M582.4 66.4h0M587.6 66.4h0M592.8 66.4h0M598.0 66.4h0M603.2 66.4h0M608.4 66.4h0M613.6 66.4h0M96.2 71.6h0M101.4 71.6h0M106.6 71.6h0M111.8 71.6h0M117.0 71.6h0M122.2 71.6h0M127.4 71.6h0M132.6 71.6h0M137.8 71.6h0M143.0 71.6h0M148.2 71.6h0M153.4 71.6h0M158.6 71.6h0M163.8 71.6h0M169.0 71.6h0M174.2 71.6h0M179.4 71.6h0M184.6 71.6h0M189.8 71.6h0M195.0 71.6h0M200.2 71.6h0M205.4 71.6h0M340.6 71.6h0M345.8 71.6h0M351.0 71.6h0M356.2 71.6h0M361.4 71.6h0M366.6 71.6h0M371.8 71.6h0M377.0 71.6h0M382.2 71.6h0M387.4 71.6h0M392.6 71.6h0M397.8 71.6h0M403.0 71.6h0M408.2 71.6h0M413.4 71.6h0M418.6 71.6h0M423.8 71.6h0M429.0 71.6h0M434.2 71.6h0M439.4 71.6h0M444.6 71.6h0M449.8 71.6h0M455.0 71.6h0M460.2 71.6h0M465.4 71.6h0M470.6 71.6h0M475.8 71.6h0M481.0 71.6h0M486.2 71.6h0M491.4 71.6h0M496.6 71.6h0M501.8 71.6h0M507.0 71.6h0M512.2 71.6h0M517.4 71.6h0M522.6 71.6h0M527.8 71.6h0M533.0 71.6h0M538.2 71.6h0M543.4 71.6h0M548.6 71.6h0M553.8 71.6h0M559.0 71.6h0M564.2 71.6h0M569.4 71.6h0M574.6 71.6h0M579.8 71.6h0M585.0 71.6h0M590.2 71.6h0M595.4 71.6h0M600.6 71.6h0M605.8 71.6h0M611.0 71.6h0M626.6 71.6h0M93.6 76.8h0M98.8 76.8h0M104.0 76.8h0M109.2 76.8h0M114.4 76.8h0M119.6 76.8h0M124.8 76.8h0M130.0 76.8h0M135.2 76.8h0M140.4 76.8h0M145.6 76.8h0M150.8 76.8h0M156.0 76.8h0M161.2 76.8h0M166.4 76.8h0M171.6 76.8h0M176.8 76.8h0M182.0 76.8h0M187.2 76.8h0M192.4 76.8h0M197.6 76.8h0M322.4 76.8h0M327.6 76.8h0M332.8 76.8h0M338.0 76.8h0M343.2 76.8h0M369.2 76.8h0M374.4 76.8h0M379.6 76.8h0M384.8 76.8h0M390.0 76.8h0M395.2 76.8h0M400.4 76.8h0M405.6 76.8h0M410.8 76.8h0M416.0 76.8h0M421.2 76.8h0M426.4 76.8h0M431.6 76.8h0M436.8 76.8h0M442.0 76.8h0M447.2 76.8h0M452.4 76.8h0M457.6 76.8h0M462.8 76.8h0M468.0 76.8h0M473.2 76.8h0M478.4 76.8h0M483.6 76.8h0M488.8 76.8h0M494.0 76.8h0M499.2 76.8h0M504.4 76.8h0M509.6 76.8h0M514.8 76.8h0M520.0 76.8h0M525.2 76.8h0M530.4 76.8h0M535.6 76.8h0M540.8 76.8h0M546.0 76.8h0M551.2 76.8h0M556.4 76.8h0M561.6 76.8h0M566.8 76.8h0M572.0 76.8h0M577.2 76.8h0M582.4 76.8h0M587.6 76.8h0M592.8 76.8h0M96.2 82.0h0M101.4 82.0h0M106.6 82.0h0M111.8 82.0h0M117.0 82.0h0M122.2 82.0h0M127.4 82.0h0M132.6 82.0h0M137.8 82.0h0M143.0 82.0h0M148.2 82.0h0M153.4 82.0h0M158.6 82.0h0M163.8 82.0h0M169.0 82.0h0M174.2 82.0h0M179.4 82.0h0M184.6 82.0h0M189.8 82.0h0M325.0 82.0h0M330.2 82.0h0M335.4 82.0h0M371.8 82.0h0M382.2 82.0h0M387.4 82.0h0M392.6 82.0h0M397.8 82.0h0M403.0 82.0h0M408.2 82.0h0M413.4 82.0h0M418.6 82.0h0M423.8 82.0h0M429.0 82.0h0M434.2 82.0h0M439.4 82.0h0M444.6 82.0h0M449.8 82.0h0M455.0 82.0h0M460.2 82.0h0M465.4 82.0h0M470.6 82.0h0M475.8 82.0h0M481.0 82.0h0M486.2 82.0h0M491.4 82.0h0M496.6 82.0h0M501.8 82.0h0M507.0 82.0h0M512.2 82.0h0M517.4 82.0h0M522.6 82.0h0M527.8 82.0h0M533.0 82.0h0M538.2 82.0h0M543.4 82.0h0M548.6 82.0h0M553.8 82.0h0M559.0 82.0h0M564.2 82.0h0M569.4 82.0h0M574.6 82.0h0M585.0 82.0h0M590.2 82.0h0M616.2 82.0h0M621.4 82.0h0M104.0 87.2h0M109.2 87.2h0M114.4 87.2h0M119.6 87.2h0M124.8 87.2h0M130.0 87.2h0M135.2 87.2h0M140.4 87.2h0M145.6 87.2h0M150.8 87.2h0M156.0 87.2h0M161.2 87.2h0M166.4 87.2h0M171.6 87.2h0M176.8 87.2h0M182.0 87.2h0M187.2 87.2h0M322.4 87.2h0M327.6 87.2h0M348.4 87.2h0M353.6 87.2h0M358.8 87.2h0M405.6 87.2h0M410.8 87.2h0M416.0 87.2h0M421.2 87.2h0M426.4 87.2h0M431.6 87.2h0M436.8 87.2h0M442.0 87.2h0M447.2 87.2h0M452.4 87.2h0M457.6 87.2h0M462.8 87.2h0M468.0 87.2h0M473.2 87.2h0M478.4 87.2h0M483.6 87.2h0M488.8 87.2h0M494.0 87.2h0M499.2 87.2h0M504.4 87.2h0M509.6 87.2h0M514.8 87.2h0M520.0 87.2h0M525.2 87.2h0M530.4 87.2h0M535.6 87.2h0M540.8 87.2h0M546.0 87.2h0M551.2 87.2h0M556.4 87.2h0M561.6 87.2h0M566.8 87.2h0M572.0 87.2h0M577.2 87.2h0M592.8 87.2h0M613.6 87.2h0M618.8 87.2h0M106.6 92.4h0M111.8 92.4h0M117.0 92.4h0M122.2 92.4h0M127.4 92.4h0M132.6 92.4h0M137.8 92.4h0M143.0 92.4h0M148.2 92.4h0M153.4 92.4h0M158.6 92.4h0M163.8 92.4h0M169.0 92.4h0M174.2 92.4h0M179.4 92.4h0M184.6 92.4h0M330.2 92.4h0M335.4 92.4h0M340.6 92.4h0M345.8 92.4h0M351.0 92.4h0M356.2 92.4h0M413.4 92.4h0M418.6 92.4h0M423.8 92.4h0M429.0 92.4h0M434.2 92.4h0M439.4 92.4h0M444.6 92.4h0M449.8 92.4h0M455.0 92.4h0M460.2 92.4h0M465.4 92.4h0M470.6 92.4h0M475.8 92.4h0M481.0 92.4h0M486.2 92.4h0M491.4 92.4h0M496.6 92.4h0M501.8 92.4h0M507.0 92.4h0M512.2 92.4h0M517.4 92.4h0M522.6 92.4h0M527.8 92.4h0M533.0 92.4h0M538.2 92.4h0M543.4 92.4h0M548.6 92.4h0M553.8 92.4h0M559.0 92.4h0M564.2 92.4h0M569.4 92.4h0M574.6 92.4h0M579.8 92.4h0M605.8 92.4h0M109.2 97.6h0M114.4 97.6h0M119.6 97.6h0M124.8 97.6h0M130.0 97.6h0M135.2 97.6h0M140.4 97.6h0M145.6 97.6h0M150.8 97.6h0M156.0 97.6h0M161.2 97.6h0M166.4 97.6h0M171.6 97.6h0M176.8 97.6h0M322.4 97.6h0M327.6 97.6h0M332.8 97.6h0M338.0 97.6h0M343.2 97.6h0M348.4 97.6h0M353.6 97.6h0M358.8 97.6h0M364.0 97.6h0M369.2 97.6h0M374.4 97.6h0M384.8 97.6h0M390.0 97.6h0M395.2 97.6h0M410.8 97.6h0M416.0 97.6h0M421.2 97.6h0M426.4 97.6h0M431.6 97.6h0M436.8 97.6h0M442.0 97.6h0M447.2 97.6h0M452.4 97.6h0M457.6 97.6h0M462.8 97.6h0M468.0 97.6h0M473.2 97.6h0M478.4 97.6h0M483.6 97.6h0M488.8 97.6h0M494.0 97.6h0M499.2 97.6h0M504.4 97.6h0M509.6 97.6h0M514.8 97.6h0M520.0 97.6h0M525.2 97.6h0M530.4 97.6h0M535.6 97.6h0M540.8 97.6h0M546.0 97.6h0M551.2 97.6h0M556.4 97.6h0M561.6 97.6h0M566.8 97.6h0M572.0 97.6h0M577.2 97.6h0M582.4 97.6h0M117.0 102.8h0M122.2 102.8h0M127.4 102.8h0M132.6 102.8h0M137.8 102.8h0M143.0 102.8h0M148.2 102.8h0M153.4 102.8h0M174.2 102.8h0M319.8 102.8h0M325.0 102.8h0M330.2 102.8h0M335.4 102.8h0M340.6 102.8h0M345.8 102.8h0M351.0 102.8h0M356.2 102.8h0M361.4 102.8h0M366.6 102.8h0M371.8 102.8h0M377.0 102.8h0M382.2 102.8h0M387.4 102.8h0M392.6 102.8h0M397.8 102.8h0M403.0 102.8h0M413.4 102.8h0M418.6 102.8h0M423.8 102.8h0M429.0 102.8h0M434.2 102.8h0M439.4 102.8h0M444.6 102.8h0M449.8 102.8h0M455.0 102.8h0M460.2 102.8h0M465.4 102.8h0M470.6 102.8h0M475.8 102.8h0M481.0 102.8h0M486.2 102.8h0M491.4 102.8h0M496.6 102.8h0M501.8 102.8h0M507.0 102.8h0M512.2 102.8h0M517.4 102.8h0M522.6 102.8h0M527.8 102.8h0M533.0 102.8h0M538.2 102.8h0M543.4 102.8h0M548.6 102.8h0M553.8 102.8h0M559.0 102.8h0M564.2 102.8h0M569.4 102.8h0M574.6 102.8h0M579.8 102.8h0M119.6 108.0h0M124.8 108.0h0M130.0 108.0h0M135.2 108.0h0M140.4 108.0h0M145.6 108.0h0M317.2 108.0h0M322.4 108.0h0M327.6 108.0h0M332.8 108.0h0M338.0 108.0h0M343.2 108.0h0M348.4 108.0h0M353.6 108.0h0M358.8 108.0h0M364.0 108.0h0M369.2 108.0h0M374.4 108.0h0M379.6 108.0h0M384.8 108.0h0M390.0 108.0h0M395.2 108.0h0M400.4 108.0h0M405.6 108.0h0M416.0 108.0h0M421.2 108.0h0M426.4 108.0h0M431.6 108.0h0M436.8 108.0h0M442.0 108.0h0M447.2 108.0h0M452.4 108.0h0M457.6 108.0h0M462.8 108.0h0M468.0 108.0h0M473.2 108.0h0M478.4 108.0h0M483.6 108.0h0M488.8 108.0h0M494.0 108.0h0M499.2 108.0h0M504.4 108.0h0M509.6 108.0h0M514.8 108.0h0M520.0 108.0h0M525.2 108.0h0M530.4 108.0h0M535.6 108.0h0M540.8 108.0h0M546.0 108.0h0M551.2 108.0h0M556.4 108.0h0M561.6 108.0h0M566.8 108.0h0M572.0 108.0h0M577.2 108.0h0M122.2 113.2h0M127.4 113.2h0M132.6 113.2h0M137.8 113.2h0M143.0 113.2h0M314.6 113.2h0M319.8 113.2h0M325.0 113.2h0M330.2 113.2h0M335.4 113.2h0M340.6 113.2h0M345.8 113.2h0M351.0 113.2h0M356.2 113.2h0M361.4 113.2h0M366.6 113.2h0M371.8 113.2h0M377.0 113.2h0M382.2 113.2h0M387.4 113.2h0M392.6 113.2h0M397.8 113.2h0M403.0 113.2h0M408.2 113.2h0M418.6 113.2h0M423.8 113.2h0M429.0 113.2h0M434.2 113.2h0M439.4 113.2h0M444.6 113.2h0M449.8 113.2h0M481.0 113.2h0M486.2 113.2h0M491.4 113.2h0M496.6 113.2h0M501.8 113.2h0M507.0 113.2h0M512.2 113.2h0M517.4 113.2h0M522.6 113.2h0M527.8 113.2h0M533.0 113.2h0M538.2 113.2h0M543.4 113.2h0M548.6 113.2h0M553.8 113.2h0M559.0 113.2h0M564.2 113.2h0M569.4 113.2h0M130.0 118.4h0M135.2 118.4h0M140.4 118.4h0M145.6 118.4h0M150.8 118.4h0M156.0 118.4h0M161.2 118.4h0M306.8 118.4h0M312.0 118.4h0M317.2 118.4h0M322.4 118.4h0M327.6 118.4h0M332.8 118.4h0M338.0 118.4h0M343.2 118.4h0M348.4 118.4h0M353.6 118.4h0M358.8 118.4h0M364.0 118.4h0M369.2 118.4h0M374.4 118.4h0M379.6 118.4h0M384.8 118.4h0M390.0 118.4h0M395.2 118.4h0M400.4 118.4h0M405.6 118.4h0M410.8 118.4h0M421.2 118.4h0M426.4 118.4h0M431.6 118.4h0M436.8 118.4h0M442.0 118.4h0M447.2 118.4h0M452.4 118.4h0M488.8 118.4h0M494.0 118.4h0M499.2 118.4h0M504.4 118.4h0M509.6 118.4h0M525.2 118.4h0M530.4 118.4h0M535.6 118.4h0M540.8 118.4h0M546.0 118.4h0M551.2 118.4h0M556.4 118.4h0M561.6 118.4h0M137.8 123.6h0M143.0 123.6h0M148.2 123.6h0M153.4 123.6h0M158.6 123.6h0M163.8 123.6h0M169.0 123.6h0M309.4 123.6h0M314.6 123.6h0M319.8 123.6h0M325.0 123.6h0M330.2 123.6h0M335.4 123.6h0M340.6 123.6h0M345.8 123.6h0M351.0 123.6h0M356.2 123.6h0M361.4 123.6h0M366.6 123.6h0M371.8 123.6h0M377.0 123.6h0M382.2 123.6h0M387.4 123.6h0M392.6 123.6h0M397.8 123.6h0M403.0 123.6h0M408.2 123.6h0M413.4 123.6h0M423.8 123.6h0M429.0 123.6h0M434.2 123.6h0M439.4 123.6h0M444.6 123.6h0M486.2 123.6h0M491.4 123.6h0M496.6 123.6h0M501.8 123.6h0M533.0 123.6h0M538.2 123.6h0M543.4 123.6h0M548.6 123.6h0M553.8 123.6h0M585.0 123.6h0M150.8 128.8h0M156.0 128.8h0M161.2 128.8h0M166.4 128.8h0M171.6 128.8h0M306.8 128.8h0M312.0 128.8h0M317.2 128.8h0M322.4 128.8h0M327.6 128.8h0M332.8 128.8h0M338.0 128.8h0M343.2 128.8h0M348.4 128.8h0M353.6 128.8h0M358.8 128.8h0M364.0 128.8h0M369.2 128.8h0M374.4 128.8h0M379.6 128.8h0M384.8 128.8h0M390.0 128.8h0M395.2 128.8h0M400.4 128.8h0M405.6 128.8h0M410.8 128.8h0M416.0 128.8h0M426.4 128.8h0M431.6 128.8h0M436.8 128.8h0M488.8 128.8h0M494.0 128.8h0M499.2 128.8h0M540.8 128.8h0M546.0 128.8h0M551.2 128.8h0M582.4 128.8h0M169.0 134.0h0M174.2 134.0h0M309.4 134.0h0M314.6 134.0h0M319.8 134.0h0M325.0 134.0h0M330.2 134.0h0M335.4 134.0h0M340.6 134.0h0M345.8 134.0h0M351.0 134.0h0M356.2 134.0h0M361.4 134.0h0M366.6 134.0h0M371.8 134.0h0M377.0 134.0h0M382.2 134.0h0M387.4 134.0h0M392.6 134.0h0M397.8 134.0h0M403.0 134.0h0M408.2 134.0h0M413.4 134.0h0M418.6 134.0h0M423.8 134.0h0M429.0 134.0h0M491.4 134.0h0M496.6 134.0h0M538.2 134.0h0M543.4 134.0h0M548.6 134.0h0M553.8 134.0h0M579.8 134.0h0M585.0 134.0h0M171.6 139.2h0M176.8 139.2h0M182.0 139.2h0M192.4 139.2h0M197.6 139.2h0M202.8 139.2h0M208.0 139.2h0M317.2 139.2h0M322.4 139.2h0M327.6 139.2h0M332.8 139.2h0M338.0 139.2h0M343.2 139.2h0M348.4 139.2h0M353.6 139.2h0M358.8 139.2h0M364.0 139.2h0M369.2 139.2h0M374.4 139.2h0M379.6 139.2h0M384.8 139.2h0M390.0 139.2h0M395.2 139.2h0M400.4 139.2h0M405.6 139.2h0M410.8 139.2h0M416.0 139.2h0M421.2 139.2h0M426.4 139.2h0M431.6 139.2h0M436.8 139.2h0M494.0 139.2h0M540.8 139.2h0M551.2 139.2h0M582.4 139.2h0M587.6 139.2h0M189.8 144.4h0M195.0 144.4h0M200.2 144.4h0M205.4 144.4h0M210.6 144.4h0M215.8 144.4h0M221.0 144.4h0M319.8 144.4h0M325.0 144.4h0M330.2 144.4h0M335.4 144.4h0M340.6 144.4h0M345.8 144.4h0M351.0 144.4h0M356.2 144.4h0M361.4 144.4h0M366.6 144.4h0M371.8 144.4h0M377.0 144.4h0M382.2 144.4h0M387.4 144.4h0M392.6 144.4h0M397.8 144.4h0M403.0 144.4h0M408.2 144.4h0M413.4 144.4h0M418.6 144.4h0M423.8 144.4h0M429.0 144.4h0M434.2 144.4h0M501.8 144.4h0M538.2 144.4h0M585.0 144.4h0M590.2 144.4h0M187.2 149.6h0M192.4 149.6h0M197.6 149.6h0M202.8 149.6h0M208.0 149.6h0M213.2 149.6h0M218.4 149.6h0M223.6 149.6h0M228.8 149.6h0M234.0 149.6h0M322.4 149.6h0M327.6 149.6h0M332.8 149.6h0M338.0 149.6h0M343.2 149.6h0M348.4 149.6h0M353.6 149.6h0M358.8 149.6h0M364.0 149.6h0M369.2 149.6h0M374.4 149.6h0M379.6 149.6h0M384.8 149.6h0M390.0 149.6h0M395.2 149.6h0M400.4 149.6h0M405.6 149.6h0M410.8 149.6h0M416.0 149.6h0M421.2 149.6h0M426.4 149.6h0M431.6 149.6h0M540.8 149.6h0M572.0 149.6h0M577.2 149.6h0M184.6 154.8h0M189.8 154.8h0M195.0 154.8h0M200.2 154.8h0M205.4 154.8h0M210.6 154.8h0M215.8 154.8h0M221.0 154.8h0M226.2 154.8h0M231.4 154.8h0M236.6 154.8h0M361.4 154.8h0M366.6 154.8h0M371.8 154.8h0M377.0 154.8h0M382.2 154.8h0M387.4 154.8h0M392.6 154.8h0M397.8 154.8h0M403.0 154.8h0M408.2 154.8h0M413.4 154.8h0M418.6 154.8h0M423.8 154.8h0M429.0 154.8h0M538.2 154.8h0M564.2 154.8h0M569.4 154.8h0M574.6 154.8h0M182.0 160.0h0M187.2 160.0h0M192.4 160.0h0M197.6 160.0h0M202.8 160.0h0M208.0 160.0h0M213.2 160.0h0M218.4 160.0h0M223.6 160.0h0M228.8 160.0h0M234.0 160.0h0M239.2 160.0h0M364.0 160.0h0M369.2 160.0h0M374.4 160.0h0M379.6 160.0h0M384.8 160.0h0M390.0 160.0h0M395.2 160.0h0M400.4 160.0h0M405.6 160.0h0M410.8 160.0h0M416.0 160.0h0M421.2 160.0h0M540.8 160.0h0M561.6 160.0h0M566.8 160.0h0M572.0 160.0h0M179.4 165.2h0M184.6 165.2h0M189.8 165.2h0M195.0 165.2h0M200.2 165.2h0M205.4 165.2h0M210.6 165.2h0M215.8 165.2h0M221.0 165.2h0M226.2 165.2h0M231.4 165.2h0M236.6 165.2h0M241.8 165.2h0M247.0 165.2h0M252.2 165.2h0M366.6 165.2h0M371.8 165.2h0M377.0 165.2h0M382.2 165.2h0M387.4 165.2h0M392.6 165.2h0M397.8 165.2h0M403.0 165.2h0M408.2 165.2h0M413.4 165.2h0M418.6 165.2h0M543.4 165.2h0M564.2 165.2h0M569.4 165.2h0M611.0 165.2h0M616.2 165.2h0M182.0 170.4h0M187.2 170.4h0M192.4 170.4h0M197.6 170.4h0M202.8 170.4h0M208.0 170.4h0M213.2 170.4h0M218.4 170.4h0M223.6 170.4h0M228.8 170.4h0M234.0 170.4h0M239.2 170.4h0M244.4 170.4h0M249.6 170.4h0M254.8 170.4h0M260.0 170.4h0M265.2 170.4h0M364.0 170.4h0M369.2 170.4h0M374.4 170.4h0M379.6 170.4h0M384.8 170.4h0M390.0 170.4h0M395.2 170.4h0M400.4 170.4h0M405.6 170.4h0M410.8 170.4h0M416.0 170.4h0M618.8 170.4h0M624.0 170.4h0M184.6 175.6h0M189.8 175.6h0M195.0 175.6h0M200.2 175.6h0M205.4 175.6h0M210.6 175.6h0M215.8 175.6h0M221.0 175.6h0M226.2 175.6h0M231.4 175.6h0M236.6 175.6h0M241.8 175.6h0M247.0 175.6h0M252.2 175.6h0M257.4 175.6h0M262.6 175.6h0M267.8 175.6h0M366.6 175.6h0M371.8 175.6h0M377.0 175.6h0M382.2 175.6h0M387.4 175.6h0M392.6 175.6h0M397.8 175.6h0M403.0 175.6h0M408.2 175.6h0M413.4 175.6h0M418.6 175.6h0M553.8 175.6h0M559.0 175.6h0M564.2 175.6h0M621.4 175.6h0M626.6 175.6h0M631.8 175.6h0M187.2 180.8h0M192.4 180.8h0M197.6 180.8h0M202.8 180.8h0M208.0 180.8h0M213.2 180.8h0M218.4 180.8h0M223.6 180.8h0M228.8 180.8h0M234.0 180.8h0M239.2 180.8h0M244.4 180.8h0M249.6 180.8h0M254.8 180.8h0M260.0 180.8h0M265.2 180.8h0M369.2 180.8h0M374.4 180.8h0M379.6 180.8h0M384.8 180.8h0M390.0 180.8h0M395.2 180.8h0M400.4 180.8h0M405.6 180.8h0M410.8 180.8h0M416.0 180.8h0M189.8 186.0h0M195.0 186.0h0M200.2 186.0h0M205.4 186.0h0M210.6 186.0h0M215.8 186.0h0M221.0 186.0h0M226.2 186.0h0M231.4 186.0h0M236.6 186.0h0M241.8 186.0h0M247.0 186.0h0M252.2 186.0h0M257.4 186.0h0M262.6 186.0h0M366.6 186.0h0M371.8 186.0h0M377.0 186.0h0M382.2 186.0h0M387.4 186.0h0M392.6 186.0h0M397.8 186.0h0M403.0 186.0h0M408.2 186.0h0M413.4 186.0h0M418.6 186.0h0M600.6 186.0h0M605.8 186.0h0M611.0 186.0h0M197.6 191.2h0M202.8 191.2h0M208.0 191.2h0M213.2 191.2h0M218.4 191.2h0M223.6 191.2h0M228.8 191.2h0M234.0 191.2h0M239.2 191.2h0M244.4 191.2h0M249.6 191.2h0M254.8 191.2h0M260.0 191.2h0M369.2 191.2h0M374.4 191.2h0M379.6 191.2h0M384.8 191.2h0M390.0 191.2h0M395.2 191.2h0M400.4 191.2h0M405.6 191.2h0M410.8 191.2h0M416.0 191.2h0M431.6 191.2h0M436.8 191.2h0M592.8 191.2h0M598.0 191.2h0M603.2 191.2h0M608.4 191.2h0M613.6 191.2h0M618.8 191.2h0M624.0 191.2h0M200.2 196.4h0M205.4 196.4h0M210.6 196.4h0M215.8 196.4h0M221.0 196.4h0M226.2 196.4h0M231.4 196.4h0M236.6 196.4h0M241.8 196.4h0M247.0 196.4h0M252.2 196.4h0M257.4 196.4h0M366.6 196.4h0M371.8 196.4h0M377.0 196.4h0M382.2 196.4h0M387.4 196.4h0M392.6 196.4h0M397.8 196.4h0M403.0 196.4h0M408.2 196.4h0M413.4 196.4h0M429.0 196.4h0M434.2 196.4h0M585.0 196.4h0M590.2 196.4h0M595.4 196.4h0M600.6 196.4h0M605.8 196.4h0M611.0 196.4h0M616.2 196.4h0M621.4 196.4h0M626.6 196.4h0M202.8 201.6h0M208.0 201.6h0M213.2 201.6h0M218.4 201.6h0M223.6 201.6h0M228.8 201.6h0M234.0 201.6h0M239.2 201.6h0M244.4 201.6h0M249.6 201.6h0M254.8 201.6h0M369.2 201.6h0M374.4 201.6h0M379.6 201.6h0M384.8 201.6h0M390.0 201.6h0M395.2 201.6h0M400.4 201.6h0M405.6 201.6h0M410.8 201.6h0M431.6 201.6h0M577.2 201.6h0M582.4 201.6h0M587.6 201.6h0M592.8 201.6h0M598.0 201.6h0M603.2 201.6h0M608.4 201.6h0M613.6 201.6h0M618.8 201.6h0M624.0 201.6h0M629.2 201.6h0M634.4 201.6h0M200.2 206.8h0M205.4 206.8h0M210.6 206.8h0M215.8 206.8h0M221.0 206.8h0M226.2 206.8h0M231.4 206.8h0M236.6 206.8h0M241.8 206.8h0M247.0 206.8h0M252.2 206.8h0M371.8 206.8h0M377.0 206.8h0M382.2 206.8h0M387.4 206.8h0M392.6 206.8h0M397.8 206.8h0M403.0 206.8h0M408.2 206.8h0M429.0 206.8h0M434.2 206.8h0M569.4 206.8h0M574.6 206.8h0M579.8 206.8h0M585.0 206.8h0M590.2 206.8h0M595.4 206.8h0M600.6 206.8h0M605.8 206.8h0M611.0 206.8h0M616.2 206.8h0M621.4 206.8h0M626.6 206.8h0M631.8 206.8h0M637.0 206.8h0M642.2 206.8h0M202.8 212.0h0M208.0 212.0h0M213.2 212.0h0M218.4 212.0h0M223.6 212.0h0M228.8 212.0h0M234.0 212.0h0M239.2 212.0h0M374.4 212.0h0M379.6 212.0h0M384.8 212.0h0M390.0 212.0h0M395.2 212.0h0M400.4 212.0h0M405.6 212.0h0M572.0 212.0h0M577.2 212.0h0M582.4 212.0h0M587.6 212.0h0M592.8 212.0h0M598.0 212.0h0M603.2 212.0h0M608.4 212.0h0M613.6 212.0h0M618.8 212.0h0M624.0 212.0h0M629.2 212.0h0M634.4 212.0h0M639.6 212.0h0M644.8 212.0h0M200.2 217.2h0M205.4 217.2h0M210.6 217.2h0M215.8 217.2h0M221.0 217.2h0M226.2 217.2h0M231.4 217.2h0M236.6 217.2h0M371.8 217.2h0M377.0 217.2h0M382.2 217.2h0M387.4 217.2h0M392.6 217.2h0M397.8 217.2h0M403.0 217.2h0M569.4 217.2h0M574.6 217.2h0M579.8 217.2h0M585.0 217.2h0M590.2 217.2h0M595.4 217.2h0M600.6 217.2h0M605.8 217.2h0M611.0 217.2h0M616.2 217.2h0M621.4 217.2h0M626.6 217.2h0M631.8 217.2h0M637.0 217.2h0M642.2 217.2h0M197.6 222.4h0M202.8 222.4h0M208.0 222.4h0M213.2 222.4h0M218.4 222.4h0M223.6 222.4h0M228.8 222.4h0M234.0 222.4h0M374.4 222.4h0M379.6 222.4h0M384.8 222.4h0M390.0 222.4h0M395.2 222.4h0M572.0 222.4h0M577.2 222.4h0M582.4 222.4h0M587.6 222.4h0M592.8 222.4h0M598.0 222.4h0M603.2 222.4h0M608.4 222.4h0M613.6 222.4h0M618.8 222.4h0M624.0 222.4h0M629.2 222.4h0M634.4 222.4h0M639.6 222.4h0M644.8 222.4h0M200.2 227.6h0M205.4 227.6h0M210.6 227.6h0M215.8 227.6h0M221.0 227.6h0M226.2 227.6h0M231.4 227.6h0M382.2 227.6h0M387.4 227.6h0M569.4 227.6h0M574.6 227.6h0M579.8 227.6h0M585.0 227.6h0M616.2 227.6h0M621.4 227.6h0M626.6 227.6h0M631.8 227.6h0M637.0 227.6h0M642.2 227.6h0M197.6 232.8h0M202.8 232.8h0M208.0 232.8h0M213.2 232.8h0M218.4 232.8h0M223.6 232.8h0M624.0 232.8h0M629.2 232.8h0M634.4 232.8h0M639.6 232.8h0M686.4 232.8h0M195.0 238.0h0M200.2 238.0h0M205.4 238.0h0M210.6 238.0h0M215.8 238.0h0M221.0 238.0h0M683.8 238.0h0M689.0 238.0h0M694.2 238.0h0M197.6 243.2h0M202.8 243.2h0M208.0 243.2h0M213.2 243.2h0M686.4 243.2h0M195.0 248.4h0M200.2 248.4h0M205.4 248.4h0M210.6 248.4h0M678.6 248.4h0M683.8 248.4h0M197.6 253.6h0M202.8 253.6h0M195.0 258.8h0M200.2 258.8h0"/><path class="wm-arc" data-i="0" d="M496.0 116.0Q338.6 -16.4 181.2 72.6"/><path class="wm-arc" data-i="1" d="M356.0 141.0Q252.6 41.4 149.2 100.4"/><path class="wm-arc" data-i="2" d="M584.0 134.0Q517.3 71.6 450.6 109.6"/><path class="wm-arc" data-i="3" d="M136.0 114.0Q150.4 58.2 164.8 76.2"/><path class="wm-arc" data-i="4" d="M411.6 92.2Q302.2 7.4 192.8 69.0"/><path class="wm-arc" data-i="5" d="M595.6 87.0Q619.0 45.5 642.4 227.8"/><path class="wm-arc" data-i="6" d="M378.0 56.0Q352.7 35.4 327.4 53.4"/><path class="wm-arc" data-i="7" d="M415.8 159.0Q377.8 21.4 339.8 57.0"/><path class="wm-arc" data-i="8" d="M246.0 184.0Q283.9 47.2 321.8 82.6"/><path class="wm-arc" data-i="9" d="M478.0 100.0Q422.4 21.4 366.8 55.0"/><path class="wm-arc" data-i="10" d="M548.0 92.0Q320.9 -66.1 93.8 61.4"/><path class="wm-arc" data-i="11" d="M552.0 130.0Q591.0 93.2 630.0 235.6"/><path class="wm-arc" data-i="12" d="M338.0 144.2Q265.0 33.8 192.0 78.6"/><path class="wm-arc" data-i="13" d="M192.0 150.8Q262.3 35.0 332.6 79.2"/><path class="wm-arc" data-i="14" d="M400.0 108.0Q379.2 51.0 358.4 69.0"/><path class="wm-arc" data-i="15" d="M186.0 124.0Q183.2 54.6 180.4 72.6"/><circle class="wm-to" data-i="0" cx="181.2" cy="72.6" r="3"/><circle class="wm-to" data-i="1" cx="149.2" cy="100.4" r="3"/><circle class="wm-to" data-i="2" cx="450.6" cy="109.6" r="3"/><circle class="wm-to" data-i="3" cx="164.8" cy="76.2" r="3"/><circle class="wm-to" data-i="4" cx="192.8" cy="69.0" r="3"/><circle class="wm-to" data-i="5" cx="642.4" cy="227.8" r="3"/><circle class="wm-to" data-i="6" cx="327.4" cy="53.4" r="3"/><circle class="wm-to" data-i="7" cx="339.8" cy="57.0" r="3"/><circle class="wm-to" data-i="8" cx="321.8" cy="82.6" r="3"/><circle class="wm-to" data-i="9" cx="366.8" cy="55.0" r="3"/><circle class="wm-to" data-i="10" cx="93.8" cy="61.4" r="3"/><circle class="wm-to" data-i="11" cx="630.0" cy="235.6" r="3"/><circle class="wm-to" data-i="12" cx="192.0" cy="78.6" r="3"/><circle class="wm-to" data-i="13" cx="332.6" cy="79.2" r="3"/><circle class="wm-to" data-i="14" cx="358.4" cy="69.0" r="3"/><circle class="wm-to" data-i="15" cx="180.4" cy="72.6" r="3"/></svg><span class="wm-flag" data-i="0" style="left:71.43%;top:46.92%">🇮🇳</span><span class="wm-flag" data-i="1" style="left:52.14%;top:55.38%">🇳🇬</span><span class="wm-flag" data-i="2" style="left:83.43%;top:51.54%">🇵🇭</span><span class="wm-flag" data-i="3" style="left:18.57%;top:43.85%">🇲🇽</span><span class="wm-flag" data-i="4" style="left:59.66%;top:32.77%">🇱🇧</span><span class="wm-flag" data-i="5" style="left:85.09%;top:33.46%">🇰🇷</span><span class="wm-flag" data-i="6" style="left:54.00%;top:20.38%">🇵🇱</span><span class="wm-flag" data-i="7" style="left:59.40%;top:61.15%">🇰🇪</span><span class="wm-flag" data-i="8" style="left:35.14%;top:70.77%">🇧🇷</span><span class="wm-flag" data-i="9" style="left:66.57%;top:35.38%">🇵🇰</span><span class="wm-flag" data-i="10" style="left:78.29%;top:35.38%">🇨🇳</span><span class="wm-flag" data-i="11" style="left:78.86%;top:50.00%">🇻🇳</span><span class="wm-flag" data-i="12" style="left:46.86%;top:55.46%">🇬🇭</span><span class="wm-flag" data-i="13" style="left:27.43%;top:58.00%">🇨🇴</span><span class="wm-flag" data-i="14" style="left:56.29%;top:44.23%">🇪🇬</span><span class="wm-flag" data-i="15" style="left:27.43%;top:46.15%">🇯🇲</span></div><div class="wm-cap" id="wm-cap" aria-live="off"></div><p class="wm-note">Example journeys, not member numbers.</p></div><script>(function(){var D=[["🇮🇳", "India", "Toronto"], ["🇳🇬", "Nigeria", "Houston"], ["🇵🇭", "Philippines", "Dubai"], ["🇲🇽", "Mexico", "Chicago"], ["🇱🇧", "Lebanon", "Montréal"], ["🇰🇷", "Korea", "Sydney"], ["🇵🇱", "Poland", "Dublin"], ["🇰🇪", "Kenya", "London"], ["🇧🇷", "Brazil", "Lisbon"], ["🇵🇰", "Pakistan", "Berlin"], ["🇨🇳", "China", "Vancouver"], ["🇻🇳", "Vietnam", "Melbourne"], ["🇬🇭", "Ghana", "New York"], ["🇨🇴", "Colombia", "Madrid"], ["🇪🇬", "Egypt", "Milan"], ["🇯🇲", "Jamaica", "Brampton"]],L=["Grew up in", "lives in"],r=document.getElementById("wm"),c=document.getElementById("wm-cap"),i=0;if(!r)return;function s(n){r.querySelectorAll(".on").forEach(function(e){e.classList.remove("on")});r.querySelectorAll('[data-i="'+n+'"]').forEach(function(e){e.classList.add("on")});var d=D[n];c.innerHTML="<small>"+L[0]+"</small> "+d[0]+" "+d[1]+" <span class=ar>→</span> <small>"+L[1]+"</small> "+d[2]}s(0);if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;setInterval(function(){i=(i+1)%D.length;s(i)},2600)})();</script><div id="p1" hidden></div><div id="p2" hidden></div></div>
+<section class="hero" id="hero" style="padding:0"><div class="w">
+ <div>
+  <p class="langhero"><a class="langh" href="fr/" hreflang="fr" lang="fr" aria-label="Lire en français" onclick="try{localStorage.setItem('rm.lang','fr')}catch(e){}">Français</a></p>
+  <p class="eb r">Verified matrimony for life abroad</p>
+  <h1 class="r r1">Your roots. Your city. <em>Your person.</em></h1>
+  <p class="lead r r2">For people born in one country and living in another. Meet someone from your own roots who lives in your city, and whose plans for marriage match yours.</p>
+  <div class="cta r r3"><a class="btn gbtn" href="app/"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>Join with Google</a><a class="btn gh" href="#how">See how it works</a></div>
+  <p class="avail r r3">Free to join · Works now in your web browser · Android on Google Play soon, iPhone after</p>
+  <div class="trust r r3"><span class="chip"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.2-7.5 9.5-4.3-1.3-7.5-4.9-7.5-9.5V6z"/><path d="M8.6 12l2.3 2.3 4.6-4.6"/></svg>ID + live selfie checked</span><span class="chip"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 018 0v2.5"/></svg>Numbers private</span><span class="chip"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 19.5c.9-3.3 3.4-5 6.5-5s5.6 1.7 6.5 5"/><circle cx="17" cy="9" r="2.8"/><path d="M17.5 14.5c2.3.3 3.6 1.8 4 4"/></svg>Parents welcome</span></div>
+ </div>
+ <div class="stage" role="img" aria-label="Example: members with roots in Lebanon, Korea, Mexico, India and Brazil, linked on a world map to the cities they live in now">
+  <div class="map" data-map="hero" aria-hidden="true"></div>
+  <div class="face f1" style="left:4%;top:8%;width:84px;height:84px" aria-hidden="true"><img src="img/home/layla.jpg" alt="" width="84" height="84"></div><div class="hi" style="left:3%;top:-1%;animation-delay:0s" aria-hidden="true"><b>Marhaba!</b> 🇱🇧</div>
+  <div class="face g f2" style="left:36%;top:2%;width:70px;height:70px;animation-delay:-2s" aria-hidden="true"><img src="img/home/jiwoo.jpg" alt="" width="70" height="70"></div><div class="hi h2b" style="left:34%;top:-6%;animation-delay:-3s" aria-hidden="true"><b>Annyeong!</b> 🇰🇷</div>
+  <div class="face g f3" style="left:2%;top:52%;width:76px;height:76px;animation-delay:-1s" aria-hidden="true"><img src="img/home/diego.jpg" alt="" width="76" height="76"></div><div class="hi" style="left:1%;top:43%;animation-delay:-6s" aria-hidden="true"><b>¡Hola!</b> 🇲🇽</div>
+  <div class="face f4" style="left:30%;top:68%;width:66px;height:66px;animation-delay:-3s" aria-hidden="true"><img src="img/home/priya.jpg" alt="" width="66" height="66"></div>
+  <div class="phone" aria-hidden="true"><div class="sc"><img src="img/home/ana.jpg" alt="" width="240" height="320"><span class="ex">Example</span><div class="gc"><b>Ana, 29</b><div class="from">🇧🇷 São Paulo → 🇨🇦 Toronto</div><div class="chips"><span class="chip">💍 In 1–2 years</span><span class="chip">✓ 5 of 5 checks</span></div></div></div></div>
+  <span class="ex exs" aria-hidden="true">Example photos, made with AI. Not real members.</span>
+ </div>
 </div></section>
 
-<div class="proof"><div class="wrap">
-  <div><b>4 checks</b><span>on every member: government ID, live selfie, roots and the city they live in</span></div>
-  <div><b>0</b><span>unverified profiles shown. Only fully verified members appear to others</span></div>
-  <div><b>Blocked</b><span>money requests in chat, the most common trick of romance scams</span></div>
-  <p class="src">Free tool: <a href="is-this-profile-real.html">Is this matrimony profile real? Take the 1-minute check</a></p>
-</div></div>
+<section id="how"><div class="w">
+ <div class="head"><p class="eb">How it works</p><h2>From sign-up to meeting families, without endless chatting.</h2></div>
+ <ol class="steps">
+  <li class="step glass"><span class="n" aria-hidden="true">1</span><h3>Join in taps</h3><p class="mt">Where you grew up, where you live, your plans. No typing.</p><div class="bar" aria-hidden="true"><i></i></div></li>
+  <li class="step glass"><span class="n" aria-hidden="true">2</span><h3>A person checks you</h3><p class="mt">ID, live selfie and photo. Roots and city badges take you to 100%.</p><div class="bar" aria-hidden="true"><i style="animation-delay:.6s"></i></div></li>
+  <li class="step glass"><span class="n" aria-hidden="true">3</span><h3>Three introductions a day</h3><p class="mt">Only verified people whose life plans match yours.</p><div class="bar" aria-hidden="true"><i style="animation-delay:1.2s"></i></div></li>
+  <li class="step glass"><span class="n" aria-hidden="true">4</span><h3>Meet with families</h3><p class="mt">Hosted Family Mixer evenings, dinner included, parents welcome.</p><div class="bar" aria-hidden="true"><i style="animation-delay:1.8s"></i></div></li>
+ </ol>
+</div></section>
 
-<section class="trust" id="trust" aria-label="Trust and safety"><div class="wrap">
-  <div class="tr-brands">
-    <a class="gsi" href="app/"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg><span>Sign in with Google</span></a>
-    <span class="ppm soon"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px"><path fill="none" stroke="#3B7D4F" stroke-width="1.8" stroke-linecap="round" d="M7 4l1.6 2.6M17 4l-1.6 2.6M5 17V11a7 7 0 0114 0v6zM9.5 11.5h.01M14.5 11.5h.01"/></svg><span class="soon-t"><b>Mobile app</b><small>Coming soon on iOS and Android</small></span></span>
-    <span class="ppm"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#003087" d="M15.607 4.653H8.941L6.645 19.251H1.82L4.862 0h7.995c3.754 0 6.375 2.294 6.473 5.513-.648-.478-2.105-.86-3.722-.86m6.57 5.546c0 3.41-3.01 6.853-6.958 6.853h-2.493L11.595 24H6.74l1.845-11.538h3.592c4.208 0 7.346-3.634 7.153-6.949a5.24 5.24 0 0 1 2.848 4.686M9.653 5.546h6.408c.907 0 1.942.222 2.363.541-.195 2.741-2.655 5.483-6.441 5.483H8.714Z"/></svg><span><b class="pp1">Pay</b><b class="pp2">Pal</b></span><small>Event tickets</small></span>
+<section class="band" id="why"><div class="w split">
+ <div class="mapcard" data-map="roots" role="img" aria-label="Map: one person from Beirut and one from Jalisco, both living in Toronto"></div>
+ <div class="stack"><p class="eb">Built for life abroad</p><h2>Two journeys, one city.</h2><p class="sub">NeuMarry shows where someone grew up and where they live now, so you meet people who understand both places. Not a filter on an app made for one country.</p>
+  <div class="chips"><span class="chip">🇱🇧 Beirut → 🇨🇦 Toronto</span><span class="chip">🇲🇽 Jalisco → 🇨🇦 Toronto</span><span class="chip">🇳🇬 Lagos → 🇬🇧 London</span><span class="chip">🇵🇭 Manila → 🇦🇪 Dubai</span></div>
+  <p><a class="tl" href="how-matching-works.html">How matching works</a></p></div>
+</div></section>
+
+<section id="safety"><div class="w">
+ <div class="head"><p class="eb">Safety first</p><h2>NeuMarry gives you verified matches only.</h2></div>
+ <div class="feat">
+  <div class="card"><span class="fi"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.2-7.5 9.5-4.3-1.3-7.5-4.9-7.5-9.5V6z"/><path d="M8.6 12l2.3 2.3 4.6-4.6"/></svg></span><h3>Checked by a person</h3><p class="mt">Every ID, live selfie and photo is checked before anyone can see a profile.</p></div>
+  <div class="card"><span class="fi"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 018 0v2.5"/></svg></span><h3>Your number stays private</h3><p class="mt">Talk in the app first. Share contact details only when you choose.</p></div>
+  <div class="card"><span class="fi"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 19.5c.9-3.3 3.4-5 6.5-5s5.6 1.7 6.5 5"/><circle cx="17" cy="9" r="2.8"/><path d="M17.5 14.5c2.3.3 3.6 1.8 4 4"/></svg></span><h3>Family can join</h3><p class="mt">Share a private family link with safe facts. Parents are welcome at events.</p></div>
+ </div>
+ <ul class="checks">
+  <li class="glass"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Photos checked with Google Cloud Vision</span></li>
+  <li class="glass"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Every ID read by Google and checked by a person</span></li>
+  <li class="glass"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Only verified members are shown</span></li>
+  <li class="glass"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Money requests in chat are blocked</span></li>
+  <li class="glass"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Data encrypted in transit and at rest</span></li>
+ </ul>
+ <div class="row"><a class="btn gh" href="sample-verified-profile.html">See a sample verified profile</a><a class="tl" href="is-this-profile-real.html">Is this matrimony profile real? Take the 1-minute check</a></div>
+</div></section>
+
+<section class="band" id="event"><div class="w split">
+ <div class="stack"><p class="eb">Family Mixer · Toronto</p><h2>An evening of conversation, dinner and families.</h2>
+  <p class="sub">60 seats for verified members, 30 women and 30 men aged 18 to 38, with parents welcome. Reserve free in the app: the evening is confirmed once 16 women and 16 men reserve by 18 November, then you have 48 hours to pay. If it is not confirmed, nobody pays.</p>
+  <div class="price"><div class="card"><div class="k">Member ticket</div><b>CA$99</b><div class="s">dinner included · early price, regular CA$129</div></div><div class="card"><div class="k">Parent ticket, up to 2</div><b>CA$69</b><div class="s">dinner included · regular CA$79</div></div></div>
+  <div class="row" style="margin-top:4px"><a class="btn" href="app/" id="reserve-open">Reserve your seat in the app</a><a class="tl" href="matrimony-events-toronto.html">Full event details</a></div>
+  <p class="note">Prices plus 13% HST. One payment in the app covers your seat and dinner; nothing to pay at the restaurant. Full refund up to 48 hours before. Every guest is ID-verified.</p></div>
+ <div><div class="pass" style="margin:0 auto"><div>
+  <div class="top"><span class="adm"><svg width="28" height="28" viewBox="0 0 64 64" aria-hidden="true"><path d="M25 50S8 40 8 26c0-7 5-11 10.5-11 3.6 0 6 2 7.5 4.5" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><path d="M39 50s17-10 17-24c0-7-5-11-10.5-11-6 0-10 5-13.5 10.5C28.5 31 25 35 25 39" fill="none" stroke="#FFC93C" stroke-width="6" stroke-linecap="round"/></svg><span class="eb">Admit one</span></span><span class="chip pchip">+ parents</span></div>
+  <p class="t">FAMILY<br>MIXER</p>
+  <dl><div><dt>Sat</dt><dd>28 Nov</dd></div><div><dt>Doors</dt><dd>5:30 pm</dd></div><div><dt>City</dt><dd>Toronto</dd></div></dl>
+  <div class="cd" aria-hidden="true"><div><b class="cd-d">–</b><span>days</span></div><div><b class="cd-h">–</b><span>hours</span></div><div><b class="cd-m">–</b><span>min</span></div><div><b class="cd-s">–</b><span>sec</span></div></div>
+ </div></div><p class="cdl" id="cd-l">Live countdown to doors</p></div>
+</div></section>
+
+<section id="communities"><div class="w">
+ <div class="head"><p class="eb">Events for every community</p><h2>Meet your own community, or everyone.</h2><p class="sub">Some evenings are for one community, so it is quicker to meet someone who shares your language and traditions. Others are open to all communities, for people who are open to more. In the app you choose which communities you are open to, and see your match % with everyone going.</p></div>
+ <div class="chips" aria-label="Community events">
+  <span class="chip">Gujarati</span><span class="chip">Punjabi</span><span class="chip">Sikh</span><span class="chip">Hindi-speaking</span><span class="chip">Marathi</span><span class="chip">Tamil</span><span class="chip">Telugu</span><span class="chip">Malayali</span><span class="chip">Kannada</span><span class="chip">Bengali</span><span class="chip">Muslim</span><span class="chip">Pakistani</span><span class="chip">Bangladeshi</span><span class="chip">Sri Lankan</span><span class="chip">Nepali</span><span class="chip">Christian</span><span class="chip">Jain</span><span class="chip">Arab</span><span class="chip">Persian</span><span class="chip">Filipino</span><span class="chip">Chinese</span><span class="chip">African</span><span class="chip">Latin American</span><span class="chip">All communities</span>
+ </div>
+ <div class="cities"><b>The app works in every country. In-person events start in Toronto and Brampton, with online events for New York, New Jersey, London and Leicester. Next in-person cities, based on where the waitlist grows fastest:</b>
+  <div class="chips"><span class="chip">New York and New Jersey</span><span class="chip">London</span><span class="chip">Leicester</span><span class="chip">Vancouver</span><span class="chip">Calgary</span><span class="chip">San Francisco Bay Area</span><span class="chip">Dallas</span><span class="chip">Sydney</span><span class="chip">Melbourne</span><span class="chip">Dubai</span></div></div>
+ <div class="row"><a class="btn gh" id="near-share" href="https://wa.me/?text=NeuMarry%3A%20verified%20matrimony%20for%20people%20living%20abroad.%20Every%20member%20proves%20their%20ID%2C%20roots%20and%20city.%20https%3A%2F%2Fneumarry.com" target="_blank" rel="noopener">Share NeuMarry</a><p class="mt" style="flex:1 1 280px">When 30 women and 30 men near you join, we host a Family Mixer in your city.</p></div>
+ <p class="nearcount" id="near-count" hidden></p>
+</div></section>
+
+<section class="band" id="app"><div class="w split">
+ <div class="stack"><p class="eb">Get the app</p><h2>Everything happens in the app.</h2>
+  <p class="sub">Your profile, verification, daily matches, chats and event seats all live in the NeuMarry app. Use it now in any web browser, on your phone or computer. The Android and iPhone apps use the same account.</p>
+  <div class="stores">
+   <a class="store" id="st-web" href="app/"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.6 3.6 5.5 3.6 8.5s-1 5.9-3.6 8.5c-2.6-2.6-3.6-5.5-3.6-8.5s1-5.9 3.6-8.5z"/></svg><span><small>Use it now in your</small><b>Web browser</b></span></a>
+   <a class="store" id="st-play" href="#join"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.5v17l14-8.5z" fill="currentColor"/></svg><span><small id="st-play-s">Coming soon on</small><b>Google Play</b></span></a>
+   <a class="store" id="st-ios" href="#join"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10.5 18.5h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span><small id="st-ios-s">Coming soon on</small><b>App Store</b></span></a>
   </div>
-  <ul class="tr-checks">
-    <li><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M9 6l1.5-2h3L15 6"/></svg><span><b>Photos checked</b>with Google Cloud Vision</span></li>
-    <li><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="11" r="2.2"/><path d="M5.8 16c.6-1.6 1.8-2.4 3.2-2.4s2.6.8 3.2 2.4M14.5 10h4M14.5 13.5h3"/></svg><span><b>Every ID read by Google</b>and checked by a person</span></li>
-    <li><svg class="ic" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg><span><b>Only verified</b>members are shown</span></li>
-    <li><svg class="ic" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 018 0v2.5"/></svg><span><b>Data encrypted</b>in transit and at rest</span></li>
+  <p class="note" id="st-note">The phone apps are not live yet. Join the waitlist below and we’ll email you the download link the day they go live.</p></div>
+ <ul class="ticks glass">
+  <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Create your profile and verify in about 5 minutes</span></li>
+  <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Daily matches on roots, city and mindset, with reasons shown</span></li>
+  <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>See your match % with everyone going to an event</span></li>
+  <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Reserve event seats free, pay only when confirmed</span></li>
+  <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Chat in the app, without sharing your number</span></li>
+ </ul>
+</div></section>
+
+<section id="join"><div class="w split top">
+ <div class="stack"><p class="eb">Founding members</p><h2>Be one of the first 500 in Toronto.</h2>
+  <ul class="perks">
+   <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>First access to event seats before they go public</span></li>
+   <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>The download link the day the app goes live</span></li>
+   <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Parents can sign up on behalf of a son or daughter</span></li>
+   <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Your details stay private and are never shown publicly</span></li>
+   <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Women: the first 300 to verify, in every country, get 3 months of Gold free</span></li>
+  </ul></div>
+ <form class="card glass" id="wait" novalidate>
+  <div class="fld"><span id="who-label">Who is signing up?</span><div class="seg" role="radiogroup" aria-labelledby="who-label"><label><input type="radio" name="who" value="self" checked><span>For myself</span></label><label><input type="radio" name="who" value="parent"><span>Parent or family</span></label></div></div>
+  <label class="fld" id="f-name"><span id="name-label">Your full name</span><input name="name" autocomplete="name" maxlength="60" required></label>
+  <div class="row2">
+   <label class="fld" id="f-email"><span>Email</span><input name="email" type="email" autocomplete="email" maxlength="80" required></label>
+   <label class="fld" id="f-phone"><span>Mobile or WhatsApp</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="+1 416 555 0142" required></label>
+  </div>
+  <div class="fld" id="f-gender"><span id="gender-label">I am</span><div class="seg" role="radiogroup" aria-labelledby="gender-label"><label><input type="radio" name="gender" value="M"><span id="g-m">A man</span></label><label><input type="radio" name="gender" value="F"><span id="g-f">A woman</span></label></div></div>
+  <div class="row2">
+   <label class="fld" id="f-age"><span id="age-label">Age</span><input name="age" type="number" inputmode="numeric" min="18" max="70" required></label>
+   <label class="fld" id="f-city"><span>City</span><select name="city" required><option value="">Choose</option><option>Toronto</option><option>Mississauga</option><option>Brampton</option><option>Markham</option><option>Vaughan</option><option>Oakville</option><option>Milton</option><option>Scarborough</option><option>Hamilton</option><option>Kitchener-Waterloo</option><option>Ottawa</option><option>Elsewhere in Canada</option><option>Outside Canada</option></select></label>
+  </div>
+  <label class="fld" id="f-roots"><span>Roots: country you grew up in</span><input name="roots" list="countries" autocomplete="off" maxlength="60" placeholder="Start typing, e.g. India" required><datalist id="countries"></datalist></label>
+  <label class="check" id="f-consent"><input type="checkbox" name="consent"><span>I agree that NeuMarry may contact me about the launch and events. My details are stored securely and never shown publicly. I can ask for them to be deleted at any time.</span></label>
+  <button class="btn" type="submit">Join the waitlist</button>
+ </form>
+</div></section>
+
+<section class="band" id="partners"><div class="w split top">
+ <div class="stack"><p class="eb">Work with us</p><h2>Hosts, restaurants and community groups.</h2>
+  <ul class="perks">
+   <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span><b>Hosts</b> run evenings in their city and earn CA$100 for every event, paid weekly. Training, the guest list and the seating plan come from us.</span></li>
+   <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span><b>Restaurants</b> give us a reserved hall on a quiet afternoon or evening. In return, 30 to 60 guests come with a prepaid meal from a fixed event menu, and you are listed as a NeuMarry partner venue.</span></li>
+   <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span><b>Matrimonial bureaus and community associations</b> earn 10% of the first Gold purchase of every member who joins with their partner code, plus ₹1,500 when a couple they brought gets engaged. Members always sign up themselves.</span></li>
   </ul>
-</div></section>
-
-<section class="near" id="near"><div class="wrap nearbox">
-  <div>
-    <p class="eyebrow">Looking for marriage?</p>
-    <h2>NeuMarry gives you verified matches only.</h2>
-    <p class="sub">Every member proves their ID, roots and city. Support the app and share it with friends and family abroad: when 30 women and 30 men near you join, we host a Family Mixer in your city.</p>
-    <p class="nearcount" id="near-count" hidden></p>
-    <div class="ctas"><a class="btn primary" href="app/">Create your free profile</a><a class="btn ghost" id="near-share" href="https://wa.me/?text=NeuMarry%3A%20verified%20matrimony%20for%20people%20living%20abroad.%20Every%20member%20proves%20their%20ID%2C%20roots%20and%20city.%20https%3A%2F%2Fneumarry.com" target="_blank" rel="noopener">Share NeuMarry</a></div>
+  <p><a class="tl" href="work-with-us.html">More about working with NeuMarry</a></p></div>
+ <form class="card glass" id="partner" novalidate>
+  <div class="fld" id="w-role"><span id="role-label">I am</span><div class="seg three" role="radiogroup" aria-labelledby="role-label"><label><input type="radio" name="role" value="host"><span>A host</span></label><label><input type="radio" name="role" value="restaurant"><span>A restaurant</span></label><label><input type="radio" name="role" value="bureau"><span>A bureau or group</span></label></div></div>
+  <label class="fld" id="w-name"><span>Your name</span><input name="name" autocomplete="name" maxlength="60" required></label>
+  <label class="fld" id="w-org"><span id="org-label">Organisation (optional)</span><input name="org" autocomplete="organization" maxlength="80"></label>
+  <div class="row2">
+   <label class="fld" id="w-city"><span>City and country</span><input name="city" maxlength="60" placeholder="e.g. Brampton, Canada" required></label>
+   <label class="fld" id="w-contact"><span>Phone or email</span><input name="contact" maxlength="80" required></label>
   </div>
-  <ol class="nearsteps">
-    <li><b>1</b><span><strong>Join and verify</strong>ID, live selfie, roots and city</span></li>
-    <li><b>2</b><span><strong>Share with people near you</strong>Friends, family, your community</span></li>
-    <li><b>3</b><span><strong>30 women + 30 men near you</strong>We host a Family Mixer in your city</span></li>
-  </ol>
+  <label class="fld" id="w-note"><span>Anything we should know (optional)</span><input name="note" maxlength="200" placeholder="Languages, communities, venue size"></label>
+  <label class="check" id="w-consent"><input type="checkbox" name="consent"><span>I agree that NeuMarry may contact me about working together. My details are used only for this.</span></label>
+  <button class="btn" type="submit">Send</button>
+ </form>
 </div></section>
 
-<section class="sec" id="how"><div class="wrap">
-  <p class="eyebrow">How it works</p>
-  <h2>From sign-up to meeting families, without endless chatting.</h2>
-  <ol class="steps">
-    <li><b>Create and verify</b><span>Your roots, your city and nine questions about values. Then a government ID and a live selfie, so everyone you meet is real.</span></li>
-    <li><b>Get matched</b><span>Hand-picked matches who share your roots, live near you and think like you, with the reasons shown on every profile.</span></li>
-    <li><b>Meet in person</b><span>Small hosted evenings in Toronto. Bring up to two parents; they get their own lounge.</span></li>
-    <li><b>Families meet</b><span>When you both say yes, a NeuMarry host helps both families connect.</span></li>
-  </ol>
+<section id="faq"><div class="w">
+ <div class="head"><p class="eb">Questions</p><h2>Before you join.</h2></div>
+ <div class="faq">
+  <details><summary>Is there an income or salary requirement?</summary><p>No. NeuMarry has no income, salary or wealth requirement for anyone, men or women. Every member is checked the same way: ID and selfie, roots and the city they live in. Matching is based on roots, values and life plans, not money.</p></details>
+  <details><summary>Is NeuMarry free?</summary><p>Joining is free: create your profile, verify, see how many people fit what you are looking for and your match % with each, and reply when a Gold member writes to you. NeuMarry Gold unlocks names and photos, interests, chat, daily picks and event guest lists, from CA$80 a month. Event tickets are separate and include the meal.</p></details>
+  <details><summary>Who can join?</summary><p>Anyone 18 or older who lives away from the country they grew up in and is looking for marriage. We start in the Greater Toronto Area and open other cities when each has enough members.</p></details>
+  <details><summary>How do you stop fake profiles?</summary><p>Every member verifies a government ID and a live selfie before they can send interests or messages, and every report is reviewed by a person.</p></details>
+  <details><summary>Who sees my photos and details?</summary><p>Only verified members. Photos stay blurred and only your first name and last initial show until you both accept. Your phone number is never shown unless you both choose to share it. Religion and community are optional.</p></details>
+  <details><summary>Can my parents be involved?</summary><p>Yes. Parents can sign up on your behalf and come to family events with their own ticket. A Family Circle where they can suggest profiles is coming soon. They cannot message anyone as you.</p></details>
+  <details><summary>What if an event does not fill?</summary><p>Nobody pays. Reserving in the app is free, and we ask for payment only after enough people reserve to confirm the event. If it is not confirmed in time, it is cancelled or moved to a new date, and you keep your free reservation.</p></details>
+  <details><summary>Can I use NeuMarry on the website?</summary><p>Yes. Open neumarry.com/app in any web browser, on your phone or computer, to create your profile, get verified, see your matches and chat. The Android app uses the same account.</p></details>
+  <details><summary>Can my parents join from another country?</summary><p>Yes. From Me in the app you can share a private family biodata link: your parents open it in any country, on a phone or computer, without installing anything. The link lasts 7 days and you can stop it at any time. A NeuMarry host can join to make the introductions.</p></details>
+  <details><summary>What is NeuMarry responsible for?</summary><p>We verify members, suggest matches, and host events where you can meet. Decisions after an introduction, and any relationship or marriage, belong to the two people and their families. We do not run criminal background checks, so please follow our safety advice and never send money to anyone you meet.</p></details>
+  <details><summary>When does my city open?</summary><p>Toronto opens first, in November 2026. Join the waitlist from anywhere and choose your city; we open the next cities based on where the waitlist grows fastest.</p></details>
+  <details><summary>Can I delete my account?</summary><p>Yes, at any time. In the app, open Me, then Delete my account. Without the app, follow the steps on our <a class="tl" href="delete-account.html">delete-account page</a>.</p></details>
+ </div>
 </div></section>
 
-<section class="sec" id="why" style="padding-top:0"><div class="wrap">
-  <p class="eyebrow">Why NeuMarry</p>
-  <h2>Built for life abroad, not as a filter on an India app.</h2>
-  <div class="usp">
-    <div><span class="pi"><svg class="ic" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5A7 7 0 005 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span><span><b>Roots, city and mindset</b><p>Matched on where you come from (country, state, language, community), where you live now down to the distance, and how you think.</p></span></div>
-    <div><span class="pi"><svg class="ic" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M15.5 4.8a3.5 3.5 0 010 6.4M18 14.8c1.8.8 3 2.5 3.5 5.2"/></svg></span><span><b>Family by your side</b><p>Hosted Family Mixers with parent tickets, and soon a Family Circle where parents can suggest profiles. They never chat as you.</p></span></div>
-    <div><span class="pi"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></span><span><b>Only real people</b><p>ID and a live selfie before anyone can message. Every report is read by a person within 24 hours.</p></span></div>
-    <div><span class="pi"><svg class="ic" viewBox="0 0 24 24"><path d="M13 2.5L5 13.5h6.2L10 21.5l8.5-11.5h-6.3z"/></svg></span><span><b>Family biodata link<em>New</em></b><p>Share your profile with your parents in any country through a private 7-day link. No phone numbers shared.</p></span></div>
-  </div>
+<section style="padding-top:0"><div class="w"><div class="close">
+ <p class="eb">For women</p><h2>The first 300 verified women in every country get 3 months of Gold free.</h2><a class="btn" href="app/">Create your free profile</a>
+</div></div></section>
+
+<section id="delete-account" style="padding-top:0"><div class="w">
+ <div class="head"><p class="eb">Your data</p><h2>Delete your NeuMarry account.</h2></div>
+ <ol class="del">
+  <li class="glass" style="border-radius:22px"><b>In the app</b><span>Open Me, then Delete my account. Your profile, photos, matches and chats are deleted within 30 days.</span></li>
+  <li class="glass" style="border-radius:22px"><b>Without the app</b><span>Email our support team from the email on your account with the subject "Delete my account". We confirm by email and delete within 30 days.</span></li>
+  <li class="glass" style="border-radius:22px"><b>What we keep</b><span>Only what the law requires, such as payment records for tax, and records of accounts removed for fraud. Cancel any Gold subscription in your Google Play or App Store account.</span></li>
+ </ol>
+ <p style="margin-top:16px"><a class="tl" href="delete-account.html">Full delete-account page</a></p>
 </div></section>
 
-<section class="sec" id="event" style="padding-top:0"><div class="wrap">
-  <p class="eyebrow">The first event</p>
-  <h2>Family Mixer, Toronto.</h2>
-  <p class="sub">Reserve a seat for free in the app. The event is confirmed once 16 women and 16 men reserve by 18 November; then you get 48 hours to pay. If it is not confirmed, nobody pays.</p>
-  <div class="event">
-    <div class="pic" id="event-art"><span class="date"><span>Nov</span><b>28</b><span>Sat</span></span><span class="tag"><svg class="ic" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/></svg>Parents welcome</span></div>
-    <div class="info">
-      <h3>An evening of conversation, dinner and families</h3>
-      <p class="whyline"><b>Why come:</b> you see the real person, not just a photo; your families meet the same evening; every guest is verified. For many families, one evening together settles what months of chatting cannot.</p>
-      <div class="meta"><span><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Sat 28 Nov · 5:30 to 8:30 pm</span><span><svg class="ic" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5A7 7 0 005 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>A partner restaurant in central Toronto</span><span><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4.4 4.2-6.5 8-6.5s7 2.1 8 6.5"/></svg>Members aged 18 to 38</span></div>
-      <ul class="incl">
-        <li><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>A reserved hall at a partner restaurant, and a host who greets every family</li>
-        <li><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Three conversations at your own table, in the same room as everyone else</li>
-        <li><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>A lounge where parents meet other parents</li>
-        <li><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Dinner included, from a fixed event menu: veg, Jain or non-veg, chosen in the app</li>
-        <li><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Private picks afterwards: mutual picks become matches</li>
-      </ul>
-      <div class="matchteaser"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3c.6 4.2 2.8 6.4 7 7-4.2.6-6.4 2.8-7 7-.6-4.2-2.8-6.4-7-7 4.2-.6 6.4-2.8 7-7z"/></svg><span><b>Know who to meet before you go.</b> In the app, see your match % with every member going, both ways: how well they fit you, and how well you fit them. Your top 3 are seated with you.</span></div>
-      <div class="prices"><div class="price"><b>CA$99</b><span>per member, dinner included, if you reserve early (regular CA$129)</span></div><div class="price"><b>CA$69</b><span>per parent, up to 2, dinner included (regular CA$79)</span></div></div>
-      <div class="seatbar"><span>Confirmed at 16 women and 16 men · 60 member seats: 30 women and 30 men</span></div>
-      <a class="btn primary" href="app/" id="reserve-open">Reserve your seat in the app</a>
-      <p class="note">Prices plus 13% HST. One payment in the app covers your seat and dinner; nothing to pay at the restaurant. Early price until the event confirms. Full refund up to 48 hours before. Every guest is ID-verified.</p>
-    </div>
-  </div>
+<section id="guides" style="padding-top:0"><div class="w">
+ <div class="head" style="margin-bottom:18px"><p class="eb">Guides</p><h2>Matrimony abroad, explained.</h2></div>
+ <nav class="guides" aria-label="Guides"><a href="matrimony-abroad-canada.html">Matrimony abroad: Canada</a><a href="toronto-matrimony.html">Matrimony in Toronto and the GTA</a><a href="matrimony-events-toronto.html">Matrimony events in Toronto</a><a href="community-matrimony-canada.html">Community matrimony in Canada</a><a href="matrimony-for-parents.html">For parents</a><a href="verified-matrimony.html">Verified profiles and safety</a><a href="matrimony-abroad-usa-uk.html">Matrimony abroad: USA and UK</a><a href="find-life-partner-abroad.html">Finding a life partner abroad</a><a href="safe-matrimony-for-women.html">Safe for women</a></nav>
 </div></section>
+</main>
 
-<section class="sec" id="communities" style="padding-top:0"><div class="wrap">
-  <p class="eyebrow">Events for every community</p>
-  <h2>Meet your own community, or everyone.</h2>
-  <p class="sub">Some evenings are for one community, so it is quicker to meet someone who shares your language and traditions. Others are open to all communities, for people who are open to more. In the app you choose which communities you are open to, and see your match % with everyone going.</p>
-  <div class="chips" aria-label="Community events">
-    <span>Gujarati</span><span>Punjabi</span><span>Sikh</span><span>Hindi-speaking</span><span>Marathi</span><span>Tamil</span><span>Telugu</span><span>Malayali</span><span>Kannada</span><span>Bengali</span><span>Muslim</span><span>Pakistani</span><span>Bangladeshi</span><span>Sri Lankan</span><span>Nepali</span><span>Christian</span><span>Jain</span><span>Arab</span><span>Persian</span><span>Filipino</span><span>Chinese</span><span>African</span><span>Latin American</span><span class="all">All communities</span>
-  </div>
-  <div class="cities"><b>The app works in every country. In-person events start in Toronto and Brampton, with online events for New York, New Jersey, London and Leicester. Next in-person cities, based on where the waitlist grows fastest:</b>
-    <span>New York and New Jersey</span><span>London</span><span>Leicester</span><span>Vancouver</span><span>Calgary</span><span>San Francisco Bay Area</span><span>Dallas</span><span>Sydney</span><span>Melbourne</span><span>Dubai</span></div>
-</div></section>
+<footer class="foot"><div class="wrap">
+ <div><a class="brand" href="./"><svg width="26" height="26" viewBox="0 0 64 64" aria-hidden="true"><path d="M25 50S8 40 8 26c0-7 5-11 10.5-11 3.6 0 6 2 7.5 4.5" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><path d="M39 50s17-10 17-24c0-7-5-11-10.5-11-6 0-10 5-13.5 10.5C28.5 31 25 35 25 39" fill="none" stroke="#FFC93C" stroke-width="6" stroke-linecap="round"/></svg>NeuMarry</a>
+  <p>A product of NEUCONET PRIVATE LIMITED, Surat, Gujarat, India.</p><p><a href="mailto:support@neumarry.com" style="display:inline">support@neumarry.com</a></p><p>Members must be 18 or older · © 2026</p></div>
+ <div><b>App</b><a href="app/">Open the app</a><a href="how-matching-works.html">How matching works</a><a href="verified-matrimony.html">Verified matrimony</a><a href="matrimony-events-toronto.html">Events in Toronto</a><a href="pricing.html">Pricing</a></div>
+ <div><b>Help</b><a href="faq.html">FAQ</a><a href="about.html">About NeuMarry</a><a href="safe-matrimony-for-women.html">Safety for women</a><a href="is-this-profile-real.html">Is this profile real?</a><a href="privacy-and-safety.html">Privacy and safety</a><a href="work-with-us.html">Work with us</a></div>
+ <div><b>By country and city</b><a href="uk-matrimony.html">United Kingdom</a><a href="usa-matrimony.html">United States</a><a href="australia-matrimony.html">Australia</a><a href="uae-matrimony.html">United Arab Emirates</a><a href="brampton-matrimony.html">Brampton</a><a href="mississauga-matrimony.html">Mississauga</a></div>
+ <div><b>Legal</b><a href="terms.html">Terms of Service</a><a href="privacy.html">Privacy Policy</a><a href="delete-account.html">Delete account</a><a href="child-safety.html">Child safety</a><b style="margin-top:14px">Follow</b><a href="https://www.instagram.com/neumarry_match" target="_blank" rel="noopener me">Instagram</a><a href="https://www.facebook.com/profile.php?id=61595614954211" target="_blank" rel="noopener me">Facebook</a><a href="https://www.linkedin.com/company/144030892/" target="_blank" rel="noopener me">LinkedIn</a></div>
+</div></footer>
 
-<section class="sec" id="app" style="padding-top:0"><div class="wrap appbox">
-  <div>
-    <p class="eyebrow">Get the app</p>
-    <h2>Everything happens in the app.</h2>
-    <p class="sub">Your profile, verification, daily matches, chats and event seats all live in the NeuMarry app. Use it now in any web browser, on your phone or computer. The Android and iPhone apps use the same account.</p>
-    <div class="stores">
-      <a class="store" id="st-web" href="app/"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z" fill="none" stroke="currentColor" stroke-width="2"/></svg><span><small>Use it now in your</small><b>Web browser</b></span></a>
-      <a class="store" id="st-play" href="#join"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.5v17l14-8.5z" fill="currentColor"/></svg><span><small id="st-play-s">Coming soon on</small><b>Google Play</b></span></a>
-      <a class="store" id="st-ios" href="#join"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10.5 18.5h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span><small id="st-ios-s">Coming soon on</small><b>App Store</b></span></a>
-    </div>
-    <p class="note" id="st-note">The phone apps are not live yet. Join the waitlist below and we’ll email you the download link the day they go live.</p>
-  </div>
-  <ul class="appfeat">
-    <li><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Create your profile and verify in about 5 minutes</li>
-    <li><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Daily matches on roots, city and mindset, with reasons shown</li>
-    <li><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>See your match % with everyone going to an event</li>
-    <li><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Reserve event seats free, pay only when confirmed</li>
-    <li><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Chat in the app, without sharing your number</li>
-  </ul>
-</div></section>
-
-<section class="sec" id="join" style="padding-top:0"><div class="wrap joinbox">
-  <div>
-    <p class="eyebrow">Founding members</p>
-    <h2>Be one of the first 500 in Toronto.</h2>
-    <ul class="perks">
-      <li><svg class="ic" viewBox="0 0 24 24"><path d="M12 3.2l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17.2l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><span>First access to event seats before they go public</span></li>
-      <li><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span>The download link the day the app goes live</span></li>
-      <li><svg class="ic" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/></svg><span>Parents can sign up on behalf of a son or daughter</span></li>
-      <li><svg class="ic" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><span>Your details stay private and are never shown publicly</span></li>
-      <li><svg class="ic" viewBox="0 0 24 24"><path d="M12 3c.6 4.2 2.8 6.4 7 7-4.2.6-6.4 2.8-7 7-.6-4.2-2.8-6.4-7-7 4.2-.6 6.4-2.8 7-7z"/></svg><span>Women: the first 300 to verify, in every country, get 3 months of Gold free</span></li>
-    </ul>
-  </div>
-  <form class="card" id="wait" novalidate>
-    <div class="fld"><span>Who is signing up?</span><div class="seg" role="radiogroup" aria-label="Who is signing up"><label><input type="radio" name="who" value="self" checked><span>For myself</span></label><label><input type="radio" name="who" value="parent"><span>Parent or family</span></label></div></div>
-    <label class="fld" id="f-name"><span id="name-label">Your full name</span><input name="name" autocomplete="name" maxlength="60" required></label>
-    <div class="row2">
-      <label class="fld" id="f-email"><span>Email</span><input name="email" type="email" autocomplete="email" maxlength="80" required></label>
-      <label class="fld" id="f-phone"><span>Mobile or WhatsApp</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="+1 416 555 0142" required></label>
-    </div>
-    <div class="fld" id="f-gender"><span id="gender-label">I am</span><div class="seg" role="radiogroup" aria-labelledby="gender-label"><label><input type="radio" name="gender" value="M"><span id="g-m">A man</span></label><label><input type="radio" name="gender" value="F"><span id="g-f">A woman</span></label></div></div>
-    <div class="row2">
-      <label class="fld" id="f-age"><span id="age-label">Age</span><input name="age" type="number" inputmode="numeric" min="18" max="70" required></label>
-      <label class="fld" id="f-city"><span>City</span><select name="city" required><option value="">Choose</option><option>Toronto</option><option>Mississauga</option><option>Brampton</option><option>Markham</option><option>Vaughan</option><option>Oakville</option><option>Milton</option><option>Scarborough</option><option>Hamilton</option><option>Kitchener-Waterloo</option><option>Ottawa</option><option>Elsewhere in Canada</option><option>Outside Canada</option></select></label>
-    </div>
-    <label class="fld" id="f-roots"><span>Roots: country you grew up in</span><input name="roots" list="countries" autocomplete="off" maxlength="60" placeholder="Start typing, e.g. India" required><datalist id="countries"></datalist></label>
-    <label class="check" id="f-consent"><input type="checkbox" name="consent"><span>I agree that NeuMarry may contact me about the launch and events. My details are stored securely and never shown publicly. I can ask for them to be deleted at any time.</span></label>
-    <button class="btn primary" type="submit">Join the waitlist</button>
-  </form>
-</div></section>
-
-<section class="sec" id="partners" style="padding-top:0"><div class="wrap joinbox">
-  <div>
-    <p class="eyebrow">Work with us</p>
-    <h2>Hosts, restaurants and community groups.</h2>
-    <ul class="perks">
-      <li><svg class="ic" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/></svg><span><b>Hosts</b> run evenings in their city and earn CA$100 for every event, paid weekly. Training, the guest list and the seating plan come from us.</span></li>
-      <li><svg class="ic" viewBox="0 0 24 24"><path d="M4 21V10l8-6 8 6v11M9 21v-6h6v6"/></svg><span><b>Restaurants</b> give us a reserved hall on a quiet afternoon or evening. In return, 30 to 60 guests come with a prepaid meal from a fixed event menu, and you are listed as a NeuMarry partner venue.</span></li>
-      <li><svg class="ic" viewBox="0 0 24 24"><rect x="3.5" y="9" width="17" height="11.5" rx="2"/><path d="M2.5 9h19M12 9v11.5"/></svg><span><b>Matrimonial bureaus and community associations</b> earn 10% of the first Gold purchase of every member who joins with their partner code, plus ₹1,500 when a couple they brought gets engaged. Members always sign up themselves.</span></li>
-    </ul>
-  </div>
-  <form class="card" id="partner" novalidate>
-    <div class="fld" id="w-role"><span id="role-label">I am</span><div class="seg three" role="radiogroup" aria-labelledby="role-label"><label><input type="radio" name="role" value="host"><span>A host</span></label><label><input type="radio" name="role" value="restaurant"><span>A restaurant</span></label><label><input type="radio" name="role" value="bureau"><span>A bureau or group</span></label></div></div>
-    <label class="fld" id="w-name"><span>Your name</span><input name="name" autocomplete="name" maxlength="60" required></label>
-    <label class="fld" id="w-org"><span id="org-label">Organisation (optional)</span><input name="org" autocomplete="organization" maxlength="80"></label>
-    <div class="row2">
-      <label class="fld" id="w-city"><span>City and country</span><input name="city" maxlength="60" placeholder="e.g. Brampton, Canada" required></label>
-      <label class="fld" id="w-contact"><span>Phone or email</span><input name="contact" maxlength="80" required></label>
-    </div>
-    <label class="fld" id="w-note"><span>Anything we should know (optional)</span><input name="note" maxlength="200" placeholder="Languages, communities, venue size"></label>
-    <label class="check" id="w-consent"><input type="checkbox" name="consent"><span>I agree that NeuMarry may contact me about working together. My details are used only for this.</span></label>
-    <button class="btn primary" type="submit">Send</button>
-  </form>
-</div></section>
-
-<section class="sec" id="faq" style="padding-top:0"><div class="wrap">
-  <p class="eyebrow">Questions</p>
-  <h2>Before you join.</h2>
-  <div class="faq">
-    <details><summary>Is NeuMarry free?<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>Joining is free: create your profile, verify, see how many people fit what you are looking for and your match % with each, and reply when a Gold member writes to you. NeuMarry Gold unlocks names and photos, interests, chat, daily picks and event guest lists, from CA$80 a month. Event tickets are separate and include the meal.</p></details>
-    <details><summary>Who can join?<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>Anyone 18 or older who lives away from the country they grew up in and is looking for marriage. We start in the Greater Toronto Area and open other cities when each has enough members.</p></details>
-    <details><summary>Is there an income or salary requirement?<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>No. NeuMarry has no income, salary or wealth requirement for anyone, men or women. Every member is checked the same way: ID and selfie, roots and the city they live in. Matching is based on roots, values and life plans, not money.</p></details>
-    <details><summary>How do you stop fake profiles?<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>Every member verifies a government ID and a live selfie before they can send interests or messages, and every report is reviewed by a person.</p></details>
-    <details><summary>Who sees my photos and details?<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>Only verified members. Photos stay blurred and only your first name and last initial show until you both accept. Your phone number is never shown unless you both choose to share it. Religion and community are optional.</p></details>
-    <details><summary>Can my parents be involved?<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>Yes. Parents can sign up on your behalf and come to family events with their own ticket. A Family Circle where they can suggest profiles is coming soon. They cannot message anyone as you.</p></details>
-    <details><summary>What if an event does not fill?<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>Nobody pays. Reserving in the app is free, and we ask for payment only after enough people reserve to confirm the event. If it is not confirmed in time, it is cancelled or moved to a new date, and you keep your free reservation.</p></details>
-    <details><summary>Can I use NeuMarry on the website?<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>Yes. Open neumarry.com/app in any web browser, on your phone or computer, to create your profile, get verified, see your matches and chat. The Android app uses the same account.</p></details>
-    <details><summary>Can my parents join from another country?<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>Yes. From Me in the app you can share a private family biodata link: your parents open it in any country, on a phone or computer, without installing anything. The link lasts 7 days and you can stop it at any time. A NeuMarry host can join to make the introductions.</p></details>
-    <details><summary>What is NeuMarry responsible for?<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>We verify members, suggest matches, and host events where you can meet. Decisions after an introduction, and any relationship or marriage, belong to the two people and their families. We do not run criminal background checks, so please follow our safety advice and never send money to anyone you meet.</p></details>
-    <details><summary>When does my city open?<svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>Toronto opens first, in November 2026. Join the waitlist from anywhere and choose your city; we open the next cities based on where the waitlist grows fastest.</p></details>
-  </div>
-  <div class="ctaband" style="margin-top:56px"><h2>Your story could start at the first Family Mixer.</h2><a class="btn" href="app/">Create your free profile</a></div>
-</div></section>
-<section class="sec" id="guides" style="padding-top:0"><div class="wrap"><p class="eyebrow">Guides</p><h2>Matrimony abroad, explained.</h2><nav class="guides" aria-label="Guides"><a href="matrimony-abroad-canada.html">Matrimony abroad: Canada</a><a href="toronto-matrimony.html">Matrimony in Toronto and the GTA</a><a href="matrimony-events-toronto.html">Matrimony events in Toronto</a><a href="community-matrimony-canada.html">Community matrimony in Canada</a><a href="matrimony-for-parents.html">For parents</a><a href="verified-matrimony.html">Verified profiles and safety</a><a href="matrimony-abroad-usa-uk.html">Matrimony abroad: USA and UK</a><a href="find-life-partner-abroad.html">Finding a life partner abroad</a><a href="safe-matrimony-for-women.html">Safe for women</a></nav></div></section></main>
-
-<section class="sec" id="delete-account" style="padding-top:0"><div class="wrap">
-  <p class="eyebrow">Your data</p>
-  <h2>Delete your NeuMarry account.</h2>
-  <ol class="steps del">
-    <li><b>In the app</b><span>Open Me, then Delete my account. Your profile, photos, matches and chats are deleted within 30 days.</span></li>
-    <li><b>Without the app</b><span>Email our support team from the email on your account with the subject "Delete my account". We confirm by email and delete within 30 days.</span></li>
-    <li><b>What we keep</b><span>Only what the law requires, such as payment records for tax, and records of accounts removed for fraud. Cancel any Gold subscription in your Google Play or App Store account.</span></li>
-  </ol>
-</div></section>
-<footer><div class="wrap"><a class="brand" href="#hero"><svg class="mark" viewBox="0 0 32 22" aria-hidden="true"><path class="c1" d="M11.60 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/><path class="c2" d="M20.40 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/></svg>NeuMarry</a><span>NeuMarry · © 2026</span><span>Members must be 18 or older</span><span class="legal-links"><button type="button" class="link" data-legal="terms">Terms of Service</button><button type="button" class="link" data-legal="privacy">Privacy Policy</button><a class="link" href="delete-account.html">Delete account</a><a class="link" href="privacy.html">Full Privacy Policy</a><a class="link" href="terms.html">Full Terms</a></span><span class="legal-links"><a class="link" href="https://www.instagram.com/neumarry_match" target="_blank" rel="noopener me">Instagram</a><a class="link" href="https://www.facebook.com/profile.php?id=61595614954211" target="_blank" rel="noopener me">Facebook</a><a class="link" href="https://www.linkedin.com/company/144030892/" target="_blank" rel="noopener me">LinkedIn</a></span></div></footer>
-<dialog id="legal" aria-labelledby="legal-title"><div class="dh"><h3 id="legal-title">Terms</h3><button class="x" type="button" id="legal-close" aria-label="Close"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div class="legal-b" id="legal-b"></div></dialog>
-
-
+<script src="js/premap.js"></script>
 <script>
-/* Editorial portraits: tonal head-and-shoulders silhouettes used as stand-ins where no
-   member photo exists (welcome screen, store images). No faces, skin tones or regional
-   dress (every head is the same soft white), so they read as adults from anywhere. portrait(seed, g, {tone}) where tone picks one of P_TONES. */
-function rngP(seed){let a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-function mixHex(a,b,t){const p=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));const A=p(a),B=p(b);return '#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('')}
-/* Each tone: background light, background deep, figure, clothing */
-const P_TONES=[
-  ['#F8E8EC','#EBC6D0','#9A4A62','#E9D2D8'],   // rose
-  ['#F1E8F4','#D9C6E3','#6A4A82','#EADFEF'],   // mauve
-  ['#E9EDF5','#C9D1E4','#3E4B74','#DCE2EE'],   // slate
-  ['#E8F0EC','#C8DCD1','#3D6656','#DCE8E1'],   // sage
-  ['#E6F0F1','#C3DCDF','#2F6670','#D7E7E9'],   // teal
-  ['#F5E7EE','#E3C2D3','#6E3558','#EEDBE5'],   // plum
-];
-const PCACHE=new Map();
-function portrait(seed,g,o){
-  o=o||{};const key=seed+g+(o.tone!=null?'t'+o.tone:'');if(PCACHE.has(key))return PCACHE.get(key);
-  const r=rngP(seed*9301+49297),pick=a=>a[Math.floor(r()*a.length)],F=g==='F';
-  const T=P_TONES[o.tone!=null?o.tone:pick([0,0,1,1,5,5,2,3,4])],id='p'+String(key).replace(/\W/g,'');
-  /* Head, neck and ears are the same soft white for every portrait, man or woman, so no
-     figure ever reads as a skin colour. The tone only colours hair, clothes and backdrop. */
-  const fig=T[2],head='#FBF9FA',headL='#FFFFFF',headD='#E9E2E6',hair=mixHex(fig,'#000000',.38);
-  const figL=headL,figD=headD;
-  const cloth=pick([T[3],mixHex(fig,'#ffffff',.35),mixHex(fig,'#000000',.1),'#F4F1EC']),clothL=mixHex(cloth,'#ffffff',.18),clothD=mixHex(cloth,'#000000',.2);
-  const lean=Math.round((r()-.5)*6);           // slight head turn
-  const hx=100+lean, hy=84, hrx=F?24:25.5, hry=F?31:32;
-  const K=1.13, TR=`transform="translate(${hx} ${hy}) scale(${K}) translate(${-hx} ${-hy})"`;
-  let s=`<svg viewBox="0 0 200 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>`
-   +`<linearGradient id="${id}b" x1="0" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="${mixHex(T[0],T[1],.45)}"/><stop offset="1" stop-color="${mixHex(T[1],fig,.12)}"/></linearGradient>`
-   +`<radialGradient id="${id}g" cx=".3" cy=".22" r=".75"><stop offset="0" stop-color="#ffffff" stop-opacity=".7"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>`
-   +`<linearGradient id="${id}f" x1="0" y1="0" x2="1" y2=".25"><stop offset="0" stop-color="${figL}"/><stop offset=".55" stop-color="${head}"/><stop offset="1" stop-color="${figD}"/></linearGradient>`
-   +`<linearGradient id="${id}c" x1="0" y1="0" x2="1" y2=".3"><stop offset="0" stop-color="${clothL}"/><stop offset=".6" stop-color="${cloth}"/><stop offset="1" stop-color="${clothD}"/></linearGradient>`
-   +`<linearGradient id="${id}h" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${mixHex(hair,'#ffffff',.14)}"/><stop offset="1" stop-color="${hair}"/></linearGradient>`
-   +`</defs>`;
-  s+=`<rect width="200" height="220" fill="url(#${id}b)"/><rect width="200" height="220" fill="url(#${id}g)"/>`;
-  // soft shadow on the backdrop
-  s+=`<ellipse cx="${118+lean}" cy="196" rx="92" ry="40" fill="${T[1]}" opacity=".55"/>`;
-  const hairStyle=F?pick(['long','long','bob','wavy','updo','shoulder']):pick(['crop','side','textured','swept']);
-  // long hair falls behind the shoulders
-  s+=`<g ${TR}>`;
-  if(F&&(hairStyle==='long'||hairStyle==='wavy'))s+=`<path d="M${hx-30} ${hy-6}C${hx-36} ${hy-48} ${hx+36} ${hy-48} ${hx+30} ${hy-6}C${hx+34} ${hy+40} ${hx+40} ${hy+76} ${hx+44} ${hy+102}${hairStyle==='wavy'?`q-10 8-18 2q-8 8-18 2`:''}L${hx-44} ${hy+102}${hairStyle==='wavy'?`q-6 6-14 0`:''}C${hx-40} ${hy+76} ${hx-34} ${hy+40} ${hx-30} ${hy-6}z" fill="url(#${id}h)"/>`;
-  if(F&&hairStyle==='shoulder')s+=`<path d="M${hx-29} ${hy-6}C${hx-34} ${hy-46} ${hx+34} ${hy-46} ${hx+29} ${hy-6}C${hx+33} ${hy+28} ${hx+34} ${hy+46} ${hx+36} ${hy+60}L${hx-36} ${hy+60}C${hx-34} ${hy+46} ${hx-33} ${hy+28} ${hx-29} ${hy-6}z" fill="url(#${id}h)"/>`;
-  if(F&&hairStyle==='updo')s+=`<ellipse cx="${hx+16}" cy="${hy-30}" rx="14" ry="12" fill="url(#${id}h)"/>`;
-  s+=`</g>`;
-  // neck
-  const nw=F?12:15;
-  s+=`<path d="M${hx-nw} ${hy+20}C${hx-nw} ${hy+36} ${hx-nw-1} ${hy+50} ${hx-nw-3} ${hy+62}L${hx+nw+3} ${hy+62}C${hx+nw+1} ${hy+50} ${hx+nw} ${hy+36} ${hx+nw} ${hy+20}z" fill="${figD}"/>`;
-  // shoulders and torso
-  const sw=F?66:78, top=hy+50, L=100-sw, R=100+sw;
-  const torso=`M${hx-nw-2} ${top}C${hx-nw-16} ${top+7} ${L+12} ${top+9} ${L} ${top+24}C${L-8} ${top+32} ${L-12} ${top+52} ${L-13} 220L${R+13} 220C${R+12} ${top+52} ${R+8} ${top+32} ${R} ${top+24}C${R-12} ${top+9} ${hx+nw+16} ${top+7} ${hx+nw+2} ${top}z`;
-  s+=`<path d="${torso}" fill="url(#${id}c)"/>`;
-  const outfit=F?pick(['vneck','boat','blazer','crew','turtle']):pick(['blazer','blazer','shirt','crew','turtle']);
-  if(outfit==='vneck')s+=`<path d="M${hx-nw-6} ${top+4}L${hx} ${top+34}L${hx+nw+6} ${top+4}z" fill="${figD}"/>`;
-  if(outfit==='boat')s+=`<path d="M${hx-nw-8} ${top+4}Q${hx} ${top+14} ${hx+nw+8} ${top+4}z" fill="${figD}"/>`;
-  if(outfit==='crew')s+=`<path d="M${hx-nw-4} ${top+3}Q${hx} ${top+12} ${hx+nw+4} ${top+3}" stroke="${clothD}" stroke-width="3" fill="none"/>`;
-  if(outfit==='turtle')s+=`<path d="M${hx-nw-1} ${hy+40}Q${hx} ${hy+44} ${hx+nw+1} ${hy+40}L${hx+nw+6} ${top+6}Q${hx} ${top+12} ${hx-nw-6} ${top+6}z" fill="url(#${id}c)"/><path d="M${hx-nw-1} ${hy+40}Q${hx} ${hy+44} ${hx+nw+1} ${hy+40}" stroke="${clothD}" stroke-width="1" fill="none" opacity=".6"/>`;
-  if(outfit==='shirt'||outfit==='blazer'){
-    const inner=outfit==='blazer'?pick(['#F7F4F0',mixHex(T[0],'#ffffff',.5)]):clothL;
-    s+=`<path d="M${hx-nw-5} ${top+3}L${hx} ${top+40}L${hx+nw+5} ${top+3}z" fill="${outfit==='blazer'?inner:clothL}"/>`;
-    s+=`<path d="M${hx-nw-5} ${top+2}L${hx-3} ${top+16}L${hx-nw+1} ${top+22}zM${hx+nw+5} ${top+2}L${hx+3} ${top+16}L${hx+nw-1} ${top+22}z" fill="${mixHex(outfit==='blazer'?inner:clothL,'#ffffff',.5)}" stroke="${mixHex(cloth,'#000',.12)}" stroke-width=".6"/>`;
-    if(outfit==='blazer')s+=`<path d="M${hx-nw-7} ${top+4}L${hx-4} ${top+62}L${hx-18} ${top+30}L${hx-nw-14} ${top+18}zM${hx+nw+7} ${top+4}L${hx+4} ${top+62}L${hx+18} ${top+30}L${hx+nw+14} ${top+18}z" fill="${clothD}" opacity=".55"/>`;
-  }
-  // head
-  s+=`<g ${TR}>`;
-  s+=`<ellipse cx="${hx}" cy="${hy}" rx="${hrx}" ry="${hry}" fill="url(#${id}f)"/>`;
-  // ears
-  s+=`<ellipse cx="${hx-hrx+1}" cy="${hy+4}" rx="3.5" ry="7" fill="${head}"/><ellipse cx="${hx+hrx-1}" cy="${hy+4}" rx="3.5" ry="7" fill="${figD}"/>`;
-  // front hair
-  if(F){
-    if(hairStyle==='bob')s+=`<path d="M${hx-29} ${hy+30}C${hx-36} ${hy-14} ${hx-20} ${hy-40} ${hx+2} ${hy-38}C${hx+26} ${hy-38} ${hx+38} ${hy-14} ${hx+29} ${hy+30}C${hx+24} ${hy+12} ${hx+22} ${hy-6} ${hx+12} ${hy-16}C${hx-2} ${hy-6} ${hx-16} ${hy-8} ${hx-22} ${hy-4}C${hx-24} ${hy+8} ${hx-24} ${hy+18} ${hx-29} ${hy+30}z" fill="url(#${id}h)"/>`;
-    else if(hairStyle==='updo')s+=`<path d="M${hx-25} ${hy+2}C${hx-28} ${hy-30} ${hx-8} ${hy-38} ${hx+4} ${hy-37}C${hx+24} ${hy-36} ${hx+30} ${hy-16} ${hx+25} ${hy+2}C${hx+18} ${hy-16} ${hx+6} ${hy-22} ${hx-6} ${hy-20}C${hx-14} ${hy-14} ${hx-20} ${hy-8} ${hx-25} ${hy+2}z" fill="url(#${id}h)"/>`;
-    else s+=`<path d="M${hx-27} ${hy+14}C${hx-32} ${hy-26} ${hx-14} ${hy-40} ${hx+4} ${hy-38}C${hx+26} ${hy-36} ${hx+34} ${hy-14} ${hx+27} ${hy+14}C${hx+24} ${hy-4} ${hx+18} ${hy-14} ${hx+8} ${hy-20}C${hx-4} ${hy-10} ${hx-14} ${hy-10} ${hx-22} ${hy-6}C${hx-24} ${hy} ${hx-25} ${hy+6} ${hx-27} ${hy+14}z" fill="url(#${id}h)"/>`;
-  }else{
-    if(hairStyle==='crop')s+=`<path d="M${hx-25} ${hy-2}C${hx-28} ${hy-30} ${hx-12} ${hy-36} ${hx+2} ${hy-35}C${hx+20} ${hy-35} ${hx+30} ${hy-24} ${hx+25} ${hy-2}C${hx+22} ${hy-14} ${hx+14} ${hy-20} ${hx} ${hy-20}C${hx-12} ${hy-20} ${hx-20} ${hy-14} ${hx-25} ${hy-2}z" fill="url(#${id}h)"/>`;
-    if(hairStyle==='side')s+=`<path d="M${hx-26} ${hy}C${hx-30} ${hy-32} ${hx-10} ${hy-38} ${hx+4} ${hy-37}C${hx+24} ${hy-36} ${hx+31} ${hy-22} ${hx+26} ${hy}C${hx+22} ${hy-12} ${hx+16} ${hy-18} ${hx+6} ${hy-22}C${hx-6} ${hy-16} ${hx-18} ${hy-14} ${hx-26} ${hy}z" fill="url(#${id}h)"/><path d="M${hx-8} ${hy-34}Q${hx-2} ${hy-26} ${hx-4} ${hy-21}" stroke="${mixHex(hair,'#fff',.2)}" stroke-width="1.2" fill="none"/>`;
-    if(hairStyle==='textured')s+=`<path d="M${hx-26} ${hy-2}C${hx-30} ${hy-24} ${hx-22} ${hy-36} ${hx-10} ${hy-38}C${hx-4} ${hy-42} ${hx+8} ${hy-42} ${hx+14} ${hy-38}C${hx+28} ${hy-34} ${hx+30} ${hy-18} ${hx+26} ${hy-2}C${hx+22} ${hy-14} ${hx+12} ${hy-20} ${hx} ${hy-19}C${hx-12} ${hy-19} ${hx-21} ${hy-13} ${hx-26} ${hy-2}z" fill="url(#${id}h)"/>`;
-    if(hairStyle==='swept')s+=`<path d="M${hx-26} ${hy}C${hx-30} ${hy-30} ${hx-14} ${hy-42} ${hx+6} ${hy-41}C${hx+26} ${hy-40} ${hx+32} ${hy-22} ${hx+26} ${hy}C${hx+22} ${hy-16} ${hx+12} ${hy-24} ${hx} ${hy-23}C${hx-12} ${hy-22} ${hx-20} ${hy-14} ${hx-26} ${hy}z" fill="url(#${id}h)"/>`;
-    if(r()<.4)r(); /* (no beard shading: it read as a darker face) keeps the same picks as before */
-  }
-  s+=`</g></svg>`;
-  PCACHE.set(key,s);return s;
-}
-
 const COUNTRY_NAMES=["Afghanistan","Aland Islands","Albania","Algeria","American Samoa","Andorra","Angola","Anguilla","Antarctica","Antigua And Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","The Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana","Bouvet Island","Brazil","British Indian Ocean Territory","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Central African Republic","Chad","Chile","China","Christmas Island","Cocos (Keeling) Islands","Colombia","Comoros","Congo","Democratic Republic of the Congo","Cook Islands","Costa Rica","Cote D'Ivoire (Ivory Coast)","Croatia","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","East Timor","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji Islands","Finland","France","French Guiana","French Polynesia","French Southern Territories","Gabon","The Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guadeloupe","Guam","Guatemala","Guernsey and Alderney","Guinea","Guinea-Bissau","Guyana","Haiti","Heard Island and McDonald Islands","Honduras","Hong Kong S.A.R.","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","North Korea","South Korea","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau S.A.R.","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Man (Isle of)","Marshall Islands","Martinique","Mauritania","Mauritius","Mayotte","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Namibia","Nauru","Nepal","Bonaire, Sint Eustatius and Saba","Netherlands","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Niue","Norfolk Island","Northern Mariana Islands","Norway","Oman","Pakistan","Palau","Palestinian Territory Occupied","Panama","Papua new Guinea","Paraguay","Peru","Philippines","Pitcairn Island","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Helena","Saint Kitts And Nevis","Saint Lucia","Saint Pierre and Miquelon","Saint Vincent And The Grenadines","Saint-Barthelemy","Saint-Martin (French part)","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Georgia","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Svalbard And Jan Mayen Islands","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Togo","Tokelau","Tonga","Trinidad And Tobago","Tunisia","Turkey","Turkmenistan","Turks And Caicos Islands","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","United States Minor Outlying Islands","Uruguay","Uzbekistan","Vanuatu","Vatican City State (Holy See)","Venezuela","Vietnam","Virgin Islands (British)","Virgin Islands (US)","Wallis And Futuna Islands","Western Sahara","Yemen","Zambia","Zimbabwe","Kosovo","Curaçao","Sint Maarten (Dutch part)"];
 (function(){
 "use strict";
-/* Live backend: set on launch day (Supabase project URL and public anon key). Empty = preview mode, nothing leaves the page. */
 const BACKEND={url:'https://ndxlguuywifovqdzdvtq.supabase.co',anonKey:'sb_publishable_oBR1e77Tx1mNysmxcZ2cgw_qDOpS4gt'};
 const LIVE=!!(BACKEND.url&&BACKEND.anonKey);
 const $=s=>document.querySelector(s);
-const LAUNCH=Date.parse('2026-11-28T22:30:00Z'); // first Family Mixer, 5:30 pm in Toronto
+const LAUNCH=Date.parse('2026-11-28T22:30:00Z'); // first Family Mixer, doors 5:30 pm in Toronto
 /* Store links: paste each listing URL when it goes live. Empty = 'Coming soon', button scrolls to the waitlist. */
 const STORE={play:'',ios:''};
+
+/* Mobile menu */
+const nav=$('.nav'),mb=$('.menu');
+mb.addEventListener('click',()=>{const o=nav.classList.toggle('open');mb.setAttribute('aria-expanded',o)});
+document.querySelectorAll('#mnav a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');mb.setAttribute('aria-expanded','false')}));
+addEventListener('keydown',e=>{if(e.key==='Escape'&&nav.classList.contains('open')){nav.classList.remove('open');mb.setAttribute('aria-expanded','false');mb.focus()}});
+
+/* Maps (real country shapes, js/premap.js) */
+const mq=matchMedia('(prefers-color-scheme: light)');
+function maps(){if(typeof PM==='undefined')return;const lt=mq.matches;
+ document.querySelectorAll('[data-map]').forEach(e=>{const k=e.dataset.map;const r=e.getBoundingClientRect();const ar=(r.width||600)/(r.height||400);
+  const o=k==='hero'?{fit:['guad','lagos','busan','beirut','toronto','london','sydney','sao'],pad:20,fsr:.026,seq:[{hl:{'484':'#FFC93C','124':'#E2136E'},arcs:[['guad','toronto']]},{hl:{'422':'#FFC93C','124':'#E2136E'},arcs:[['beirut','toronto']]},{hl:{'566':'#FFC93C','826':'#E2136E'},arcs:[['lagos','london']]},{hl:{'410':'#FFC93C','036':'#E2136E'},arcs:[['busan','sydney']]}]}
+   :{fit:['beirut','guad','toronto'],pad:80,fsr:.04,hl:{'422':'rgba(255,92,158,.7)','484':'rgba(255,201,60,.6)','124':lt?'rgba(20,16,24,.12)':'rgba(255,255,255,.22)'},arcs:[['beirut','toronto','#FF5C9E'],['guad','toronto','#FFC93C']],pins:[['beirut','Beirut','#FF5C9E'],['guad','Jalisco','#FFC93C'],['toronto','Toronto',lt?'#141018':'#FFFFFF']]};
+  e.innerHTML=PM.draw(Object.assign({vb:PM.fit(o.fit,ar,o.pad),theme:lt?'light':'dark'},o))})}
+try{const st=document.createElement('style');st.textContent=PM.CSS;document.head.appendChild(st);maps();
+ if(mq.addEventListener)mq.addEventListener('change',maps);let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(maps,250)})}catch(e){}
+
+/* Live member counts (real numbers from the database; hidden when there are none) */
 (async()=>{try{const r=await fetch(`${BACKEND.url}/rest/v1/rpc/public_counts`,{method:'POST',headers:{'apikey':BACKEND.anonKey,'Authorization':`Bearer ${BACKEND.anonKey}`,'Content-Type':'application/json'},body:'{}'});const c=await r.json();
-if(c&&c.joined){const el=document.getElementById('near-count');el.textContent=(document.documentElement.lang==='fr'?`${c.joined} membres inscrits · ${c.waiting} en attente de vérification`:`${c.joined} members joined · ${c.waiting} waiting for verification`);el.hidden=false}}catch(e){}})();
+if(c&&c.joined){const el=document.getElementById('near-count');el.textContent=(document.documentElement.lang.indexOf('fr')===0?`${c.joined} membres inscrits · ${c.waiting} en attente de vérification`:`${c.joined} members joined · ${c.waiting} waiting for verification`);el.hidden=false}}catch(e){}})();
 try{const sh=document.getElementById('near-share');if(navigator.share&&sh)sh.addEventListener('click',ev=>{ev.preventDefault();navigator.share({title:'NeuMarry',text:'Verified matrimony for people living abroad. Every member proves their ID, roots and city.',url:'https://neumarry.com'}).catch(()=>{})})}catch(e){}
 try{const q=new URLSearchParams(location.search).get('p');if(q&&/^[A-Za-z0-9]{2,20}$/.test(q))localStorage.setItem('rm.p',q.toUpperCase())}catch(e){}
 
-if(LIVE){const s=$('#preview-strip');if(s)s.hidden=true}
-
 [['play','#st-play'],['ios','#st-ios']].forEach(([k,sel])=>{if(STORE[k]){const a=$(sel);a.href=STORE[k];a.target='_blank';a.rel='noopener';a.classList.add('live');$(sel+'-s').textContent=k==='play'?'Get it on':'Download on the'}});
 if(STORE.play||STORE.ios)$('#st-note').textContent=STORE.play&&STORE.ios?'Free to download.':(STORE.play?'Free to download on Android. iPhone coming soon: join the waitlist and we’ll email you.':'Free to download on iPhone. Android coming soon: join the waitlist and we’ll email you.');
-$('#p1').innerHTML=portrait(11,'F',{tone:0});
-$('#p2').innerHTML=portrait(42,'M',{tone:2});
 const dl=$('#countries');dl.innerHTML=COUNTRY_NAMES.map(n=>`<option value="${n.replace(/"/g,'&quot;')}">`).join('');
 
-/* Event art */
-(function(){let s='<svg viewBox="0 0 400 320" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="eg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFC2A6"/><stop offset=".55" stop-color="#FF8399"/><stop offset="1" stop-color="#E8436B"/></linearGradient><radialGradient id="el"><stop offset="0" stop-color="#FFF6D8"/><stop offset="1" stop-color="#FFF6D8" stop-opacity="0"/></radialGradient></defs><rect width="400" height="320" fill="url(#eg)"/>';
-  [[60,250,50],[340,90,70],[250,280,40]].forEach(([x,y,r])=>{s+=`<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" opacity=".12"/>`});
-  [[-10,100,410,110,170],[-10,140,410,130,210]].forEach(([x1,y1,x2,y2,cy])=>{s+=`<path d="M${x1} ${y1} Q200 ${cy} ${x2} ${y2}" stroke="#7A2040" stroke-opacity=".3" stroke-width="1.5" fill="none"/>`;for(let i=1;i<12;i++){const t=i/12,x=(1-t)*(1-t)*x1+2*(1-t)*t*200+t*t*x2,y=(1-t)*(1-t)*y1+2*(1-t)*t*cy+t*t*y2+6;s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="13" fill="url(#el)"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.4" fill="${i%3?'#FFF2C4':'#FFD1DC'}"/>`}});
-  s+='<g fill="#fff" opacity=".94"><path d="M270 238h52v12a26 26 0 01-52 0z"/><path d="M196 248h40v9a20 20 0 01-40 0z" opacity=".85"/></g><path d="M322 243a9 9 0 010 18" stroke="#fff" stroke-width="4.5" fill="none" opacity=".94"/><g stroke="#fff" stroke-width="2.6" fill="none" opacity=".75" stroke-linecap="round"><path d="M288 226q-5-9 2-16M304 226q-5-9 2-16"/></g></svg>';
-  $('#event-art').insertAdjacentHTML('afterbegin',s)})();
-
-/* Countdown */
-function tick(){const ms=LAUNCH-Date.now();if(ms<=0){$('#cd-d').textContent='0';$('#cd-h').textContent='0';$('#cd-m').textContent='0';$('#cd-l').textContent='See you at the next Family Mixer';return}
-  const m=Math.floor(ms/60000);$('#cd-d').textContent=Math.floor(m/1440);$('#cd-h').textContent=Math.floor(m%1440/60);$('#cd-m').textContent=m%60}
-tick();setInterval(tick,30000);
-
-/* Header border on scroll */
-const hdr=$('header');addEventListener('scroll',()=>hdr.classList.toggle('scrolled',scrollY>8),{passive:true});
+/* Countdown to doors of the first Family Mixer */
+function tick(){let s=Math.max(0,Math.floor((LAUNCH-Date.now())/1000));const v={d:Math.floor(s/86400),h:Math.floor(s%86400/3600),m:Math.floor(s%3600/60),s:s%60};
+ for(const u in v)document.querySelectorAll('.cd-'+u).forEach(e=>e.textContent=String(v[u]).padStart(2,'0'));
+ if(s<=0)$('#cd-l').textContent='See you at the next Family Mixer'}
+tick();setInterval(tick,1000);
 
 /* Helpers */
 let toastT;function toast(t){clearTimeout(toastT);let el=$('.toast');if(!el){el=document.createElement('div');el.className='toast';el.setAttribute('role','status');document.body.appendChild(el)}el.textContent=t;toastT=setTimeout(()=>el.remove(),3600)}
-function setErr(wrapSel,msg){const w=$(wrapSel);if(!w)return;w.classList.toggle('bad',!!msg);let e=w.querySelector('.err');if(msg){if(!e){e=document.createElement('span');e.className='err';w.appendChild(e)}e.textContent=msg}else if(e)e.remove()}
+function setErr(wrapSel,msg){const w=$(wrapSel);if(!w)return;w.classList.toggle('bad',!!msg);let e=w.querySelector('.err');if(msg){if(!e){e=document.createElement('span');e.className='err';e.setAttribute('role','alert');w.appendChild(e)}e.textContent=msg}else if(e)e.remove()}
 const EMAIL=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 function phoneOk(v){const d=v.replace(/\D/g,'');return d.length>=10&&d.length<=15}
 function code(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='RM-';for(let i=0;i<6;i++)s+=c[Math.floor(Math.random()*c.length)];return s}
@@ -664,7 +454,9 @@ async function send(table,row){
     if(r.status===409)return {ok:false,dup:true};return {ok:r.ok}}catch(e){return {ok:false}}}
 function remember(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 function recall(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}}
-function doneHTML(title,body,ref){return `<div class="done" tabindex="-1"><span class="big"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><h3>${title}</h3><p>${body}</p>${ref?`<p>Your reference: <span class="code">${ref}</span></p>`:''}${LIVE?'':'<p class="note">Preview: this was not saved. Sign-ups go live with the launch.</p>'}</div>`}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function doneHTML(title,body,ref){return `<div class="done" tabindex="-1"><span class="big"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><h3>${title}</h3><p class="mt">${body}</p>${ref?`<p class="mt">Your reference: <span class="code">${ref}</span></p>`:''}${LIVE?'':'<p class="note">Preview: this was not saved. Sign-ups go live with the launch.</p>'}</div>`}
+function clearOne(t){const w=t.closest('.fld,.check');if(w&&w.classList.contains('bad')){w.classList.remove('bad');const e=w.querySelector('.err');if(e)e.remove()}}
 
 /* Waitlist form */
 const wait=$('#wait');
@@ -672,7 +464,6 @@ function syncWho(){const parent=wait.who.value==='parent';$('#name-label').textC
   $('#gender-label').textContent=parent?'Signing up for my':'I am';$('#g-m').textContent=parent?'Son':'A man';$('#g-f').textContent=parent?'Daughter':'A woman';$('#age-label').textContent=parent?'Their age':'Age'}
 wait.addEventListener('change',e=>{if(e.target.name==='who')syncWho();clearOne(e.target)});
 wait.addEventListener('input',e=>clearOne(e.target));
-function clearOne(t){const w=t.closest('.fld,.check');if(w&&w.classList.contains('bad')){w.classList.remove('bad');const e=w.querySelector('.err');if(e)e.remove()}}
 wait.addEventListener('submit',async e=>{e.preventDefault();const f=wait;let first=null;const bad=(sel,msg)=>{setErr(sel,msg);if(msg&&!first)first=sel};
   const parent=f.who.value==='parent';
   bad('#f-name',f.name.value.trim().length<2?'Enter a full name':'');
@@ -708,16 +499,7 @@ pf.addEventListener('submit',async e=>{e.preventDefault();const f=pf;let first=n
   const r=await send('work_with_us',row);btn.disabled=false;btn.textContent='Send';
   if(!r.ok){toast('Could not send right now. Check your connection and try again.');return}
   f.innerHTML=doneHTML(`Thank you, ${esc(row.name.split(' ')[0])}`,'Our team will call you within 3 working days.');f.querySelector('.done').focus()});
-/* Legal summaries */
-const LEGAL={terms:['Terms of Service: key points',['You must be 18 or older and legally free to marry, and you join NeuMarry to find a marriage partner.','One account per person, in your real name, verified with a government ID and a live selfie.','NeuMarry verifies members, suggests matches and hosts events. We do not run criminal background checks. Decisions after an introduction, and any relationship or marriage, are the responsibility of the members and their families.','Never send money, gifts or visa help to anyone you meet, and report anyone who asks.','Gold renews until you cancel in your app store account. Event seats are reserved with a small seat hold (CA$2 in Toronto) that counts toward the ticket and is refunded in full if the event is not confirmed; the rest is paid only when the event is confirmed, refundable up to 48 hours before.','Read the full Terms of Service on this website.']],
-  privacy:['Privacy Policy: key points',['We collect what you share in your profile and verification, and how you use the app, to verify you, suggest matches, run events and keep members safe.','Your phone number, email and ID are never shown to other members. ID images are deleted after verification.','We never sell your data. Service providers process it only for us, under contract.','You can see, correct or delete your data at any time from the app.','The waitlist form on this page collects your name, contact details, age, city and roots, only to tell you about the launch and events.','Questions go to our Privacy and Grievance Officer, who replies within 30 days.']]};
-const ldlg=$('#legal');
-document.querySelectorAll('[data-legal]').forEach(b=>b.addEventListener('click',()=>{const L=LEGAL[b.dataset.legal];$('#legal-title').textContent=L[0];$('#legal-b').innerHTML='<ul>'+L[1].map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>';if(typeof ldlg.showModal==='function')ldlg.showModal();else ldlg.setAttribute('open','')}));
-$('#legal-close').addEventListener('click',()=>ldlg.close?ldlg.close():ldlg.removeAttribute('open'));
-ldlg.addEventListener('click',e=>{if(e.target===ldlg&&ldlg.close)ldlg.close()});
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 const prev=recall('rm.wait');if(prev&&prev.ref){wait.innerHTML=doneHTML(`You’re on the list, ${esc(prev.first||'')}`.replace(/, $/,''),'We’ll email you the download link the day the app goes live, with first access to event seats.',esc(prev.ref))}
-
 })();
 </script>
 <div id="nm-consent" role="dialog" aria-live="polite" aria-label="Cookie settings" hidden><style>#nm-consent{position:fixed;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));z-index:60;max-width:560px;margin:0 auto;background:#fff;color:#3B1F2A;border:1px solid #F3E0E1;border-radius:18px;box-shadow:0 10px 30px rgba(59,31,42,.16);padding:14px 16px;font:14px/1.5 "Nunito Sans",system-ui,-apple-system,"Segoe UI",sans-serif}#nm-consent p{margin:0 0 10px}#nm-consent a{color:#C8325A;font-weight:700}#nm-consent .b{display:flex;gap:10px}#nm-consent button{flex:1;min-height:42px;border-radius:999px;font:700 14px/1 "Nunito Sans",system-ui,sans-serif;cursor:pointer}#nm-consent .y{background:#E8436B;color:#fff;border:1px solid #E8436B}#nm-consent .n{background:#fff;color:#3B1F2A;border:1px solid #E7CFD2}.nm-alink{background:none;border:0;padding:0;font:inherit;color:inherit;text-decoration:underline;cursor:pointer}</style><p>This website uses Google Analytics to count visits and the Meta Pixel to measure our ads on Facebook and Instagram. We never sell your data. <a href="privacy.html">Privacy Policy</a></p><div class="b"><button type="button" class="n" data-c="denied">Decline</button><button type="button" class="y" data-c="granted">Accept</button></div></div><script>(function(){var tz='';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||''}catch(e){}var eu=/^(Europe\/|Atlantic\/(Reykjavik|Canary|Madeira|Faroe|Azores))/.test(tz);var d=document.getElementById('nm-consent'),c=null;try{c=localStorage.getItem('nm.ads')}catch(e){}function set(v){try{localStorage.setItem('nm.ads',v);if(eu||v==='denied')localStorage.setItem('nm.analytics',v)}catch(e){}if(eu||v==='denied')gtag('consent','update',{analytics_storage:v});if(window.fbq)fbq('consent',v==='granted'?'grant':'revoke');d.hidden=true}d.addEventListener('click',function(e){var v=e.target&&e.target.getAttribute('data-c');if(v)set(v)});if(c!=='granted'&&c!=='denied')d.hidden=false;var f=document.querySelector('footer .wrap');if(f){var a=document.createElement('button');a.type='button';a.className='nm-alink link';a.textContent='Cookie settings';a.addEventListener('click',function(){d.hidden=false});f.appendChild(a)}})();</script></body></html>

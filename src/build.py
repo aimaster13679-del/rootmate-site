@@ -8,97 +8,24 @@ SITE = 'https://neumarry.com/'
 EMAIL = 'support@neumarry.com'
 
 def rd(n): return open(os.path.join(H, n), encoding='utf-8').read()
-s = rd('landing_src.html').replace('/*__PORTRAIT__*/', rd('portrait.js')).replace('/*__COUNTRIES__*/', rd('countries_names.js'))
+# ---------- Home page (new design, his ok on the inside-premium mock, 6 Nov 2026) ----------
+# Source: src/home_src.html (head part, then <!--BODY-->, then the page). The old home (landing_src.html) is no longer built.
+ICONS = {
+ 'shield': '<path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.2-7.5 9.5-4.3-1.3-7.5-4.9-7.5-9.5V6z"/><path d="M8.6 12l2.3 2.3 4.6-4.6"/>',
+ 'lock': '<rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 018 0v2.5"/>',
+ 'users': '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 19.5c.9-3.3 3.4-5 6.5-5s5.6 1.7 6.5 5"/><circle cx="17" cy="9" r="2.8"/><path d="M17.5 14.5c2.3.3 3.6 1.8 4 4"/>',
+ 'globe': '<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.6 3.6 5.5 3.6 8.5s-1 5.9-3.6 8.5c-2.6-2.6-3.6-5.5-3.6-8.5s1-5.9 3.6-8.5z"/>',
+ 'menu': '<path d="M4 7h16M4 12h16M4 17h16"/>',
+ 'check': '<circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/>',
+}
+def _icon(m): return ('<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" '
+                      'stroke-linejoin="round" aria-hidden="true">' + ICONS[m.group(1)] + '</svg>')
+_hs = re.sub(r'<!--i:(\w+)-->', _icon, rd('home_src.html'))
+_hs = re.sub(r'^<!--.*?-->\n', '', _hs, count=1, flags=re.S)
+_hs = (_hs.replace('/*__COUNTRIES__*/', rd('countries_names.js')).replace('__SUPA_URL__', SUPA_URL).replace('__SUPA_KEY__', SUPA_KEY))
+head, body = _hs.split('<!--BODY-->')
+assert 'RootMate' not in _hs
 
-# Content fixes for what is live today
-fix = [
- ('Then phone, government ID and a live selfie, so everyone you meet is real.', 'Then a government ID and a live selfie, so everyone you meet is real.'),
- ('daily matches, chats, video calls and event seats', 'daily matches, chats and event seats'),
- ('Chat and video call, without sharing your number</li>', 'Chat in the app, without sharing your number</li>'),
- ('unlocks names and photos, interests, chat and video calls, daily picks, event guest lists and Quick Match, from CA$80 a month.', 'unlocks names and photos, interests, chat, daily picks and event guest lists, from CA$80 a month.'),
- ('Yes. When you and a match are ready, you can set up a family video call in the app. Parents join with a link from any country, on a phone or computer, without installing anything, and the app shows the time for both families.', 'Yes. From Me in the app you can share a private family biodata link: your parents open it in any country, on a phone or computer, without installing anything. The link lasts 7 days and you can stop it at any time.'),
- ("verified by phone, government ID and a live selfie.", "verified with a government ID and a live selfie."),
- ("'The full Terms are in the app, under Me, then Legal and privacy.'", "'Read the full Terms of Service on this website.'"),
- ('Open Me, then Legal and privacy, then Delete my account.', 'Open Me, then Delete my account.'),
- ("const BACKEND={url:'',anonKey:''};", "const BACKEND={url:'%s',anonKey:'%s'};" % (SUPA_URL, SUPA_KEY)),
- ("headers:{'apikey':BACKEND.anonKey,'Authorization':`Bearer ${BACKEND.anonKey}`,'Content-Type':'application/json','Prefer':'return=minimal'}", "headers:{'apikey':BACKEND.anonKey,'Content-Type':'application/json','Prefer':'return=minimal'}"),
- ("await send('partners',row)", "await send('work_with_us',row)"),
- ('Every member verifies a phone number, a government ID and a live selfie before they can send interests or messages. Members can also be vouched for by people who know them, and every report is reviewed by a person.', 'Every member verifies a government ID and a live selfie before they can send interests or messages, and every report is reviewed by a person.'),
- ('When you both say yes, a RootMate host sets up a family call for both sides.', 'When you both say yes, a RootMate host helps both families connect.'),
- ('.ctaband{', '.links a.hl{background:#FFF3DC;border:1px solid #E7C27A;color:#8A5A12;border-radius:999px;padding:6px 12px;font-weight:700}.ctaband{'),
- ('<a href="#partners">Work with us</a><a href="#faq">FAQ</a>', '<a class="hl" href="work-with-us.html">Work with us</a><a href="#faq">FAQ</a>'),
- ('<h1>Your person from <em>back home</em> might live ten minutes away.</h1>', '<h1>Every person here is <em>real.</em> Proven.</h1>'),
- ('Both from Gujarat', 'Same roots'),
- ('Lives 8 km apart · ID verified', 'ID · selfie · roots · city checked'),
- ('<div class="proof"><div class="wrap">\n  <div><b>2.57 million</b><span>South Asians live in Canada, the country’s largest racialized group</span></div>\n  <div><b>46%</b><span>of them live in the Toronto area, where they are 19% of the population</span></div>\n  <div><b>32</b><span>is their median age, nine years younger than Canada overall</span></div>\n  <p class="src">Source: <a href="https://www150.statcan.gc.ca/n1/pub/89-657-x/89-657-x2025007-eng.htm" target="_blank" rel="noopener">Statistics Canada, 2021 Census</a></p>\n</div></div>', '<div class="proof"><div class="wrap">\n  <div><b>4 checks</b><span>on every member: government ID, live selfie, roots and the city they live in</span></div>\n  <div><b>0</b><span>unverified profiles shown. Only fully verified members appear to others</span></div>\n  <div><b>Blocked</b><span>money requests in chat, the most common trick of romance scams</span></div>\n  <p class="src">Free tool: <a href="is-this-profile-real.html">Is this matrimony profile real? Take the 1-minute check</a></p>\n</div></div>'),
- ('<span class="pill"><i></i>Launching in Toronto · November 2026</span>', '<span class="pill"><i></i>Matrimony for life abroad · Launching in Toronto, November 2026</span>'),
- ('RootMate is matrimony for people living abroad. Meet verified people', 'RootMate is a matrimony app for people living abroad. Meet verified people'),
- ('Hosted Family Mixers with parent tickets, and a Family Circle where parents can suggest profiles. They never chat as you.', 'Hosted Family Mixers with parent tickets, and soon a Family Circle where parents can suggest profiles. They never chat as you.'),
- ('Parents can sign up on your behalf, come to family events with their own ticket, and join a Family Circle to suggest profiles.', 'Parents can sign up on your behalf and come to family events with their own ticket. A Family Circle where they can suggest profiles is coming soon.'),
-
- # No video calls in the app yet; the web app is live.
- ('<b>Quick Match<em>December</em></b><p>Both say yes, then a 5-minute video intro the same day. No phone numbers shared.</p>',
-  '<b>Family biodata link<em>New</em></b><p>Share your profile with your parents in any country through a private 7-day link. No phone numbers shared.</p>'),
- ('<p>No. The website tells you about RootMate and lets you join the waitlist. Signing up, matching, chats and event bookings all happen in the app for Android and iPhone, so every member is verified on their own phone.</p>',
-  '<p>Yes. Open neumarry.com/app in any web browser, on your phone or computer, to create your profile, get verified, see your matches and chat. The Android app uses the same account.</p>'),
-
- # The web app is live at /app/: point the calls to action there.
- ('<a class="btn primary sm" href="#app">Get the app</a>', '<a class="btn primary sm" href="app/">Open the app</a>'),
- ('<div class="ctas"><a class="btn primary" href="#app">Get the app</a><a class="btn ghost" href="#join">Join the waitlist</a></div>',
-  '<div class="ctas"><a class="btn primary" href="app/">Create your free profile</a><a class="btn ghost" href="/sample-verified-profile.html">See a sample verified profile</a></div>'),
- ('<p class="avail">For Android and iPhone · Google Play first, App Store soon after</p>',
-  '<p class="avail">Works now in your web browser · Android on Google Play soon, iPhone after</p>'),
- ('<a class="btn primary" href="#app" id="reserve-open">Reserve your seat in the app</a>', '<a class="btn primary" href="app/" id="reserve-open">Reserve your seat in the app</a>'),
- ('<h2>Your story could start at the first Family Mixer.</h2><a class="btn" href="#app">Get the app</a>',
-  '<h2>Your story could start at the first Family Mixer.</h2><a class="btn" href="app/">Create your free profile</a>'),
- ('Your profile, verification, daily matches, chats and event seats all live in the RootMate app. This website is only here to tell you about it.',
-  'Your profile, verification, daily matches, chats and event seats all live in the RootMate app. Use it now in any web browser, on your phone or computer. The Android and iPhone apps use the same account.'),
- ('<div class="stores">\n      <a class="store" id="st-play"',
-  '<div class="stores">\n      <a class="store" id="st-web" href="app/"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z" fill="none" stroke="currentColor" stroke-width="2"/></svg><span><small>Use it now in your</small><b>Web browser</b></span></a>\n      <a class="store" id="st-play"'),
- ('<p class="note" id="st-note">Not live yet. Join the waitlist below and we’ll email you the download link the day it goes live.</p>',
-  '<p class="note" id="st-note">The phone apps are not live yet. Join the waitlist below and we’ll email you the download link the day they go live.</p>'),
-]
-for a, b in fix:
-    assert a in s, 'missing: ' + a[:60]
-    s = s.replace(a, b)
-# Website v2 (his ok 1 Nov 11:06 on the website mock): the app's new look on the home page hero.
-import sys as _sys; _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import worldmap
-GLOBE = worldmap.html('en') + '<div id="p1" hidden></div><div id="p2" hidden></div>'
-v2fix = [
- ('<span class="pill"><i></i>Matrimony for life abroad · Launching in Toronto, November 2026</span>', '<span class="pill"><i></i>For people who grew up in one country and live in another</span>'),
- ('<h1>Every person here is <em>real.</em> Proven.</h1>', '<h1>Your roots. Your city. <em>Your person.</em></h1>'),
- ('RootMate is a matrimony app for people living abroad. Meet verified people who share your roots and your mindset, in your city, with your family by your side.',
-  'Verified matrimony for every country and community. Meet people of your roots who live near you, and bring your family in, without giving up your privacy.'),
-]
-for a2, b2 in v2fix:
-    assert a2 in s, 'v2 missing: ' + a2[:60]
-    s = s.replace(a2, b2)
-_ai = s.index('<div class="art" aria-hidden="true">'); _aj = s.index('</div>\n</div></section>', _ai)
-s = s[:_ai] + '<div class="art v2art" aria-hidden="true">' + GLOBE + s[_aj:]
-s = s.replace('<div class="count" id="count"', '<div class="v2prom"><div><b>Verified</b><span>ID, selfie, roots, city</span></div><div><b>Private</b><span>no number shared</span></div><div><b>About 6 min</b><span>almost all taps</span></div></div>\n    <div class="count" id="count"', 1)
-s = s.replace('</style>', """
-.hero{background:radial-gradient(120% 80% at 70% 0%,#6A2A48 0%,#3A1A2B 55%,#24101B 100%);color:#fff}.hero::before{display:none}
-.hero h1{color:#fff;font-weight:600;letter-spacing:-.02em}.hero h1 em{font-family:var(--f-display);font-style:italic;font-weight:500;font-size:1em;color:#FFB4C2;white-space:normal}
-.hero .lede{color:rgba(255,255,255,.85)}.hero .avail{color:rgba(255,255,255,.7)}.hero .pill{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.18)}
-.hero .btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35)}.hero .btn.primary{background:#fff;color:#2E1622;box-shadow:none}
-.hero .count{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:#fff;box-shadow:none}.hero .count .u{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.16);box-shadow:none}.hero .count .u b{color:#fff}.hero .count .lbl,.hero .count span{color:rgba(255,255,255,.75)}
-.hero .langhero .langh{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.2)}
-@media (min-width:900px){.hero .wrap{grid-template-columns:1fr 1.12fr;gap:40px}}
-.near .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}.near .nearsteps{margin-top:18px}
-.hero .count{padding:12px 14px;border-radius:18px;gap:10px;align-items:center}.hero .count .lbl{padding-left:4px}
-.v2prom{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px;max-width:520px}.v2prom div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:10px 12px;min-width:0}
-.v2prom b{display:block;font-size:14px}.v2prom span{font-size:12px;color:rgba(255,255,255,.72)}
-.v2art{position:relative;max-width:640px;width:100%;margin:0 auto;aspect-ratio:auto;height:auto;justify-self:stretch}""" + worldmap.CSS + """.v2globe{position:absolute;inset:0;width:100%;height:100%}
-.v2flag{position:absolute;font-size:22px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.35))}.v2city{position:absolute;left:64%;top:24%;font:800 12px var(--f-body);padding:5px 10px;border-radius:999px;background:#fff;color:#2E1622}
-@media (prefers-reduced-motion:no-preference){.v2arc{stroke-dasharray:4 5;animation:v2dash 6s linear infinite}@keyframes v2dash{to{stroke-dashoffset:-90}}}
-</style>""", 1)
-s = s.replace('RootMate', 'NeuMarry')
-s = s.replace('<title>NeuMarry Toronto</title>', '<title>NeuMarry: Matrimony &amp; Marriage App for People Living Abroad</title>')
-assert 'RootMate' not in s
-# Full document around the fragment
-i = s.index('</style>') + len('</style>')
-head, body = s[:i], s[i:]
 GUIDES = ['matrimony-abroad-canada', 'toronto-matrimony', 'matrimony-events-toronto', 'community-matrimony-canada',
           'matrimony-for-parents', 'verified-matrimony', 'matrimony-abroad-usa-uk', 'find-life-partner-abroad', 'safe-matrimony-for-women']
 def guide_meta(slug):
@@ -141,13 +68,12 @@ KEYWORDS = 'matrimony, matrimonial, marriage app, matrimony abroad, expat matrim
 meta = ('<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
         f'<meta name="description" content="{esc(HOME_DESC)}"><meta name="keywords" content="{KEYWORDS}">' + social(HOME_TITLE, HOME_DESC, SITE))
 legal_links = '<a class="link" href="privacy.html">Privacy Policy</a><a class="link" href="terms.html">Terms of Service</a><a class="link" href="delete-account.html">Delete account</a><a class="link" href="child-safety.html">Child safety</a>'
-body = body.replace('<a class="link" href="#delete-account">Delete account</a>', '<a class="link" href="delete-account.html">Delete account</a><a class="link" href="privacy.html">Full Privacy Policy</a><a class="link" href="terms.html">Full Terms</a></span><span class="legal-links">' + SOCIAL_LINKS)
 guide_links = ''.join(f'<a href="{g["slug"]}.html">{g["short"]}</a>' for g in G)
-guides_sec = ('<section class="sec" id="guides" style="padding-top:0"><div class="wrap"><p class="eyebrow">Guides</p>'
-              '<h2>Matrimony abroad, explained.</h2><nav class="guides" aria-label="Guides">' + guide_links + '</nav></div></section>')
-assert '</main>' in body
-body = body.replace('</main>', guides_sec + '</main>', 1)
+for _k, _v in [('<!--GUIDES-->', guide_links), ('<!--SOCIAL-->', ''.join(f'<a href="{u}" target="_blank" rel="noopener me">{n}</a>' for n, u in SOCIAL))]:
+    assert body.count(_k) == 1, _k
+    body = body.replace(_k, _v)
 faq = faq_from(body)
+assert len(faq) >= 10, 'home FAQ not found'
 home_ld = {'@context': 'https://schema.org', '@graph': [
     ORG,
     {'@type': 'WebSite', '@id': SITE + '#site', 'url': SITE, 'name': 'NeuMarry', 'publisher': {'@id': SITE + '#org'}, 'inLanguage': 'en'},
@@ -163,30 +89,21 @@ home_ld = {'@context': 'https://schema.org', '@graph': [
      'organizer': {'@id': SITE + '#org'},
      'offers': {'@type': 'Offer', 'price': '99', 'priceCurrency': 'CAD', 'availability': 'https://schema.org/InStock', 'validFrom': '2026-10-22T00:00:00-04:00', 'url': SITE + 'matrimony-events-toronto.html'}},
 ] + ([{'@type': 'FAQPage', 'mainEntity': faq}] if faq else [])}
-head = head.replace('</style>', '.guides{margin-top:22px;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}.guides a{display:block;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;font-weight:700;color:var(--ink);text-decoration:none;box-shadow:var(--shadow)}.guides a:hover{border-color:var(--rose);color:var(--rose-deep)}</style>', 1) + ld(home_ld)
-# Language switch in the home header (French copy in fr/)
-HOME_LANG_CSS = ('<style>header .langh{margin-left:auto;font-weight:700;font-size:14px;color:var(--rose-deep);text-decoration:none;'
-                 'border:1px solid var(--line);border-radius:999px;padding:7px 11px;line-height:1;white-space:nowrap}header .langh:hover{border-color:var(--rose)}'
-                 'header .langh~.btn{margin-left:0}@media (min-width:761px){header .langh{margin-left:0}}'
-                 '.langhero{display:none}@media (max-width:420px){header .langh{display:none}header .langh~.btn{margin-left:auto}'
-                 '.langhero{display:flex;justify-content:flex-end;margin:0 0 12px}.langhero .langh{margin:0;font-weight:700;font-size:14px;color:var(--rose-deep);text-decoration:none;'
-                 'border:1px solid var(--line);border-radius:999px;padding:7px 12px;line-height:1;background:var(--surface)}}</style>')
-def home_lang(href, code, label):
-    return (f'<a class="langh" href="{href}" hreflang="{code}" lang="{code}" aria-label="{label}" '
-            f'onclick="try{{localStorage.setItem(\'rm.lang\',\'{code}\')}}catch(e){{}}">{code.upper()}</a>')
-OPEN_BTN = '<a class="btn primary sm" href="app/">Open the app</a>'
-assert body.count(OPEN_BTN) == 1
-HOME_HEAD = head.replace('<meta name="claude:viewport-fit-sides" content="cover">', '')
-# Consent error goes on its own line under the checkbox text (it was squeezed beside it)
-HOME_HEAD = HOME_HEAD.replace('</style>', '.check{flex-wrap:wrap}.check>span:not(.err){flex:1 1 0;min-width:0}.check .err{flex-basis:100%;padding-left:30px}</style>', 1)
+HOME_HEAD = head
 HOME_BODY = body
 HOME_ALT = (f'<link rel="alternate" hreflang="en" href="{SITE}"><link rel="alternate" hreflang="fr" href="{SITE}fr/">'
             f'<link rel="alternate" hreflang="x-default" href="{SITE}">')
-body = body.replace(OPEN_BTN, home_lang('fr/', 'fr', 'Lire en français') + OPEN_BTN)
-HERO_START = '<section class="hero" id="hero"><div class="wrap">\n  <div>'
-assert body.count(HERO_START) == 1
-body = body.replace(HERO_START, HERO_START + '<p class="langhero">' + home_lang('fr/', 'fr', 'Lire en français').replace('>FR<', '>Français<') + '</p>')
-open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write('<!doctype html><html lang="en"><head>' + meta + HOME_ALT + HOME_HEAD + HOME_LANG_CSS + '</head><body>' + body + '</body></html>')
+# Language switch: a pill in the header (computer) and a link above the title (phone). French copy in fr/.
+def home_lang(href, code, label, text):
+    return (f'<a class="langh" href="{href}" hreflang="{code}" lang="{code}" aria-label="{label}" '
+            f'onclick="try{{localStorage.setItem(\'rm.lang\',\'{code}\')}}catch(e){{}}">{text}</a>')
+def put_lang(b, href, code, label, text):
+    for k in ('<!--LANG-->', '<!--LANGHERO-->'):
+        assert b.count(k) == 1, k
+        b = b.replace(k, home_lang(href, code, label, text))
+    return b
+body = put_lang(body, 'fr/', 'fr', 'Lire en français', 'Français')
+open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write('<!doctype html><html lang="en"><head>' + meta + HOME_ALT + HOME_HEAD + ld(home_ld) + '</head><body class="nm-home">' + body + '</body></html>')
 
 FOOT_GUIDES = ''.join(f'<a class="link" href="{g["slug"]}.html">{g["short"]}</a>' for g in P + G)
 FR_DIR = os.path.join(H, 'fr', 'pages')
@@ -372,9 +289,9 @@ if FR_SLUGS:
     for en_, fr_ in sorted(hf.PAIRS, key=lambda x: -len(x[0])):
         assert en_ in fb, 'French home: English text not found: ' + en_[:70]
         fb = fb.replace(en_, fr_)
-    fb = fb.replace('<a class="btn primary sm" href="app/">Ouvrir l’app</a>', home_lang('../', 'en', 'Read in English') + '<a class="btn primary sm" href="app/">Ouvrir l’app</a>')
-    fb = fb.replace(HERO_START, HERO_START + '<p class="langhero">' + home_lang('../', 'en', 'Read in English').replace('>EN<', '>English<') + '</p>')
-    fb = fr_fix_links(fb).replace('href="../app/"', 'href="../app/" onclick="try{localStorage.setItem(\'rm.lang\',\'fr\')}catch(e){}"')
+    fb = put_lang(fb, '../', 'en', 'Read in English', 'English').replace('href="./"', 'href="__FRHOME__"')
+    fb = fr_fix_links(fb).replace('href="../app/"', 'href="../app/" onclick="try{localStorage.setItem(\'rm.lang\',\'fr\')}catch(e){}"').replace('href="__FRHOME__"', 'href="./"')
+    fb = re.sub(r'src="(img|js)/', r'src="../\1/', fb)
     FR_HOME_TITLE = 'NeuMarry : mariage vérifié pour ceux qui vivent à l’étranger'
     FR_HOME_DESC = 'Application matrimoniale vérifiée pour qui vit loin du pays où il a grandi, de toutes les communautés. Suggestions selon origines, ville et valeurs. Gratuit.'
     fh = re.sub(r'<script type="application/ld\+json">.*?</script>', '', HOME_HEAD, flags=re.S)
@@ -384,7 +301,7 @@ if FR_SLUGS:
              .replace('href="icon-192.png"', 'href="../icon-192.png"').replace('href="apple-touch-icon.png"', 'href="../apple-touch-icon.png"'))
     fld = ld({'@context': 'https://schema.org', '@type': 'WebPage', '@id': SITE + 'fr/', 'url': SITE + 'fr/', 'name': FR_HOME_TITLE, 'description': FR_HOME_DESC,
               'inLanguage': 'fr-CA', 'isPartOf': {'@id': SITE + '#site'}, 'publisher': ORG})
-    fhtml = '<!doctype html><html lang="fr-CA"><head>' + fmeta + HOME_ALT + fh + HOME_LANG_CSS + '<style>.legal-links{flex-wrap:wrap;gap:8px 16px}</style>' + fld + '</head><body>' + fb + '</body></html>'
+    fhtml = '<!doctype html><html lang="fr-CA"><head>' + fmeta + HOME_ALT + fh + fld + '</head><body class="nm-home">' + fb + '</body></html>'
     fhtml = re.sub(r'(src|href)="(icon-\d+\.png|apple-touch-icon\.png|og-image\.png)"', r'\1="../\2"', fhtml)
     open(os.path.join(OUT, 'fr', 'index.html'), 'w', encoding='utf-8').write(fhtml)
     def fr_write(f, url, main, graph):
@@ -571,7 +488,7 @@ for _root, _dirs, _files in os.walk(OUT):
         if not _f.endswith('.html'):
             continue
         _p = os.path.join(_root, _f); _h = open(_p, encoding='utf-8').read()
-        if 'glass.css' in _h or 'http-equiv="refresh"' in _h or '</head>' not in _h:
+        if 'glass.css' in _h or 'http-equiv="refresh"' in _h or '</head>' not in _h or '<body class="nm-home">' in _h:
             continue
         _href = ('../' * (0 if _rel == '.' else len(_rel.split(os.sep)))) + 'glass.css'
         open(_p, 'w', encoding='utf-8').write(_h.replace('</head>', f'<link rel="stylesheet" href="{_href}"></head>', 1))
