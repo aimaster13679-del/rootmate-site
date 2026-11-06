@@ -1625,3 +1625,14 @@ html.gl.gl-lt .px-sec{background:rgba(255,255,255,.66);border-color:#fff;box-sha
 html.gl .px-path li.on i{background:#0E9F6E;border-color:#8DEBC3}
 html.gl.gl-lt .px-ib{background:linear-gradient(150deg,#E3F7EE,#BFEFD9);color:#0E7A55}html.gl .px-ib{background:rgba(141,235,195,.16);color:#8DEBC3}
 html.gl .px-road b{font-size:clamp(20px,6vw,26px);white-space:nowrap}
+/* Me + Events like the approved bento mock */
+html.gl .fu-me{padding:16px;border-radius:24px;background:linear-gradient(160deg,rgba(150,235,200,.14),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.12);margin-bottom:10px}
+html.gl.gl-lt .fu-me{background:linear-gradient(160deg,rgba(222,249,237,.95),rgba(168,232,204,.5));border-color:#fff;box-shadow:0 1px 0 #fff inset,0 18px 36px -26px rgba(30,80,60,.35)}
+html.gl .fu-t.v{background:linear-gradient(160deg,rgba(200,240,160,.13),rgba(255,255,255,.04))}html.gl .fu-t.y{background:linear-gradient(160deg,rgba(255,226,120,.15),rgba(255,255,255,.04))}html.gl .fu-t.p{background:linear-gradient(160deg,rgba(150,235,200,.14),rgba(255,255,255,.04))}
+html.gl.gl-lt .fu-t.v{background:linear-gradient(160deg,rgba(238,250,226,.95),rgba(203,238,172,.55))}html.gl.gl-lt .fu-t.y{background:linear-gradient(160deg,rgba(255,248,206,.95),rgba(255,234,140,.55))}html.gl.gl-lt .fu-t.p{background:linear-gradient(160deg,rgba(222,249,237,.95),rgba(168,232,204,.55))}
+html.gl .fu-t,html.gl .fu-t.v,html.gl .fu-t.y,html.gl .fu-t.k,html.gl .fu-t.p{border-top-width:1px}
+html.c3.gl.gl-lt .fu-tk{background:linear-gradient(160deg,rgba(255,248,206,.96),rgba(255,234,140,.6)) padding-box,linear-gradient(115deg,#F2C94C,#FFF3C4 40%,#9FE6C6 70%,#F2C94C) border-box;color:#14231C}
+html.c3.gl.gl-lt .fu-tk .fu-k{color:#7A5F00}html.c3.gl.gl-lt .fu-tk .fu-meta{color:#4E5E57}
+html.c3.gl.gl-lt .fu-date{background-image:linear-gradient(115deg,#0E7A55,#3BBF8A 40%,#C9A300 60%,#0E7A55)}
+html.c3.gl.gl-lt .fu-tka .btn.ghost{background:rgba(255,255,255,.7);color:#14231C;border-color:#fff}
+html.c3.gl.gl-lt .fu-bar i{background:rgba(255,255,255,.75)}
