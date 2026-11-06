@@ -3021,7 +3021,7 @@ const A3MAIL={'Signed up, did not start the form':['Your NeuMarry profile is wai
 async function a3load(){if(A3.busy)return;A3.busy=true;try{const [ov,hl]=await Promise.all([API.rpc('admin_overview').catch(()=>null),API.rpc('admin_help_list').catch(()=>[])]);A3.ov=ov;A3.help=hl||[]}finally{A3.busy=false;render()}}
 function a3kpi(n,l,s,c,go){return n===null||n===undefined?'':`<button class="a3k" style="--c:${c}" data-a="a3go" data-k="${go||''}" aria-label="${esc(l)}: ${esc(String(n))}. Open details"><b>${esc(String(n))}</b><span>${esc(l)}</span>${s?`<small>${esc(s)}</small>`:''}<em class="a3more">Details ›</em></button>`}
 function a3bars(vals){const m=Math.max(1,...vals);return `<div class="a3bars" aria-label="Sign-ups per day, last 30 days">${vals.map((v,i)=>`<i data-a="a3go" data-k="day:${vals.length-1-i}" role="button" aria-label="${v} sign-ups, ${vals.length-1-i} days ago" style="height:${Math.max(3,Math.round(v/m*100))}%;${i===vals.length-1?'background:#FFC93C':''}" title="${v}"></i>`).join('')}</div>`}
-function a3home(){if(A3.mem)return a3member();if(A3.list)return a3list();const o=A3.ov;if(!o)return `<div class="a3c">${spinner('Loading')}</div>`;const f=o.funnel_7d||{};const bots=o.bots||[];const failed=bots.filter(b=>b.status==='failed');
+function a3home(){if(A3.list)return a3list();const o=A3.ov;if(!o)return `<div class="a3c">${spinner('Loading')}</div>`;const f=o.funnel_7d||{};const bots=o.bots||[];const failed=bots.filter(b=>b.status==='failed');
   const d=o.signups_today-o.signups_yesterday;const vals=o.signups_30d||[];const tot=vals.reduce((a,b)=>a+b,0);const src=Object.entries(o.sources_30d||{}).sort((a,b)=>b[1]-a[1]);
   const need=[o.checks_waiting>0?['shield',`${o.checks_waiting} waiting for checks`,o.oldest_wait_hours!=null?`Oldest ${o.oldest_wait_hours} h · promise 24 h`:'','checks']:null,
     o.reports_open>0?['flag',`${o.reports_open} open report${o.reports_open>1?'s':''}`,'Answer within 24 h','checks']:null,
@@ -3054,11 +3054,11 @@ function a3help(){const L=A3.help;const su=(S.admin&&S.admin.signups)||[];
       return `<div class="a3r"><span><b>${esc(x.full_name||x.google_name||x.email)}</b><small>${esc(x.city||'')}${x.city?' · ':''}${esc(a3ago(x.created_at))}${x.reminded_at?' · auto reminder sent':''}</small></span><a class="a3lnk" href="mailto:${esc(x.email)}?subject=${encodeURIComponent(t[0])}&body=${encodeURIComponent(body)}">Email</a></div>`}).join('')}</details>`).join(''):'<p class="a3m">Nobody is stuck for more than a day.</p>'}
     <p class="a3m">Automatic emails already go after 1 and 3 days. "Email" opens your mail app with a ready message; you press send. Keep it to 2 messages a week per person.</p></div>`}
 function a3tabsHtml(){const o=A3.ov;const t=A3.tab;const chk=o?o.checks_waiting+o.reports_open:0;
-  return `<div class="a3tabs pad" role="tablist">${[['home','Home'],['robots','Robots'],['help','Help'],['checks','Checks']].map(([k,l])=>`<button role="tab" aria-selected="${t===k}" class="${t===k?'on':''}" data-a="a3tab" data-k="${k}">${l}${k==='checks'&&chk?` <em>${chk}</em>`:''}${k==='help'&&o&&o.help_open?` <em>${o.help_open}</em>`:''}${k==='robots'&&o&&(o.bots||[]).some(b=>b.status==='failed')?' <em class="r">!</em>':''}</button>`).join('')}</div>`}
+  return `<div class="a3tabs pad" role="tablist">${[['home','Home'],['members','Members'],['activity','Activity'],['money','Money'],['events','Events'],['robots','Robots'],['help','Help'],['checks','Checks']].map(([k,l])=>`<button role="tab" aria-selected="${t===k}" class="${t===k?'on':''}" data-a="a3tab" data-k="${k}">${l}${k==='checks'&&chk?` <em>${chk}</em>`:''}${k==='help'&&o&&o.help_open?` <em>${o.help_open}</em>`:''}${k==='robots'&&o&&(o.bots||[]).some(b=>b.status==='failed')?' <em class="r">!</em>':''}</button>`).join('')}</div>`}
 function renderAdmin3(){const t=A3.tab;
-  return `<div class="view a3v" role="dialog" aria-label="Admin panel"><div class="a3top pad"><button class="iconbtn" data-a="a3up" aria-label="Back">${ic('back')}</button><div class="grow"><p class="a3kick">NeuMarry admin · <span>● live</span></p><h2>${{home:'Command center',robots:'Robots',help:'Help members'}[t]||'Command center'}</h2></div><button class="iconbtn" data-a="a3reload" aria-label="Refresh">${ic('refresh')}</button></div>
+  return `<div class="view a3v" role="dialog" aria-label="Admin panel"><div class="a3top pad"><button class="iconbtn" data-a="a3up" aria-label="Back">${ic('back')}</button><div class="grow"><p class="a3kick">NeuMarry admin · <span>● live</span></p><h2>${{home:'Command center',members:'Members',activity:'Activity',money:'Money',events:'Events',robots:'Robots',help:'Help members'}[t]||'Command center'}</h2></div><button class="iconbtn" data-a="a3reload" aria-label="Refresh">${ic('refresh')}</button></div>
    ${a3tabsHtml()}
-   <div class="scroll"><div class="a3body pad">${t==='robots'?a3robots():t==='help'?a3help():a3home()}</div></div></div>`}
+   <div class="scroll"><div class="a3body pad">${A3.mem?a3member():t==='members'?a3members():t==='activity'?a3activity():t==='money'?a3money():t==='events'?a3events():t==='robots'?a3robots():t==='help'?a3help():a3home()}</div></div></div>`}
 (function(){
   if(!IC.refresh)Object.assign(IC,{refresh:'<path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/>',alert:'<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17h.01"/>'});
   if(!IC.alert)IC.alert='<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17h.01"/>';
@@ -3072,7 +3072,7 @@ function renderAdmin3(){const t=A3.tab;
     async a3send(el){const t=document.getElementById('a3ans');const v=(t&&t.value||'').trim();if(!v){toast('Write an answer first','x');return}
       try{await API.rpc('admin_help_answer',{p_id:A3.open,p_answer:v,p_solved:el.dataset.solved==='1'});toast('Answer sent','check');A3.open=null;a3load()}catch(e){fail(e)}}
   });
-  const _oa=A.openAdmin;A.openAdmin=function(){A3.tab='home';A3.bot=null;A3.open=null;A3.list=null;A3.mem=null;_oa.apply(this,arguments);if(C3())a3load()};
+  const _oa=A.openAdmin;A.openAdmin=function(){A3.tab='home';A3.bot=null;A3.open=null;A3.list=null;A3.mem=null;A3.ev=null;A3.st=null;A3.mlist=undefined;_oa.apply(this,arguments);if(C3())a3load()};
 })();
 
 
@@ -3084,14 +3084,58 @@ function a3list(){const L=A3.list;const rows=a3rows().filter(L.f);
   return `<button class="a3back" data-a="a3up">${ic('back')} Back</button><div class="a3c"><div class="a3h"><b>${esc(L.title)}</b><span>${rows.length}</span></div>
    ${S.admin&&S.admin.loading?spinner('Loading'):rows.length?rows.slice(0,200).map(x=>`<button class="a3r" data-a="a3mem" data-k="${esc(x.user_id)}"><span class="a3d ${/live/i.test(x.step||'')?'ok':'run'}"></span><span><b>${esc(x.full_name||x.google_name||x.email||'Member')}</b><small>${esc(x.step||'')}</small><small>${esc([x.city,x.country].filter(Boolean).join(', '))}${x.city||x.country?' · ':''}${esc(a3ago(x.created_at))}</small></span><em>›</em></button>`).join(''):`<p class="a3m">No members here in the last 30 days.</p>`}
    <p class="a3m">${esc(L.note||'Members who joined in the last 30 days.')}</p></div>`}
-function a3member(){const x=a3rows().find(r=>r.user_id===A3.mem);if(!x)return `<button class="a3back" data-a="a3up">${ic('back')} Back</button><div class="a3c"><p class="a3m">Not found.</p></div>`;
-  const dt=t=>t?new Date(t).toLocaleString([], {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'—';
+function a3member(){const id=A3.mem;const m=A3.memd&&A3.memd.id===id?A3.memd:null;const x=a3rows().find(r=>r.user_id===id)||{};
+  const back=`<button class="a3back" data-a="a3up">${ic('back')} Back</button>`;
+  if(!m)return back+`<div class="a3c">${A3.memd===false?`<p class="a3m">Could not load this member.</p>`:spinner('Loading')}</div>`;
+  const dt=t=>t?new Date(t).toLocaleString([], {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';
   const row=(k,v)=>v===null||v===undefined||v===''?'':`<div class="a3kv"><span>${esc(k)}</span><b>${esc(String(v))}</b></div>`;
-  return `<button class="a3back" data-a="a3up">${ic('back')} Back</button><div class="a3c"><div class="a3h"><b>${esc(x.full_name||x.google_name||'Member')}</b><span>${esc(x.gender||'')}</span></div>
-   <div class="a3step ${/live/i.test(x.step||'')?'ok':''}">${esc(x.step||'')}</div>
-   ${row('Email',x.email)}${row('Signed in with',x.provider)}${row('City',[x.city,x.country].filter(Boolean).join(', '))}${row('Joined',dt(x.created_at))}${row('Last active',dt(x.last_active))}
-   ${row('Sign-ins',x.logins)}${row('Minutes on the form',x.form_minutes)}${row('Phone time zone',x.phone_tz)}${row('Phone language',x.phone_lang)}${row('Reminder email',x.reminded_at?dt(x.reminded_at):'not yet')}
-   ${x.email?`<a class="btn primary block" href="mailto:${esc(x.email)}">${ic('mail')} Email this member</a>`:''}</div>`}
+  const age=m.dob?Math.floor((Date.now()-new Date(m.dob))/3156e7):null;
+  const num=(n,l)=>`<div class="a3k sm"><b>${esc(String(n||0))}</b><span>${esc(l)}</span></div>`;
+  return back+`<div class="a3c"><div class="a3h"><b>${esc(m.name||'Member')}</b><span>${esc([m.gender,age].filter(Boolean).join(' · '))}</span></div>
+   <div class="a3step ${m.live?'ok':''}">${esc(m.banned?'Banned':m.step||'')}</div>${m.plan&&m.plan!=='free'?`<span class="a3step ok">${esc(String(m.plan).toUpperCase())}</span>`:''}
+   ${row('Email',m.email)}${row('Signed in with',m.provider)}${row('Lives in',[m.city,m.country].filter(Boolean).join(', '))}${row('Roots',m.roots)}${row('Language',m.tongue)}${row('Religion',m.religion)}${row('Work',m.job)}${row('Education',m.education)}${row('Marital status',m.marital)}${row('Came from',m.source)}</div>
+  <div class="a3c"><div class="a3h"><b>Activity</b><span>all time</span></div><div class="a3g">${num(m.interests_sent,'Interests sent')}${num(m.interests_got,'Interests received')}${num(m.matches,'Matches')}${num(m.chats,'Chats')}${num(m.messages_sent,'Messages sent')}${num(m.messages_7d,'Messages, 7 days')}</div>
+   ${row('Joined',dt(m.joined))}${row('Last active',dt(m.last_seen))}${row('Last sign-in',dt(m.last_sign_in))}${row('Sign-ins',x.logins)}${row('Minutes on the form',x.form_minutes)}${row('Phone time zone',x.phone_tz)}${row('Phone language',x.phone_lang)}</div>
+  <div class="a3c"><div class="a3h"><b>Checks</b><span>${m.photos} photo${m.photos===1?'':'s'}</span></div>${(m.docs||[]).length?m.docs.map(d=>`<div class="a3kv"><span>${esc(d.kind)}</span><b>${esc(d.status)} · ${esc(dt(d.at))}</b></div>`).join(''):'<p class="a3m">No documents sent yet.</p>'}</div>
+  <div class="a3c"><div class="a3h"><b>Money</b><span>Gold and tickets</span></div>
+   ${(m.gold||[]).map(g=>`<div class="a3kv"><span>Gold · ${esc(g.source)}</span><b>${esc(g.product)} · until ${esc(dt(g.to))}${g.renew?' · renews':''}</b></div>`).join('')}
+   ${(m.tickets||[]).map(t=>`<div class="a3kv"><span>${esc(t.event)}</span><b>${esc(t.status)} · ${money(t.cents,t.cur)}${t.in?' · checked in':''}</b></div>`).join('')}
+   ${!(m.gold||[]).length&&!(m.tickets||[]).length?'<p class="a3m">No payments yet.</p>':''}</div>
+  <div class="a3c"><div class="a3h"><b>Safety</b></div>${row('Reports against',m.reports_against)}${row('Warned messages',m.flagged)}<p class="a3m">Chat text stays private; only the numbers show here.</p>
+   ${m.email?`<a class="btn primary block" href="mailto:${esc(m.email)}">${ic('mail')} Email this member</a>`:''}</div>`}
+async function a3loadMem(id){A3.memd=null;try{A3.memd=await API.rpc('admin_member',{p_uid:id})||false}catch(e){A3.memd=false}render()}
+async function a3loadStats(){if(A3.stB)return;A3.stB=true;try{A3.st=await API.rpc('admin_stats')}catch(e){A3.st=false}finally{A3.stB=false;render()}}
+function a3need(){if(A3.st===undefined||A3.st===null){a3loadStats();return `<div class="a3c">${spinner('Loading')}</div>`}if(A3.st===false)return `<div class="a3c"><p class="a3m">Could not load. Pull to refresh or tap ⟳.</p></div>`;return ''}
+function a3kv2(k,n,max,col,act){return `<div class="a3f${act?' a3fb':''}" ${act?`role="button" tabindex="0" ${act}`:''}><span>${esc(k)}</span><div><i style="width:${Math.max(2,Math.round(n/Math.max(1,max)*100))}%;background:${col}"></i></div><b>${n}</b></div>`}
+function a3members(){const L=A3.mlist;if(L===undefined){A3.mlist=null;a3search('')}
+  return `<div class="a3c"><input id="a3q" type="search" class="a3in" placeholder="Search name, email, city or country" aria-label="Search members" value="${esc(A3.mq||'')}" data-a3q="1">
+   ${(A3.st&&A3.st.members)?(()=>{const M=A3.st.members;return `<div class="a3g">${[['Members',M.total],['Women',M.women],['Men',M.men],['Live',M.live],['Gold',M.gold],['Banned',M.banned]].map(([l,n])=>`<div class="a3k sm"><b>${n}</b><span>${l}</span></div>`).join('')}</div>`})():(a3loadStats(),'')}
+   ${A3.mlist===null?spinner('Loading'):(A3.mlist||[]).length?A3.mlist.map(x=>`<button class="a3r" data-a="a3mem" data-k="${esc(x.id)}"><span class="a3d ${x.banned?'failed':/live/i.test(x.step||'')?'ok':'run'}"></span><span><b>${esc(x.full_name||x.email||'Member')}${x.gold?' · Gold':''}</b><small>${esc(x.step||'')}</small><small>${esc([x.city,x.country].filter(Boolean).join(', '))}${x.origin_country?' · roots '+esc(x.origin_country):''} · joined ${esc(a3ago(x.created_at))}</small></span><em>›</em></button>`).join(''):'<p class="a3m">No members found.</p>'}</div>
+   ${A3.st&&A3.st.members?['countries','roots','cities'].map(k=>{const a=A3.st.members[k]||[];return a.length?`<div class="a3c"><div class="a3h"><b>${{countries:'Where they live',roots:'Their roots',cities:'Top cities'}[k]}</b><span>tap to see</span></div>${a.map(r=>a3kv2(r.k,r.n,a[0].n,'#9D7CFF',`data-a="a3find" data-k="${esc(String(r.k).split(',')[0])}"`)).join('')}</div>`:''}).join(''):''}`}
+async function a3search(q){A3.mq=q;A3.mlist=null;render();try{A3.mlist=await API.rpc('admin_members',{p_q:q||null,p_limit:100})}catch(e){A3.mlist=[]}render()}
+function a3activity(){const w=a3need();if(w)return w;const a=A3.st.activity;const d=a.days_14||[];const mx=Math.max(1,...d.map(x=>x.active));const mm=Math.max(1,...d.map(x=>x.messages));
+  const k=(n,l,s,c,go)=>`<button class="a3k" style="--c:${c}" ${go?`data-a="a3go" data-k="${go}"`:'data-a="a3tab" data-k="members"'}><b>${n}</b><span>${l}</span>${s?`<small>${s}</small>`:''}<em class="a3more">Details ›</em></button>`;
+  return `<div class="a3g">${k(a.active_today,'Active today','opened the app','#12A36B')}${k(a.active_7d,'Active, 7 days','',  '#9D7CFF')}${k(a.messages_today,'Messages today',`${a.messages_7d} in 7 days`,'#FF5C9E')}${k(a.chats_7d,'Chats, 7 days','pairs talking','#FFC93C')}${k(a.interests_7d,'Interests, 7 days',`${a.accepted_7d} accepted`,'#FF8A3D')}${k(a.matches_all,'Matches','all time','#12A36B')}</div>
+   <div class="a3c"><div class="a3h"><b>Active members per day</b><span>14 days</span></div><div class="a3bars">${d.map(x=>`<i style="height:${Math.max(3,Math.round(x.active/mx*100))}%" title="${x.active}"></i>`).join('')}</div></div>
+   <div class="a3c"><div class="a3h"><b>Messages per day</b><span>14 days</span></div><div class="a3bars">${d.map(x=>`<i style="height:${Math.max(3,Math.round(x.messages/mm*100))}%;background:#FF5C9E" title="${x.messages}"></i>`).join('')}</div></div>
+   <div class="a3c"><div class="a3h"><b>Day by day</b></div>${d.slice().reverse().map(x=>`<div class="a3kv"><span>${esc(new Date(x.d).toLocaleDateString([], {weekday:'short',day:'numeric',month:'short'}))}</span><b>${x.active} active · ${x.messages} messages · ${x.interests} interests</b></div>`).join('')}</div>
+   ${a.flagged_7d?`<button class="a3c a3n" data-a="a3tab" data-k="checks">${ic('alert')}<span><b>${a.flagged_7d} warned message${a.flagged_7d>1?'s':''} in 7 days</b><small>Money or scam words; see Checks</small></span><em>Open</em></button>`:''}`}
+function a3money(){const w=a3need();if(w)return w;const M=A3.st.money;const T=M.tickets||[];
+  return `<div class="a3g">${T.map(t=>`<div class="a3k" style="--c:#12A36B"><b>${money(t.paid_30d,t.cur)}</b><span>Tickets, 30 days</span><small>${money(t.paid_all,t.cur)} all time · ${t.count_all} paid</small></div>`).join('')}
+    <button class="a3k" style="--c:#FFC93C" data-a="a3tab" data-k="members"><b>${M.gold_active}</b><span>Gold active</span><small>${M.gold_new_30d} new in 30 days · ${M.gold_renewing} renewing</small><em class="a3more">Members ›</em></button></div>
+   ${T.length?`<div class="a3c"><div class="a3h"><b>Event tickets</b><span>per currency</span></div>${T.map(t=>`<div class="a3kv"><span>${esc(t.cur)} paid (before tax)</span><b>${money(t.paid_all,t.cur)}</b></div><div class="a3kv"><span>of it to restaurants (meals)</span><b>${money(t.meals_all,t.cur)}</b></div><div class="a3kv"><span>NeuMarry share</span><b>${money(t.paid_all-t.meals_all,t.cur)}</b></div>${t.refunded_all?`<div class="a3kv"><span>Refunded</span><b>${money(t.refunded_all,t.cur)}</b></div>`:''}`).join('')}</div>`:''}
+   ${(M.gold_by_product||[]).length?`<div class="a3c"><div class="a3h"><b>Gold plans</b><span>active</span></div>${M.gold_by_product.map(r=>a3kv2(r.k,r.n,M.gold_by_product[0].n,'#FFC93C')).join('')}<p class="a3m">Gold money arrives through Google Play / App Store; the exact amounts after store fees are in the store report.</p></div>`:''}
+   ${(M.payouts||[]).length?`<div class="a3c"><div class="a3h"><b>Payouts to hosts and partners</b></div>${M.payouts.map(p=>`<div class="a3kv"><span>${esc(p.status)} · ${p.n}</span><b>${money(p.cents,p.cur)}</b></div>`).join('')}</div>`:''}
+   <div class="a3c"><div class="a3h"><b>Latest payments</b><span>${(M.recent||[]).length}</span></div>${(M.recent||[]).length?M.recent.map(r=>`<button class="a3r" data-a="a3mem" data-k="${esc(r.uid)}"><span class="a3d ok"></span><span><b>${esc(r.kind)} · ${esc(r.who||'Member')}</b><small>${esc(r.what||'')}${r.cents!=null?' · '+money(r.cents,r.cur):''}</small><small>${esc(a3ago(r.at))}</small></span><em>›</em></button>`).join(''):'<p class="a3m">No payments yet.</p>'}</div>`}
+function a3events(){const w=a3need();if(w)return w;const E=A3.st.events||[];if(!E.length)return `<div class="a3c"><p class="a3m">No events in the last 60 days or coming up.</p></div>`;
+  if(A3.ev){const e=E.find(x=>x.id===A3.ev);if(e){const row=(k,v)=>`<div class="a3kv"><span>${k}</span><b>${esc(String(v))}</b></div>`;
+    return `<button class="a3back" data-a="a3up">${ic('back')} All events</button><div class="a3c"><div class="a3h"><b>${esc(e.title)}</b><span>${esc(e.status)}</span></div>
+     ${row('When',new Date(e.starts_at).toLocaleString([], {weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}))}${row('Where',[e.city,e.country].filter(Boolean).join(', '))}
+     ${a3kv2('Women',e.women,e.seats_women,'#FF5C9E')}${a3kv2('Men',e.men,e.seats_men,'#9D7CFF')}
+     ${row('Seats',`${e.women}/${e.seats_women} women · ${e.men}/${e.seats_men} men`)}${row('Paid tickets',e.paid)}${row('Money (before tax)',money(e.cents,e.currency))}${row('Checked in at the door',e.checked_in)}</div>`}}
+  return E.map(e=>`<button class="a3c a3ev" data-a="a3ev" data-k="${esc(e.id)}"><span class="a3h"><b>${esc(e.title)}</b><span>${esc(e.status)}</span></span><small>${esc(new Date(e.starts_at).toLocaleDateString([], {day:'numeric',month:'short'}))} · ${esc(e.city||'')}</small>
+    <span class="a3seat"><i style="width:${Math.round(e.women/Math.max(1,e.seats_women)*100)}%;background:#FF5C9E"></i></span><span class="a3seat"><i style="width:${Math.round(e.men/Math.max(1,e.seats_men)*100)}%;background:#9D7CFF"></i></span>
+    <small>${e.women}/${e.seats_women} women · ${e.men}/${e.seats_men} men · ${money(e.cents,e.currency)}</small><em class="a3more">Details ›</em></button>`).join('')}
 (function(){
   Object.assign(A,{
     a3go(el){const k=el.dataset.k||'';
@@ -3101,12 +3145,16 @@ function a3member(){const x=a3rows().find(r=>r.user_id===A3.mem);if(!x)return `<
       else if(k.startsWith('day:')){const n=+k.slice(4);A3.list={title:n===0?'Sign-ups today':n===1?'Sign-ups yesterday':`Sign-ups ${n} days ago`,f:x=>a3daysAgo(x.created_at)===n}}
       else if(/^f\d$/.test(k)){const [fn,t]=A3F[+k[1]];A3.list={title:t+' (last 7 days)',f:x=>a3daysAgo(x.created_at)<7&&fn(x),note:'Members who joined in the last 7 days and reached this step.'}}
       A3.mem=null;render();const sc=document.querySelector('.a3v .scroll');if(sc)sc.scrollTop=0},
-    a3mem(el){A3.mem=el.dataset.k;render();const sc=document.querySelector('.a3v .scroll');if(sc)sc.scrollTop=0},
-    a3up(){if(A3.mem)A3.mem=null;else if(A3.list)A3.list=null;else if(A3.open)A3.open=null;else if(A3.bot)A3.bot=null;else if(A3.tab!=='home')A3.tab='home';else{A.closeView();return}render()}
+    a3mem(el){A3.mem=el.dataset.k;a3loadMem(A3.mem);render();const sc=document.querySelector('.a3v .scroll');if(sc)sc.scrollTop=0},
+    a3up(){if(A3.mem)A3.mem=null;else if(A3.ev)A3.ev=null;else if(A3.list)A3.list=null;else if(A3.open)A3.open=null;else if(A3.bot)A3.bot=null;else if(A3.tab!=='home')A3.tab='home';else{A.closeView();return}render()}
   });
   /* phone back button and the top back arrow: one step back inside the admin panel first, then close it */
-  const _gb=goBack;goBack=function(){if(view&&view.type==='admin'&&!sheet&&!picker&&!celebrate&&(A3.mem||A3.list||A3.open||A3.bot||A3.tab!=='home')){A.a3up();return true}return _gb()};
-  const _ta=A.a3tab;A.a3tab=function(el){A3.list=null;A3.mem=null;return _ta.apply(this,arguments)};
+  const _gb=goBack;goBack=function(){if(view&&view.type==='admin'&&!sheet&&!picker&&!celebrate&&(A3.mem||A3.ev||A3.list||A3.open||A3.bot||A3.tab!=='home')){A.a3up();return true}return _gb()};
+  const _ta=A.a3tab;A.a3tab=function(el){A3.list=null;A3.mem=null;A3.ev=null;return _ta.apply(this,arguments)};
+  Object.assign(A,{a3ev(el){A3.ev=el.dataset.k;render();const sc=document.querySelector('.a3v .scroll');if(sc)sc.scrollTop=0},
+    a3find(el){A3.tab='members';const q=el.dataset.k||'';render();a3search(q)}});
+  let a3t=null;document.addEventListener('input',e=>{if(e.target&&e.target.dataset&&e.target.dataset.a3q){clearTimeout(a3t);const v=e.target.value;a3t=setTimeout(()=>{a3search(v.trim());setTimeout(()=>{const i=document.getElementById('a3q');if(i){i.focus();i.setSelectionRange(v.length,v.length)}},50)},450)}});
+  const _rl=A.a3reload;A.a3reload=function(){A3.st=null;A3.mlist=undefined;if(A3.mem)a3loadMem(A3.mem);return _rl.apply(this,arguments)};
 })();
 
 /* member side: "Need help?" sheet (C3 preview first). The question goes to the team's help inbox; answers show here. */

@@ -1276,3 +1276,9 @@ button.a3k{border:0;border-top:3px solid var(--c);text-align:left;width:100%;col
 .a3step{display:inline-block;margin:2px 0 10px;padding:5px 10px;border-radius:999px;background:#3A2A14;color:#FFC93C;font:700 12px var(--f-body)}
 .a3step.ok{background:#123A2A;color:#3FD39A}
 .a3c>.btn.block{margin-top:12px}
+.a3k.sm{padding:9px 10px}.a3k.sm b{font-size:20px}
+.a3in{width:100%;box-sizing:border-box;border:1px solid #3A3242;background:#141018;color:#fff;border-radius:12px;padding:11px 12px;font:600 14px var(--f-body);margin-bottom:10px}
+.a3ev{display:block;width:100%;text-align:left;border:0;color:#F4F1F8;cursor:pointer}.a3ev small{display:block;margin-top:4px;color:#A9A1B6;font:600 12px var(--f-body)}
+.a3seat{display:block;height:7px;border-radius:9px;background:#2B2433;margin-top:7px;overflow:hidden}.a3seat i{display:block;height:100%;border-radius:9px}
+.a3ev .a3more{display:block;margin-top:6px;font:700 11px var(--f-body);font-style:normal;color:#C9B8FF}
+.a3c>.a3step{justify-self:start;margin:0}
