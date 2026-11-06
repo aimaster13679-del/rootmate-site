@@ -3703,6 +3703,15 @@ function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^
   const _vh=v2head;v2head=function(sub){const h=_vh(sub);if(!RL())return h;const d=S.draft||{};const [pp]=V2PART[v2key()]||[1];
     const seed=[d.name,d.oc,d.os,d.country,d.city,(d.ans||[]).join('')].join('|');
     return h.replace('<div class="grow">',`<span class="rl-hsig" title="Your Roots Signature">${rlSig(seed,'',Math.max(1,Math.min(4,pp)))}</span><div class="grow">`)};
+
+  /* ===== Events: a globe tile with every upcoming event (tap a pin = open that event) ===== */
+  RLX.OPTS.events=()=>{let evs=[];try{evs=events().filter(e=>e.date>Date.now()-864e5)}catch(e){}const me=S.me||{};const h0=meHome();
+    const pins=evs.slice(0,12).map(e=>({ll:ll({country:e.country,city:e.city}),html:`<i></i>${esc(e.city||'')}`,cls:'on',a:'openEvent',id:e.id}));
+    if(h0)pins.unshift({ll:h0,html:`<i></i>You`,cls:'me'});const c=h0||(pins[0]&&pins[0].ll)||[0,20];
+    return {center:[c[0],Math.max(-20,Math.min(45,c[1]))],zoom:innerWidth<500?1.6:2.2,spin:0,arcs:[],roots:[],lives:[me.country].filter(Boolean),pins}};
+  const _re=renderEvents;renderEvents=function(){const h=_re();if(!RL()||!RLX.webgl())return h;const k=h.indexOf('<div class="main-inner pad">');if(k<0)return h;const e=k+'<div class="main-inner pad">'.length;
+    let n=0;try{n=events().filter(x=>x.date>Date.now()).length}catch(x){}
+    return h.slice(0,e)+`<div class="rl-tile rl-evt"><div class="rl-slot" data-rl="events"></div><div class="rl-cap"><p class="eb">Family tables near you</p><b>${n} upcoming event${n===1?'':'s'}</b></div></div>`+h.slice(e)};
   const _are=afterRenderEvents;afterRenderEvents=function(){const r=_are.apply(this,arguments);try{if(RL())RLX.attach()}catch(e){}return r};
 })();
 
