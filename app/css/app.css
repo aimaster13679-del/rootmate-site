@@ -1614,3 +1614,14 @@ html.gl.gl-lt .px-ph .px-gc .px-nm small{color:#4E5E57}html.gl.gl-lt .px-facts s
 html.gl.gl-lt .px-facts span.s{background:linear-gradient(150deg,#D6F7E8,#A6E9CB);color:#0B4D36;border-color:transparent}
 html.gl.gl-lt .px-same{color:#0E7A55}html.gl.gl-lt .px-ok{color:#0E7A55;background:#E3F7EE;border-color:#BFEFD9}
 html.gl .px-ph{color:var(--ink)}
+/* profile like the approved bento mock: tinted road tiles with big numbers, mint plan tile */
+html.gl .px-road{border:1px solid rgba(255,255,255,.12);border-top-width:1px;padding:14px;border-radius:20px}
+html.gl .px-road.h{background:linear-gradient(160deg,rgba(255,226,120,.16),rgba(255,255,255,.04))}html.gl .px-road.y{background:linear-gradient(160deg,rgba(200,240,160,.13),rgba(255,255,255,.04))}
+html.gl.gl-lt .px-road.h{background:linear-gradient(160deg,rgba(255,248,206,.95),rgba(255,234,140,.55));border-color:#fff}html.gl.gl-lt .px-road.y{background:linear-gradient(160deg,rgba(238,250,226,.95),rgba(203,238,172,.55));border-color:#fff}
+html.gl .px-road small{text-transform:uppercase;letter-spacing:.08em;font-size:11px;font-weight:800;color:#8DEBC3}html.gl.gl-lt .px-road small{color:#0E5B43}
+html.gl .px-road b{font-size:28px;line-height:1.1;color:#8DEBC3;font-weight:800}html.gl.gl-lt .px-road b{color:#0E5B43}
+html.gl #px-plan{background:linear-gradient(160deg,rgba(150,235,200,.13),rgba(255,255,255,.04))}html.gl.gl-lt #px-plan{background:linear-gradient(160deg,rgba(222,249,237,.95),rgba(168,232,204,.5));border-color:#fff}
+html.gl.gl-lt .px-sec{background:rgba(255,255,255,.66);border-color:#fff;box-shadow:0 1px 0 #fff inset,0 18px 36px -26px rgba(30,80,60,.35)}
+html.gl .px-path li.on i{background:#0E9F6E;border-color:#8DEBC3}
+html.gl.gl-lt .px-ib{background:linear-gradient(150deg,#E3F7EE,#BFEFD9);color:#0E7A55}html.gl .px-ib{background:rgba(141,235,195,.16);color:#8DEBC3}
+html.gl .px-road b{font-size:clamp(20px,6vw,26px);white-space:nowrap}
