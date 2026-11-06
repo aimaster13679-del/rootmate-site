@@ -3455,7 +3455,7 @@ if(!IC.share)Object.assign(IC,{share:'<circle cx="18" cy="5.5" r="2.5"/><circle 
     return `<button class="px-rb" data-a="pass" data-id="${p.id}" aria-label="Not for me">${ic('x')}</button><button class="px-big" data-a="interest" data-id="${p.id}" aria-label="Send interest to ${esc(shown(p))}">${ic('heart')}</button>${save}`}
   function deckCard(p){const c=compat(p),st=S.interests[p.id],lk=locked(p)&&!(st==='received'&&p.gold);const f=facts(p),n=f.filter(x=>x[2]).length,ok=checksDone(p);
     return `<div class="px-slide"><article class="mcard px-card${lk?' lockd':''}">
-     <button class="px-ph" data-a="open" data-id="${p.id}" aria-label="${lk?`See this ${c.total}% match with Gold`:`Open ${esc(shown(p))}'s profile`}">${avatar(p,'cover')}<span class="px-fade"></span>
+     <button class="px-ph" data-a="open" data-id="${p.id}" aria-label="${lk?`See this ${c.total}% match with Gold`:`Open ${esc(shown(p))}'s profile`}">${p.photos&&p.photos[0]?`<img class="px-bl" src="${esc(p.photos[0])}" alt="" aria-hidden="true">`:''}${avatar(p,'cover')}<span class="px-fade"></span>
       <span class="px-route">${fl(p.oc)} ${esc(p.os||p.oc)} <i>→</i> ${fl(p.country)} ${esc(p.cityName)}</span>${fit(c.total)}
       ${st==='received'?`<span class="px-likes">${ic('heart')}Likes you</span>`:''}
       <span class="px-gc"><span class="px-nm"><b>${esc(shown(p))}, ${p.age}</b><small>${lk?`${ic('lock')} Name and photos with Gold`:`${esc(p.job||'')}${p.job?' · ':''}${esc(distLabel(p))}`}</small></span>
@@ -3524,7 +3524,7 @@ if(!IC.share)Object.assign(IC,{share:'<circle cx="18" cy="5.5" r="2.5"/><circle 
     const fam=famOk(p)?t('v2fam','users',fo?'Shared':'Family',fo,` aria-label="${fo?'Shared with your family. Tap to remove':'Share with family'}"`):`<button class="px-tile" data-a="pxGo" data-k="#px-fam,#px-chk">${ic('users')}<span>Family</span></button>`;
     return `<div class="px-tiles">${first}${fam}${t('shortlist','star',sl?'Saved':'Save',sl,` aria-pressed="${sl}"`)}</div>`}
   function top(p){const c=compat(p),nm=shown(p);const meta=[p.job,p.r,p.t].filter(Boolean).join(' · ');
-    return `<div class="px-top"><div class="px-tph">${avatar(p,'xl')}<span class="px-fade"></span></div>
+    return `<div class="px-top"><div class="px-tph">${p.photos&&p.photos[0]?`<img class="px-bl" src="${esc(p.photos[0])}" alt="" aria-hidden="true">`:''}${avatar(p,'xl')}<span class="px-fade"></span></div>
      <div class="px-tb"><button class="px-cb" data-a="closeView" aria-label="Back">${ic('back')}</button><span class="grow"></span>
       ${famOk(p)?`<button class="px-cb" data-a="v2fam" data-id="${p.id}" aria-label="Share with family">${ic('share')}</button>`:''}<button class="px-cb" data-a="more" data-id="${p.id}" aria-label="More options">${ic('more')}</button></div>
      <div class="px-float"><div class="px-fh"><h2>${esc(nm)}, ${p.age}</h2>${fit(c.total)}</div>

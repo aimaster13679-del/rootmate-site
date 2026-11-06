@@ -1578,3 +1578,19 @@ html.c3.gl .px-card,html.c3.gl .px-sec,html.c3.gl .fu-t,html.c3.gl .panel,html.c
 .v2rev-p span.nf{display:grid;place-items:center;background:linear-gradient(150deg,#E3F7EE,#A8F0CF);color:#0B4D36}.v2rev-p span.nf .ic,.v2rev-p span.nf svg{width:30px;height:30px}
 html.c3.gl .v2rev-p span.nf{background:linear-gradient(150deg,rgba(168,240,207,.25),rgba(255,226,120,.18));color:#8DEBC3;border-color:rgba(255,255,255,.2)}
 .v2gt-a svg{width:100%;height:100%;display:block}
+/* birthday wheel: text exactly in the middle of each row (the font shorthand had reset line-height) */
+.v2wit{display:flex;align-items:center;justify-content:center;line-height:1}
+/* member photos fit whole (his rule 7 Nov 03:08: face must be fully visible): photo shown complete, soft blurred copy fills the sides */
+html.gl .px-bl{position:absolute;left:-30px;top:-30px;width:calc(100% + 60px);height:calc(100% + 60px);object-fit:cover;filter:blur(26px) brightness(.85) saturate(1.1);z-index:0}
+html.gl .px-ph>.av,html.gl .px-tph>.av{background:transparent!important;z-index:1}
+html.gl .px-ph>.av img,html.gl .px-tph>.av img{object-fit:contain!important;object-position:50% 0!important}
+html.gl .px-ph .px-fade,html.gl .px-tph .px-fade{z-index:1}html.gl .px-ph .px-route,html.gl .px-ph .px-fit,html.gl .px-ph .px-gc,html.gl .px-ph .px-likes{z-index:2}
+/* deck card like the approved bento mock: photo on top (whole face, nothing covered), details tile below */
+html.gl .px-ph{height:auto!important;display:block;padding-bottom:12px}
+html.gl .px-ph>.av{position:relative!important;inset:auto!important;display:block;width:100%!important;height:min(96vw,400px)!important;border-radius:0}
+html.gl .px-ph .px-bl{height:calc(min(96vw,400px) + 60px)}
+html.gl .px-ph .px-fade{display:none}
+html.gl .px-ph .px-gc{position:relative;left:auto;right:auto;bottom:auto;margin:-28px 12px 0}
+html.gl .px-tph{height:min(118vw,470px)}
+html.gl .px-float{margin-top:-36px}
+html.gl .px-tph .px-fade{background:linear-gradient(180deg,rgba(10,12,11,.35),rgba(10,12,11,0) 18%,rgba(10,12,11,0) 88%,var(--bg) 100%)}
