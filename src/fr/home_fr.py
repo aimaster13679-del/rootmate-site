@@ -290,5 +290,13 @@ PAIRS = [
  ('<b>By country and city</b><a href="uk-matrimony.html">United Kingdom</a><a href="usa-matrimony.html">United States</a><a href="australia-matrimony.html">Australia</a><a href="uae-matrimony.html">United Arab Emirates</a>',
   '<b>Par pays et par ville</b><a href="uk-matrimony.html">Royaume-Uni</a><a href="usa-matrimony.html">États-Unis</a><a href="australia-matrimony.html">Australie</a><a href="uae-matrimony.html">Émirats arabes unis</a>'),
  ('<b>Legal</b><a href="terms.html">Terms of Service</a><a href="privacy.html">Privacy Policy</a><a href="delete-account.html">Delete account</a><a href="child-safety.html">Child safety</a><b style="margin-top:14px">Follow</b>',
-  '<b>Juridique</b><a href="terms.html">Conditions d’utilisation</a><a href="privacy.html">Politique de confidentialité</a><a href="delete-account.html" hreflang="en">Supprimer mon compte (en anglais)</a><a href="child-safety.html" hreflang="en">Sécurité des enfants (en anglais)</a><b style="margin-top:14px">Suivez-nous</b>'),
+  '<b>Juridique</b><a href="terms.html">Conditions d’utilisation</a><a href="privacy.html">Politique de confidentialité</a><a href="delete-account.html" hreflang="en">Supprimer mon compte (en anglais)</a><a href="child-safety.html" hreflang="en">Sécurité des enfants (en anglais)</a><b style="margin-top:14px">Suivez-nous</b>'), # Draw your roots line (7 Nov 2026)
+ ('>Try it · 10 seconds<', '>Essayez · 10 secondes<'),
+ ('Draw your <em>roots line.</em>', 'Tracez votre <em>ligne de racines.</em>'),
+ ('Tap where you grew up and where you live now. Every NeuMarry profile carries this line, so you meet people who understand both of your homes.',
+  'Touchez l’endroit où vous avez grandi et celui où vous vivez. Chaque profil NeuMarry porte cette ligne : vous rencontrez des gens qui comprennent vos deux chez-soi.'),
+ ('<p class="lbl">I grew up in</p>', '<p class="lbl">Où j’ai grandi</p>'),
+ ('<p class="lbl">I live in</p>', '<p class="lbl">Où je vis</p>'),
+ ('Start with your line →', 'Commencez avec votre ligne →'),
+ ('aria-label="A real globe with your roots line"', 'aria-label="Un vrai globe avec votre ligne de racines"'),
 ]
