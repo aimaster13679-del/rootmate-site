@@ -3654,29 +3654,56 @@ function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^
   /* ===== Matches: globe tile + introductions as signature cards ===== */
   RLX.OPTS.home=()=>{const it=(RLX._it||[]);const r=meRoot(),me=S.me||{};
     const pins=[];if(r)pins.push({ll:r,html:`<i></i>${esc(me.os||me.oc||'')} · your roots`,cls:'root'});
-    it.forEach((p,i)=>{const h=pHome(p);if(h)pins.push({ll:h,html:`<i></i>${esc(p.cityName||p.country)}`,cls:'on',fly:true,go:()=>{const d=document.querySelector('.rl-cards');if(d&&d.children[i])d.scrollTo({left:d.children[i].offsetLeft-d.offsetLeft-4,behavior:'smooth'})}})});
-    const h0=meHome();if(h0)pins.push({ll:h0,html:`<i></i>You · ${esc(me.city||me.country||'')}`,cls:'me'});
+    const h0=meHome();const gs=atlasGroups();if(h0&&!gs.some(g=>g.city===me.city))pins.push({ll:h0,html:`<i></i>You · ${esc(me.city||me.country||'')}`,cls:'me'});
+    gs.forEach(g=>{pins.push({ll:g.ll,html:`<i></i>${esc(g.city)} <b>${g.n}</b>${g.city===me.city?' · you':''}`,cls:S.rlCity===g.key?'on sel':'on',fly:true,go:()=>{S.rlCity=g.key;S.rlF=S.rlF||{};render()}})});
     const arcs=it.map(p=>[ll({country:p.oc,state:p.os}),pHome(p),'g']).concat(r&&h0?[[r,h0,'y']]:[]);
     const c=r||h0||[20,20];return {padB:it.length?150:0,center:[c[0],Math.max(-20,Math.min(40,c[1]))],zoom:innerWidth<500?1.15:1.5,spin:-.03,arcs,roots:[me.oc].concat(it.map(p=>p.oc)).filter(Boolean),lives:[me.country].concat(it.map(p=>p.country)).filter(Boolean),pins}};
+  function atlasGroups(){const me=S.me||{};const all=(RLX._all||[]).filter(p=>!S.blocked.includes(p.id));const same=all.filter(p=>p.oc&&p.oc===me.oc);const L=same.length?same:all;const m={};
+    L.forEach(p=>{const k=(p.cityName||'')+'|'+(p.country||'');if(!p.cityName)return;(m[k]=m[k]||{key:k,city:p.cityName,country:p.country,list:[],ll:pHome(p)}).list.push(p)});
+    return Object.values(m).filter(g=>g.ll).map(g=>Object.assign(g,{n:g.list.length})).sort((a,b)=>b.n-a.n).slice(0,14)}
+  RLX.atlasGroups=atlasGroups;
+  const famGood=id=>{try{const x=(FAM.list||[]).find(y=>y.id===id);return !!(x&&(x.reactions||[]).some(r=>r.reaction==='good'))}catch(e){return false}};
+  const why=(p,n)=>{try{return whyChips(p).slice(0,n).map(w=>w.t)}catch(e){return []}};
   function acts(p,lk){const st=S.interests[p.id],sl=S.shortlist.includes(p.id);
     const save=`<button class="rl-b" data-a="shortlist" data-id="${p.id}" aria-label="${sl?'Remove from saved':'Save for later'}" aria-pressed="${sl}"${sl?' data-on="1"':''}>${ic('star')}</button>`;
     if(lk)return `<button class="btn gold rl-wide" data-a="upgrade" data-r="profile" data-id="${p.id}">${ic('crown')}See profile with Gold</button>`;
     if(st==='mutual')return `${save}<button class="rl-go" data-a="openchat" data-id="${p.id}">${ic('chat')}Open the Bridge</button>`;
-    if(st==='received')return `<button class="rl-b" data-a="decline" data-id="${p.id}" aria-label="Not now">${ic('x')}</button><button class="rl-go" data-a="accept" data-id="${p.id}">${ic('heart')}Say yes</button>${save}`;
+    if(st==='received')return `<button class="rl-b" data-a="decline" data-id="${p.id}" aria-label="Not now">${ic('x')}</button><button class="rl-go" data-a="accept" data-id="${p.id}">${ic('heart')}${(()=>{try{return v2noteFrom(p.id)}catch(e){return ''}})()?'Say yes & answer':'Say yes'}</button>${save}`;
     if(st==='sent')return `<span class="rl-sent">${ic('check')}Interest sent</span>${save}`;
     return `<button class="rl-b" data-a="pass" data-id="${p.id}" aria-label="Not now">${ic('x')}</button><button class="rl-go" data-a="interest" data-id="${p.id}">${ic('heart')}I'm interested</button>${save}`}
   function card(p){const c=compat(p),st=S.interests[p.id],lk=locked(p)&&!(st==='received'&&p.gold);const tz=tzOf(p);
     return `<article class="rl-card"><button class="rl-top" data-a="open" data-id="${p.id}" aria-label="${lk?`See this ${c.total}% match with Gold`:`Open ${esc(shown(p))}'s profile`}">
-      <span class="rl-sgw">${rlSig(p.id,'',4)}${st==='received'?`<span class="rl-likes">${ic('heart')}Likes you</span>`:''}</span>
+      <span class="rl-sgw">${rlSig(p.id,'',4)}${st==='received'?`<span class="rl-likes">${ic('heart')}Likes you</span>`:famGood(p.id)?`<span class="rl-likes y">${ic('users')}Family likes</span>`:''}</span>
       <span class="rl-who"><b>${esc(shown(p))}, ${p.age}</b><small>${fl(p.oc)} ${esc(p.os||p.oc||'')} → ${fl(p.country)} ${esc(p.cityName||'')}</small>
-       ${tz?`<small>${ic('clock')}${esc(hhmm(tz))} there</small>`:''}<span class="rl-fit">${c.total}% shared</span></span></button>
+       ${tz?`<small>${ic('clock')}${esc(hhmm(tz))} there</small>`:''}${why(p,2).map(w=>`<small class="rl-why">${ic('check')}${esc(w)}</small>`).join('')}<span class="rl-fit">${c.total}% shared</span></span></button>
      <div class="rl-acts">${acts(p,lk)}</div></article>`}
-  const _ib3=introBlock;introBlock=function(list){const prev=_ib3(list);if(!RL())return prev;const it=introsToday(list);RLX._it=it;
+  const _ib3=introBlock;introBlock=function(list){const prev=_ib3(list);if(!RL())return prev;const it=introsToday(list);RLX._it=it;RLX._all=list||[];
     const a=prev.indexOf('<div class="pxb">'),b=prev.lastIndexOf('<div class="pxb">');const top=a>=0&&a!==b?prev.slice(a,prev.indexOf('<div class="sec-h px-sh">')>0?prev.indexOf('<div class="sec-h px-sh">'):b):'';const bot=b>=0?prev.slice(b):'';
     const me=S.me||{};const globe=RLX.webgl()?`<div class="rl-tile rl-home"><div class="rl-slot" data-rl="home"></div><div class="rl-cap"><p class="eb">${esc(me.oc||'')} roots · worldwide</p><b>${it.length?`${it.length} introduction${it.length>1?'s':''} today`:'Your roots line'}</b></div></div>`:'';
+    let city=null;if(S.rlCity){city=atlasGroups().find(g=>g.key===S.rlCity)||null;if(!city)S.rlCity=null}
+    if(city){const F=S.rlF||{},me2=S.me||{};let L=city.list.slice();if(F.plan)L=L.filter(p=>me2.ans&&p.ans&&p.ans[8]===me2.ans[8]);if(F.ver)L=L.filter(p=>checksDone(p)===5);if(F.fam)L=L.filter(p=>me2.ans&&p.ans&&p.ans[2]===me2.ans[2]);
+      const chip=(k,l)=>`<button class="rl-chip${F[k]?' on':''}" data-a="rlF" data-k="${k}">${l}</button>`;
+      const sheet=`<div class="rl-sheet${globe?' over':''}"><div class="sec-h rl-sh"><h2>${esc(city.city)} · ${city.n}</h2><button class="rl-chip" data-a="rlCity">${ic('x')}Today</button></div>
+       <div class="rl-chips">${chip('plan','Same marriage plan')}${chip('fam','Same family plan')}${chip('ver','Fully verified')}</div>
+       ${L.length?`<div class="rl-cards">${L.map(card).join('')}</div>`:`<p class="rl-none">No one here with these filters yet. Try fewer filters.</p>`}</div>`;
+      return globe+sheet+top+bot}
     const cards=it.length?`<div class="rl-sheet${globe?' over':''}"><div class="sec-h rl-sh"><h2>Today for you</h2><small>${ic('clock')}New in <span data-until="${midnight()}">${fmtLeft(midnight()-Date.now())}</span></small></div><div class="rl-cards">${it.map(card).join('')}</div></div>`:'';
     return globe+cards+top+bot};
 
+  A.rlCity=function(){S.rlCity=null;render();try{const g=RLX.OPTS.home();RLX.fly('home',g.center,innerWidth<500?1.15:1.5)}catch(e){}};
+  /* ===== Question-first: an interest always starts with a question from their story ===== */
+  const _int=A.interest;A.interest=async function(el){const id=el.dataset.id;if(!RL()||!id)return _int(el);const note=(S.v2note||{})[id];
+    if(!note){S.rlAsk=id;render();return}S.rlAsk=null;return _int(el)};
+  A.rlAskPick=function(el){S.v2note=S.v2note||{};S.v2note[el.dataset.id]=el.dataset.v;render()};
+  A.rlAskClose=function(){S.rlAsk=null;render()};
+  function askSheet(){const p=byId(S.rlAsk);if(!p){S.rlAsk=null;return ''}let Q=[];try{Q=v2replyOpts(p).slice(0,3)}catch(e){}
+    Q=Q.concat([`What made you choose ${p.cityName}?`,'What does a family weekend look like for you?']).filter((x,i,a)=>x&&a.indexOf(x)===i).slice(0,5);const cur=(S.v2note||{})[p.id]||'';
+    return `<div class="rl-askw" role="dialog" aria-label="Start with a question"><div class="rl-ask"><div class="rl-askh"><span class="rl-sgw" style="width:64px;height:64px">${rlSig(p.id,'',3)}</span><div><p class="eb">No blank likes</p><b>Start with a question from ${esc(p.first||shown(p))}'s story</b></div><button class="rl-b" data-a="rlAskClose" aria-label="Close">${ic('x')}</button></div>
+     <p class="rl-askp">When ${esc(p.first||'they')} says yes, the Bridge opens with your question on top.</p>
+     <div class="rl-qs">${Q.map(q=>`<button class="rl-q${cur===q?' on':''}" data-a="rlAskPick" data-id="${p.id}" data-v="${esc(q)}"><span>${esc(q)}</span><i></i></button>`).join('')}</div>
+     <button class="rl-go" data-a="interest" data-id="${p.id}"${cur?'':' disabled'}>${ic('send')}Send question</button></div></div>`}
+  A.rlPage=function(el){const pg=el.parentNode.nextElementSibling;if(pg){const c=pg.children[+el.dataset.k];pg.scrollTo({left:c.offsetLeft-pg.offsetLeft,behavior:'smooth'})}};
+  A.rlF=function(el){S.rlF=S.rlF||{};S.rlF[el.dataset.k]=!S.rlF[el.dataset.k];render()};
   /* ===== Profile: 'What you share' rings + their local time ===== */
   const _pv=renderProfileView;renderProfileView=function(id,isMe){const html=_pv(id,isMe);if(!RL()||isMe)return html;const p=byId(id);if(!p)return html;
     let c;try{c=compat(p)}catch(e){return html}const tz=tzOf(p);const cl=v=>{v=+v||0;if(v<=1)v*=100;return Math.max(0,Math.min(100,Math.round(v)))};
@@ -3685,8 +3712,18 @@ function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^
     const blk=`<section class="rl-share"><div class="rl-rings"><svg viewBox="0 0 120 120" aria-hidden="true">${ring.map((r,i)=>{const R=50-i*13;return `<circle cx="60" cy="60" r="${R}" fill="none" stroke="${col[i]}" stroke-opacity=".15" stroke-width="9"/><circle class="rl-ring" cx="60" cy="60" r="${R}" fill="none" stroke="${col[i]}" stroke-width="9" stroke-linecap="round" pathLength="1" style="--o:${(1-r.v/100).toFixed(2)};animation-delay:${.15+i*.15}s" transform="rotate(-90 60 60)"/>`}).join('')}</svg>
       <div class="rl-rl"><p class="eb">What you share</p>${ring.map((r,i)=>`<div><i style="background:${col[i]}"></i>${esc(r.l)}<span>${r.v}%</span></div>`).join('')}</div></div>
       ${tz?`<p class="rl-tz">${ic('clock')}${esc(hhmm(tz))} in ${esc(p.cityName||p.country)} now</p>`:''}</section>`;
+    const wy=why(p,3);const wblk=wy.length?`<section class="rl-whyb"><p class="eb">Why you were introduced</p>${wy.map(w=>`<div>${ic('check')}${esc(w)}</div>`).join('')}</section>`:'';
+    const fblk=famGood(id)?`<div class="rl-fam rl-famp"><span class="rl-fi">${ic('users')}</span><div class="rl-ft"><b>Your family gave a 👍</b><small>They read the safe facts you shared. Only you see this.</small></div></div>`:'';
+    const A_=i=>{try{return p.ans&&p.ans[i]!=null&&QS[i].o[p.ans[i]]?QS[i].o[p.ans[i]]:''}catch(e){return ''}};
+    const CH=[['Roots',[['Grew up',[p.os,p.oc].filter(Boolean).join(', ')],['Mother tongue',p.t],['Faith',p.r]]],
+      ['City',[['Lives in',[p.cityName,p.country].filter(Boolean).join(', ')],['Work',p.job],['Studied',p.edu],['Settling',A_(0)]]],
+      ['Marriage',[['When',A_(8)],['Careers',A_(1)],['Children',A_(3)]]],
+      ['Family',[['Family home',A_(2)],['Faith at home',A_(4)]]],
+      ['Nature',[['Weekends',A_(5)],['Money',A_(6)],['Disagreements',A_(7)]]]].map(([t,r])=>[t,r.filter(x=>x[1])]).filter(c=>c[1].length);
+    const book=CH.length?`<section class="rl-book"><p class="eb">Life Book · swipe the pages</p><div class="rl-tabs">${CH.map((c,i)=>`<button class="rl-chip${i?'':' on'}" data-a="rlPage" data-k="${i}">${String(i+1).padStart(2,'0')} · ${c[0]}</button>`).join('')}</div>
+      <div class="rl-pages" onscroll="var i=Math.round(this.scrollLeft/(this.children[0].offsetWidth+10));[].forEach.call(this.previousElementSibling.children,function(c,j){c.classList.toggle('on',i===j)})">${CH.map((c,i)=>`<div class="rl-page"><span class="rl-no">${String(i+1).padStart(2,'0')}</span><b class="rl-pt">${c[0]}</b>${c[1].map(([k,v])=>`<div class="rl-kv"><span>${k}</span><b>${esc(v)}</b></div>`).join('')}</div>`).join('')}</div></section>`:'';
     let h2=html,vb='';const vm=h2.match(/<div class="panel v2"><p class="v2lb"[\s\S]*?<\/audio><\/div>/);if(vm){vb=vm[0].replace('class="panel v2"','class="panel v2 rl-voice"');h2=h2.replace(vm[0],'')}
-    const k=h2.indexOf('<section');return k>0?h2.slice(0,k)+vb+blk+h2.slice(k):h2};
+    const k=h2.indexOf('<section');if(!(S.v2note||{})[id])h2=h2.replace(/(data-a="interest"[^>]*>[\s\S]{0,400}?)Send interest</g,'$1Ask a question<');return k>0?h2.slice(0,k)+vb+wblk+fblk+blk+book+h2.slice(k):h2};
 
   /* ===== Bridge: both local times on top of the chat ===== */
   const _cv=renderChatView;renderChatView=function(id){const html=_cv(id);if(!RL())return html;const p=byId(id),me=S.me||{};if(!p)return html;
@@ -3716,7 +3753,7 @@ function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^
   const _re=renderEvents;renderEvents=function(){const h=_re();if(!RL()||!RLX.webgl())return h;const k=h.indexOf('<div class="main-inner pad">');if(k<0)return h;const e=k+'<div class="main-inner pad">'.length;
     let n=0;try{n=events().filter(x=>x.date>Date.now()).length}catch(x){}
     return h.slice(0,e)+`<div class="rl-tile rl-evt"><div class="rl-slot" data-rl="events"></div><div class="rl-cap"><p class="eb">Family tables near you</p><b>${n} upcoming event${n===1?'':'s'}</b></div></div>`+h.slice(e)};
-  const _are=afterRenderEvents;afterRenderEvents=function(){const r=_are.apply(this,arguments);try{if(RL())RLX.attach()}catch(e){}return r};
+  const _are=afterRenderEvents;afterRenderEvents=function(){const r=_are.apply(this,arguments);try{if(RL()){RLX.attach();if(S.rlAsk&&S.screen!=='welcome'){const d=document.createElement('div');d.innerHTML=askSheet();if(d.firstChild)app.appendChild(d.firstChild)}}}catch(e){}return r};
 })();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()}}; /* used by automated tests */
