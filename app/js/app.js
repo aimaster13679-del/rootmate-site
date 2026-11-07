@@ -3802,7 +3802,8 @@ Object.assign(IC,{
   chev2:'<path d="M9 5l7 7-7 7"/>', back2:'<path d="M15 5l-7 7 7 7"/>', tick2:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
   lock2:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
   shield2:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
-  mega2:'<path d="M3 10v4h3l7 5V5L6 10z"/><path d="M17 9a4 4 0 0 1 0 6"/>'
+  mega2:'<path d="M3 10v4h3l7 5V5L6 10z"/><path d="M17 9a4 4 0 0 1 0 6"/>',
+  chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'
 });
 const P15={d:null,busy:'',v:null};
 function P15on(){return !!(P15.d&&P15.d.on)}
@@ -3913,6 +3914,77 @@ P15V.tickets=tickets15;
   });
   const _open=A.p15open;A.p15open=function(el){P15.n=1;return _open(el)};
 })();
+
+/* ---------- Plan 15 phase 2b: host side (Host Plans, create event by taps, dashboard, door check) ---------- */
+P15.f={};
+const hostBiz15=()=>((P15.d&&P15.d.biz)||[]).find(b=>b.kind==='host');
+const planOn15=b=>!!(b&&b.planUntil&&new Date(b.planUntil)>Date.now());
+function chips15(key,opts,cur){return `<div class="p15-chips">${opts.map(([v,l])=>`<button class="p15-chip${String(cur)===String(v)?' on':''}" data-a="p15f" data-k="${key}" data-val="${esc(v)}">${esc(l)}</button>`).join('')}</div>`}
+function hostPlans15(){const b=hostBiz15(),f=P15.f,me=S.me||{};
+  const plans=[['host_basic','Host Basic','2 events a month · up to 50 seats'],['host_pro','Host Pro','10 events a month · up to 300 seats'],['host_big','Host Big','Unlimited events · 1,000+ seats · festivals']];
+  if(!f.plan)f.plan='host_pro';
+  return p15wrap(p15top('Host Plans',true)+`<p class="p15-sub">You set the ticket price. We keep 10% of each ticket; buyers pay a ${p15price('booking_fee')} booking fee.</p>
+  ${b?`<div class="p15-g p15-note">${ic('tick2')} Host name: <b>${esc(b.name)}</b>${planOn15(b)?` · ${esc((plans.find(p=>p[0]===b.plan)||[])[1]||'')} active until ${esc(new Date(b.planUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short'}))}`:''}</div>`:
+   `<div class="p15-g p15-form"><label>Host name people will see</label><input id="p15-hn" maxlength="60" placeholder="e.g. Lagos Nights Club" value="${esc(f.hn||'')}"><small>City: ${esc(me.city||'')} ${esc(me.country||'')}</small></div>`}
+  ${plans.map(([k,t,d])=>`<button class="p15-g p15-plan${f.plan===k?' on':''}" data-a="p15f" data-k="plan" data-val="${k}"><span><b>${t}</b><small>${d}</small></span><span class="p15-pr0"><b>${p15price(k)}</b><small>/month</small></span></button>`).join('')}
+  <div class="p15-g p15-note">${ic('tick2')} Tickets, QR entry, refunds and payouts done for you · guests' phone numbers stay private</div>
+  <button class="p15-btn" data-a="p15hostBuy"${P15.busy==='host'?' disabled':''}>${P15.busy==='host'?'Starting…':planOn15(b)?'Renew for one more month':'Start hosting'}</button>${P15.d&&P15.d.payTest?'<p class="p15-ex">Test mode: no real money is taken.</p>':''}
+  ${planOn15(b)?`<button class="p15-g p15-row" data-a="p15open" data-v="hostboard"><span class="p15-b mint">${ic('chart')}</span><span class="tx"><b>Host Dashboard</b><small>Your events, seats and money</small></span>${ic('chev2')}</button>`:''}`)}
+function days15(){const out=[];for(let i=1;i<=21;i++){const d=new Date(Date.now()+i*864e5);out.push([d.toISOString().slice(0,10),d.toLocaleDateString(RM_I18N.locale,{weekday:'short',day:'numeric',month:'short'})])}return out}
+function newEv15(){const f=P15.f;f.kind=f.kind||'meetup';f.day=f.day||days15()[5][0];f.hr=f.hr||'19:00';f.seats=f.seats||'20';f.price=f.price||'15';f.who=f.who||'all';
+  return p15wrap(p15top('New Event',true)+`<div class="p15-g p15-form">
+  <label>What kind</label>${chips15('kind',[['meetup','Friend Meetup'],['watch','Watch Party'],['festival','Festival'],['trip','Day Trip']],f.kind)}
+  <label>Event name</label><input id="p15-et" maxlength="90" placeholder="e.g. Cricket final on the big screen" value="${esc(f.et||'')}">
+  <label>Day</label>${chips15('day',days15().slice(0,14),f.day)}
+  <label>Start time</label>${chips15('hr',[['10:00','10 am'],['13:00','1 pm'],['17:00','5 pm'],['19:00','7 pm'],['20:00','8 pm']],f.hr)}
+  <label>Place (shown to Plus members and ticket holders)</label><input id="p15-ev" maxlength="120" placeholder="e.g. Hall 2, Square One" value="${esc(f.ev||'')}">
+  <label>Seats</label>${chips15('seats',[['6','6'],['12','12'],['20','20'],['50','50'],['100','100'],['200','200']],f.seats)}
+  <label>Ticket price</label>${chips15('price',[['0','Free'],['8','8'],['12','12'],['15','15'],['25','25'],['40','40']],f.price)}
+  <label>Who can come</label>${chips15('who',[['all','Everyone'],['women','Women only'],['men','Men only'],['u30','Under 30'],['30plus','30 and over']],f.who)}</div>
+  <button class="p15-btn" data-a="p15evCreate"${P15.busy==='ev'?' disabled':''}>${P15.busy==='ev'?'Saving…':'Publish event'}</button>`)}
+function board15(){const l=P15.hb;if(l===undefined){API.rpc('host_board15',{}).then(r=>{P15.hb=r;render()}).catch(()=>{P15.hb=[];render()});return p15wrap(p15top('Host Dashboard',true)+spinner('Loading'))}
+  return p15wrap(p15top('Host Dashboard',true)+(l.length?l.map(e=>`<div class="p15-g p15-hb"><div class="p15-hbh"><b>${esc(e.title)}</b><span class="p15-pill${e.status==='open'?'':' y'}">${e.status==='open'?'Open':e.status==='cancelled'?'Cancelled':'Done'}</span></div>
+    <small>${esc(evWhen(e))} · ${e.sold} of ${e.seats} seats sold · ${e.checkedIn} checked in</small><div class="p15-bar"><i style="width:${Math.round(100*e.sold/Math.max(1,e.seats))}%"></i></div>
+    <div class="p15-kv"><div><small>Tickets</small><b>${money(e.tickets,e.currency)}</b></div><div><small>NeuMarry</small><b>${money(e.cut,e.currency)}</b></div><div><small>You get</small><b class="p15-acc">${money(e.yours,e.currency)}</b></div></div>
+    ${e.status==='open'?`<div class="p15-2"><button class="p15-btn ghost" data-a="p15promote" data-id="${e.id}">Promote · ${p15price('event_promote')}</button><button class="p15-btn ghost" data-a="p15hostCancel" data-id="${e.id}">Cancel event</button></div>`:''}</div>`).join(''):
+    `<div class="p15-g p15-note">${ic('cal')} No events yet. Publish your first one.</div>`)+
+  `<div class="p15-2"><button class="p15-btn ghost" data-a="p15open" data-v="door">${ic('qr')} Door check</button><button class="p15-btn" data-a="p15open" data-v="newev">New event</button></div>
+  <p class="p15-ex">Your money is paid to your bank after each event. Guests' phone numbers are never shown.</p>`)}
+function door15(){const r=P15.dr;
+  return p15wrap(p15top('Door Check',true)+`<p class="p15-sub">Scan the guest's ticket, or type the code under it.</p>
+  ${'BarcodeDetector' in window?`<button class="p15-btn" data-a="p15scan">${ic('qr')} Scan with camera</button><video id="p15-cam" playsinline muted class="p15-cam${P15.cam?'':' off'}"></video>`:''}
+  <div class="p15-g p15-form"><label>Ticket code</label><input id="p15-code" maxlength="40" autocomplete="off" placeholder="18 letters and numbers"></div><button class="p15-btn ghost" data-a="p15check">Check ticket</button>
+  ${r?`<div class="p15-g p15-res ${r.ok?'ok':'no'}">${ic(r.ok?'tick2':'info')}<span><b>${r.ok?`Welcome in: ${r.qty} seat${r.qty>1?'s':''}`:r.why==='already in'?'Already used':r.why==='not paid'?'Ticket not paid':r.why==='not your event'?'Ticket for another event':'Ticket not found'}</b><small>${esc(r.event||'')}</small></span></div>`:''}`)}
+Object.assign(P15V,{host:hostPlans15,newev:newEv15,hostboard:board15,door:door15});
+(function(){
+  Object.assign(A,{
+    p15f(el){const k=el.dataset.k;['p15-hn','p15-et','p15-ev'].forEach(id=>{const x=document.getElementById(id);if(x)P15.f[id.slice(4)]=x.value});P15.f[k]=el.dataset.val;render()},
+    async p15hostBuy(){if(P15.busy)return;const x=document.getElementById('p15-hn');if(x)P15.f.hn=x.value.trim();let b=hostBiz15();const me=S.me||{};
+      if(!b&&(P15.f.hn||'').length<2){toast('Please write your host name.','info');return}
+      P15.busy='host';render();
+      try{let id=b&&b.id;if(!id)id=await API.rpc('biz_upsert15',{k:'host',nm:P15.f.hn,cty:me.city||'',ctry:me.country||'',lg:[],ab:'',cat:'',lic:''});
+        await API.rpc('buy_biz_plan15',{bid:id,prod:P15.f.plan||'host_pro'});await load15();P15.hb=undefined;P15.v='hostboard';toast('Your host plan is active.','tick2')}
+      catch(e){toast(String(e.message||e).includes('not open')?'Payments open soon.':'Could not start the plan. Please try again.','info')}P15.busy='';render()},
+    async p15evCreate(){if(P15.busy)return;const f=P15.f,b=hostBiz15();['et','ev'].forEach(k=>{const x=document.getElementById('p15-'+k);if(x)f[k]=x.value.trim()});
+      if(!b||!planOn15(b)){P15.v='host';render();return}
+      if((f.et||'').length<4){toast('Please write the event name (4 letters or more).','info');return}
+      if((f.ev||'').length<3){toast('Please write the place.','info');return}
+      const me=S.me||{},tz=(window.TZCITY&&TZCITY[me.city])||Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const st=new Date(f.day+'T'+f.hr+':00');P15.busy='ev';render();
+      try{await API.rpc('event_create15',{bid:b.id,k:f.kind,t:f.et,cty:me.city||'',ctry:me.country||'',ven:f.ev,st:st.toISOString(),n:Number(f.seats),pc:Number(f.price)*100,cur:(CMAP[me.country]&&CMAP[me.country][3])||'USD',nts:[],lg:[],wh:f.who});
+        P15.f={};P15.hb=undefined;P15.ev={};P15.v='hostboard';toast('Your event is live.','tick2')}
+      catch(e){const m=String(e.message||e);toast(m.includes('limit')?'Your plan allows no more events this month.':m.includes('too many seats')?'Too many seats for your plan.':m.includes('host plan')?'Your host plan has ended. Please renew.':'Could not publish. Please try again.','info')}P15.busy='';render()},
+    async p15promote(el){try{await API.rpc('promote15',{eid:el.dataset.id});P15.ev={};toast('Promoted: top of your city for 7 days.','tick2')}catch(e){toast('Could not promote. Please try again.','info')}},
+    async p15hostCancel(el){if(!confirm15('Cancel this event? Every guest gets all money back.'))return;try{const n=await API.rpc('host_cancel15',{eid:el.dataset.id});P15.hb=undefined;P15.ev={};toast(`Cancelled. ${n} ticket${n===1?'':'s'} refunded.`,'tick2')}catch(e){toast('Could not cancel. Please try again.','info')}render()},
+    async p15check(){const x=document.getElementById('p15-code');const c=(x&&x.value||'').trim().replace(/^NM15:/,'');if(!c)return;try{P15.dr=await API.rpc('checkin15',{c})}catch(e){P15.dr={ok:false,why:'not found'}}render()},
+    async p15scan(){try{const v=document.getElementById('p15-cam');const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});P15.cam=s;v.srcObject=s;v.classList.remove('off');await v.play();
+      const det=new BarcodeDetector({formats:['qr_code']});const loop=async()=>{if(!P15.cam)return;try{const r=await det.detect(v);if(r[0]){const c=r[0].rawValue.replace(/^NM15:/,'');s.getTracks().forEach(t=>t.stop());P15.cam=null;P15.dr=await API.rpc('checkin15',{c});render();return}}catch(e){}requestAnimationFrame(loop)};loop()}
+      catch(e){toast('Camera is not allowed. Type the code instead.','info')}}
+  });
+  const _back=A.p15back;A.p15back=function(el){if(P15.cam){P15.cam.getTracks().forEach(t=>t.stop());P15.cam=null}P15.dr=null;
+    const up={newev:'hostboard',door:'hostboard',hostboard:'host'};if(up[P15.v]){P15.v=up[P15.v];render();return}return _back(el)};
+})();
+function confirm15(m){try{return window.confirm(m)}catch(e){return true}}
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 boot();
