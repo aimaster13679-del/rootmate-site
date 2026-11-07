@@ -26,7 +26,7 @@ _hs = (_hs.replace('/*__COUNTRIES__*/', rd('countries_names.js')).replace('__SUP
 head, body = _hs.split('<!--BODY-->')
 assert 'RootMate' not in _hs
 
-GUIDES = ['matrimony-abroad-canada', 'toronto-matrimony', 'matrimony-events-toronto', 'community-matrimony-canada',
+GUIDES = ['matrimony-abroad-canada', 'toronto-matrimony', 'community-matrimony-canada',
           'matrimony-for-parents', 'verified-matrimony', 'matrimony-abroad-usa-uk', 'find-life-partner-abroad', 'safe-matrimony-for-women']
 def guide_meta(slug):
     t = rd('guides/%s.html' % slug)
@@ -81,13 +81,6 @@ home_ld = {'@context': 'https://schema.org', '@graph': [
      'description': HOME_DESC, 'url': SITE, 'publisher': {'@id': SITE + '#org'}, 'offers': {'@type': 'Offer', 'price': '0', 'priceCurrency': 'CAD'}},
     {'@type': 'WebApplication', 'name': 'NeuMarry', 'operatingSystem': 'Any web browser', 'applicationCategory': 'LifestyleApplication', 'browserRequirements': 'Requires JavaScript',
      'description': HOME_DESC, 'url': SITE + 'app/', 'publisher': {'@id': SITE + '#org'}, 'offers': {'@type': 'Offer', 'price': '0', 'priceCurrency': 'CAD'}},
-    {'@type': 'Event', 'name': 'NeuMarry Family Mixer, Toronto', 'startDate': '2026-11-28T17:30:00-05:00', 'endDate': '2026-11-28T20:30:00-05:00',
-     'eventStatus': 'https://schema.org/EventScheduled', 'eventAttendanceMode': 'https://schema.org/OfflineEventAttendanceMode',
-     'description': 'An evening of conversation and dinner for verified singles aged 18 to 38 looking for marriage. Parents welcome.',
-     'image': [OG], 'url': SITE + 'matrimony-events-toronto.html',
-     'location': {'@type': 'Place', 'name': 'Partner restaurant in the Greater Toronto Area', 'address': {'@type': 'PostalAddress', 'addressLocality': 'Toronto', 'addressRegion': 'ON', 'addressCountry': 'CA'}},
-     'organizer': {'@id': SITE + '#org'},
-     'offers': {'@type': 'Offer', 'price': '99', 'priceCurrency': 'CAD', 'availability': 'https://schema.org/InStock', 'validFrom': '2026-10-22T00:00:00-04:00', 'url': SITE + 'matrimony-events-toronto.html'}},
 ] + ([{'@type': 'FAQPage', 'mainEntity': faq}] if faq else [])}
 HOME_HEAD = head
 HOME_BODY = body
@@ -110,7 +103,7 @@ FR_DIR = os.path.join(H, 'fr', 'pages')
 FR_FILES = sorted(f[:-5] for f in os.listdir(FR_DIR) if f.endswith('.html')) if os.path.isdir(FR_DIR) else []
 FR_LEGAL_DIR = os.path.join(H, 'fr', 'legal')
 FR_LEGAL = [x for x in ('privacy', 'terms') if os.path.exists(os.path.join(FR_LEGAL_DIR, x + '.body.html'))] if FR_FILES else []
-FR_SLUGS = FR_FILES + (['work-with-us', 'event-host-toronto'] if FR_FILES else []) + FR_LEGAL
+FR_SLUGS = FR_FILES + (['work-with-us'] if FR_FILES else []) + FR_LEGAL
 def alternates(name):
     if name not in FR_SLUGS: return ''
     return (f'<link rel="alternate" hreflang="en" href="{SITE}{name}.html"><link rel="alternate" hreflang="fr" href="{SITE}fr/{name}.html">'
@@ -127,7 +120,7 @@ def shell(name, title_tag, desc, main, extra_head='', kind='website'):
 <title>{title_tag}</title><meta name="description" content="{esc(desc)}">{social(title_tag, desc, url, kind)}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Nunito+Sans:wght@400;600;700;800&display=swap">
 <link rel="stylesheet" href="legal.css">{extra_head}</head><body>
-<header><div class="wrap"><a class="brand" href="./"><svg viewBox="0 0 32 22" aria-hidden="true"><path class="c1" d="M11.60 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/><path class="c2" d="M20.40 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/></svg>NeuMarry</a><nav><a href="matrimony-events-toronto.html">Events</a><a class="hl" href="work-with-us.html">Work with us</a><a href="app/">Open the app</a></nav></div></header>
+<header><div class="wrap"><a class="brand" href="./"><svg viewBox="0 0 32 22" aria-hidden="true"><path class="c1" d="M11.60 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/><path class="c2" d="M20.40 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/></svg>NeuMarry</a><nav><a class="hl" href="work-with-us.html">Work with us</a><a href="app/">Open the app</a></nav></div></header>
 <main><div class="wrap">{lang_link("fr/" + name + ".html", "fr", "Lire cette page en français", "Français") if name in FR_SLUGS else ""}{main}</div></main>
 <footer><div class="wrap"><div class="fg">{FOOT_GUIDES}</div><span>NeuMarry · © 2026</span><span>Members must be 18 or older</span>{legal_links}<a class="link" href="mailto:{EMAIL}">{EMAIL}</a>{SOCIAL_LINKS}</div></footer>
 </body></html>'''
@@ -142,10 +135,10 @@ page('privacy', 'Privacy Policy', 'How NeuMarry collects, uses and protects your
 page('terms', 'Terms of Service', 'The NeuMarry Terms of Service.')
 page('delete-account', 'Delete your account', 'How to delete your NeuMarry account and data.')
 page('child-safety', 'Child safety standards', 'NeuMarry is for adults only. Our standards against child sexual abuse and exploitation, how to report a concern, and our child safety contact.')
-# Where PayPal sends members back from the phone app after paying for an event (not for search engines).
-page('paid', 'Payment done', 'Your NeuMarry event payment.')
+# Old payment return page (events are closed); kept so old links still open (not for search engines).
+page('paid', 'Payment', 'NeuMarry payment page.')
 page('bio', 'Family biodata', 'A private NeuMarry profile card shared with family.')
-page('partner', 'Partner restaurant', 'A private page for a NeuMarry partner restaurant.')
+page('partner', 'Partner with NeuMarry', 'Matrimonial bureaus and community groups can partner with NeuMarry.')
 _tp = os.path.join(OUT, 'partner.html'); _th = open(_tp, encoding='utf-8').read().replace('content="index,follow,max-image-preview:large"', 'content="noindex,nofollow"'); open(_tp, 'w', encoding='utf-8').write(_th)
 _bp = os.path.join(OUT, 'bio.html'); _bh = open(_bp, encoding='utf-8').read().replace('content="index,follow,max-image-preview:large"', 'content="noindex,nofollow"'); open(_bp, 'w', encoding='utf-8').write(_bh)
 _pp = os.path.join(OUT, 'paid.html'); _ph = open(_pp, encoding='utf-8').read().replace('content="index,follow,max-image-preview:large"', 'content="noindex"'); open(_pp, 'w', encoding='utf-8').write(_ph)
@@ -168,18 +161,18 @@ for g in G:
     if faq: graph.append({'@type': 'FAQPage', 'mainEntity': faq})
     shell(g['slug'], g['title'], g['desc'], main, ld({'@context': 'https://schema.org', '@graph': graph}), 'article')
 
-# ---------- Work with NeuMarry: overview + event host job page ----------
+# ---------- Work with NeuMarry: bureau and community partner program ----------
 def wwu_form(role=None):
-    roles = [('host', 'An event host'), ('restaurant', 'A restaurant'), ('bureau', 'A bureau or community group')]
+    roles = [('bureau', 'A bureau or community group')]
     pick = '' if role else ('<fieldset class="fset"><legend>I am</legend>' + ''.join(
         f'<label class="opt"><input type="radio" name="role" value="{v}"{" checked" if i == 0 else ""}><span>{l}</span></label>' for i, (v, l) in enumerate(roles)) + '</fieldset>')
     hidden = f'<input type="hidden" name="role" value="{role}">' if role else ''
     return f"""<form class="wform" id="wform" novalidate>{pick}{hidden}
 <label>Your name<input name="name" required maxlength="60" autocomplete="name"></label>
-{"" if role == "host" else '<label>Restaurant, bureau or group (optional)<input name="org" maxlength="80"></label>'}
+<label>Bureau or group (optional)<input name="org" maxlength="80"></label>
 <label>City and country<input name="city" required maxlength="60" placeholder="e.g. Brampton, Canada"></label>
 <label>Phone or email<input name="contact" required maxlength="80" autocomplete="email"></label>
-<label>Anything we should know (optional)<textarea name="note" maxlength="500" rows="3" placeholder="Languages you speak, seats in your hall, communities you work with"></textarea></label>
+<label>Anything we should know (optional)<textarea name="note" maxlength="500" rows="3" placeholder="Languages you speak, communities you work with"></textarea></label>
 <label class="ck"><input type="checkbox" name="consent" required><span>NeuMarry may contact me about working together. My details are used only for this.</span></label>
 <button class="btn" type="submit">Send</button><p class="fmsg" id="fmsg" role="status"></p></form>
 <script>(function(){{const f=document.getElementById('wform'),m=document.getElementById('fmsg');
@@ -193,50 +186,27 @@ body:JSON.stringify({{role:d.role,name:d.name.trim(),org:(d.org||'').trim()||nul
 if(!r.ok)throw new Error(r.status);f.reset();m.textContent='Thank you. Our team will contact you within 3 working days.';m.className='fmsg ok'}}
 catch(x){{m.textContent='Could not send. Check your connection and try again, or email {EMAIL}.';m.className='fmsg err'}}b.disabled=false}})}})();</script>"""
 
-WWU_TITLE = 'Work with NeuMarry: event hosts, restaurants and marriage bureaus'
-WWU_DESC = 'NeuMarry is hiring event hosts in Toronto (CA$100 per event) and partnering with restaurants and matrimonial bureaus. Apply in two minutes.'
+WWU_TITLE = 'Work with NeuMarry: matrimonial bureaus and community groups'
+WWU_DESC = 'NeuMarry partners with matrimonial bureaus and community groups in every country. Earn 10% of the first Gold purchase of members you bring. Apply in two minutes.'
 wwu_main = f"""<p class="crumbs"><a href="./">NeuMarry</a> › Work with us</p>
 <h1>Work with NeuMarry</h1>
-<p class="lede">We’re hiring. NeuMarry brings verified singles and their families together at Family Mixers, hosted dinners in their own city. We are looking for event hosts, partner restaurants and matrimonial bureaus, starting in Toronto, Brampton and Mississauga.</p>
+<p class="lede">NeuMarry is a verified matrimony app for people living away from the country they grew up in. We partner with matrimonial bureaus and community groups, in every country.</p>
 <div class="roles">
-<a class="role" href="event-host-toronto.html"><b>Event hosts</b><span class="pay">CA$100 for every event</span><span>Welcome families, keep time and seat members with their best matches. Training, the guest list and the seating plan come from us. Paid weekly.</span><span class="more">See the host role →</span></a>
-<a class="role" href="#apply"><b>Partner restaurants</b><span class="pay">30 to 60 paying guests a night</span><span>Give us a private room on a quiet evening. Every guest has already paid, the meal is sold by you at your price, and you are listed as a NeuMarry partner venue.</span><span class="more">Apply below →</span></a>
 <a class="role" href="#apply"><b>Matrimonial bureaus and community groups</b><span class="pay">10% + ₹1,500 per engagement</span><span>Earn 10% of the first Gold purchase of every member who joins with your partner code, plus ₹1,500 when a couple you brought gets engaged. Members always sign up themselves.</span><span class="more">Apply below →</span></a>
 </div>
 <h2 id="apply">Apply in two minutes</h2>
 <p>Tell us who you are and how to reach you. Our team replies within 3 working days.</p>
-{wwu_form()}"""
+{wwu_form('bureau')}"""
 shell('work-with-us', WWU_TITLE, WWU_DESC, wwu_main, ld({'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [
     {'@type': 'ListItem', 'position': 1, 'name': 'NeuMarry', 'item': SITE}, {'@type': 'ListItem', 'position': 2, 'name': 'Work with us', 'item': SITE + 'work-with-us.html'}]}))
 
-JOB_DESC_HTML = ('<p>NeuMarry is a matrimony app for people living abroad. We run Family Mixers: hosted dinner evenings in Toronto where verified singles, '
-    'and often their parents, meet in person at separate tables in one shared room.</p>'
-    '<p><b>What you do:</b> welcome guests and check their QR tickets, keep the evening on time, seat members with their best matches, '
-    'and help families feel at ease. Each evening runs about 4 hours.</p>'
-    '<p><b>Pay:</b> CA$100 for every event you host, paid weekly. Training, the guest list and the seating plan come from us.</p>'
-    '<p><b>You are a good fit if</b> you are warm and organised, know your community, and speak English plus at least one South Asian language. '
-    'Hosts agree to a background check and a code of conduct, and keep every guest’s details private.</p>')
-job_ld = {'@context': 'https://schema.org', '@type': 'JobPosting', 'title': 'Event host (part-time), Family Mixer evenings',
-    'description': JOB_DESC_HTML, 'datePosted': '2026-10-22', 'validThrough': '2027-01-31T23:59:00-05:00',
-    'employmentType': ['PART_TIME', 'CONTRACTOR'], 'directApply': True,
-    'hiringOrganization': {'@type': 'Organization', 'name': 'NeuMarry', 'sameAs': SITE, 'logo': SITE + 'icon-512.png'},
-    'jobLocation': {'@type': 'Place', 'address': {'@type': 'PostalAddress', 'addressLocality': 'Toronto', 'addressRegion': 'ON', 'addressCountry': 'CA'}},
-    'identifier': {'@type': 'PropertyValue', 'name': 'NeuMarry', 'value': 'host-toronto-2026'}}
-host_main = f"""<p class="crumbs"><a href="./">NeuMarry</a> › <a href="work-with-us.html">Work with us</a> › Event host, Toronto</p>
-<h1>Event host (part-time), Toronto</h1>
-<p class="lede">CA$100 for every Family Mixer you host, paid weekly. Evenings and weekends, in Toronto, Brampton and Mississauga.</p>
-{JOB_DESC_HTML}
-<h2 id="apply">Apply now</h2>
-<p>Add the languages you speak and the communities you know in the last box. Our team replies within 3 working days.</p>
-{wwu_form('host')}"""
-shell('event-host-toronto', 'Event host jobs in Toronto: CA$100 per event · NeuMarry', 'Part-time event host in Toronto, Brampton and Mississauga. Host NeuMarry Family Mixer dinners and earn CA$100 per event, paid weekly. Apply in two minutes.', host_main, ld(job_ld))
 
 # ---------- About, feature and city pages (src/pages) ----------
 for p in P:
     url = SITE + p['slug'] + '.html'
     loc = ('city', 'country')
     near = [o for o in P if o['slug'] != p['slug'] and (o['kind'] in loc) == (p['kind'] in loc)]
-    others = near + [o for o in P if o['slug'] != p['slug'] and o not in near] + [g for g in G if g['slug'] in ('verified-matrimony', 'matrimony-events-toronto', 'toronto-matrimony')]
+    others = near + [o for o in P if o['slug'] != p['slug'] and o not in near] + [g for g in G if g['slug'] in ('verified-matrimony', 'toronto-matrimony')]
     if p['kind'] in loc: others = near[:3] + [o for o in P if o['slug'] in ('how-matching-works', 'privacy-and-safety')]
     related = '<h2>Read next</h2><ul class="rel">' + ''.join(f'<li><a href="{o["slug"]}.html">{o["short"]}</a></li>' for o in others[:5]) + '</ul>'
     main = f'<p class="crumbs"><a href="./">NeuMarry</a> › {p["short"]}</p>' + p['body'] + CTA + related
@@ -310,7 +280,7 @@ if FR_SLUGS:
 <title>{f['title']}</title><meta name="description" content="{esc(f['desc'])}">{head}{alternates(f['slug'])}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Nunito+Sans:wght@400;600;700;800&display=swap">
 <link rel="stylesheet" href="../legal.css">{LANG_CSS}{ld({'@context': 'https://schema.org', '@graph': graph})}</head><body>
-<header><div class="wrap"><a class="brand" href="../"><svg viewBox="0 0 32 22" aria-hidden="true"><path class="c1" d="M11.60 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/><path class="c2" d="M20.40 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/></svg>NeuMarry</a><nav><a class="ev" href="matrimony-events-toronto.html">Événements</a><a class="hl" href="work-with-us.html"><span class="lg">Travailler avec nous</span><span class="sh">Collaborer</span></a><a href="../app/" onclick="try{{localStorage.setItem('rm.lang','fr')}}catch(e){{}}">Ouvrir l’app</a></nav></div></header>
+<header><div class="wrap"><a class="brand" href="../"><svg viewBox="0 0 32 22" aria-hidden="true"><path class="c1" d="M11.60 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/><path class="c2" d="M20.40 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/></svg>NeuMarry</a><nav><a class="hl" href="work-with-us.html"><span class="lg">Travailler avec nous</span><span class="sh">Collaborer</span></a><a href="../app/" onclick="try{{localStorage.setItem('rm.lang','fr')}}catch(e){{}}">Ouvrir l’app</a></nav></div></header>
 <main><div class="wrap">{lang_link('../' + f['slug'] + '.html', 'en', 'Read this page in English', 'English')}{main}</div></main>
 <footer><div class="wrap"><div class="fg">{fr_foot}</div><span>NeuMarry · © 2026</span><span>Les membres doivent avoir 18 ans ou plus</span>{fr_legal}<a class="link" href="mailto:{EMAIL}">{EMAIL}</a>{SOCIAL_LINKS}</div></footer>
 </body></html>"""
@@ -341,17 +311,15 @@ if FR_SLUGS:
                                                                 {'@type': 'ListItem', 'position': 2, 'name': title, 'item': url}]}]
         fr_write({'slug': slug, 'title': title + ' · NeuMarry', 'desc': desc}, url, main, graph)
 
-    # French "Work with us" and "Event host" pages
+    # French "Work with us" page
     spec = importlib.util.spec_from_file_location('work_fr', os.path.join(H, 'fr', 'work_fr.py')); wf = importlib.util.module_from_spec(spec); spec.loader.exec_module(wf)
-    OPTIONAL_ON_HOST = {'<legend>I am</legend>', '<span>An event host</span>', '<span>A restaurant</span>', '<span>A bureau or community group</span>',
-                        '<label>Restaurant, bureau or group (optional)<input'}
+    OPTIONAL_ON_HOST = {'<legend>I am</legend>', '<span>A bureau or community group</span>'}
     def fr_tr(html, pairs):
         for en_, fr_ in pairs:
             assert en_ in html or en_ in OPTIONAL_ON_HOST, 'French work pages: English text not found: ' + en_[:70]
             html = html.replace(en_, fr_)
         return html
-    for slug, title, desc, short, src, pairs in [('work-with-us', wf.WWU_TITLE, wf.WWU_DESC, 'Travailler avec nous', wwu_main, wf.WWU),
-                                                 ('event-host-toronto', wf.HOST_TITLE, wf.HOST_DESC, 'Animateur d’événements, Toronto', host_main, wf.HOST)]:
+    for slug, title, desc, short, src, pairs in [('work-with-us', wf.WWU_TITLE, wf.WWU_DESC, 'Travailler avec nous', wwu_main, wf.WWU)]:
         url = SITE + 'fr/' + slug + '.html'
         main = fr_fix_links(fr_tr(fr_tr(src, pairs), wf.FORM))
         graph = [{'@type': 'WebPage', '@id': url, 'url': url, 'name': title, 'description': desc, 'inLanguage': 'fr-CA', 'isPartOf': {'@id': SITE + '#site'}, 'publisher': ORG, 'dateModified': TODAY},
@@ -362,7 +330,7 @@ if FR_SLUGS:
 # llms.txt: a plain summary for AI assistants (llmstxt.org format)
 llms = ['# NeuMarry', '',
         '> NeuMarry is a verified matrimony app for people living away from the country they grew up in, from every country and community. '
-        'Members match on values, lifestyle, roots and distance, and meet with their families at hosted Family Mixer evenings. Launching in Toronto, Canada in November 2026; the app works in every country.', '',
+        'Members match on values, lifestyle, roots and distance, and families can see safe facts through a private family link. Launching in Toronto, Canada in November 2026; the app works in every country.', '',
         'Key facts:',
         '- Every member verifies a government ID and a live selfie, and proves their roots and the city they live in, before others can see them.',
         '- No income, salary or wealth requirement for anyone, men or women. NeuMarry is not Knot.dating and has no Rs 50 lakh rule.',
@@ -378,7 +346,7 @@ open(os.path.join(OUT, 'llms.txt'), 'w', encoding='utf-8').write('\n'.join(llms)
 
 # robots.txt and sitemap.xml
 open(os.path.join(OUT, 'robots.txt'), 'w').write(f'User-agent: *\nAllow: /\n\nSitemap: {SITE}sitemap.xml\n')
-urls = [(SITE, '1.0', 'weekly')] + [(SITE + p['slug'] + '.html', '0.8', 'monthly') for p in P] + [(SITE + g['slug'] + '.html', '0.8', 'monthly') for g in G] + [(SITE + 'work-with-us.html', '0.7', 'monthly'), (SITE + 'event-host-toronto.html', '0.7', 'weekly')] + [(SITE + n + '.html', '0.3', 'yearly') for n in ('privacy', 'terms', 'delete-account', 'child-safety')] + ([(SITE + 'fr/', '0.8', 'weekly')] if FR_SLUGS else []) + [(SITE + 'fr/' + x + '.html', '0.6', 'monthly') for x in FR_SLUGS]
+urls = [(SITE, '1.0', 'weekly')] + [(SITE + p['slug'] + '.html', '0.8', 'monthly') for p in P] + [(SITE + g['slug'] + '.html', '0.8', 'monthly') for g in G] + [(SITE + 'work-with-us.html', '0.7', 'monthly')] + [(SITE + n + '.html', '0.3', 'yearly') for n in ('privacy', 'terms', 'delete-account', 'child-safety')] + ([(SITE + 'fr/', '0.8', 'weekly')] if FR_SLUGS else []) + [(SITE + 'fr/' + x + '.html', '0.6', 'monthly') for x in FR_SLUGS]
 open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
     ''.join(f'  <url><loc>{u}</loc><lastmod>{TODAY}</lastmod><changefreq>{c}</changefreq><priority>{pr}</priority></url>\n' for u, pr, c in urls) + '</urlset>\n')
 # ---------- Google Analytics (website only, not /app/) with Consent Mode v2 ----------
@@ -478,6 +446,16 @@ for old, new in [('nri-matrimony-canada', 'matrimony-abroad-canada'), ('nri-matr
             '<!doctype html><html><head><meta charset="utf-8"><title>NeuMarry</title><meta name="robots" content="noindex,follow">'
             f'<link rel="canonical" href="{url}"><meta http-equiv="refresh" content="0; url={url}"></head>'
             f'<body><p><a href="{url}">This page has moved. Open the new page.</a></p></body></html>')
+
+# Closed pages (in-person events ended 7 Nov 2026): a tiny redirect, noindex, not in the sitemap.
+for old, dest, canon in [('matrimony-events-toronto', './', SITE), ('event-host-toronto', 'work-with-us.html', SITE + 'work-with-us.html')]:
+    for sub in ('', 'fr'):
+        if sub and not os.path.isdir(os.path.join(OUT, sub)): continue
+        open(os.path.join(OUT, sub, old + '.html'), 'w', encoding='utf-8').write(
+            '<!doctype html><html><head><meta charset="utf-8"><title>NeuMarry</title><meta name="robots" content="noindex">'
+            f'<link rel="canonical" href="{canon}"><meta http-equiv="refresh" content="0; url={dest}"></head>'
+            f'<body><p><a href="{dest}">Open NeuMarry</a></p></body></html>')
+assert 'events-toronto' not in open(os.path.join(OUT, 'sitemap.xml')).read() and 'event-host' not in open(os.path.join(OUT, 'sitemap.xml')).read()
 
 # Glass look on every page (his ok 7 Nov 2026): glass.css loads last, so it wins over the page styles. Not in app/ (the app has its own).
 for _root, _dirs, _files in os.walk(OUT):

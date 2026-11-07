@@ -375,7 +375,9 @@ async function loadMessages(){
 }
 function ensureMatchChats(){Object.keys(S.interests).forEach(id=>{if(S.interests[id]==='mutual'&&!S.chats[id])S.chats[id]=[{f:'sys',x:'You both said yes. Say hello! Phone numbers stay hidden.',ts:Date.now()-1000}]})}
 async function loadEvents(){const [list,staff,board,pn]=await Promise.all([API.rpc('event_list'),API.rpc('staff_events').catch(()=>[]),API.rpc('city_board').catch(()=>null),API.rpc('partners_near').catch(()=>[]),API.rpc('online_next').catch(()=>null),API.rpc('my_bio_reactions').catch(()=>null)]).then(r=>{S.online=r[4]||null;const br=r[5];S.bioReacts=Array.isArray(br)?br:(br&&br.my_bio_reactions)||[];return r});RAW.ev=list||[];RAW.staff=staff||[];S.board=board||S.board||null;S.partnersNear=pn||[];applyEvents()}
-function applyEvents(){S.events=(RAW.ev||[]).map(eventFromServer);S.staff=(RAW.staff||[]).map(x=>typeof x==='string'?x:(x.staff_events||Object.values(x)[0]))}
+/* Events closed (his decision 7 Nov 12:42: 'event band, janjat nahi chahiye'): set to false to bring them back. */
+var NO_EVENTS=true;
+function applyEvents(){S.events=NO_EVENTS?[]:(RAW.ev||[]).map(eventFromServer);S.staff=(RAW.staff||[]).map(x=>typeof x==='string'?x:(x.staff_events||Object.values(x)[0]))}
 function cacheSave(){try{if(!RAW.me||!RAW.cards||!API.userId())return;const u={},keep=Date.now()+900e3;
   Object.keys(URLS).forEach(k=>{if(URLS[k].exp>keep)u[k]=URLS[k]});
   localStorage.setItem(CK,JSON.stringify({uid:API.userId(),at:Date.now(),raw:RAW,urls:u}))}catch(e){}}
@@ -715,12 +717,12 @@ function renderWelcome(){
       <button class="btn ghost block" data-a="login">I already have an account</button></div>
     <p class="note">By continuing you agree to our <button class="link" data-a="legal" data-k="terms">Terms</button> and <button class="link" data-a="legal" data-k="privacy">Privacy Policy</button>. 18+ only.</p>
     <ul class="usp">
-      <li><span class="pi">${ic('users')}</span><span><b>Family Mixers</b><span>Hosted evenings in your city, dinner included. Bring your parents, meet in person.</span></span></li>
+      ${NO_EVENTS?`<li><span class="pi">${ic('users')}</span><span><b>Family circle</b><span>Share a match with family</span></span></li>`:`<li><span class="pi">${ic('users')}</span><span><b>Family Mixers</b><span>Hosted evenings in your city, dinner included. Bring your parents, meet in person.</span></span></li>`}
       <li><span class="pi">${ic('pin')}</span><span><b>Roots, city and mindset</b><span>Matched on where you come from, where you live and how you think.</span></span></li>
       <li><span class="pi">${ic('shield')}</span><span><b>Only real people</b><span>Every member is checked with a government ID and a live selfie.</span></span></li>
       <li><span class="pi">${ic('lock')}</span><span><b>Private by default</b><span>Photos stay hidden until you both say yes. Your number is never shown.</span></span></li>
     </ul>
-    <a class="wwu-link" href="${esc(CFG.site)}work-with-us.html" target="_blank" rel="noopener">${ic('users')}<span><b>Work with NeuMarry</b><small>Hosts, partner restaurants and matrimonial bureaus</small></span>${ic('chev')}</a>
+    ${NO_EVENTS?'':`<a class="wwu-link" href="${esc(CFG.site)}work-with-us.html" target="_blank" rel="noopener">${ic('users')}<span><b>Work with NeuMarry</b><small>Hosts, partner restaurants and matrimonial bureaus</small></span>${ic('chev')}</a>`}
 
   </div></div>`;
 }
@@ -780,9 +782,9 @@ function renderAuth(){
 const LEGAL={terms:['Terms of Service: the key points',[
   'You must be 18 or older and legally free to marry, and you join to find a marriage partner, not for dating or business.',
   'One account per person, in your real name. You verify a government ID and a live selfie, and prove your roots and the city you live in with documents.',
-  'NeuMarry suggests matches and hosts events. We do not run criminal background checks and cannot promise who anyone is or how they will behave. Meetings, decisions, relationships and any marriage after an introduction are your own responsibility.',
+  NO_EVENTS?'NeuMarry suggests matches. We do not run criminal background checks and cannot promise who anyone is or how they will behave. Meetings, decisions, relationships and any marriage after an introduction are your own responsibility.':'NeuMarry suggests matches and hosts events. We do not run criminal background checks and cannot promise who anyone is or how they will behave. Meetings, decisions, relationships and any marriage after an introduction are your own responsibility.',
   'Never send money, gifts or visa help to anyone you meet here, and report anyone who asks.',
-  'Gold renews automatically until you cancel in your Google Play or App Store account. Event seats are free to reserve and paid only when the event is confirmed. The ticket includes your meal; nothing is paid at the restaurant.',
+  NO_EVENTS?'Gold renews automatically until you cancel in your Google Play or App Store account.':'Gold renews automatically until you cancel in your Google Play or App Store account. Event seats are free to reserve and paid only when the event is confirmed. The ticket includes your meal; nothing is paid at the restaurant.',
   'We can suspend accounts that break these rules, including fake profiles, harassment and asking for money.']],
  privacy:['Privacy Policy: the key points',[
   'We collect what you put in your profile, your ID, selfie and document checks, your activity in the app and basic device data, and use it to verify you, suggest matches, run events and keep members safe.',
@@ -845,7 +847,7 @@ function renderVerifyBody(d,edit){const me=edit?S.me:null,vs=d.vs||0;const place
     </div>
     <p class="hint">${ic('lock')} Documents are deleted within 30 days of the check and never shown to members.</p>
     <div class="vcard"><h4>${ic('phone')}Mobile number <small class="hint" style="font-weight:500">optional</small></h4>
-      <p class="hint">For event reminders from your host. Never shown to other members. Code checks by SMS are coming soon.</p>
+      <p class="hint">${NO_EVENTS?'Never shown to other members.':'For event reminders from your host. Never shown to other members.'} Code checks by SMS are coming soon.</p>
       <div class="row2" style="grid-template-columns:96px 1fr"><label class="fld"><span>Code</span><input value="${esc(code||'+')}" disabled aria-label="Country code"></label>${inF('phone','Mobile number','tel',d.phone,'inputmode="numeric" maxlength="14" autocomplete="tel-national"')}</div>
     </div>`}
   if(vs===1){const idOk=me&&me.v.id,selfOk=me&&me.v.selfie,idC=me&&me.idCheck,sC=me&&me.selfieCheck;
@@ -1009,7 +1011,7 @@ function renderSignup(){if(S.suInter&&!S.editMode)return journeyScreen(S.suInter
     ${pr.oc!=='Any'?pickF('prefs.os','Their roots: state / region','draft'):''}
     ${pickF('prefs.religion','Religion','draft')}
     ${pickF('prefs.community','Community','draft',{disabled:pr.religion==='Any'||!commOf(pr.religion).length,hint:pr.religion==='Any'?'Choose a religion to pick a community.':''})}
-    ${pr.community!=='Any'?pickF('prefs.alsoComm','Also open to these communities','draft',{hint:'More communities means more matches and more people to meet at events.'}):''}
+    ${pr.community!=='Any'?pickF('prefs.alsoComm','Also open to these communities','draft',{hint:NO_EVENTS?'':'More communities means more matches and more people to meet at events.'}):''}
     ${pickF('prefs.timeline','Ready to marry','draft')}`;
   }
   if(st===5&&d.vs)return verifyHead(d)+`<div class="scroll" id="su-scroll"><div class="form pad">${body}</div></div>`+verifyFoot(d);
@@ -1210,7 +1212,7 @@ function renderMe(){
     <button class="btn ghost" data-a="edit">Edit profile</button></div>
    <button class="likes nm-bio" data-a="shareBio"><span class="pi">${ic('send')}</span><span class="tx"><b>Family biodata</b><span>Send a private 7-day link to your family. They can answer 👍 or 🤔. No phone, email or photos.</span></span>${ic('back','flipx')}</button>${(S.bioReacts||[]).length?`<div class="fam-r"><b>${ic('users')}Your family said</b>${S.bioReacts.slice(0,5).map(r=>`<span>${r.reaction==='good'?'👍 Looks good':'🤔 Let’s talk'}${r.who?` · ${esc(r.who)}`:''}</span>`).join('')}</div>`:''}${S.bioUntil?`<p class="hint">Your link works until ${esc(new Date(S.bioUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short'}))}. <button class="link" data-a="stopBio">Stop link</button></p>`:''}
    ${recheckCall(me)}<div class="panel"><h3>Verification</h3><div>${vr(idS[0],'Government ID',idS[1],1)}${vr(sS[0],'Live selfie',sS[1],1)}${vr(rS[0],`Roots: ${me.os}, ${me.oc}`,rS[0]==='ok'&&me.rootsAt?`Proven with a document · ${dt(me.rootsAt)}`:rS[1],2)}${vr(lS[0],`Lives in: ${myPlace()}, ${me.country}`,lS[1],3)}${me.locOk?vr('ok','Location check',`Confirmed · ${dt(me.locAt)}`):''}<div class="vrow">${ic('info','no-ic')}<span class="tx"><b>Phone number</b><small>${me.phone?esc(me.phone)+' · code checks by SMS are coming soon':'Optional · add it in Edit profile'}</small></span></div></div></div>
-   ${workCard()}
+   ${NO_EVENTS?'':workCard()}
    <div class="panel"><h3>Privacy</h3><div>
     ${toggle('privacy.blur','Hide my photos','Only people you have both accepted can see them',me.privacy.blur,'me')}
     ${toggle('privacy.showC','Show my community','Filters still work if this is off',me.privacy.showC,'me')}
@@ -1595,7 +1597,7 @@ function renderSheet(){
      <div class="row2">${pickF('prefs.hMin','Height from','me')}${pickF('prefs.hMax','Height to','me')}</div>
      ${pickF('prefs.religion','Religion','me')}
      ${pickF('prefs.community','Community','me',{disabled:pr.religion==='Any'||!commOf(pr.religion).length,hint:pr.religion==='Any'?'Choose a religion first. Communities change with religion.':''})}
-     ${pr.community!=='Any'?pickF('prefs.alsoComm','Also open to these communities','me',{hint:'Widens your matches and who you meet at events.'}):''}
+     ${pr.community!=='Any'?pickF('prefs.alsoComm','Also open to these communities','me',{hint:NO_EVENTS?'':'Widens your matches and who you meet at events.'}):''}
      ${pickF('prefs.tongue','Mother tongue','me')}
      ${pickF('prefs.diet','Diet','me')}
      ${pickF('prefs.timeline','Ready to marry','me',{hint:'From their answer to “How soon do you want to marry?”'})}
@@ -1676,10 +1678,10 @@ function render(){
   else if(S.screen==='auth'){html=renderAuth();if(sheet)html+=renderSheet()}
   else if(S.screen==='signup'){html=renderSignup();if(sheet)html+=renderSheet();if(picker)html+=renderPicker()}
   else{
-    const c=navCounts();
+    const c=navCounts();if(NO_EVENTS){if(S.tab==='events')S.tab='matches';if(view&&(view.type==='event'||view.type==='host'))view=null}
     const tabs={matches:renderMatches,events:renderEvents,connections:renderConnections,me:renderMe};
     html=(tabs[S.tab]||renderMatches)()+
-    `<div class="navwrap"><nav class="nav n4" aria-label="Main">${[['matches','Matches','rings'],['events','Events','cal',c.ev],['connections','Chats','chat',c.conn],['me','Me','user']].map(([k,l,i,n])=>
+    `<div class="navwrap"><nav class="nav n${NO_EVENTS?3:4}" aria-label="Main">${[['matches','Matches','rings'],['events','Events','cal',c.ev],['connections','Chats','chat',c.conn],['me','Me','user']].filter(x=>!(NO_EVENTS&&x[0]==='events')).map(([k,l,i,n])=>
       `<button data-a="tab" data-k="${k}" class="${S.tab===k?'on':''}" aria-current="${S.tab===k?'page':'false'}">${ic(i)}<span>${l}</span>${n?`<span class="count-dot" aria-label="${n} new">${n}</span>`:''}</button>`).join('')}</nav></div>`;
     if(view)html+=view.type==='chat'?renderChatView(view.id):view.type==='event'?renderEventView(view.id):view.type==='admin'?renderAdmin():view.type==='host'?renderHostView(view.id):renderProfileView(view.id,view.type==='me');
     if(sheet)html+=renderSheet();
@@ -2992,7 +2994,7 @@ function c3path(id){const p=byId(id);if(!p)return '';famLoad();const m=S.chats[i
    [talk?'done':'now','Talking','Safe chat, numbers stay private',talk?'':'Open chat'],
    [talk?'now':'','First video call','At a time good for you both','Plan a call'],
    [fam?'done':'','Families talk',fam?'Shared with your family':'Share with family, they reply on your private link',fam?'':'Share'],
-   ['','Meet in person','Meet in a public place, or at a Family Mixer',''],['','Decide together','Only when you both feel ready','']];
+   ['','Meet in person',(NO_EVENTS?'Meet in a public place':'Meet in a public place, or at a Family Mixer'),''],['','Decide together','Only when you both feel ready','']];
   const act={'Open chat':`data-a="closeSheet"`,'Plan a call':`data-a="callPlan" data-id="${id}"`,'Share':`data-a="v2fam" data-id="${id}"`};
   return sheetShell('Your path with '+(p.first||'your match'),`<div class="c3path">${st.map(([c,t,s,a],i)=>`<div class="c3step ${c}"><i>${c==='done'?'✓':i+1}</i><div><b>${t}</b><small>${esc(s)}</small></div>${a?`<button class="v2pill" ${act[a]}>${a}</button>`:''}</div>`).join('')}
    <p class="c3calm"><b>No pressure.</b> Move to a step only when you both choose it. Either of you can pause or end kindly at any time.</p></div>`)}
@@ -3229,7 +3231,7 @@ function langSheet(){const av=['en','fr'].concat(window.NM_AVAIL||[]);const cur=
    <div class="ej-badges">
     <button type="button" class="ej-bdg${r==='ok'?' ok':''}" data-a="goVerify" data-n="2">${ic('globe')}<b>Roots</b><small>${r==='ok'?'Proven':r==='wait'?'With our team':'A document that shows where you come from'}</small></button>
     <button type="button" class="ej-bdg${c==='ok'?' ok':''}" data-a="goVerify" data-n="3">${ic('pin')}<b>City</b><small>${c==='ok'?'Proven':c==='wait'?'With our team':'Proof of where you live now'}</small></button></div>
-   <p class="note">Needed for events. Members with all badges are introduced first.</p>
+   <p class="note">${NO_EVENTS?'Members with all badges are introduced first.':'Needed for events. Members with all badges are introduced first.'}</p>
    ${C3()?`<button class="btn ghost block h3btn" data-a="h3open">${ic('chat')} Need help? Ask our team</button>`:''}
   </div></div>`};
 
@@ -3241,9 +3243,9 @@ function langSheet(){const av=['en','fr'].concat(window.NM_AVAIL||[]);const cur=
       <div class="ej-chips">${chips}</div>
       <button class="btn primary block" data-a="goVerify" data-n="${r==='ok'?3:2}">Add roots and city · 2 min</button>
       <button class="link" data-a="ejSeen">Later</button>
-      <small>Optional now. With all 5 badges you can book events and you are introduced first.</small></div>`;
+      <small>${NO_EVENTS?'Optional now. With all 5 badges you are introduced first.':'Optional now. With all 5 badges you can book events and you are introduced first.'}</small></div>`;
     if(r==='wait'&&(c==='wait'||c==='ok')||c==='wait'&&r==='ok')return `<div class="callout">${ic('clock')}<span>Your documents are with our team, usually within 24 hours.</span></div>`;
-    return `<div class="callout">${ic('shield')}<span>Add your roots and city badges to book events and be introduced first. <button class="link" data-a="goVerify" data-n="${r==='ok'?3:2}">Add now</button></span></div>`};
+    return `<div class="callout">${ic('shield')}<span>${NO_EVENTS?'Add your roots and city badges to be introduced first.':'Add your roots and city badges to book events and be introduced first.'} <button class="link" data-a="goVerify" data-n="${r==='ok'?3:2}">Add now</button></span></div>`};
 
   /* "Send interest" gate while the basic check is not done yet */
   const _rs=renderSheet;renderSheet=function(){if(!sheet||sheet.type!=='verifyGate'||sheet.ev||!EJ())return _rs();const me=S.me;
@@ -3290,12 +3292,12 @@ function langSheet(){const av=['en','fr'].concat(window.NM_AVAIL||[]);const cur=
     const sub=allIn?'With our team · usually within 24 hours':need.length+(need.length===1?' stamp':' stamps')+' and you are live';
     return `<div class="topbar pad"><div class="grow"><div class="hello">${greet()}, <em>${esc(me.name.split(' ')[0])}</em></div><div class="sub">${sub}</div></div></div>
   <div class="scroll" id="main"><div class="main-inner pad tp-page">
-   ${pass(o,pctOf(o)+'% verified',allIn?'Your stamps are with our team':'Live at 60%. Events at 100%.',n?`<div class="tp-foot">${ic('heart')}<span><b>${n}</b> verified ${who} already fit what you are looking for</span></div>`:'')}
+   ${pass(o,pctOf(o)+'% verified',allIn?'Your stamps are with our team':(NO_EVENTS?'Live at 60%. Introduced first at 100%.':'Live at 60%. Events at 100%.'),n?`<div class="tp-foot">${ic('heart')}<span><b>${n}</b> verified ${who} already fit what you are looking for</span></div>`:'')}
    ${nx?`<button type="button" class="tp-next" data-a="${nx==='photo'?'goPhoto':'goVerify'}" data-n="1"><small>YOUR NEXT STAMP</small><b>${nx==='photo'?'Add your photo':'ID and live selfie'}</b><span>${nx==='photo'?'About 1 minute':'About 2 minutes · checked by a person'}</span><i>${ic('back','flipx')}</i></button>`:
      `<div class="callout">${ic('clock')}<span><b>Everything is with our team.</b> We check within 24 hours. Your profile goes live the moment the last check is approved.</span></div>`}
    <div class="sec-h"><h2>To go live</h2><small>60%</small></div>
    <div class="tp-tiles">${['photo','id','selfie'].map(k=>tile(k,o,WHY[k])).join('')}</div>
-   <div class="sec-h"><h2>For 100%</h2><small>events · introduced first</small></div>
+   <div class="sec-h"><h2>For 100%</h2><small>${NO_EVENTS?'introduced first':'events · introduced first'}</small></div>
    <div class="tp-tiles">${['roots','lives'].map(k=>tile(k,o,WHY[k])).join('')}</div>
    <p class="note">Every member sees your % and which stamps you have. Your documents are never shown.</p>
    ${C3()?`<button class="btn ghost block h3btn" data-a="h3open">${ic('chat')} Need help? Ask our team</button>`:''}
@@ -3306,9 +3308,9 @@ function langSheet(){const av=['en','fr'].concat(window.NM_AVAIL||[]);const cur=
     let seen=false;try{seen=localStorage.getItem('nm.liveSeen.'+S.me.id)==='1'}catch(e){}
     const wait=['roots','lives'].filter(k=>o[k]==='wait').length,todo=['roots','lives'].filter(k=>o[k]!=='ok'&&o[k]!=='wait');
     if(!seen)return `<div class="tp-live">${pass(o,'You are live','Verified members who fit you can now see you',
-      `<div class="tp-foot col"><span>${l.length?`${l.join(' + ')} left for 100%: book events and be introduced first.`:''}</span>
+      `<div class="tp-foot col"><span>${l.length?`${l.join(' + ')} left for 100%: ${NO_EVENTS?'be introduced first.':'book events and be introduced first.'}`:''}</span>
       ${todo.length?`<button class="btn primary block" data-a="goVerify" data-n="${todo[0]==='roots'?2:3}">Get to 100% · about 2 min</button>`:''}<button class="link tp-later" data-a="ejSeen">Later</button></div>`)}</div>`;
-    return `<button type="button" class="tp-strip" data-a="${todo.length?'goVerify':'tab'}" data-n="${todo[0]==='lives'?3:2}" data-k="me">${ring(pct,48)}<span><b>${pct}% verified</b><small>${wait&&!todo.length?'Your documents are with our team':l.join(' + ')+' left · 100% gets events'}</small></span>${todo.length?`<em>Add →</em>`:''}</button>`};
+    return `<button type="button" class="tp-strip" data-a="${todo.length?'goVerify':'tab'}" data-n="${todo[0]==='lives'?3:2}" data-k="me">${ring(pct,48)}<span><b>${pct}% verified</b><small>${wait&&!todo.length?'Your documents are with our team':l.join(' + ')+(NO_EVENTS?' left · 100% is introduced first':' left · 100% gets events')}</small></span>${todo.length?`<em>Add →</em>`:''}</button>`};
 
   /* Event gate: passport + what is missing */
   const _rs=renderSheet;renderSheet=function(){if(!sheet||sheet.type!=='verifyGate'||!sheet.ev||!EJ())return _rs();const o=meSt(),miss=ST.map(x=>x[0]).filter(k=>o[k]!=='ok');
@@ -3737,7 +3739,7 @@ function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^
   /* ===== Me: your Roots Signature ===== */
   const _me=renderMe;renderMe=function(){let html=_me();if(!RL())return html;const me=S.me||{};
     const t=`<div class="rl-mesig"><span class="rl-sgw">${rlSig(me.id||me.name||'me',initials(me.name)||'',4)}</span><div><p class="eb">Your Roots Signature</p><b>${esc(me.os||me.oc||'')} → ${esc(me.city||me.country||'')}</b><small>A pattern only you have. It shows on your introduction card.</small></div></div>`;
-    html=html.replace(/<button class="likes" data-a="openAdmin">[\s\S]*?<\/button>/,'');const ad=me.isAdmin?`<button class="rl-admin" data-a="openAdmin"><span>${ic('shield')}</span><div><b>Admin panel</b><small>Members, events, reports, robots</small></div><i>›</i></button>`:'';
+    html=html.replace(/<button class="likes" data-a="openAdmin">[\s\S]*?<\/button>/,'');const ad=me.isAdmin?`<button class="rl-admin" data-a="openAdmin"><span>${ic('shield')}</span><div><b>Admin panel</b><small>Members, reports, robots</small></div><i>›</i></button>`:'';
     const k=html.indexOf('<div class="scroll');if(k<0)return html;const e=html.indexOf('>',k)+1;return html.slice(0,e)+ad+t+html.slice(e)};
 
 
@@ -3757,6 +3759,28 @@ function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^
   const _are=afterRenderEvents;afterRenderEvents=function(){const r=_are.apply(this,arguments);try{if(S.screen==='events'){const seen=new Set();document.querySelectorAll('#app .fu-tk').forEach(c=>{const b=c.querySelector('[data-id]');const id=b&&b.dataset.id;if(!id)return;if(seen.has(id))c.remove();else seen.add(id)})}if(RL()){RLX.attach();if(S.rlAsk&&S.screen!=='welcome'){const d=document.createElement('div');d.innerHTML=askSheet();if(d.firstChild)app.appendChild(d.firstChild)}}}catch(e){}return r};
 })();
 
-window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()}}; /* used by automated tests */
+/* ---------- Opening, loading and pull-to-refresh animations (his ask 7 Nov 12:53) ----------
+   1. index.html draws the logo animation before any script runs; here we remove it once the first real screen is drawn.
+   2. spinner(): two hearts that draw themselves in a loop instead of a plain ring.
+   3. Pull down at the top of a main screen: our hearts draw with the pull, beat while fresh data loads. */
+(function(){
+  const HP1='M11.60 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z';
+  const HP2='M20.40 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z';
+  const hearts=(cls)=>`<svg class="${cls}" viewBox="0 0 32 22" aria-hidden="true"><path class="a" pathLength="1" d="${HP1}"/><path class="b" pathLength="1" d="${HP2}"/></svg>`;
+  spinner=function(label){return `<span class="spin nm-hl" role="status" aria-label="${esc(label||'Loading')}">${hearts('')}</span>`};
+  const _a2=afterRenderEvents;afterRenderEvents=function(){const r=_a2.apply(this,arguments);try{if((S.screen!=='boot'||S.bootError)&&window.nmSplashDone)window.nmSplashDone()}catch(e){}return r};
+  /* pull to refresh */
+  let P=null,busyR=false;
+  function el(){let e=document.getElementById('nm-ptr');if(!e){e=document.createElement('div');e.id='nm-ptr';e.setAttribute('aria-hidden','true');e.innerHTML=`<span class="pb">${hearts('ph')}</span>`;document.body.appendChild(e)}return e}
+  function canPull(t){if(busyR||view||sheet||picker||S.screen!=='app')return null;const m=document.getElementById('main');if(!m||!m.contains(t)||m.scrollTop>0)return null;if(t.closest&&t.closest('.rl-home,.rl-evt,.maplibregl-map,input,textarea,select'))return null;return m}
+  document.addEventListener('touchstart',e=>{if(e.touches.length!==1)return;const m=canPull(e.target);P=m?{y:e.touches[0].clientY,d:0}:null},{passive:true});
+  document.addEventListener('touchmove',e=>{if(!P)return;const d=e.touches[0].clientY-P.y;if(d<=0){if(P.d)set(0);P.d=0;return}P.d=d;set(d)},{passive:true});
+  document.addEventListener('touchend',()=>{if(!P)return;const d=P.d;P=null;if(d>=110)go();else set(0,true)},{passive:true});
+  function set(d,back){const e=el(),p=Math.min(1,d/110),y=Math.min(84,d*.55);e.classList.toggle('back',!!back);e.classList.toggle('ready',p>=1);e.style.transform=`translate(-50%,${y-60}px)`;e.style.opacity=d?Math.min(1,p*1.6):0;e.style.setProperty('--p',1-p)}
+  async function go(){busyR=true;const e=el();e.classList.add('go');e.classList.remove('back');e.style.transform='translate(-50%,24px)';e.style.opacity=1;e.style.setProperty('--p',0);
+    const t0=Date.now();try{await loadAll();cacheSave&&cacheSave()}catch(x){}const w=Math.max(0,700-(Date.now()-t0));setTimeout(()=>{render();e.classList.remove('go');set(0,true);busyR=false},w)}
+})();
+
+window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 boot();
 })();

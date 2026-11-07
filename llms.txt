@@ -1,6 +1,6 @@
 # NeuMarry
 
-> NeuMarry is a verified matrimony app for people living away from the country they grew up in, from every country and community. Members match on values, lifestyle, roots and distance, and meet with their families at hosted Family Mixer evenings. Launching in Toronto, Canada in November 2026; the app works in every country.
+> NeuMarry is a verified matrimony app for people living away from the country they grew up in, from every country and community. Members match on values, lifestyle, roots and distance, and families can see safe facts through a private family link. Launching in Toronto, Canada in November 2026; the app works in every country.
 
 Key facts:
 - Every member verifies a government ID and a live selfie, and proves their roots and the city they live in, before others can see them.
@@ -12,17 +12,17 @@ Key facts:
 
 ## About
 
-- [About NeuMarry](https://neumarry.com/about.html): Who runs NeuMarry, why it exists and how it works: a verified matrimony app for people living away from the country they grew up in, with family events.
+- [About NeuMarry](https://neumarry.com/about.html): Who runs NeuMarry, why it exists and how it works: a verified matrimony app for people living away from the country they grew up in.
 - [How matching works](https://neumarry.com/how-matching-works.html): How NeuMarry works out your match %: nine questions about married life, lifestyle, your preferences, where you live and where your family comes from.
-- [Free and Gold](https://neumarry.com/pricing.html): What NeuMarry costs: joining, verification and match % are free. Gold shows names, photos, interests and chat from CA$80 a month. Event tickets are separate.
+- [Free and Gold](https://neumarry.com/pricing.html): What NeuMarry costs: joining, verification and match % are free. Gold shows names, photos, interests and chat from CA$80 a month.
 - [Privacy and safety](https://neumarry.com/privacy-and-safety.html): How NeuMarry keeps you safe: ID and live selfie checks, photos hidden until you both accept, no phone numbers shown, block and report reviewed by a person.
-- [FAQ](https://neumarry.com/faq.html): Answers about NeuMarry: who can join, what is free, Gold prices, verification, privacy, parents, events, the web app and deleting your account.
+- [FAQ](https://neumarry.com/faq.html): Answers about NeuMarry: who can join, what is free, Gold prices, verification, privacy, parents, the web app and deleting your account.
 - [Is this profile real?](https://neumarry.com/is-this-profile-real.html): Free check for matrimony and dating profiles: 6 simple yes/no questions show the warning signs of a fake profile or scam. No sign-up. Share it with family.
 - [प्रोफ़ाइल असली है? (हिंदी)](https://neumarry.com/is-this-profile-real-hi.html): 6 आसान हाँ/ना सवालों से जानिए कि शादी वाली प्रोफ़ाइल नकली या धोखा तो नहीं। मुफ़्त, बिना साइन-अप। परिवार के साथ शेयर करें।
 - [પ્રોફાઇલ સાચી છે? (ગુજરાતી)](https://neumarry.com/is-this-profile-real-gu.html): 6 સરળ હા/ના પ્રશ્નોથી જાણો કે લગ્નની પ્રોફાઇલ નકલી કે છેતરપિંડી તો નથી. મફત, સાઇન-અપ વગર. પરિવાર સાથે શેર કરો.
 - [Sample verified profile](https://neumarry.com/sample-verified-profile.html): See how a fully verified NeuMarry profile looks: 5 checks done by a person, why you match, shared roots and distance. This is a sample, not a real member.
-- [Matrimony in Brampton](https://neumarry.com/brampton-matrimony.html): Find a life partner for marriage in Brampton, Ontario. Verified members, match % on values and roots, distance on every profile, and family events in the GTA.
-- [Matrimony in Mississauga](https://neumarry.com/mississauga-matrimony.html): Find a life partner for marriage in Mississauga, Ontario. Verified members, match % on values and roots, distance on every profile, family events in the GTA.
+- [Matrimony in Brampton](https://neumarry.com/brampton-matrimony.html): Find a life partner for marriage in Brampton, Ontario. Verified members, match % on values and roots, distance on every profile, and a private family link for parents.
+- [Matrimony in Mississauga](https://neumarry.com/mississauga-matrimony.html): Find a life partner for marriage in Mississauga, Ontario. Verified members, match % on values and roots, distance on every profile, a private family link for parents.
 - [Matrimony in the UK](https://neumarry.com/uk-matrimony.html): Matrimony for people living in the UK, from every country. Verified members, match % on values and roots, distance on every profile. London, Leicester and more.
 - [Matrimony in the USA](https://neumarry.com/usa-matrimony.html): Matrimony for people living in the United States, from every country. Verified members, match % on values and roots, distance on every profile, coast to coast.
 - [Matrimony in Australia](https://neumarry.com/australia-matrimony.html): Verified matrimony for people living in Australia, from every country. Match % on values and roots, distance on every profile. Sydney, Melbourne, Brisbane.
@@ -30,19 +30,18 @@ Key facts:
 
 ## Guides
 
-- [Matrimony abroad: Canada](https://neumarry.com/matrimony-abroad-canada.html): Matrimony in Canada for people who grew up in another country, every community. Verified profiles, matches on roots, city and values, Toronto family events.
-- [Matrimony in Toronto and the GTA](https://neumarry.com/toronto-matrimony.html): Indian and South Asian matrimony in Toronto and the GTA. Meet verified singles in Brampton, Mississauga, Markham and Scarborough, with family events.
-- [Matrimony events in Toronto](https://neumarry.com/matrimony-events-toronto.html): Indian and South Asian matrimony events in Toronto. Meet verified singles aged 18 to 38 over dinner, parents welcome. CA$2 seat hold, pay only if confirmed.
+- [Matrimony abroad: Canada](https://neumarry.com/matrimony-abroad-canada.html): Matrimony in Canada for people who grew up in another country, every community. Verified profiles, matches on roots, city and values, families included.
+- [Matrimony in Toronto and the GTA](https://neumarry.com/toronto-matrimony.html): Indian and South Asian matrimony in Toronto and the GTA. Meet verified singles in Brampton, Mississauga, Markham and Scarborough, with your family involved.
 - [Community matrimony in Canada](https://neumarry.com/community-matrimony-canada.html): Gujarati, Punjabi, Sikh, Tamil, Telugu, Malayali, Marathi, Bengali, Muslim, Christian and Jain matrimony in Canada. Every member verified, in one app.
-- [For parents](https://neumarry.com/matrimony-for-parents.html): Matrimony for parents of sons and daughters in Canada and abroad. Create their profile, meet families at hosted events, and see only verified matches.
+- [For parents](https://neumarry.com/matrimony-for-parents.html): Matrimony for parents of sons and daughters in Canada and abroad. Create their profile, involve the family, and see only verified matches.
 - [Verified profiles and safety](https://neumarry.com/verified-matrimony.html): How NeuMarry checks every member in 5 steps: government ID, live selfie, roots document, proof of city and a photo review. No fake profiles, only verified ones.
 - [Matrimony abroad: USA and UK](https://neumarry.com/matrimony-abroad-usa-uk.html): Matrimony for people living in the USA, UK, Australia and the Gulf who grew up in another country. Verified profiles and matches on roots, city and values.
 - [Finding a life partner abroad](https://neumarry.com/find-life-partner-abroad.html): A practical guide to finding a life partner for marriage when you live abroad: where to look, what to ask early, involving family, and staying safe.
-- [Safe for women](https://neumarry.com/safe-matrimony-for-women.html): How NeuMarry keeps women safe: every member verified by ID, live selfie, roots and city; numbers hidden, money requests blocked, parents welcome at events.
+- [Safe for women](https://neumarry.com/safe-matrimony-for-women.html): How NeuMarry keeps women safe: every member verified by ID, live selfie, roots and city; numbers hidden, money requests blocked, family kept in the loop.
 
 ## Work with us
 
-- [Work with NeuMarry](https://neumarry.com/work-with-us.html): NeuMarry is hiring event hosts in Toronto (CA$100 per event) and partnering with restaurants and matrimonial bureaus. Apply in two minutes.
+- [Work with NeuMarry](https://neumarry.com/work-with-us.html): NeuMarry partners with matrimonial bureaus and community groups in every country. Earn 10% of the first Gold purchase of members you bring. Apply in two minutes.
 
 ## Optional
 
