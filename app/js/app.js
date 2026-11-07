@@ -4274,6 +4274,44 @@ Object.assign(P15V,{adcheck:adCheck15,biz:biz15v,services:svc15v,svcplan:svcPlan
   const _o=A.p15open;A.p15open=function(el){const v=el.dataset.v;if(v==='services')P15.ex={};if(v==='adspot')P15.ads=undefined;if(v==='svcleads')P15.vl=undefined;if(v==='adcheck')P15.ac=undefined;return _o(el)};
 })();
 
+/* ---------- Plan 15 admin: 'New app' tab in the admin panel (real rows only; every number opens its details) ---------- */
+(function(){
+  if(typeof renderAdmin3!=='function')return;
+  const BKN={host:'Hosts',league:'League organisers',expert:'Experts',agent:'Rental agents',services:'Event services',advertiser:'Advertisers'};
+  const mny=(c,cur)=>money(c,cur||'USD');const LB={league_fee:'League team fees',sale_item:'Moving-out sale items',ticket:'Event tickets'};
+  async function load(){try{A3.p15=await API.rpc('admin15',{})}catch(e){A3.p15=false}try{A3.p15ads=await API.rpc('ads_check15',{})||[]}catch(e){A3.p15ads=[]}render()}
+  const kpi=(n,l,s,k)=>`<button class="a3k${String(n).length>9?' a3k-l':''}" style="--c:#3BBF8A" data-a="a3p15" data-k="${k}" aria-label="${esc(l)}: ${esc(String(n))}. Open details"><b>${esc(String(n))}</b><span>${esc(l)}</span>${s?`<small>${esc(s)}</small>`:''}<em class="a3more">Details ›</em></button>`;
+  function a3new(){const o=A3.p15;if(o===undefined){A3.p15=null;load()}
+    if(!o)return `<div class="a3c">${o===false?'<p class="a3m">Could not load. Tap refresh.</p>':spinner('Loading')}</div>`;
+    const k=A3.p15k,paid=o.paid30||[],tot={};paid.forEach(p=>{tot[p.currency]=(tot[p.currency]||0)+Number(p.cents)});const test=paid.length&&paid.every(p=>p.test);
+    const bz=Object.values(o.biz||{}).reduce((a,b)=>a+b,0),lic=o.lic||[],ads=A3.p15ads||[];
+    const back=`<button class="a3back" data-a="a3p15" data-k="">${ic('back')} Back</button>`;
+    if(k==='money')return back+`<div class="a3c"><div class="a3h"><b>Paid, last 30 days</b><span>${test?'test mode':''}</span></div>${paid.length?paid.map(p=>`<div class="a3kv"><span>${esc(LB[p.product]||p.label)} · ${p.n}×</span><b>${esc(mny(p.cents,p.currency))}</b></div>`).join(''):'<p class="a3m">Nothing paid yet.</p>'}</div>
+      <div class="a3c"><div class="a3h"><b>Our share from tickets</b><span>10% + booking fees</span></div>${(o.cut30||[]).length?o.cut30.map(c=>`<div class="a3kv"><span>${c.seats} seat${c.seats>1?'s':''}</span><b>${esc(mny(c.cents,c.currency))}</b></div>`).join(''):'<p class="a3m">No tickets sold yet.</p>'}</div>`;
+    if(k==='biz')return back+`<div class="a3c"><div class="a3h"><b>Businesses with an active plan</b><span>${bz}</span></div>${Object.keys(o.biz||{}).length?Object.entries(o.biz).map(([x,n])=>`<div class="a3kv"><span>${esc(BKN[x]||x)}</span><b>${n}</b></div>`).join(''):'<p class="a3m">None yet.</p>'}</div>`;
+    if(k==='members')return back+`<div class="a3c"><div class="a3h"><b>Members</b><span>now</span></div><div class="a3kv"><span>NeuMarry Plus active</span><b>${o.plus}</b></div><div class="a3kv"><span>Verified Tick active</span><b>${o.tick}</b></div></div>`;
+    if(k==='live')return back+`<div class="a3c"><div class="a3h"><b>Live in the app</b><span>now</span></div><div class="a3kv"><span>Upcoming events</span><b>${o.events}</b></div><div class="a3kv"><span>Rooms posted</span><b>${o.rooms}</b></div><div class="a3kv"><span>Moving-out sale items</span><b>${o.sales}</b></div></div>`;
+    const need=lic.length+ads.length,m=Object.entries(tot).map(([c,v])=>mny(v,c)).join(' + ')||mny(0,'USD');
+    return `<div class="a3g">${kpi(m,'Paid in 30 days',test?'test mode, no real money':`${paid.reduce((a,p)=>a+Number(p.n),0)} payments`,'money')}${kpi(o.plus,'Plus members',`${o.tick} with Verified Tick`,'members')}${kpi(bz,'Businesses',`active plans`,'biz')}${kpi(o.events,'Upcoming events',`${o.rooms} rooms · ${o.sales} sale items`,'live')}</div>
+     ${(o.days30||[]).some(Boolean)?`<div class="a3c"><div class="a3h"><b>Payments per day</b><span>30 days</span></div><div class="a3bars">${(()=>{const v=o.days30,mx=Math.max(1,...v);return v.map((n,i)=>`<i data-a="a3p15" data-k="money" role="button" aria-label="${n} payments, ${v.length-1-i} days ago" style="height:${Math.max(3,Math.round(n/mx*100))}%"></i>`).join('')})()}</div></div>`:''}
+     ${need?'':`<div class="a3c a3ok">${ic('check')} Nothing waiting for you.</div>`}
+     ${ads.length?`<div class="a3c"><div class="a3h"><b>Ads to check</b><span>${ads.length}</span></div>${ads.map(a=>`<div class="a3r"><span><b>${esc(a.title)}</b><small>${esc(a.body||'')}</small><small>${esc(a.by)} · ${esc(a.city)} · <a class="a3lnk" href="${esc(a.url)}" target="_blank" rel="noopener">link</a></small></span></div><div class="a3btns"><button class="btn ghost sm" data-a="a3p15ad" data-id="${a.id}" data-y="0">Remove</button><button class="btn primary sm" data-a="a3p15ad" data-id="${a.id}" data-y="1">Approve</button></div>`).join('')}</div>`:''}
+     ${lic.length?`<div class="a3c"><div class="a3h"><b>Licences to check</b><span>${lic.length}</span></div>${lic.map(b=>`<div class="a3r"><span><b>${esc(b.name)}</b><small>${esc(BKN[b.kind]||b.kind)}${b.category?' · '+esc(b.category):''} · ${esc([b.city,b.country].filter(Boolean).join(', '))}</small><small>Licence: ${esc(b.licence)}${b.active?'':' · plan not active'}</small></span></div><div class="a3btns"><button class="btn ghost sm" data-a="a3p15lic" data-id="${b.id}" data-y="0">Not valid</button><button class="btn primary sm" data-a="a3p15lic" data-id="${b.id}" data-y="1">Licence checked</button></div>`).join('')}
+       <p class="a3m">Check the number on the official register of that country before you tap "Licence checked".</p></div>`:''}`}
+  const _t=a3tabsHtml;a3tabsHtml=function(){const h=_t();return P15on()?h.replace('<button role="tab"',`<button role="tab" aria-selected="${A3.tab==='new'}" class="${A3.tab==='new'?'on':''}" data-a="a3tab" data-k="new">New app</button><button role="tab"`):h};
+  const _h=a3home;a3home=function(){return A3.tab==='new'?a3new():_h()};
+  const _r=renderAdmin3;renderAdmin3=function(){const h=_r();return A3.tab==='new'?h.replace(/<h2>[^<]*<\/h2>/,'<h2>New app</h2>'):h};
+  const run=async(fn,ok)=>{try{await fn();toast(ok,'check')}catch(e){toast('Could not save. Please try again.','x')}A3.p15=undefined;render()};
+  Object.assign(A,{
+    a3p15(el){A3.p15k=el.dataset.k||null;render();const s=document.querySelector('.a3v .scroll');if(s)s.scrollTop=0},
+    a3p15ad(el){run(()=>API.rpc('ad_review15',{aid:el.dataset.id,ok:el.dataset.y==='1'}),el.dataset.y==='1'?'Approved. It is live now.':'Removed.')},
+    a3p15lic(el){run(()=>API.rpc('admin_biz_verify15',{bid:el.dataset.id,ok:el.dataset.y==='1'}),el.dataset.y==='1'?'Marked as licence checked.':'Licence removed from the page.')}
+  });
+  const _rl=A.a3reload;A.a3reload=function(){A3.p15=undefined;return _rl.apply(this,arguments)};
+  const _tb=A.a3tab;A.a3tab=function(el){A3.p15k=null;if(el.dataset.k==='new')A3.p15=undefined;return _tb(el)};
+  const _up=A.a3up;if(_up)A.a3up=function(){if(A3.tab==='new'&&A3.p15k){A3.p15k=null;render();return}return _up.apply(this,arguments)};
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 boot();
 })();

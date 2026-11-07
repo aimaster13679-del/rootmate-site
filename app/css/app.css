@@ -1899,7 +1899,7 @@ html.p15on #app::before{width:260px;height:260px;left:-70px;top:120px;background
 html.p15on #app::after{width:300px;height:300px;right:-90px;top:380px;background:radial-gradient(circle at 60% 40%,rgba(255,214,90,.42),rgba(255,214,90,0) 70%);animation:p15drift2 22s ease-in-out infinite alternate}
 html.p15on.gl-lt #app::before{background:radial-gradient(circle at 35% 35%,rgba(74,214,160,.55),rgba(74,214,160,0) 70%)}
 html.p15on.gl-lt #app::after{background:radial-gradient(circle at 60% 40%,rgba(255,200,40,.45),rgba(255,200,40,0) 70%)}
-html.p15on #app>.scroll,html.p15on #app>.navwrap,html.p15on #app>.view,html.p15on #app>.sheet-wrap,html.p15on #app>.toast{position:relative;z-index:1}
+/* (8 Nov) no position override here: views, sheets and toasts keep their own overlay positions */
 html.p15on #app>.scroll{background:radial-gradient(220px 220px at 85% 8%,rgba(190,235,150,.16),transparent 70%)}
 @keyframes p15drift1{0%{transform:translate(0,0) scale(1)}100%{transform:translate(70px,90px) scale(1.15)}}
 @keyframes p15drift2{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-80px,-120px) scale(.9)}}
@@ -1956,3 +1956,5 @@ html.p15on #app>.scroll{background:none}
 .p15-mehd .tx{display:flex;flex-direction:column;gap:3px;min-width:0}.p15-mehd .tx b{font-size:17px;font-weight:800;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .p15-mehd .tx small{color:var(--p-mut);font-size:13px}
 .p15-av{width:52px;height:52px;flex:0 0 52px;border-radius:50%;display:grid;place-items:center;font-size:21px;font-weight:800;color:#0B5D3B;background:linear-gradient(150deg,#D8F8EA,#A3E8C9);border:2px solid var(--p-gl2)}
+.a3k.a3k-l b{font-size:19px;line-height:1.25;word-break:break-word}
+.a3v .a3btns .btn.ghost,html.gl-lt .a3v .a3btns .btn.ghost{color:#F4F1F8!important;border-color:rgba(255,255,255,.28)!important;background:rgba(255,255,255,.04)!important}
