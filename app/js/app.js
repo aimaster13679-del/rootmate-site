@@ -3609,7 +3609,8 @@ const RLX=(function(){
     let t0=performance.now();const step=now=>{if(!E.map)return;if(!E.el.isConnected||document.hidden||(E.fr=(E.fr||0)+1)%2){E.anim=requestAnimationFrame(step);return}const f=((now-t0)/2600)%1;
       m.getSource('com').setData({type:'FeatureCollection',features:fs.map((F,i)=>{const cs=F.geometry.coordinates;return{type:'Feature',properties:{c:F.properties.c},geometry:{type:'Point',coordinates:cs[Math.floor(((f+i*.17)%1)*(cs.length-1))]}}})});
       if(o.spin&&!E.touched&&!m.isMoving()&&E.el.isConnected){const c=m.getCenter();m.setCenter([c.lng+o.spin,c.lat])}E.anim=requestAnimationFrame(step)};E.anim=requestAnimationFrame(step)}
-  function hide(E){if(!E.map)return;const c=E.map.getCenter();E.markers.forEach(x=>{const l=x.getLngLat();x.getElement().style.visibility=ang([c.lng,c.lat],[l.lng,l.lat])>72?'hidden':'visible'})}
+  function hide(E){if(!E.map)return;const c=E.map.getCenter();const taken=E.markers.filter(x=>x.getElement().classList.contains('open')).map(x=>E.map.project(x.getLngLat()));E.markers.forEach(x=>{const l=x.getLngLat(),el=x.getElement(),f=el.classList.contains('p15f');let v=ang([c.lng,c.lat],[l.lng,l.lat])<=(f?64:72);
+    if(v&&f&&!el.classList.contains('open')){const q=E.map.project(l),H=E.map.getContainer().clientHeight;if(q.y<52||q.y>H-62||taken.some(t=>Math.abs(t.x-q.x)<27&&Math.abs(t.y-q.y)<27))v=false;else taken.push(q)}el.style.visibility=v?'visible':'hidden'})}
   function kill(k){const E=live[k];if(!E)return;cancelAnimationFrame(E.anim);try{E.map&&E.map.remove()}catch(e){}delete live[k]}
   /* place the persistent map for `key` into every .rl-slot[data-rl=key] after a render */
   function attach(){if(!webgl())return;const here=new Set([...document.querySelectorAll('.rl-slot[data-rl]')].map(x=>x.dataset.rl));Object.keys(live).forEach(k=>{if(!here.has(k)&&k==='welcome')kill(k)});
@@ -3806,22 +3807,30 @@ Object.assign(IC,{
   chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'
 });
 const P15={d:null,busy:'',v:null};
+const FL15=[['Canada',-106,57],['United States',-98,39],['Mexico',-102,23],['Brazil',-51,-10],['Argentina',-64,-34],['Colombia',-73,4],['Peru',-75,-9],['Chile',-71,-30],['United Kingdom',-2,53],['Ireland',-8,53],['France',2,46.5],['Spain',-3.7,40],['Portugal',-8,39.5],['Germany',10,51],['Italy',12.5,42.5],['Netherlands',5.3,52.2],['Poland',19,52],['Sweden',16,62],['Norway',9,61],['Greece',22,39],['Turkey',35,39],['Ukraine',31,49],['Egypt',30,26.5],['Morocco',-6,32],['Nigeria',8,9.5],['Ghana',-1,7.9],['Kenya',38,0.2],['Ethiopia',39.5,8.6],['South Africa',24,-29],['Lebanon',35.8,33.9],['Saudi Arabia',45,24],['United Arab Emirates',54,24],['Iran',53,32],['Pakistan',69,30],['India',79,22],['Nepal',84,28.2],['Bangladesh',90,23.7],['Sri Lanka',80.7,7.8],['China',104,35],['South Korea',127.8,36.3],['Japan',138,36.5],['Philippines',122,12.5],['Vietnam',106,16],['Thailand',101,15],['Malaysia',102,4],['Indonesia',113,-1],['Singapore',103.8,1.35],['Australia',134,-25],['New Zealand',172,-41],['Russia',90,60]];
+const fg15=n=>{try{return flag(n)||''}catch(e){return ''}};
+try{if(typeof RLX!=='undefined'&&RLX.OPTS&&RLX.OPTS.welcome)RLX.OPTS.p15=()=>Object.assign({},RLX.OPTS.welcome(),{zoom:innerWidth<500?1.1:1.4,
+  pins:FL15.filter(c=>fg15(c[0])).map(c=>({ll:[c[1],c[2]],anchor:'center',cls:'p15f',html:`<span class="p15fg">${fg15(c[0])}</span><b>${esc(c[0])}</b>`,fly:true,
+    go:ev=>{const b=ev.currentTarget;const was=b.classList.contains('open');document.querySelectorAll('.rl-mk.p15f.open').forEach(x=>x.classList.remove('open'));if(!was)b.classList.add('open')}}))})}catch(e){}
 function P15on(){return !!(P15.d&&P15.d.on)}
 async function load15(){try{P15.d=await API.rpc('my15',{});try{localStorage.setItem('nm.p15.'+(API.userId()||''),JSON.stringify(P15.d))}catch(e){}}catch(e){}}
 function warm15(){try{const o=JSON.parse(localStorage.getItem('nm.p15.'+(API.userId()||''))||'null');if(o&&!P15.d)P15.d=o}catch(e){}}
 const p15price=k=>{const c=P15.d&&P15.d.prices&&P15.d.prices[k];return c==null?'':money(c,'USD')};
 const p15top=(t,back)=>`<div class="p15-top">${back?`<button class="p15-tb" data-a="p15back" aria-label="Back">${ic('back2')}</button>`:'<span class="p15-tb ghost"></span>'}<h1>${esc(t)}</h1><span class="p15-tb ghost"></span></div>`;
-const p15tile=(icn,tone,t,d,act,extra)=>`<button class="p15-g p15-t" data-a="${act}"><span class="p15-b ${tone}">${ic(icn)}</span><b>${esc(t)}</b><small>${esc(d)}</small>${extra||''}</button>`;
+const PH15={'Settle In':'house','Events & Friends':'hall','Membership':'keys','For Business':'store','Find a Room':'room','Travel Buddy for Parents':'plane','Job Referral':'office','Trusted Experts':'docs','Moving-Out Sale':'sofa','Friend Meetups':'table','Watch Parties':'stadium','Festivals':'lantern','Day Trips':'trip','Sports Leagues':'league'};
+const ph15=t=>PH15[t]?`<span class="p15-ph"><img src="img/p15/${PH15[t]}.webp" alt="" loading="lazy" decoding="async"></span>`:'';
+const p15tile=(icn,tone,t,d,act,extra)=>`<button class="p15-g p15-t" data-a="${act}">${ph15(t)}<span class="p15-b ${tone}">${ic(icn)}</span><b>${esc(t)}</b><small>${esc(d)}</small>${extra||''}</button>`;
 function p15wrap(inner){return `<div class="scroll p15s" id="main"><div class="main-inner p15">${inner}</div></div>`}
 function home15(){
   const me=S.me||{};
   return p15wrap(`<div class="p15-brand"><img src="img/icon-192.png" alt=""><b>NeuMarry</b><span class="p15-city">${ic('pin')}${esc(me.city||me.country||'')}</span></div>
   <h2 class="p15-h1">Your people,<br>wherever you live</h2><p class="p15-sub">Rooms, jobs, parents' travel, events and friends: all in one place.</p>
+  ${(typeof RL==='function'&&RL()&&RLX.webgl())?`<div class="p15-earth"><div class="rl-slot" data-rl="p15"></div><span class="p15-earth-h">${ic('globe')} Spin it · tap a flag</span><span class="p15-earth-t">One app for people living abroad, in every country</span></div>`:''}
   <div class="p15-bento">
-   <button class="p15-g p15-t span2 row" data-a="tab" data-k="settle"><span class="p15-b mint big">${ic('key')}</span><span class="tx"><b>Settle In</b><small>Room, job, parents' travel, trusted experts</small></span>${ic('chev2')}</button>
+   <button class="p15-g p15-t span2 row" data-a="tab" data-k="settle">${ph15('Settle In')}<span class="p15-b mint big">${ic('key')}</span><span class="tx"><b>Settle In</b><small>Room, job, parents' travel, trusted experts</small></span>${ic('chev2')}</button>
    ${p15tile('party','lem','Events & Friends','Meetups, watch parties, festivals, trips','tab" data-k="ev15')}
    ${p15tile('star2','fern','Membership','NeuMarry Plus and Verified Tick','p15open" data-v="plus')}
-   <button class="p15-g p15-t span2 row" data-a="p15open" data-v="biz"><span class="p15-b mint">${ic('store2')}</span><span class="tx"><b>For Business</b><small>Agents, hosts, event services, ads</small></span>${ic('chev2')}</button>
+   <button class="p15-g p15-t span2 row" data-a="p15open" data-v="biz">${ph15('For Business')}<span class="p15-b mint">${ic('store2')}</span><span class="tx"><b>For Business</b><small>Agents, hosts, event services, ads</small></span>${ic('chev2')}</button>
   </div>`)}
 function settle15(){
   const t=[['bed2','mint','Find a Room','Rooms and roommates, by area and budget','rooms'],['plane2','lem','Travel Buddy for Parents','A verified buddy on the same flight','buddy'],
@@ -4156,6 +4165,113 @@ Object.assign(P15V,{rooms:rooms15v,postroom:postRoom15,buddy:buddy15v,referral:r
   });
   const _bk=A.p15back;A.p15back=function(el){const up={postroom:'rooms',expplan:'experts',leads:'expplan'};if(up[P15.v]){P15.v=up[P15.v];render();return}return _bk(el)};
   const _o=A.p15open;A.p15open=function(el){const v=el.dataset.v;if(v==='rooms')P15.rooms=undefined;if(v==='buddy')P15.bd=undefined;if(v==='referral')P15.rf=undefined;if(v==='experts')P15.ex={};if(v==='sale')P15.sl=undefined;if(v==='leads')P15.ld=undefined;return _o(el)};
+})();
+
+/* ---------- Plan 15 phase 5: For Business hub, Event Services, Ad Spot, Sponsored box, new Me ---------- */
+Object.assign(PH15,{'Host Plans':'hall','Event Services':'catering','Ad Spot':'city','Expert or Agent':'docs','League Organiser':'league'});
+const bizOf15=k=>((P15.d&&P15.d.biz)||[]).find(b=>b.kind===k);
+const until15=d=>new Date(d).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short'});
+function biz15v(){
+  const st=k=>{const b=bizOf15(k);return planOn15(b)?`<span class="p15-pill">${ic('tick2')} Active</span>`:''};
+  const row=(t,d,v,k)=>`<button class="p15-g p15-t span2 row" data-a="p15open" data-v="${v}">${ph15(t)}<span class="tx"><b>${esc(t)}</b><small>${esc(d)}</small></span>${k?st(k):''}${ic('chev2')}</button>`;
+  return p15wrap(p15top('For Business',true)+`<p class="p15-sub">Reach people who just moved to your city. You pay a plan first; members find you inside NeuMarry.</p><div class="p15-bento">
+   ${row('Host Plans','Run meetups, watch parties, festivals and trips · from '+p15price('host_basic')+' a month','host','host')}
+   ${row('League Organiser','Run a sports league · '+p15price('league_plan')+' a month','lgplan','league')}
+   ${row('Expert or Agent','Licensed experts and rental agents · from '+p15price('expert_plan')+' a month','expplan','expert')}
+   ${row('Event Services','Catering, decor, music, photos for hosts · '+p15price('services_plan')+' a month','svcplan','services')}
+   ${row('Ad Spot','One clear "Sponsored" box in your city · '+p15price('ad_spot')+' a month','adspot','')}</div>
+   <button class="p15-g p15-row" data-a="p15open" data-v="services"><span class="p15-b mint">${ic('party')}</span><span class="tx"><b>Hosting an event?</b><small>Find catering, decor, music and photos near you</small></span>${ic('chev2')}</button>
+   <div class="p15-g p15-note">${ic('shield2')} No hidden charges. Plans run month to month; you can stop any time.</div>`)}
+const SVC15=[['Catering','Catering'],['Decor','Decor'],['Music','DJ & music'],['Photo','Photo & video'],['Venue','Venues']];
+function svc15v(){const cat=P15.f.sc||'',key='services'+cat,l=(P15.ex||{})[key];
+  if(l===undefined){API.rpc('experts15',{k:'services',cat}).then(r=>{P15.ex=Object.assign(P15.ex||{},{[key]:r});render()}).catch(()=>{P15.ex=Object.assign(P15.ex||{},{[key]:[]});render()});return p15wrap(p15top('Event Services',true)+spinner('Loading'))}
+  return p15wrap(p15top('Event Services',true)+`<div class="p15-g p15-hero ph">${ph15('Event Services')}<small>Food, decor, music and photos for your event, from businesses in your city.</small></div>`+chips15('sc',[['','All']].concat(SVC15),cat)+
+   (l.length?l.map(b=>`<div class="p15-g p15-pad"><div class="p15-rh"><span class="tx"><b>${esc(b.name)}</b><small>${esc(b.city)}</small></span>${b.top?'<span class="p15-pill y">Top Spot</span>':''}</div>
+     <div class="p15-tags">${b.category?`<span class="p15-pill">${esc((SVC15.find(x=>x[0]===b.category)||[0,b.category])[1])}</span>`:''}</div>${b.about?`<small style="display:block;margin-top:6px">${esc(b.about)}</small>`:''}
+     ${b.locked&&!(b.services&&b.services.length)?`<button class="p15-unlock" data-a="p15open" data-v="host">${ic('lock2')} Prices and booking open for hosts and Plus members</button>`:
+      `${(b.services||[]).map(s=>`<div class="p15-li"><span class="tx"><b>${esc(s.title)}</b>${s.detail?`<small>${esc(s.detail)}</small>`:''}</span><b>${money(s.price,s.currency)}</b></div>`).join('')}<button class="p15-btn" data-a="p15svcAsk" data-id="${b.id}">${ic('chat')} Request booking</button><p class="p15-ex">Your name and email go to this business only after you tap Request booking. You agree the price with them directly.</p>`}</div>`).join(''):
+   `<div class="p15-g p15-note">${ic('store2')} No event services in your city yet. They join every week.</div>`)+
+   `<button class="p15-g p15-row" data-a="p15open" data-v="svcplan"><span class="p15-b fern">${ic('store2')}</span><span class="tx"><b>Do you run an event business?</b><small>Event Services Plan ${p15price('services_plan')} a month</small></span>${ic('chev2')}</button>`)}
+function svcPlan15(){const f=P15.f,b=bizOf15('services'),me=S.me||{};
+  return p15wrap(p15top('Event Services Plan',true)+`<div class="p15-g p15-hero ph">${ph15('Event Services')}<small>Hosts in your city see your prices and send you booking requests.</small></div>
+  <div class="p15-g p15-form"><label>Business name</label><input id="p15-vn" maxlength="60" value="${esc(f.vn||(b&&b.name)||'')}">
+   <label>What you do</label>${chips15('vc',SVC15,f.vc||'Catering')}
+   <label>One line about you</label><input id="p15-va" maxlength="160" value="${esc(f.va||'')}">
+   <label>Your services and prices (${esc(cur15())})</label>${[0,1,2].map(i=>`<div class="p15-svc"><input id="p15-v${i}t" maxlength="80" placeholder="Service ${i+1}" value="${esc(f['v'+i+'t']||'')}"><input id="p15-v${i}p" inputmode="numeric" maxlength="6" placeholder="Price" value="${esc(f['v'+i+'p']||'')}"></div>`).join('')}
+   <small>City: ${esc(me.city||'')} ${esc(me.country||'')}</small></div>
+  <button class="p15-btn" data-a="p15svcBuy"${P15.busy==='svc'?' disabled':''}>${P15.busy==='svc'?'Starting…':planOn15(b)?`Save and add a month · ${p15price('services_plan')}`:`Start Event Services Plan · ${p15price('services_plan')} a month`}</button>
+  ${planOn15(b)?`<div class="p15-g p15-note">${ic('tick2')} Your plan is active until ${esc(until15(b.planUntil))}.</div>
+   <button class="p15-g p15-row" data-a="p15open" data-v="svcleads"><span class="p15-b mint">${ic('chat')}</span><span class="tx"><b>Booking requests</b><small>Hosts who tapped Request booking</small></span>${ic('chev2')}</button>
+   <button class="p15-btn ghost" data-a="p15xTop" data-id="${b.id}">Top Spot for 30 days · ${p15price('services_top')}</button>`:''}
+  ${P15.d&&P15.d.payTest?'<p class="p15-ex">Test mode: no real money is taken.</p>':''}`)}
+function svcLeads15(){const b=bizOf15('services'),l=P15.vl;if(!b)return p15wrap(p15top('Booking requests',true));
+  if(l===undefined){API.rpc('leads15',{bid:b.id}).then(r=>{P15.vl=r;render()}).catch(()=>{P15.vl=[];render()});return p15wrap(p15top('Booking requests',true)+spinner('Loading'))}
+  return p15wrap(p15top('Booking requests',true)+(l.length?`<div class="p15-g">${l.map(x=>`<div class="p15-li"><span class="p15-b mint">${ic('user')}</span><span class="tx"><b>${esc(x.name)}</b><small>${esc(x.email||'')}${x.note?' · '+esc(x.note):''}</small></span></div>`).join('')}</div>`:`<div class="p15-g p15-note">${ic('chat')} No requests yet. Hosts see your page in Event Services.</div>`))}
+function adSpot15(){const f=P15.f,l=P15.ads,me=S.me||{};
+  if(l===undefined){API.rpc('ads_mine15',{}).then(r=>{P15.ads=r;render()}).catch(()=>{P15.ads=[];render()});return p15wrap(p15top('Ad Spot',true)+spinner('Loading'))}
+  const n=v=>Number(v||0).toLocaleString(RM_I18N.locale);
+  return p15wrap(p15top('Ad Spot',true)+`<div class="p15-g p15-hero ph">${ph15('Ad Spot')}<small>One "Sponsored" box on the Home screen of members in ${esc(me.city||'your city')}. Real views and taps, counted for you.</small></div>
+  ${l.length?`<div class="p15-sec"><b>Your ads</b></div>${l.map(a=>`<div class="p15-g p15-pad"><div class="p15-rh"><span class="tx"><b>${esc(a.title)}</b><small>${esc(a.city)} · ${esc(new Date(a.month).toLocaleDateString(RM_I18N.locale,{month:'long',year:'numeric'}))}</small></span><span class="p15-pill${a.status==='live'?'':' y'}">${({live:'Live',check:'Waiting for check',removed:'Not approved',ended:'Ended'})[a.status]||''}</span></div>
+    <div class="p15-kv"><div><small>Views</small><b>${n(a.views)}</b></div><div><small>Taps</small><b>${n(a.taps)}</b></div><div><small>Tap rate</small><b>${a.views?(a.taps/a.views*100).toFixed(1)+'%':'–'}</b></div></div></div>`).join('')}`:''}
+  <div class="p15-g p15-form"><label>Headline (4 to 60 letters)</label><input id="p15-at" maxlength="60" placeholder="e.g. Fresh home-style food, delivered" value="${esc(f.at||'')}">
+   <label>One more line (optional)</label><input id="p15-ab" maxlength="90" value="${esc(f.ab||'')}">
+   <label>Link (https://…)</label><input id="p15-au" maxlength="300" inputmode="url" placeholder="https://" value="${esc(f.au||'')}">
+   <label>Month</label>${chips15('afs',[['0','Normal · '+p15price('ad_spot')],['1','Festival season · '+p15price('ad_spot_festival')]],f.afs||'0')}</div>
+  <div class="p15-g p15-note">${ic('shield2')} Every ad is checked by us before it shows. It always carries the word "Sponsored". No ads for money transfers, loans, visas or anything against the law.</div>
+  <button class="p15-btn" data-a="p15adBuy"${P15.busy==='ad'?' disabled':''}>${P15.busy==='ad'?'Sending…':`Buy one month · ${p15price(f.afs==='1'?'ad_spot_festival':'ad_spot')}`}</button>
+  ${P15.d&&P15.d.payTest?'<p class="p15-ex">Test mode: no real money is taken.</p>':''}`)}
+/* the one Sponsored box on Home: real ad of this city, or nothing */
+function adBox15(){const a=P15.ad;if(a===undefined){P15.ad=null;API.rpc('ad_for15',{}).then(r=>{P15.ad=r||null;if(r)render()}).catch(()=>{});return ''}
+  if(!a)return '';return `<button class="p15-g p15-ad" data-a="p15adTap" data-id="${esc(a.id)}"><span class="p15-pill">Sponsored</span><b>${esc(a.title)}</b>${a.body?`<small>${esc(a.body)}</small>`:''}<span class="p15-ad-go">${ic('chev2')}</span></button>`}
+function me15(){const me=S.me||{},d=P15.d||{},biz=(d.biz||[]).filter(b=>b.kind!=='advertiser');
+  const BK={host:['Host Plans','hostboard'],league:['League Organiser','lgplan'],expert:['Expert or Agent','expplan'],agent:['Expert or Agent','expplan'],services:['Event Services','svcplan']};
+  const row=(icn,tone,t,s,a,v)=>`<button class="p15-g p15-row" data-a="${a}"${v?` data-v="${v}"`:''}><span class="p15-b ${tone}">${ic(icn)}</span><span class="tx"><b>${t}</b><small>${s}</small></span>${ic('chev2')}</button>`;
+  return p15wrap(p15top('Me')+`<div class="p15-g p15-pad p15-mehd"><span class="p15-av">${esc(((me.name||'?').trim()[0]||'?').toUpperCase())}</span><span class="tx"><b>${esc(me.name||'')}${d.tick?` <span class="p15-pill">${ic('shield2')} Verified</span>`:''}</b><small>${esc([me.city,me.country].filter(Boolean).join(', '))}</small></span></div>
+  <div class="p15-sec"><b>Membership</b></div>
+  ${row('star2','lem','NeuMarry Plus',d.plus?'Active until '+esc(until15(d.plusUntil)):'Full details, early booking · '+p15price('plus_m')+' a month','p15open','plus')}
+  ${row('shield2','mint','Verified Tick',d.tick?'Active until '+esc(until15(d.tickUntil)):'People trust you faster · '+p15price('tick'),'p15open','tick')}
+  <div class="p15-sec"><b>My things</b></div>
+  ${row('party','fern','My Tickets','Your seats with their QR codes','p15open','tickets')}
+  ${row('bed2','mint','My rooms, trips and requests','Find a Room, Travel Buddy, Job Referral','tab" data-k="settle','')}
+  ${biz.length?`<div class="p15-sec"><b>My business</b></div>${biz.map(b=>{const k=BK[b.kind]||['For Business','biz'];return row('store2','fern',esc(b.name||k[0]),esc(k[0])+' · '+(planOn15(b)?'active until '+esc(until15(b.planUntil)):'plan not active'),'p15open',k[1])}).join('')}`:''}
+  ${row('mega2','lem','For Business','Hosts, experts, event services, ads','p15open','biz')}
+  ${me.isAdmin?row('chart','mint','Admin panel','Members, payments and checks','openAdmin','')+row('mega2','mint','Ads to check','Approve or remove new Ad Spot ads','p15open','adcheck'):''}
+  <div class="p15-sec"><b>Help and account</b></div>
+  <div class="p15-g">
+   <button class="p15-li p15-libtn" data-a="lang"><span class="p15-b mint">${ic('globe')}</span><span class="tx"><b>Language</b><small>${esc((LANGS_ALL.find(x=>x[0]===RM_I18N.lang)||LANGS_ALL[0])[1])}</small></span>${ic('chev2')}</button>
+   <button class="p15-li p15-libtn" data-a="helpOpen"><span class="p15-b mint">${ic('mail')}</span><span class="tx"><b>Help and contact</b><small>Questions, complaints, Grievance Officer</small></span>${ic('chev2')}</button>
+   <button class="p15-li p15-libtn" data-a="legal" data-k="terms"><span class="p15-b mint">${ic('info')}</span><span class="tx"><b>Terms of Service</b></span>${ic('chev2')}</button>
+   <button class="p15-li p15-libtn" data-a="legal" data-k="privacy"><span class="p15-b mint">${ic('lock2')}</span><span class="tx"><b>Privacy Policy</b></span>${ic('chev2')}</button>
+   <button class="p15-li p15-libtn" data-a="deleteAsk"><span class="p15-b mint">${ic('trash')}</span><span class="tx"><b>Delete my account</b><small>Permanently remove your data</small></span>${ic('chev2')}</button></div>
+  <button class="p15-btn ghost" data-a="logout">Log out</button>
+  <p class="p15-ex">NeuMarry ${esc(CFG.version)} · ${esc(API.email())}</p>`)}
+function adCheck15(){const l=P15.ac;if(l===undefined){API.rpc('ads_check15',{}).then(r=>{P15.ac=r||[];render()}).catch(()=>{P15.ac=[];render()});return p15wrap(p15top('Ads to check',true)+spinner('Loading'))}
+  return p15wrap(p15top('Ads to check',true)+(l.length?l.map(a=>`<div class="p15-g p15-pad"><span class="p15-pill">Sponsored</span><h2 style="margin:8px 0 2px">${esc(a.title)}</h2>${a.body?`<small style="display:block">${esc(a.body)}</small>`:''}<small style="display:block;margin-top:6px">${esc(a.by)} · ${esc(a.city)}</small><a class="p15-link" href="${esc(a.url)}" target="_blank" rel="noopener">Open the link</a>
+   <div class="p15-2"><button class="p15-btn ghost" data-a="p15adRev" data-id="${a.id}" data-y="0">Remove</button><button class="p15-btn" data-a="p15adRev" data-id="${a.id}" data-y="1">Approve</button></div></div>`).join(''):`<div class="p15-g p15-note">${ic('tick2')} No ads waiting.</div>`))}
+Object.assign(P15V,{adcheck:adCheck15,biz:biz15v,services:svc15v,svcplan:svcPlan15,svcleads:svcLeads15,adspot:adSpot15});
+(function(){
+  const keep=['p15-vn','p15-va','p15-v0t','p15-v0p','p15-v1t','p15-v1p','p15-v2t','p15-v2p','p15-at','p15-ab','p15-au'];
+  const grab=()=>keep.forEach(id=>{const x=document.getElementById(id);if(x)P15.f[id.slice(4)]=x.value.trim()});
+  const _f=A.p15f;A.p15f=function(el){grab();return _f(el)};
+  const err=(m,map)=>{m=String(m.message||m);for(const k in map)if(m.includes(k))return map[k];return m.includes('not open')?'Payments open soon.':'Something went wrong. Please try again.'};
+  const run=async(busy,fn,ok,map)=>{if(P15.busy)return;grab();P15.busy=busy;render();try{await fn();if(ok)toast(ok,'tick2')}catch(e){toast(err(e,map||{}),'info')}P15.busy='';render()};
+  const _rm=renderMe;renderMe=function(){if(P15on()&&!P15.v)return me15();return _rm()};
+  const _h=home15;home15=function(){const h=_h();const a=adBox15();return a?h.replace(/<\/div><\/div>$/,a+'</div></div>'):h};
+  Object.assign(A,{
+    p15svcAsk(el){run('va',async()=>{await API.rpc('connect15',{bid:el.dataset.id,nt:'Event booking request'})},'Sent. The business will contact you by email.',{'plus needed':'Booking opens for hosts and Plus members.'})},
+    p15svcBuy(){const f=P15.f;grab();const me=S.me||{};if((f.vn||'').length<2){toast('Please write your business name.','info');return}
+      const items=[0,1,2].map(i=>({title:f['v'+i+'t']||'',detail:'',price:Math.round(Number(f['v'+i+'p']||0)*100),currency:cur15()})).filter(x=>x.title);
+      if(!items.length){toast('Please add at least one service with its price.','info');return}
+      if(items.some(x=>!(x.price>0))){toast('Please write a price for every service.','info');return}
+      run('svc',async()=>{const id=await API.rpc('biz_upsert15',{k:'services',nm:f.vn,cty:me.city||'',ctry:me.country||'',lg:[],ab:f.va||'',cat:f.vc||'Catering',lic:''});
+        await API.rpc('service_set15',{bid:id,items});await API.rpc('buy_biz_plan15',{bid:id,prod:'services_plan'});await load15();P15.ex={}},'Your plan is active. Hosts can find you in Event Services.')},
+    p15adBuy(){const f=P15.f;grab();const me=S.me||{};if((f.at||'').length<4){toast('Please write a headline (at least 4 letters).','info');return}if(!/^https:\/\/[^\s.]+\.[^\s]+$/i.test(f.au||'')){toast('Please paste a full link starting with https://','info');return}
+      run('ad',async()=>{await API.rpc('ad_buy15',{nm:me.name||'Advertiser',t:f.at,bd:f.ab||'',u:f.au,festival:f.afs==='1'});P15.f={};P15.ads=undefined;await load15()},'Received. We check your ad, then it goes live in your city.',{'details':'Please check the headline and link.'})},
+    p15adRev(el){run('ar',async()=>{await API.rpc('ad_review15',{aid:el.dataset.id,ok:el.dataset.y==='1'});P15.ac=undefined},el.dataset.y==='1'?'Approved. It is live now.':'Removed.')},
+    p15adTap(el){const a=P15.ad;if(!a)return;try{API.rpc('ad_tap15',{aid:a.id})}catch(e){}try{window.open(a.url,'_blank','noopener')}catch(e){}}
+  });
+  const _bk=A.p15back;A.p15back=function(el){const up={svcplan:'biz',svcleads:'svcplan',adspot:'biz',services:'biz',adcheck:null};if(up[P15.v]){P15.v=up[P15.v];render();return}return _bk(el)};
+  const _o=A.p15open;A.p15open=function(el){const v=el.dataset.v;if(v==='services')P15.ex={};if(v==='adspot')P15.ads=undefined;if(v==='svcleads')P15.vl=undefined;if(v==='adcheck')P15.ac=undefined;return _o(el)};
 })();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */

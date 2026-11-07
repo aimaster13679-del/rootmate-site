@@ -1907,3 +1907,52 @@ html.p15on #app>.scroll{background:radial-gradient(220px 220px at 85% 8%,rgba(19
 .p15-t,.p15-row,.p15-plan,.p15-pr,.p15-chip,.p15-btn{transition:transform .15s ease}
 .p15-t:active,.p15-row:active,.p15-plan:active,.p15-pr:active,.p15-chip:active,.p15-btn:active{transform:scale(.97)}
 .p15-t .p15-b{transition:transform .25s ease}.p15-t:active .p15-b{transform:rotate(-8deg) scale(1.08)}
+/* 8 Nov 00:07 his rule: colours stay as they were; depth comes from the live globe and pictures, not colour blobs */
+html.p15on #app::before,html.p15on #app::after{display:none}
+html.p15on #app>.scroll{background:none}
+.p15-globe{position:relative;height:300px;margin:0 -16px -96px;border-radius:0;overflow:hidden;z-index:0}
+.p15-globe .rl-fb{position:absolute;inset:0}
+.p15-over{position:relative;z-index:1}
+.p15-art{display:block;width:100%;height:84px;border-radius:16px;overflow:hidden;margin-bottom:10px}
+.p15-art svg{display:block;width:100%;height:100%}
+.p15-t.row .p15-art{width:84px;height:64px;flex:0 0 84px;margin:0}
+.p15-row .p15-art{width:64px;height:52px;flex:0 0 64px;margin:0;border-radius:12px}
+/* 8 Nov 00:07 his ask: HD pictures on every door and tile (seeing is faster than reading). No faces. */
+.p15-t{position:relative;overflow:hidden;padding:0!important;justify-content:flex-start}
+.p15-t>.p15-ph{display:block;width:100%;height:96px;overflow:hidden;flex:0 0 auto}
+.p15-t>.p15-ph img{display:block;width:100%;height:100%;object-fit:cover}
+.p15-t.span2>.p15-ph{height:120px}
+.p15-t>.p15-b{margin:-22px 0 0 12px;position:relative;z-index:1;box-shadow:0 6px 16px -6px rgba(0,0,0,.45);border:2px solid var(--p-gl2);background-color:var(--p-gl2)}
+.p15-t>b{margin:8px 12px 0}.p15-t>small{margin:3px 12px 12px}
+.p15-t.row{flex-direction:column;align-items:flex-start}
+.p15-t.row>.tx{padding:4px 12px 12px;width:100%;box-sizing:border-box}.p15-t.row>.ic:last-child{position:absolute;right:12px;bottom:14px}
+.p15-t.row>.p15-b.big{width:46px;height:46px}
+.p15-earth{position:relative;height:320px;margin:0 0 12px;border-radius:24px;overflow:hidden;border:1px solid var(--p-edge);box-shadow:var(--p-sh)}
+.p15-earth .rl-slot{position:absolute;inset:0}
+.p15-earth-t{position:absolute;left:10px;right:10px;bottom:10px;display:flex;align-items:center;gap:7px;padding:8px 12px;border-radius:14px;font-size:12.5px;font-weight:700;background:var(--p-gl2);border:1px solid var(--p-edge);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.p15-earth-t .ic{width:16px;height:16px}
+
+.p15-earth-h{position:absolute;left:10px;top:10px;display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;font-size:12px;font-weight:800;background:var(--p-gl2);border:1px solid var(--p-edge);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);pointer-events:none;z-index:2}
+.p15-earth-h .ic{width:15px;height:15px}
+.p15-earth-t{pointer-events:none;z-index:2}
+.rl-mk.p15f{padding:0;width:26px;height:26px;justify-content:center;gap:0;border-radius:50%;transition:width .25s,padding .25s,border-radius .25s,transform .2s}
+.rl-mk.p15f .p15fg{font-size:15px;line-height:1}
+.rl-mk.p15f b{display:none;font-weight:800}
+.rl-mk.p15f:active{transform:scale(.9)}
+.rl-mk.p15f.open{width:auto;height:32px;padding:0 12px 0 7px;gap:6px;border-radius:999px;z-index:3;outline:3px solid rgba(14,159,110,.3)}
+.rl-mk.p15f.open b{display:inline}
+@media (prefers-reduced-motion:no-preference){.rl-mk.p15f{animation:p15bob 3.2s ease-in-out infinite}.rl-mk.p15f:nth-child(odd){animation-delay:-1.6s}}
+@keyframes p15bob{50%{translate:0 -3px}}
+/* Plan 15 phase 5: business hub, photo hero, Sponsored box, Me */
+.p15-t.row>.p15-ph+.tx{padding-top:10px;padding-right:40px}
+.p15-t.row>.p15-pill{position:absolute;top:10px;right:10px;z-index:1;background:var(--p-gl2);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.p15-hero.ph{padding:0;overflow:hidden;text-align:left}
+.p15-hero.ph>.p15-ph{display:block;height:150px}.p15-hero.ph>.p15-ph img{display:block;width:100%;height:100%;object-fit:cover}
+.p15-hero.ph>small{display:block;padding:12px 14px 14px;font-size:13.5px;line-height:1.45;color:var(--p-ink,inherit)}
+.p15-ad{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:100%;text-align:left;padding:14px 46px 14px 14px;margin-top:12px;cursor:pointer}
+.p15-ad b{font-size:15px;font-weight:800;line-height:1.3}.p15-ad small{font-size:13px;color:var(--p-mut);line-height:1.4}
+.p15-ad .p15-pill{font-size:11px}.p15-ad-go{position:absolute;right:14px;top:50%;transform:translateY(-50%)}
+.p15-mehd{display:flex;align-items:center;gap:12px}
+.p15-mehd .tx{display:flex;flex-direction:column;gap:3px;min-width:0}.p15-mehd .tx b{font-size:17px;font-weight:800;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.p15-mehd .tx small{color:var(--p-mut);font-size:13px}
+.p15-av{width:52px;height:52px;flex:0 0 52px;border-radius:50%;display:grid;place-items:center;font-size:21px;font-weight:800;color:#0B5D3B;background:linear-gradient(150deg,#D8F8EA,#A3E8C9);border:2px solid var(--p-gl2)}
