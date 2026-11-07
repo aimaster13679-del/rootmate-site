@@ -1,35 +1,78 @@
-<h1>Family biodata</h1>
-<p class="lede" id="bio-lede">A private profile card shared by a NeuMarry member with their family.</p>
-<div id="bio" class="bio-card" aria-live="polite"><p>Loading…</p></div>
-<p class="note">This link was made by the member and works for 7 days. It never shows phone numbers, email, address, ID documents or photos. To talk, create a free profile on NeuMarry and send an interest.</p>
+<div class="fv" id="fv">
+<p class="fv-pill"><i></i>Family Room · private link</p>
+<h1 id="fv-h">Family Room</h1>
+<p class="lede" id="bio-lede">A private profile shared by a NeuMarry member with their family. Read, then tell them what you think.</p>
+<div id="bio" class="fv-me" aria-live="polite"><p>Loading…</p></div>
+<div class="fv-who" id="fv-who" hidden><p class="fv-k">First, who are you?</p><div class="fv-chips" role="group" aria-label="Who are you">
+ <button type="button" data-w="Mom">Mom</button><button type="button" data-w="Dad">Dad</button><button type="button" data-w="Sister">Sister</button><button type="button" data-w="Brother">Brother</button><button type="button" data-w="Grandparent">Grandparent</button><button type="button" data-w="Aunt / Uncle">Aunt / Uncle</button><button type="button" data-w="Friend">Friend</button></div></div>
+<p class="fv-note">This link was made by the member and works for 7 days. It never shows phone numbers, email, address, ID documents or photos. To talk, create a free profile on NeuMarry and send an interest.</p>
 <p><a class="btn" href="app/">Create your free profile</a></p>
-<style>.bio-card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px;margin:16px 0;box-shadow:0 14px 30px -18px rgba(90,30,54,.45)}
-.bio-card h2{font-family:Lora,Georgia,serif;font-weight:500;font-size:26px;margin:0 0 4px}.bio-card .seal{display:inline-block;background:#E4F3EB;color:#2F7A5B;font-weight:800;font-size:13px;padding:5px 10px;border-radius:999px;margin-bottom:12px}
-.bio-card dl{display:grid;grid-template-columns:120px 1fr;gap:8px 12px;margin:0}.bio-card dt{color:var(--muted);font-weight:700}.bio-card dd{margin:0;font-weight:700}.note{color:var(--muted);font-size:14px}</style>
-<script>(function(){var t=new URLSearchParams(location.search).get('t')||'',box=document.getElementById('bio');
-function esc(x){return String(x==null?'':x).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
-if(!t){box.innerHTML='<p>This link is not complete. Ask for a new one.</p>';return}
-fetch('https://ndxlguuywifovqdzdvtq.supabase.co/rest/v1/rpc/bio_card',{method:'POST',headers:{'apikey':'sb_publishable_oBR1e77Tx1mNysmxcZ2cgw_qDOpS4gt','Content-Type':'application/json'},body:JSON.stringify({t:t})})
-.then(function(r){return r.json()}).then(function(d){if(!d||d.error){box.innerHTML='<p>This link has ended or was stopped by the member. Ask them for a new one.</p>';return}
-var h=d.height_cm?d.height_cm+' cm':'',rows=[['Roots',d.roots],['Lives in',d.lives],['Work',d.job],['Education',d.education],['Height',h],['Faith',d.religion],['Diet',d.diet],['Marital status',d.marital],['Profile made by',d.created_by],['Looking for',[d.looking_age?'age '+d.looking_age:'',d.looking_roots?'roots in '+d.looking_roots:''].filter(Boolean).join(', ')]];
-box.innerHTML='<h2>'+esc(d.name)+', '+esc(d.age)+'</h2><span class="seal">Verified by NeuMarry: '+esc(d.checks)+' of 5 checks</span><dl>'+rows.filter(function(r){return r[1]}).map(function(r){return '<dt>'+esc(r[0])+'</dt><dd>'+esc(r[1])+'</dd>'}).join('')+'</dl>';
-box.innerHTML+='<div class="fr"><p class="fr-h">What do you think? Your answer goes only to '+esc(d.name)+'.</p><input id="fr-w" maxlength="30" placeholder="Who are you? (e.g. Mom)" aria-label="Who are you"><div class="fr-b"><button data-r="good">👍 Looks good</button><button data-r="talk">🤔 Let’s talk</button></div><p id="fr-m" class="fr-m" aria-live="polite"></p></div>';
-box.querySelector('.fr-b').addEventListener('click',function(e){var b=e.target.closest('button[data-r]');if(!b)return;var m=document.getElementById('fr-m');
- fetch('https://ndxlguuywifovqdzdvtq.supabase.co/rest/v1/rpc/bio_react',{method:'POST',headers:{'apikey':'sb_publishable_oBR1e77Tx1mNysmxcZ2cgw_qDOpS4gt','Content-Type':'application/json'},body:JSON.stringify({t:t,r:b.dataset.r,w:document.getElementById('fr-w').value})})
- .then(function(r){return r.json()}).then(function(x){m.textContent=x&&x.ok?'Thank you. '+d.name+' will see your answer in the app.':'Could not send. The link may have ended.'}).catch(function(){m.textContent='Could not send. Check your connection.'})});
-}).catch(function(){box.innerHTML='<p>Could not load. Check your connection and open the link again.</p>'});
-/* Parent view (1 Nov): people the member shared with family */
+</div>
+<style>
+.fv{--g:rgba(255,255,255,.66);--e:rgba(255,255,255,.96);--mt:#0B4D36;--mu:#56655D;max-width:640px}
+html[data-theme=dark] .fv{--g:rgba(255,255,255,.06);--e:rgba(255,255,255,.13);--mt:#AEF3D4;--mu:#9DAEA5}
+.fv-pill{display:inline-flex;gap:8px;align-items:center;font-size:13px;font-weight:800;padding:8px 13px;border-radius:999px;background:var(--g);border:1px solid var(--e);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
+.fv-pill i{width:8px;height:8px;border-radius:50%;background:#0E9F6E;animation:fvp 2.2s infinite}@keyframes fvp{0%{box-shadow:0 0 0 0 rgba(95,211,162,.7)}70%{box-shadow:0 0 0 9px rgba(95,211,162,0)}100%{box-shadow:0 0 0 0 rgba(95,211,162,0)}}
+.fv h1{text-wrap:balance;margin:12px 0 6px}
+.fv-card,.fv-me>.fv-c{position:relative;border-radius:28px;padding:18px;margin:16px 0;background:var(--g);border:1px solid var(--e);-webkit-backdrop-filter:blur(22px) saturate(150%);backdrop-filter:blur(22px) saturate(150%);box-shadow:0 26px 50px -32px rgba(20,70,50,.5)}
+.fv-top{display:flex;gap:14px;align-items:center}.fv-sg{width:86px;height:86px;flex:none}.fv-sg svg{width:100%;height:100%;overflow:visible}
+.fv-top h2{font-size:26px;margin:0;line-height:1.15}.fv-route{display:inline-flex;gap:6px;align-items:center;margin-top:6px;font-weight:800;font-size:14px;color:var(--mt)}
+.fv-seal{display:inline-block;margin-top:8px;white-space:nowrap;background:linear-gradient(150deg,#DDF8EC,#A3E8C9);color:#0B4D36;font-weight:800;font-size:12.5px;padding:5px 10px;border-radius:999px}
+.fv-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.fv-t{border-radius:18px;padding:12px;background:var(--g);border:1px solid var(--e)}.fv-t.w{grid-column:span 2}
+.fv-t span{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--mu)}.fv-t b{display:block;font-size:16px;margin-top:4px;line-height:1.3}
+.fv-t.y{background:linear-gradient(155deg,rgba(255,248,212,.9),rgba(255,226,127,.4))}.fv-t.m{background:linear-gradient(155deg,rgba(221,248,236,.95),rgba(163,232,201,.5))}
+html[data-theme=dark] .fv-t.y{background:linear-gradient(155deg,rgba(255,226,128,.18),rgba(255,226,128,.04))}html[data-theme=dark] .fv-t.m{background:linear-gradient(155deg,rgba(120,228,186,.2),rgba(120,228,186,.05))}
+.fv-k{font-weight:800;margin:0 0 8px}
+.fv-chips{display:flex;flex-wrap:wrap;gap:8px}.fv-chips button{border:1px solid var(--e);background:var(--g);border-radius:999px;padding:11px 15px;font:inherit;font-weight:800;font-size:15px;color:inherit;cursor:pointer}
+.fv-chips button.on{background:linear-gradient(150deg,#D8F8EA,#9FE6C6);color:#0B4D36;border-color:#fff}
+.fv-who{margin:6px 0 10px}
+.fv-b{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.fv-b button{border:0;border-radius:18px;padding:16px 8px;font:inherit;font-size:17px;font-weight:900;cursor:pointer;background:linear-gradient(150deg,#D8F8EA,#9FE6C6);color:#0B4D36;box-shadow:0 14px 24px -16px rgba(14,91,67,.6)}
+.fv-b button[data-r=talk]{background:linear-gradient(150deg,#FFF6CC,#FFE07A);color:#5A4600;box-shadow:0 14px 24px -16px rgba(160,120,0,.5)}
+.fv-b button.on{outline:3px solid currentColor;outline-offset:2px}
+.fv-m{color:#0E7A55;font-weight:800;margin:10px 0 0;min-height:1.4em}html[data-theme=dark] .fv-m{color:#AEF3D4}
+.fv-sh{margin:26px 0 4px;font-size:24px;text-wrap:balance}.fv-ss{color:var(--mu);margin:0 0 6px}
+.fv-p .fv-top h2{font-size:22px}.fv-p p.fv-line{margin:10px 0 0;font-weight:700}
+.fv .btn{background:linear-gradient(150deg,#D8F8EA,#9FE6C6)!important;color:#0B4D36!important;border:0!important;box-shadow:0 14px 26px -16px rgba(14,91,67,.6)!important;font-weight:800}
+.fv-note{color:var(--mu);font-size:14px;margin-top:18px}
+.fv-r{transform-box:view-box;transform-origin:50% 50%;animation:fvs linear infinite}@keyframes fvs{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.fv-r,.fv-pill i{animation:none}}
+</style>
+<script>(function(){var t=new URLSearchParams(location.search).get('t')||'',box=document.getElementById('bio'),who='';
 var API='https://ndxlguuywifovqdzdvtq.supabase.co/rest/v1/rpc/',H={'apikey':'sb_publishable_oBR1e77Tx1mNysmxcZ2cgw_qDOpS4gt','Content-Type':'application/json'};
-fetch(API+'bio_shared',{method:'POST',headers:H,body:JSON.stringify({t:t})}).then(function(r){return r.json()}).then(function(L){if(!L||!L.length)return;
- var w=document.createElement('section');w.className='pv';w.innerHTML='<h2 class="pv-h">'+L.length+' '+(L.length===1?'person':'people')+' shared with you</h2><p class="pv-s">Verified members from their matches. First name, age, work, roots and city only. Tell them what you think.</p>'+
- L.map(function(p){return '<div class="pv-c" data-id="'+esc(p.id)+'"><div class="pv-t"><b>'+esc(p.name)+', '+esc(p.age)+'</b><span class="seal">Verified</span></div><p>'+esc([p.job,p.roots?'Roots: '+p.roots:'',p.lives?'Lives in '+p.lives:''].filter(Boolean).join(' · '))+'</p>'+
-  '<div class="pv-b"><button data-r="good"'+(p.mine==='good'?' class="on"':'')+'>👍 Looks good</button><button data-r="talk"'+(p.mine==='talk'?' class="on"':'')+'>💬 Let’s talk</button></div></div>'}).join('');
- box.parentNode.insertBefore(w,box.nextSibling);
- w.addEventListener('click',function(e){var b=e.target.closest('button[data-r]');if(!b)return;var c=b.closest('.pv-c'),who=(document.getElementById('fr-w')||{}).value||'';
-  fetch(API+'bio_react_on',{method:'POST',headers:H,body:JSON.stringify({t:t,target:c.dataset.id,r:b.dataset.r,w:who})}).then(function(r){return r.json()}).then(function(x){if(x&&x.ok){[].forEach.call(c.querySelectorAll('button'),function(z){z.classList.toggle('on',z===b)})}})});
-}).catch(function(){})})();</script>
-<style>.pv{margin:8px 0 16px}.pv-h{font-family:Lora,Georgia,serif;font-weight:500;font-size:26px;margin:18px 0 4px}.pv-s{color:var(--muted);margin:0 0 12px}
-.pv-c{background:#fff;border:1px solid var(--line);border-radius:22px;padding:16px;margin-bottom:12px;box-shadow:0 14px 30px -20px rgba(90,30,54,.45)}.pv-t{display:flex;justify-content:space-between;align-items:center;gap:8px}.pv-t b{font-family:Lora,Georgia,serif;font-size:22px;font-weight:600}
-.pv-c p{margin:6px 0 12px;font-size:17px;font-weight:700;color:#5B4350}.pv-b{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pv-b button{border:0;border-radius:16px;padding:15px 8px;font:inherit;font-size:17px;font-weight:900;background:#E9F5EE;color:#24845A}
-.pv-b button[data-r=talk]{background:#FCF1DE;color:#7A5418}.pv .seal{background:#E4F3EB;color:#2F7A5B;font-weight:800;font-size:13px;padding:5px 10px;border-radius:999px}.pv-b button.on{outline:3px solid currentColor}</style>
-<style>.fr{margin-top:18px;border-top:1px solid #F3E0E1;padding-top:14px}.fr-h{font-weight:800;margin:0 0 8px}.fr input{width:100%;box-sizing:border-box;border:1.5px solid #F3E0E1;border-radius:12px;padding:11px 12px;font:inherit;margin-bottom:10px}.fr-b{display:flex;gap:10px}.fr-b button{flex:1;border:1.5px solid #F3E0E1;background:#fff;border-radius:14px;padding:12px;font:inherit;font-weight:800;cursor:pointer}.fr-b button:hover{border-color:#E8436B;background:#FFE7EC}.fr-m{color:#1E6B4A;font-weight:700;margin-top:8px}</style>
+function esc(x){return String(x==null?'':x).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+/* Roots Signature: a pattern made from the person (never a face), same as in the app */
+function sig(seed){var h=2166136261,s=String(seed);for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}var a=h>>>0;
+ function R(){a|=0;a=a+0x6D2B79F5|0;var q=Math.imul(a^a>>>15,1|a);q=q+Math.imul(q^q>>>7,61|q)^q;return((q^q>>>14)>>>0)/4294967296}
+ var d=document.documentElement.dataset.theme==='dark',id='fs'+(h%1e7),pal=d?[['#7EE7BC','#FFE27A'],['#B8F08A','#5FD3A2'],['#FFE27A','#9FE6C6'],['#5FD3A2','#D4F2B6']]:[['#0E9F6E','#E8B800'],['#5DBB2E','#0E9F6E'],['#E8B800','#3CC28C'],['#0E7A55','#9BD86A']],defs='',lay='';
+ for(var L=0;L<4;L++){var k=3+Math.floor(R()*6),ph=R()*6.28,A=26+L*7+R()*6,B=10+R()*14,C=R()*.35,p=pal[L],path='';
+  for(var j=0;j<=200;j++){var u=j/200*Math.PI*2,r=A+B*Math.cos(k*u+ph)+C*B*Math.cos((k*2+1)*u);path+=(j?'L':'M')+(100+r*Math.cos(u)).toFixed(1)+' '+(100+r*Math.sin(u)).toFixed(1)}
+  defs+='<linearGradient id="'+id+'g'+L+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+p[0]+'"/><stop offset="1" stop-color="'+p[1]+'"/></linearGradient>';
+  lay+='<g class="fv-r" style="animation-duration:'+(40+L*18)+'s;animation-direction:'+(L%2?'reverse':'normal')+'"><path d="'+path+'Z" fill="url(#'+id+'g'+L+')" fill-opacity="'+(d?.1:.13)+'" stroke="url(#'+id+'g'+L+')" stroke-width="'+(L===3?1.6:1.1)+'"/></g>'}
+ return '<svg viewBox="0 0 200 200" aria-hidden="true"><defs>'+defs+'</defs>'+lay+'</svg>'}
+function first(n){return String(n||'').split(' ')[0]}
+if(!t){box.innerHTML='<div class="fv-c"><p>This link is not complete. Ask for a new one.</p></div>';return}
+fetch(API+'bio_card',{method:'POST',headers:H,body:JSON.stringify({t:t})}).then(function(r){return r.json()}).then(function(d){
+ if(!d||d.error){box.innerHTML='<div class="fv-c"><p>This link has ended or was stopped by the member. Ask them for a new one.</p></div>';return}
+ document.getElementById('fv-h').textContent=first(d.name)+'’s Family Room';
+ var h=d.height_cm?d.height_cm+' cm':'',look=[d.looking_age?'age '+d.looking_age:'',d.looking_roots?'roots in '+d.looking_roots:''].filter(Boolean).join(', ');
+ var T=[['Roots',d.roots,'y'],['Lives in',d.lives,'m'],['Work',d.job,''],['Education',d.education,''],['Height',h,''],['Faith',d.religion,''],['Diet',d.diet,''],['Marital status',d.marital,''],['Profile made by',d.created_by,''],['Looking for',look,'m w']].filter(function(r){return r[1]});
+ box.innerHTML='<div class="fv-c"><div class="fv-top"><span class="fv-sg" data-seed="'+esc(d.name)+'">'+sig(d.name)+'</span><div><h2>'+esc(d.name)+', '+esc(d.age)+'</h2>'+(d.roots&&d.lives?'<span class="fv-route">'+esc(d.roots)+' → '+esc(d.lives)+'</span><br>':'')+'<span class="fv-seal">Verified by NeuMarry: '+esc(d.checks)+' of 5 checks</span></div></div>'+
+  '<div class="fv-grid">'+T.map(function(r){return '<div class="fv-t '+r[2]+'"><span>'+esc(r[0])+'</span><b>'+esc(r[1])+'</b></div>'}).join('')+'</div>'+
+  '<p class="fv-k" style="margin-top:16px">What do you think? Your answer goes only to '+esc(first(d.name))+'.</p><div class="fv-b" id="fv-me"><button data-r="good">👍 Looks good</button><button data-r="talk">💬 Let’s talk</button></div><p id="fr-m" class="fv-m" aria-live="polite"></p></div>';
+ document.getElementById('fv-who').hidden=false;box.parentNode.insertBefore(document.getElementById('fv-who'),box);
+ document.getElementById('fv-me').addEventListener('click',function(e){var b=e.target.closest('button[data-r]');if(!b)return;var m=document.getElementById('fr-m');
+  fetch(API+'bio_react',{method:'POST',headers:H,body:JSON.stringify({t:t,r:b.dataset.r,w:who})}).then(function(r){return r.json()}).then(function(x){if(x&&x.ok){[].forEach.call(b.parentNode.children,function(z){z.classList.toggle('on',z===b)});m.textContent='Thank you. '+first(d.name)+' will see your answer in the app.'}else m.textContent='Could not send. The link may have ended.'}).catch(function(){m.textContent='Could not send. Check your connection.'})});
+ /* people the member shared with family */
+ fetch(API+'bio_shared',{method:'POST',headers:H,body:JSON.stringify({t:t})}).then(function(r){return r.json()}).then(function(L){if(!L||!L.length)return;
+  var w=document.createElement('section');w.innerHTML='<h2 class="fv-sh">'+L.length+' '+(L.length===1?'person':'people')+' '+esc(first(d.name))+' shared with you</h2><p class="fv-ss">Verified members from their matches. First name, age, work, roots and city only, never photos or contacts.</p>'+
+   L.map(function(p){return '<div class="fv-card fv-p" data-id="'+esc(p.id)+'"><div class="fv-top"><span class="fv-sg" style="width:70px;height:70px" data-seed="'+esc(p.id)+'">'+sig(p.id)+'</span><div><h2>'+esc(p.name)+', '+esc(p.age)+'</h2>'+(p.roots&&p.lives?'<span class="fv-route">'+esc(p.roots)+' → '+esc(p.lives)+'</span><br>':'')+'<span class="fv-seal">Verified</span></div></div>'+
+    (p.job?'<p class="fv-line">'+esc(p.job)+'</p>':'')+'<div class="fv-b"><button data-r="good"'+(p.mine==='good'?' class="on"':'')+'>👍 Looks good</button><button data-r="talk"'+(p.mine==='talk'?' class="on"':'')+'>💬 Let’s talk</button></div></div>'}).join('');
+  box.parentNode.insertBefore(w,box.nextSibling);
+  w.addEventListener('click',function(e){var b=e.target.closest('button[data-r]');if(!b)return;var c=b.closest('.fv-p');
+   fetch(API+'bio_react_on',{method:'POST',headers:H,body:JSON.stringify({t:t,target:c.dataset.id,r:b.dataset.r,w:who})}).then(function(r){return r.json()}).then(function(x){if(x&&x.ok){[].forEach.call(c.querySelectorAll('button'),function(z){z.classList.toggle('on',z===b)})}})});
+ }).catch(function(){});
+}).catch(function(){box.innerHTML='<div class="fv-c"><p>Could not load. Check your connection and open the link again.</p></div>'});
+document.getElementById('fv-who').addEventListener('click',function(e){var b=e.target.closest('button[data-w]');if(!b)return;who=b.dataset.w;[].forEach.call(this.querySelectorAll('button'),function(z){z.classList.toggle('on',z===b)})});
+})();</script>
