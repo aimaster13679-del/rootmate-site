@@ -1860,3 +1860,10 @@ html:not(.gl-lt) .p15-btn{background:linear-gradient(140deg,rgba(120,228,186,.32
 .p15-ticket{padding:18px;text-align:center;margin-bottom:12px}.p15-qr{width:200px;height:200px;margin:14px auto 6px;padding:10px;border-radius:20px;background:#fff}.p15-qr svg{width:100%;height:100%}
 .p15-btn.ghost{background:var(--p-gl)!important;color:var(--p-ink)!important;border:1px solid var(--p-edge)!important;height:46px;font-size:14px}
 .p15 .p15-row+.p15-row{margin-top:9px}
+/* Plan 15 background (his 7 Nov 23:54 'upar itni roshni nahi chahiye'): no glow at the top; the calm bento glass
+   backdrop of the approved mock: soft mint / lemon / fern light spread evenly, light and dark. */
+html.p15on body,html.p15on.c3.gl body,html.p15on.c3.gl.gl-lt body{background:#070A09}
+html.p15on.gl-lt body{background:#EEF5EF}
+html.p15on #app{background:radial-gradient(40% 30% at 12% 18%,rgba(120,228,186,.10),transparent 70%),radial-gradient(35% 28% at 92% 45%,rgba(255,226,128,.07),transparent 70%),radial-gradient(40% 30% at 30% 88%,rgba(190,235,150,.07),transparent 70%),#070A09}
+html.p15on.gl-lt #app{background:radial-gradient(40% 30% at 12% 18%,#DDF8EC,transparent 70%),radial-gradient(35% 28% at 92% 45%,#FFF8D4,transparent 70%),radial-gradient(40% 30% at 30% 88%,#EFFAE2,transparent 70%),#EEF5EF}
+html.p15on .navwrap{background:transparent}

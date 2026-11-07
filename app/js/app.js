@@ -3855,7 +3855,7 @@ const P15T={host:'Host Plans',biz:'For Business',rooms:'Find a Room',buddy:'Trav
     if(P15.v)return (P15V[P15.v]||(()=>soon15(P15T[P15.v]||'')))();
     return S.tab==='settle'?settle15():S.tab==='ev15'?events15():home15()};
   const _me=renderMe;renderMe=function(){if(P15on()&&P15.v){return (P15V[P15.v]||(()=>soon15(P15T[P15.v]||'')))()}return _me()};
-  const _ar=afterRenderEvents;afterRenderEvents=function(vk){_ar(vk);if(!P15on())return;const nav=document.querySelector('.navwrap .nav');if(!nav)return;
+  const _ar=afterRenderEvents;afterRenderEvents=function(vk){_ar(vk);document.documentElement.classList.toggle('p15on',P15on()&&S.screen==='app');if(!P15on())return;const nav=document.querySelector('.navwrap .nav');if(!nav)return;
     const cur=P15.v&&S.tab==='me'?'me':S.tab==='settle'||S.tab==='ev15'||S.tab==='me'?S.tab:'matches';
     nav.className='nav n4';nav.innerHTML=[['matches','Home','home2'],['settle','Settle In','key'],['ev15','Events','party'],['me','Me','user']].map(([k,l,i])=>
       `<button data-a="tab" data-k="${k}" class="${cur===k?'on':''}" aria-current="${cur===k?'page':'false'}">${ic(i)}<span>${l}</span></button>`).join('')};
