@@ -4321,6 +4321,13 @@ Object.assign(P15V,{adcheck:adCheck15,biz:biz15v,services:svc15v,svcplan:svcPlan
   const _up=A.a3up;if(_up)A.a3up=function(){if(A3.tab==='new'&&A3.p15k){A3.p15k=null;render();return}return _up.apply(this,arguments)};
 })();
 
+/* Every product page opens with its own HD photo (his ask 8 Nov 00:14: people understand by seeing). */
+(function(){
+  const VPH={'ev-meetups':'Friend Meetups','ev-watch':'Watch Parties','ev-festival':'Festivals','ev-trip':'Day Trips','ev-league':'Sports Leagues',rooms:'Find a Room',postroom:'Find a Room',buddy:'Travel Buddy for Parents',referral:'Job Referral',experts:'Trusted Experts',sale:'Moving-Out Sale',host:'Host Plans',lgplan:'League Organiser',expplan:'Expert or Agent'};
+  Object.keys(VPH).forEach(v=>{const f=P15V[v];if(typeof f!=='function')return;P15V[v]=function(){const h=f.apply(this,arguments);const i=h.indexOf('<div class="p15-top">');if(i<0||h.includes('p15-hero ph'))return h;
+    const j=h.indexOf('</h1>',i);const k=j<0?-1:h.indexOf('</div>',j);if(k<0)return h;return h.slice(0,k+6)+`<div class="p15-banner">${ph15(VPH[v])}</div>`+h.slice(k+6)}});
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 boot();
 })();
