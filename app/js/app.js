@@ -3930,7 +3930,7 @@ function hostPlans15(){const b=hostBiz15(),f=P15.f,me=S.me||{};
   <div class="p15-g p15-note">${ic('tick2')} Tickets, QR entry, refunds and payouts done for you · guests' phone numbers stay private</div>
   <button class="p15-btn" data-a="p15hostBuy"${P15.busy==='host'?' disabled':''}>${P15.busy==='host'?'Starting…':planOn15(b)?'Renew for one more month':'Start hosting'}</button>${P15.d&&P15.d.payTest?'<p class="p15-ex">Test mode: no real money is taken.</p>':''}
   ${planOn15(b)?`<button class="p15-g p15-row" data-a="p15open" data-v="hostboard"><span class="p15-b mint">${ic('chart')}</span><span class="tx"><b>Host Dashboard</b><small>Your events, seats and money</small></span>${ic('chev2')}</button>`:''}`)}
-function days15(){const out=[];for(let i=1;i<=21;i++){const d=new Date(Date.now()+i*864e5);out.push([d.toISOString().slice(0,10),d.toLocaleDateString(RM_I18N.locale,{weekday:'short',day:'numeric',month:'short'})])}return out}
+function days15(){const out=[];for(let i=1;i<=21;i++){const d=new Date(Date.now()+i*864e5);out.push([d.toLocaleDateString('en-CA'),d.toLocaleDateString(RM_I18N.locale,{weekday:'short',day:'numeric',month:'short'})])}return out}
 function newEv15(){const f=P15.f;f.kind=f.kind||'meetup';f.day=f.day||days15()[5][0];f.hr=f.hr||'19:00';f.seats=f.seats||'20';f.price=f.price||'15';f.who=f.who||'all';
   return p15wrap(p15top('New Event',true)+`<div class="p15-g p15-form">
   <label>What kind</label>${chips15('kind',[['meetup','Friend Meetup'],['watch','Watch Party'],['festival','Festival'],['trip','Day Trip']],f.kind)}
@@ -3985,6 +3985,61 @@ Object.assign(P15V,{host:hostPlans15,newev:newEv15,hostboard:board15,door:door15
     const up={newev:'hostboard',door:'hostboard',hostboard:'host'};if(up[P15.v]){P15.v=up[P15.v];render();return}return _back(el)};
 })();
 function confirm15(m){try{return window.confirm(m)}catch(e){return true}}
+
+/* ---------- Plan 15: Sports Leagues (team registration, points table, need a player, organiser) ---------- */
+P15.lg={};
+const lgBiz15=()=>((P15.d&&P15.d.biz)||[]).find(b=>b.kind==='league');
+function leagueDetail15(e){const L=P15.lg[e.id];if(L===undefined){API.rpc('league15',{eid:e.id}).then(r=>{P15.lg[e.id]=r||{teams:[]};render()}).catch(()=>{P15.lg[e.id]={teams:[]};render()});return p15wrap(p15top('Sports Leagues',true)+spinner('Loading'))}
+  const mine=L.teams.find(t=>t.mine),f=P15.f;
+  return p15wrap(p15top('Sports Leagues',true)+`<div class="p15-g p15-pad"><span class="p15-pill">${ic('ball2')} ${esc(e.sport||'League')}</span><h2>${esc(e.title)}</h2><small>Starts ${esc(evWhen(e))} · ${L.teams.length} of ${e.seats} teams · organiser ${esc(e.host)}</small></div>
+  <div class="p15-sec"><b>Points table</b></div>
+  ${L.teams.length?`<div class="p15-g">${L.teams.map((t,i)=>`<div class="p15-li"><b class="p15-rank">${i+1}</b><span class="tx"><b>${esc(t.name)}</b>${t.need?`<small class="p15-acc">Needs ${t.need} player${t.need>1?'s':''}${t.mine&&t.asks?` · ${t.asks} asked to join`:''}</small>`:''}</span>
+    ${L.own?`<span class="p15-pts"><button data-a="p15pts" data-id="${t.id}" data-p="${t.points-1}" aria-label="Minus">−</button><b>${t.points}</b><button data-a="p15pts" data-id="${t.id}" data-p="${t.points+1}" aria-label="Plus">+</button></span>`:
+      `<b>${t.points}</b>${t.need&&!t.mine?(t.asked?'<span class="p15-pill">Asked</span>':`<button class="p15-chip" data-a="p15ask" data-id="${t.id}">Ask to join</button>`):''}`}</div>`).join('')}</div>`:`<div class="p15-g p15-note">${ic('ball2')} No teams yet. Be the first to register.</div>`}
+  ${!mine&&!L.own&&e.left?`<div class="p15-g p15-form"><label>Your team name</label><input id="p15-tn" maxlength="40" placeholder="e.g. Toronto Lions CC" value="${esc(f.tn||'')}">
+    <label>Players you still need</label>${chips15('need',[['0','None'],['1','1'],['2','2'],['3','3'],['5','5']],f.need||'0')}</div>
+   <div class="p15-buy"><span><b>${money(e.price,e.currency)}</b><small>team fee for the season</small></span><button class="p15-btn" data-a="p15team" data-id="${e.id}"${P15.busy==='team'?' disabled':''}>${P15.busy==='team'?'Registering…':'Register team'}</button></div>
+   ${P15.d&&P15.d.payTest?'<p class="p15-ex">Test mode: no real money is taken.</p>':''}`:mine?`<div class="p15-g p15-note">${ic('tick2')} Your team <b>${esc(mine.name)}</b> is in this league.</div>`:''}`)}
+function newLeague15(){const f=P15.f;f.sport=f.sport||'Cricket';f.teams=f.teams||'12';f.fee=f.fee||'500';f.day=f.day||days15()[13][0];
+  return p15wrap(p15top('New League',true)+`<div class="p15-g p15-form">
+   <label>Sport</label>${chips15('sport',[['Cricket','Cricket'],['Football','Football'],['Volleyball','Volleyball'],['Basketball','Basketball'],['Kabaddi','Kabaddi'],['Badminton','Badminton']],f.sport)}
+   <label>League name</label><input id="p15-ln" maxlength="90" placeholder="e.g. GTA Weekend Cricket League" value="${esc(f.ln||'')}">
+   <label>Grounds</label><input id="p15-lv" maxlength="120" placeholder="e.g. Brampton grounds" value="${esc(f.lv||'')}">
+   <label>Number of teams</label>${chips15('teams',[['6','6'],['8','8'],['12','12'],['16','16'],['20','20']],f.teams)}
+   <label>Team fee for the season</label>${chips15('fee',[['200','200'],['500','500'],['800','800'],['1000','1,000'],['1500','1,500']],f.fee)}
+   <label>First match day</label>${chips15('day',days15().slice(6,20),f.day)}</div>
+   <p class="p15-ex">We keep 5% of each team fee. The rest is paid to you.</p>
+   <button class="p15-btn" data-a="p15lgCreate"${P15.busy==='lg'?' disabled':''}>${P15.busy==='lg'?'Saving…':'Publish league'}</button>`)}
+function lgPlan15(){const b=lgBiz15(),f=P15.f,me=S.me||{};
+  return p15wrap(p15top('Run a League',true)+`<p class="p15-sub">Teams register and pay the season fee in the app. Points table and "need a player" are done for you.</p>
+  ${b?`<div class="p15-g p15-note">${ic('tick2')} Organiser: <b>${esc(b.name)}</b>${planOn15(b)?' · plan active':''}</div>`:`<div class="p15-g p15-form"><label>Organiser name people will see</label><input id="p15-on" maxlength="60" placeholder="e.g. GTA Cricket Club" value="${esc(f.on||'')}"><small>City: ${esc(me.city||'')} ${esc(me.country||'')}</small></div>`}
+  <div class="p15-g p15-plan on"><span><b>League Organiser Plan</b><small>Leagues, teams, fees, points table</small></span><span class="p15-pr0"><b>${p15price('league_plan')}</b><small>/month</small></span></div>
+  ${planOn15(b)?`<button class="p15-btn" data-a="p15open" data-v="newleague">New league</button>`:`<button class="p15-btn" data-a="p15lgBuy"${P15.busy==='lgp'?' disabled':''}>${P15.busy==='lgp'?'Starting…':'Start plan'}</button>${P15.d&&P15.d.payTest?'<p class="p15-ex">Test mode: no real money is taken.</p>':''}`}`)}
+Object.assign(P15V,{lgplan:lgPlan15,newleague:newLeague15});
+(function(){
+  const _ed=evDetail15;evDetail15=function(id){const e=evFind(id);if(e&&e.kind==='league')return leagueDetail15(e);return _ed(id)};
+  const _el=evList15;evList15=function(v){let h=_el(v);if(v==='ev-league')h=h.replace(`data-v="host"><span class="p15-b fern">${ic('mega2')}</span><span class="tx"><b>Host your own</b><small>Host Plan from ${p15price('host_basic')} a month</small>`,`data-v="lgplan"><span class="p15-b fern">${ic('ball2')}</span><span class="tx"><b>Run a league</b><small>Organiser Plan ${p15price('league_plan')} a month</small>`);return h};
+  const _f=A.p15f;A.p15f=function(el){['p15-tn','p15-ln','p15-lv','p15-on'].forEach(id=>{const x=document.getElementById(id);if(x)P15.f[id.slice(4)]=x.value});return _f(el)};
+  Object.assign(A,{
+    async p15team(el){if(P15.busy)return;const x=document.getElementById('p15-tn');const nm=(x&&x.value||'').trim();if(nm.length<2){toast('Please write your team name.','info');return}
+      P15.busy='team';render();const id=el.dataset.id;
+      try{await API.rpc('team_join15',{eid:id,nm,need:Number(P15.f.need||0)});P15.lg[id]=undefined;P15.f={};toast('Your team is registered.','tick2')}
+      catch(x){const m=String(x.message||x);toast(m.includes('full')?'This league is full.':m.includes('already')?'You already have a team here.':m.includes('not open')?'Payments open soon.':'Could not register. Please try again.','info')}P15.busy='';render()},
+    async p15ask(el){try{await API.rpc('ask_team15',{tid:el.dataset.id});P15.lg={};toast('The captain can see you want to join.','tick2')}catch(x){toast('Could not send. Please try again.','info')}render()},
+    async p15pts(el){try{await API.rpc('team_points15',{tid:el.dataset.id,pts:Number(el.dataset.p)});P15.lg={}}catch(x){toast('Could not save points.','info')}render()},
+    async p15lgBuy(){if(P15.busy)return;const x=document.getElementById('p15-on');if(x)P15.f.on=x.value.trim();let b=lgBiz15();const me=S.me||{};
+      if(!b&&(P15.f.on||'').length<2){toast('Please write the organiser name.','info');return}P15.busy='lgp';render();
+      try{const id=b?b.id:await API.rpc('biz_upsert15',{k:'league',nm:P15.f.on,cty:me.city||'',ctry:me.country||'',lg:[],ab:'',cat:'',lic:''});await API.rpc('buy_biz_plan15',{bid:id,prod:'league_plan'});await load15();toast('Your organiser plan is active.','tick2')}
+      catch(e){toast(String(e.message||e).includes('not open')?'Payments open soon.':'Could not start the plan. Please try again.','info')}P15.busy='';render()},
+    async p15lgCreate(){if(P15.busy)return;const f=P15.f,b=lgBiz15();['ln','lv'].forEach(k=>{const x=document.getElementById('p15-'+k);if(x)f[k]=x.value.trim()});
+      if(!b||!planOn15(b)){P15.v='lgplan';render();return}if((f.ln||'').length<4){toast('Please write the league name.','info');return}if((f.lv||'').length<3){toast('Please write the grounds.','info');return}
+      const me=S.me||{};P15.busy='lg';render();
+      try{const id=await API.rpc('event_create15',{bid:b.id,k:'league',t:f.ln,cty:me.city||'',ctry:me.country||'',ven:f.lv,st:new Date(f.day+'T10:00:00').toISOString(),n:Number(f.teams),pc:Number(f.fee)*100,cur:(CMAP[me.country]&&CMAP[me.country][3])||'USD',nts:[],lg:[],wh:'all'});
+        await API.rpc('league_set_sport15',{eid:id,sp:f.sport});P15.f={};P15.ev={};P15.v='ev-league';toast('Your league is live.','tick2')}
+      catch(e){toast('Could not publish. Please try again.','info')}P15.busy='';render()}
+  });
+  const _bk=A.p15back;A.p15back=function(el){const up={newleague:'lgplan',lgplan:'ev-league'};if(up[P15.v]){P15.v=up[P15.v];render();return}return _bk(el)};
+})();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 boot();
