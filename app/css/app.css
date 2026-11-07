@@ -1958,3 +1958,29 @@ html.p15on #app>.scroll{background:none}
 .p15-av{width:52px;height:52px;flex:0 0 52px;border-radius:50%;display:grid;place-items:center;font-size:21px;font-weight:800;color:#0B5D3B;background:linear-gradient(150deg,#D8F8EA,#A3E8C9);border:2px solid var(--p-gl2)}
 .a3k.a3k-l b{font-size:19px;line-height:1.25;word-break:break-word}
 .a3v .a3btns .btn.ghost,html.gl-lt .a3v .a3btns .btn.ghost{color:#F4F1F8!important;border-color:rgba(255,255,255,.28)!important;background:rgba(255,255,255,.04)!important}
+/* ===== Plan 15 palette 2 (his rule 8 Nov 00:46): DARK bento = only glassy black + see-through white, no green.
+   LIGHT bento = pearl white glass with soft lilac / sky / blush glass accents (no black slabs, no green). ===== */
+.p15{--p-gl:rgba(255,255,255,.06);--p-gl2:rgba(30,30,34,.82);--p-edge:rgba(255,255,255,.13);--p-hair:rgba(255,255,255,.08);--p-ink:#F3F3F5;--p-mut:#A6A6AF;--p-acc:#FFFFFF;
+ --p-m1:rgba(255,255,255,.16);--p-m2:rgba(255,255,255,.05);--p-mt:#F6F6F8;--p-l1:rgba(255,255,255,.13);--p-l2:rgba(255,255,255,.04);--p-lt:#EDEDF1;--p-f1:rgba(255,255,255,.11);--p-f2:rgba(255,255,255,.03);--p-ft:#E6E6EB}
+html.gl-lt .p15{--p-gl:rgba(255,255,255,.66);--p-gl2:rgba(255,255,255,.9);--p-edge:rgba(255,255,255,.98);--p-hair:rgba(40,36,80,.08);--p-ink:#16152A;--p-mut:#5E5C74;--p-acc:#5B4FD6;
+ --p-m1:#EEEBFF;--p-m2:#D9D3FF;--p-mt:#3F35A6;--p-l1:#E7F2FF;--p-l2:#C9E0FF;--p-lt:#1D4C86;--p-f1:#FFEEF3;--p-f2:#FFD4E1;--p-ft:#97284F;--p-sh:0 18px 40px -26px rgba(60,50,140,.30)}
+html.p15on body,html.p15on.c3.gl body{background:#08080A}
+html.p15on #app{background:radial-gradient(45% 32% at 12% 16%,rgba(255,255,255,.05),transparent 70%),radial-gradient(40% 30% at 92% 50%,rgba(255,255,255,.035),transparent 70%),#08080A}
+html.p15on.gl-lt body,html.p15on.c3.gl.gl-lt body{background:#F3F2F8}
+html.p15on.gl-lt #app{background:radial-gradient(40% 30% at 12% 16%,#ECE9FF,transparent 70%),radial-gradient(38% 30% at 92% 46%,#E6F1FF,transparent 70%),radial-gradient(40% 30% at 30% 88%,#FFEFF4,transparent 70%),#F3F2F8}
+.p15-btn{background:linear-gradient(140deg,#EEEBFF,#D7D0FF)!important;color:#2F2690!important;border:1px solid rgba(255,255,255,.95)!important;box-shadow:0 12px 26px -14px rgba(91,79,214,.55)!important}
+html:not(.gl-lt) .p15-btn{background:linear-gradient(140deg,rgba(255,255,255,.2),rgba(255,255,255,.07))!important;color:#FFFFFF!important;border-color:rgba(255,255,255,.2)!important;box-shadow:0 12px 26px -16px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.18)!important}
+.p15-btn.ghost{background:var(--p-gl)!important;color:var(--p-ink)!important;border:1px solid var(--p-edge)!important;box-shadow:none!important}
+.p15-av{color:#3F35A6;background:linear-gradient(150deg,#EEEBFF,#D7D0FF)}
+html:not(.gl-lt) .p15-av{color:#fff;background:linear-gradient(150deg,rgba(255,255,255,.22),rgba(255,255,255,.06))}
+html.p15on.p15on.p15on.gl-lt .navwrap .nav button.on,html.p15on.p15on.gl-lt.c3.gl .navwrap .nav button.on{background:linear-gradient(140deg,#EEEBFF,#DCD6FF)!important;color:#3F35A6!important}
+html.p15on.p15on.p15on:not(.gl-lt) .navwrap .nav button.on,html.p15on.p15on.c3.gl:not(.gl-lt) .navwrap .nav button.on{background:rgba(255,255,255,.14)!important;color:#fff!important}
+html.p15on:not(.gl-lt) .navwrap .nav{background:rgba(22,22,26,.78)!important;border-color:rgba(255,255,255,.12)!important}
+.rl-mk.p15f.open{outline-color:rgba(91,79,214,.3)}
+html:not(.gl-lt) .rl-mk.p15f.open{outline-color:rgba(255,255,255,.28)}
+html:not(.gl-lt) .rl-mk.p15f{background:rgba(30,30,34,.82)}
+.kick i{background:#5B4FD6}
+html.p15on .toast{background:rgba(255,255,255,.92);color:#16152A;border:1px solid #fff;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:0 16px 36px -18px rgba(60,50,140,.45)}
+html.p15on .toast .ic{color:#5B4FD6}
+html.p15on:not(.gl-lt) .toast{background:rgba(34,34,40,.9);color:#F3F3F5;border-color:rgba(255,255,255,.14);box-shadow:0 16px 36px -18px rgba(0,0,0,.9)}
+html.p15on:not(.gl-lt) .toast .ic{color:#fff}

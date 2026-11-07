@@ -3807,6 +3807,7 @@ Object.assign(IC,{
   chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'
 });
 const P15={d:null,busy:'',v:null};
+const em15=e=>`${(e&&e.raw)||''} ${(e&&e.code)||''} ${(e&&e.message)||e}`;
 const FL15=[['Canada',-106,57],['United States',-98,39],['Mexico',-102,23],['Brazil',-51,-10],['Argentina',-64,-34],['Colombia',-73,4],['Peru',-75,-9],['Chile',-71,-30],['United Kingdom',-2,53],['Ireland',-8,53],['France',2,46.5],['Spain',-3.7,40],['Portugal',-8,39.5],['Germany',10,51],['Italy',12.5,42.5],['Netherlands',5.3,52.2],['Poland',19,52],['Sweden',16,62],['Norway',9,61],['Greece',22,39],['Turkey',35,39],['Ukraine',31,49],['Egypt',30,26.5],['Morocco',-6,32],['Nigeria',8,9.5],['Ghana',-1,7.9],['Kenya',38,0.2],['Ethiopia',39.5,8.6],['South Africa',24,-29],['Lebanon',35.8,33.9],['Saudi Arabia',45,24],['United Arab Emirates',54,24],['Iran',53,32],['Pakistan',69,30],['India',79,22],['Nepal',84,28.2],['Bangladesh',90,23.7],['Sri Lanka',80.7,7.8],['China',104,35],['South Korea',127.8,36.3],['Japan',138,36.5],['Philippines',122,12.5],['Vietnam',106,16],['Thailand',101,15],['Malaysia',102,4],['Indonesia',113,-1],['Singapore',103.8,1.35],['Australia',134,-25],['New Zealand',172,-41],['Russia',90,60]];
 const fg15=n=>{try{return flag(n)||''}catch(e){return ''}};
 try{if(typeof RLX!=='undefined'&&RLX.OPTS&&RLX.OPTS.welcome)RLX.OPTS.p15=()=>Object.assign({},RLX.OPTS.welcome(),{zoom:innerWidth<500?1.1:1.4,
@@ -3874,8 +3875,8 @@ const P15T={host:'Host Plans',biz:'For Business',rooms:'Find a Room',buddy:'Trav
     p15open(el){P15.v=el.dataset.v;view=null;sheet=null;render();const m=document.getElementById('main');if(m)m.scrollTop=0},
     p15back(){P15.v=null;render()},
     p15yr(el){P15.y=el.dataset.y==='1';render()},
-    async p15buyPlus(){if(P15.busy)return;P15.busy='plus';render();try{await API.rpc('buy_plus15',{yearly:!!P15.y});await load15();toast('NeuMarry Plus is active.','star2')}catch(e){toast(String(e.message||e).includes('not open')?'Payments open soon.':'Could not start Plus. Please try again.','info')}P15.busy='';render()},
-    async p15buyTick(){if(P15.busy)return;P15.busy='tick';render();try{await API.rpc('buy_tick15',{});await load15();toast('Your Verified Tick is active.','shield2')}catch(e){toast(String(e.message||e).includes('ID and selfie')?'Please finish your ID check first.':'Could not add the tick. Please try again.','info')}P15.busy='';render()}
+    async p15buyPlus(){if(P15.busy)return;P15.busy='plus';render();try{await API.rpc('buy_plus15',{yearly:!!P15.y});await load15();toast('NeuMarry Plus is active.','star2')}catch(e){toast(em15(e).includes('not open')?'Payments open soon.':'Could not start Plus. Please try again.','info')}P15.busy='';render()},
+    async p15buyTick(){if(P15.busy)return;P15.busy='tick';render();try{await API.rpc('buy_tick15',{});await load15();toast('Your Verified Tick is active.','shield2')}catch(e){toast(em15(e).includes('ID and selfie')?'Please finish your ID check first.':'Could not add the tick. Please try again.','info')}P15.busy='';render()}
   });
   const _la=loadAll;loadAll=async function(){await Promise.all([_la(),load15()])};
   /* fast open: plan15 state comes from this phone at once, and loads beside the profile (never before it) */
@@ -3917,9 +3918,9 @@ P15V.tickets=tickets15;
     p15n(el){P15.n=Math.max(1,Math.min(10,P15.n+Number(el.dataset.d)));render()},
     async p15book(el){if(P15.busy)return;const id=el.dataset.id,e=evFind(id);if(!e)return;P15.busy='book';render();
       try{await API.rpc('book15',{eid:id,n:P15.n});P15.tk=undefined;P15.ev[e.kind]=undefined;P15.n=1;P15.v='tickets';toast('Booked. Your ticket is ready.','tick2')}
-      catch(x){const m=String(x.message||x);toast(m.includes('plus members')?'For the first 24 hours only Plus members can book.':m.includes('not enough')?'Not enough seats left.':m.includes('not open')?'Payments open soon.':'Could not book. Please try again.','info')}
+      catch(x){const m=em15(x);toast(m.includes('plus members')?'For the first 24 hours only Plus members can book.':m.includes('not enough')?'Not enough seats left.':m.includes('not open')?'Payments open soon.':'Could not book. Please try again.','info')}
       P15.busy='';render()},
-    async p15cancelT(el){try{await API.rpc('cancel_ticket15',{tid:el.dataset.id});P15.tk=undefined;toast('Cancelled. Ticket money comes back.','tick2')}catch(x){toast(String(x.message||x).includes('too late')?'Less than 48 hours left, so it can no longer be cancelled.':'Could not cancel. Please try again.','info')}render()}
+    async p15cancelT(el){try{await API.rpc('cancel_ticket15',{tid:el.dataset.id});P15.tk=undefined;toast('Cancelled. Ticket money comes back.','tick2')}catch(x){toast(em15(x).includes('too late')?'Less than 48 hours left, so it can no longer be cancelled.':'Could not cancel. Please try again.','info')}render()}
   });
   const _open=A.p15open;A.p15open=function(el){P15.n=1;return _open(el)};
 })();
@@ -3933,7 +3934,7 @@ function hostPlans15(){const b=hostBiz15(),f=P15.f,me=S.me||{};
   const plans=[['host_basic','Host Basic','2 events a month · up to 50 seats'],['host_pro','Host Pro','10 events a month · up to 300 seats'],['host_big','Host Big','Unlimited events · 1,000+ seats · festivals']];
   if(!f.plan)f.plan='host_pro';
   return p15wrap(p15top('Host Plans',true)+`<p class="p15-sub">You set the ticket price. We keep 10% of each ticket; buyers pay a ${p15price('booking_fee')} booking fee.</p>
-  ${b?`<div class="p15-g p15-note">${ic('tick2')} Host name: <b>${esc(b.name)}</b>${planOn15(b)?` · ${esc((plans.find(p=>p[0]===b.plan)||[])[1]||'')} active until ${esc(new Date(b.planUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short'}))}`:''}</div>`:
+  ${b?`<div class="p15-g p15-note">${ic('tick2')}<span>Host name: <b>${esc(b.name)}</b>${planOn15(b)?` · ${esc((plans.find(p=>p[0]===b.plan)||[])[1]||'')} active until ${esc(new Date(b.planUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short'}))}`:''}</span></div>`:
    `<div class="p15-g p15-form"><label>Host name people will see</label><input id="p15-hn" maxlength="60" placeholder="e.g. Lagos Nights Club" value="${esc(f.hn||'')}"><small>City: ${esc(me.city||'')} ${esc(me.country||'')}</small></div>`}
   ${plans.map(([k,t,d])=>`<button class="p15-g p15-plan${f.plan===k?' on':''}" data-a="p15f" data-k="plan" data-val="${k}"><span><b>${t}</b><small>${d}</small></span><span class="p15-pr0"><b>${p15price(k)}</b><small>/month</small></span></button>`).join('')}
   <div class="p15-g p15-note">${ic('tick2')} Tickets, QR entry, refunds and payouts done for you · guests' phone numbers stay private</div>
@@ -3973,7 +3974,7 @@ Object.assign(P15V,{host:hostPlans15,newev:newEv15,hostboard:board15,door:door15
       P15.busy='host';render();
       try{let id=b&&b.id;if(!id)id=await API.rpc('biz_upsert15',{k:'host',nm:P15.f.hn,cty:me.city||'',ctry:me.country||'',lg:[],ab:'',cat:'',lic:''});
         await API.rpc('buy_biz_plan15',{bid:id,prod:P15.f.plan||'host_pro'});await load15();P15.hb=undefined;P15.v='hostboard';toast('Your host plan is active.','tick2')}
-      catch(e){toast(String(e.message||e).includes('not open')?'Payments open soon.':'Could not start the plan. Please try again.','info')}P15.busy='';render()},
+      catch(e){toast(em15(e).includes('not open')?'Payments open soon.':'Could not start the plan. Please try again.','info')}P15.busy='';render()},
     async p15evCreate(){if(P15.busy)return;const f=P15.f,b=hostBiz15();['et','ev'].forEach(k=>{const x=document.getElementById('p15-'+k);if(x)f[k]=x.value.trim()});
       if(!b||!planOn15(b)){P15.v='host';render();return}
       if((f.et||'').length<4){toast('Please write the event name (4 letters or more).','info');return}
@@ -3982,7 +3983,7 @@ Object.assign(P15V,{host:hostPlans15,newev:newEv15,hostboard:board15,door:door15
       const st=new Date(f.day+'T'+f.hr+':00');P15.busy='ev';render();
       try{await API.rpc('event_create15',{bid:b.id,k:f.kind,t:f.et,cty:me.city||'',ctry:me.country||'',ven:f.ev,st:st.toISOString(),n:Number(f.seats),pc:Number(f.price)*100,cur:(CMAP[me.country]&&CMAP[me.country][3])||'USD',nts:[],lg:[],wh:f.who});
         P15.f={};P15.hb=undefined;P15.ev={};P15.v='hostboard';toast('Your event is live.','tick2')}
-      catch(e){const m=String(e.message||e);toast(m.includes('limit')?'Your plan allows no more events this month.':m.includes('too many seats')?'Too many seats for your plan.':m.includes('host plan')?'Your host plan has ended. Please renew.':'Could not publish. Please try again.','info')}P15.busy='';render()},
+      catch(e){const m=em15(e);toast(m.includes('limit')?'Your plan allows no more events this month.':m.includes('too many seats')?'Too many seats for your plan.':m.includes('host plan')?'Your host plan has ended. Please renew.':'Could not publish. Please try again.','info')}P15.busy='';render()},
     async p15promote(el){try{await API.rpc('promote15',{eid:el.dataset.id});P15.ev={};toast('Promoted: top of your city for 7 days.','tick2')}catch(e){toast('Could not promote. Please try again.','info')}},
     async p15hostCancel(el){if(!confirm15('Cancel this event? Every guest gets all money back.'))return;try{const n=await API.rpc('host_cancel15',{eid:el.dataset.id});P15.hb=undefined;P15.ev={};toast(`Cancelled. ${n} ticket${n===1?'':'s'} refunded.`,'tick2')}catch(e){toast('Could not cancel. Please try again.','info')}render()},
     async p15check(){const x=document.getElementById('p15-code');const c=(x&&x.value||'').trim().replace(/^NM15:/,'');if(!c)return;try{P15.dr=await API.rpc('checkin15',{c})}catch(e){P15.dr={ok:false,why:'not found'}}render()},
@@ -4008,7 +4009,7 @@ function leagueDetail15(e){const L=P15.lg[e.id];if(L===undefined){API.rpc('leagu
   ${!mine&&!L.own&&e.left?`<div class="p15-g p15-form"><label>Your team name</label><input id="p15-tn" maxlength="40" placeholder="e.g. Toronto Lions CC" value="${esc(f.tn||'')}">
     <label>Players you still need</label>${chips15('need',[['0','None'],['1','1'],['2','2'],['3','3'],['5','5']],f.need||'0')}</div>
    <div class="p15-buy"><span><b>${money(e.price,e.currency)}</b><small>team fee for the season</small></span><button class="p15-btn" data-a="p15team" data-id="${e.id}"${P15.busy==='team'?' disabled':''}>${P15.busy==='team'?'Registering…':'Register team'}</button></div>
-   ${P15.d&&P15.d.payTest?'<p class="p15-ex">Test mode: no real money is taken.</p>':''}`:mine?`<div class="p15-g p15-note">${ic('tick2')} Your team <b>${esc(mine.name)}</b> is in this league.</div>`:''}`)}
+   ${P15.d&&P15.d.payTest?'<p class="p15-ex">Test mode: no real money is taken.</p>':''}`:mine?`<div class="p15-g p15-note">${ic('tick2')}<span>Your team <b>${esc(mine.name)}</b> is in this league.</span></div>`:''}`)}
 function newLeague15(){const f=P15.f;f.sport=f.sport||'Cricket';f.teams=f.teams||'12';f.fee=f.fee||'500';f.day=f.day||days15()[13][0];
   return p15wrap(p15top('New League',true)+`<div class="p15-g p15-form">
    <label>Sport</label>${chips15('sport',[['Cricket','Cricket'],['Football','Football'],['Volleyball','Volleyball'],['Basketball','Basketball'],['Kabaddi','Kabaddi'],['Badminton','Badminton']],f.sport)}
@@ -4021,7 +4022,7 @@ function newLeague15(){const f=P15.f;f.sport=f.sport||'Cricket';f.teams=f.teams|
    <button class="p15-btn" data-a="p15lgCreate"${P15.busy==='lg'?' disabled':''}>${P15.busy==='lg'?'Saving…':'Publish league'}</button>`)}
 function lgPlan15(){const b=lgBiz15(),f=P15.f,me=S.me||{};
   return p15wrap(p15top('Run a League',true)+`<p class="p15-sub">Teams register and pay the season fee in the app. Points table and "need a player" are done for you.</p>
-  ${b?`<div class="p15-g p15-note">${ic('tick2')} Organiser: <b>${esc(b.name)}</b>${planOn15(b)?' · plan active':''}</div>`:`<div class="p15-g p15-form"><label>Organiser name people will see</label><input id="p15-on" maxlength="60" placeholder="e.g. GTA Cricket Club" value="${esc(f.on||'')}"><small>City: ${esc(me.city||'')} ${esc(me.country||'')}</small></div>`}
+  ${b?`<div class="p15-g p15-note">${ic('tick2')}<span>Organiser: <b>${esc(b.name)}</b>${planOn15(b)?' · plan active':''}</span></div>`:`<div class="p15-g p15-form"><label>Organiser name people will see</label><input id="p15-on" maxlength="60" placeholder="e.g. GTA Cricket Club" value="${esc(f.on||'')}"><small>City: ${esc(me.city||'')} ${esc(me.country||'')}</small></div>`}
   <div class="p15-g p15-plan on"><span><b>League Organiser Plan</b><small>Leagues, teams, fees, points table</small></span><span class="p15-pr0"><b>${p15price('league_plan')}</b><small>/month</small></span></div>
   ${planOn15(b)?`<button class="p15-btn" data-a="p15open" data-v="newleague">New league</button>`:`<button class="p15-btn" data-a="p15lgBuy"${P15.busy==='lgp'?' disabled':''}>${P15.busy==='lgp'?'Starting…':'Start plan'}</button>${P15.d&&P15.d.payTest?'<p class="p15-ex">Test mode: no real money is taken.</p>':''}`}`)}
 Object.assign(P15V,{lgplan:lgPlan15,newleague:newLeague15});
@@ -4033,13 +4034,13 @@ Object.assign(P15V,{lgplan:lgPlan15,newleague:newLeague15});
     async p15team(el){if(P15.busy)return;const x=document.getElementById('p15-tn');const nm=(x&&x.value||'').trim();if(nm.length<2){toast('Please write your team name.','info');return}
       P15.busy='team';render();const id=el.dataset.id;
       try{await API.rpc('team_join15',{eid:id,nm,need:Number(P15.f.need||0)});P15.lg[id]=undefined;P15.f={};toast('Your team is registered.','tick2')}
-      catch(x){const m=String(x.message||x);toast(m.includes('full')?'This league is full.':m.includes('already')?'You already have a team here.':m.includes('not open')?'Payments open soon.':'Could not register. Please try again.','info')}P15.busy='';render()},
+      catch(x){const m=em15(x);toast(m.includes('full')?'This league is full.':m.includes('already')?'You already have a team here.':m.includes('not open')?'Payments open soon.':'Could not register. Please try again.','info')}P15.busy='';render()},
     async p15ask(el){try{await API.rpc('ask_team15',{tid:el.dataset.id});P15.lg={};toast('The captain can see you want to join.','tick2')}catch(x){toast('Could not send. Please try again.','info')}render()},
     async p15pts(el){try{await API.rpc('team_points15',{tid:el.dataset.id,pts:Number(el.dataset.p)});P15.lg={}}catch(x){toast('Could not save points.','info')}render()},
     async p15lgBuy(){if(P15.busy)return;const x=document.getElementById('p15-on');if(x)P15.f.on=x.value.trim();let b=lgBiz15();const me=S.me||{};
       if(!b&&(P15.f.on||'').length<2){toast('Please write the organiser name.','info');return}P15.busy='lgp';render();
       try{const id=b?b.id:await API.rpc('biz_upsert15',{k:'league',nm:P15.f.on,cty:me.city||'',ctry:me.country||'',lg:[],ab:'',cat:'',lic:''});await API.rpc('buy_biz_plan15',{bid:id,prod:'league_plan'});await load15();toast('Your organiser plan is active.','tick2')}
-      catch(e){toast(String(e.message||e).includes('not open')?'Payments open soon.':'Could not start the plan. Please try again.','info')}P15.busy='';render()},
+      catch(e){toast(em15(e).includes('not open')?'Payments open soon.':'Could not start the plan. Please try again.','info')}P15.busy='';render()},
     async p15lgCreate(){if(P15.busy)return;const f=P15.f,b=lgBiz15();['ln','lv'].forEach(k=>{const x=document.getElementById('p15-'+k);if(x)f[k]=x.value.trim()});
       if(!b||!planOn15(b)){P15.v='lgplan';render();return}if((f.ln||'').length<4){toast('Please write the league name.','info');return}if((f.lv||'').length<3){toast('Please write the grounds.','info');return}
       const me=S.me||{};P15.busy='lg';render();
@@ -4095,7 +4096,10 @@ function ref15v(){const d=P15.rf;if(d===undefined){Promise.all([API.rpc('refs_mi
     <button class="p15-g p15-row" data-a="p15refPack"><span class="p15-b lem">${ic('star2')}</span><span class="tx"><b>5 Job Referrals</b><small>${p15price('ref_5')} instead of ${money(((P15.d&&P15.d.prices&&P15.d.prices.ref_1)||0)*5,'USD')}</small></span>${ic('chev2')}</button>`}
   ${d.asked.length?`<div class="p15-sec"><b>Your requests</b></div><div class="p15-g">${d.asked.map(q=>`<div class="p15-li"><span class="tx"><b>${esc(q.company)}</b><small>${esc(new Date(q.at).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short'}))}</small></span><span class="p15-pill${q.status==='sent'?' y':''}">${ST[q.status]}</span></div>`).join('')}</div>`:''}
   ${d.inbox.length?`<div class="p15-sec"><b>People asking you</b></div>${d.inbox.map(q=>`<div class="p15-g p15-pad"><b>${esc(q.name)}</b><small style="display:block">${esc(q.note)}</small><a class="p15-link" href="${esc(q.link)}" target="_blank" rel="noopener">Open the job</a>${q.status==='sent'?`<div class="p15-2"><button class="p15-btn ghost" data-a="p15refAns" data-id="${q.id}" data-y="0">Not this time</button><button class="p15-btn" data-a="p15refAns" data-id="${q.id}" data-y="1">I referred them</button></div>`:`<span class="p15-pill">${ST[q.status]}</span>`}</div>`).join('')}`:''}
-  ${d.me?`<div class="p15-g p15-note">${ic('brief')} You refer people at <b>${esc(d.me.company)}</b>.</div>`:`<div class="p15-g p15-form"><label>I work at (company name)</label><input id="p15-myco" maxlength="60" value="${esc(f.myco||'')}"><label>Company website</label><input id="p15-mydom" maxlength="60" placeholder="e.g. samplebank.com" value="${esc(f.mydom||'')}"></div><button class="p15-btn ghost" data-a="p15refMe">Let people ask me</button>`}`)}
+  ${d.me?(d.me.verified?`<div class="p15-g p15-note">${ic('shield2')}<span>You refer people at <b>${esc(d.me.company)}</b> · work email checked.</span></div>`:
+    `<div class="p15-g p15-form"><label>Check your work email at ${esc(d.me.company)}</label><small>People can ask you only after this check. We use the email only to send a code, then delete it.</small>
+     ${f.codeSent?`<input id="p15-wc" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="6-digit code" value="${esc(f.wc||'')}">`:`<input id="p15-we" type="email" inputmode="email" maxlength="120" placeholder="you@company.com" value="${esc(f.we||'')}">`}</div>
+     ${f.codeSent?`<button class="p15-btn" data-a="p15refCode"${P15.busy==='rc'?' disabled':''}>Check the code</button><button class="p15-btn ghost" data-a="p15refAgain">Send a new code</button>`:`<button class="p15-btn" data-a="p15refSend"${P15.busy==='rs'?' disabled':''}>${P15.busy==='rs'?'Sending…':'Send me a code'}</button>`}`):`<div class="p15-g p15-form"><label>I work at (company name)</label><input id="p15-myco" maxlength="60" value="${esc(f.myco||'')}"><label>Company website</label><input id="p15-mydom" maxlength="60" placeholder="e.g. samplebank.com" value="${esc(f.mydom||'')}"></div><button class="p15-btn ghost" data-a="p15refMe">Let people ask me</button>`}`)}
 function experts15v(){const k=P15.f.ek||'expert',cat=P15.f.ec||'',key=k+cat,l=(P15.ex||{})[key];
   if(l===undefined){API.rpc('experts15',{k,cat}).then(r=>{P15.ex=Object.assign(P15.ex||{},{[key]:r});render()}).catch(()=>{P15.ex=Object.assign(P15.ex||{},{[key]:[]});render()});return p15wrap(p15top('Trusted Experts',true)+spinner('Loading'))}
   return p15wrap(p15top('Trusted Experts',true)+chips15('ek',[['expert','Experts'],['agent','Rental agents']],k)+(k==='expert'?chips15('ec',[['','All'],['Immigration','Immigration'],['Tax','Tax'],['Insurance','Insurance'],['Movers','Movers']],cat):'')+
@@ -4132,10 +4136,10 @@ function leads15v(){const b=((P15.d&&P15.d.biz)||[]).find(x=>x.kind===(P15.f.ek2
   return p15wrap(p15top('People who asked',true)+(l.length?`<div class="p15-g">${l.map(x=>`<div class="p15-li"><span class="p15-b mint">${ic('user')}</span><span class="tx"><b>${esc(x.name)}</b><small>${esc(x.email||'')}${x.note?' · '+esc(x.note):''}</small></span></div>`).join('')}</div>`:`<div class="p15-g p15-note">${ic('chat')} Nobody yet. Members see your page in Trusted Experts.</div>`))}
 Object.assign(P15V,{rooms:rooms15v,postroom:postRoom15,buddy:buddy15v,referral:ref15v,experts:experts15v,sale:sale15v,expplan:expPlan15,leads:leads15v});
 (function(){
-  const keep=['p15-rtl','p15-rar','p15-rct','p15-rad','p15-fc','p15-tc','p15-fno','p15-jl','p15-jn','p15-myco','p15-mydom','p15-st','p15-sa','p15-xn','p15-xl','p15-xa','p15-s0t','p15-s0p','p15-s1t','p15-s1p','p15-s2t','p15-s2p'];
+  const keep=['p15-we','p15-wc','p15-rtl','p15-rar','p15-rct','p15-rad','p15-fc','p15-tc','p15-fno','p15-jl','p15-jn','p15-myco','p15-mydom','p15-st','p15-sa','p15-xn','p15-xl','p15-xa','p15-s0t','p15-s0p','p15-s1t','p15-s1p','p15-s2t','p15-s2p'];
   const grab=()=>keep.forEach(id=>{const x=document.getElementById(id);if(x)P15.f[id.slice(4)]=x.value.trim()});
   const _f=A.p15f;A.p15f=function(el){grab();const k=el.dataset.k;if(k==='max')P15.rooms=undefined;if(k==='ek'||k==='ec')P15.ex=P15.ex;if(k==='co'){P15.f.jl='';P15.f.jn=''}return _f(el)};
-  const err=(m,map)=>{m=String(m.message||m);for(const k in map)if(m.includes(k))return map[k];return m.includes('not open')?'Payments open soon.':'Something went wrong. Please try again.'};
+  const err=(m,map)=>{m=em15(m);for(const k in map)if(m.includes(k))return map[k];return m.includes('not open')?'Payments open soon.':'Something went wrong. Please try again.'};
   const run=async(busy,fn,ok,map)=>{if(P15.busy)return;grab();P15.busy=busy;render();try{await fn();if(ok)toast(ok,'tick2')}catch(e){toast(err(e,map||{}),'info')}P15.busy='';render()};
   Object.assign(A,{
     p15roomPost(){const f=P15.f;grab();if((f.rtl||'').length<4){toast('Please write a short title.','info');return}if((f.rar||'').length<2){toast('Please write the area.','info');return}if((f.rct||'').length<5){toast('Please add a phone or email for replies.','info');return}
@@ -4147,10 +4151,15 @@ Object.assign(P15V,{rooms:rooms15v,postroom:postRoom15,buddy:buddy15v,referral:r
     p15bstep(el){run('bs',async()=>{await API.rpc('buddy_step15',{bid:el.dataset.id,st:el.dataset.s});P15.bd=undefined},'The family can see this step now.')},
     p15refAsk(){const f=P15.f;grab();if(!/^https?:\/\//i.test(f.jl||'')){toast('Please paste the full job link (https://…).','info');return}
       run('ra',async()=>{await API.rpc('ref_ask15',{co:f.co,link:f.jl,nt:f.jn||''});P15.f={};P15.rf=undefined},'Request sent. Reply within 7 days, or you get it back.',{'no one there':'Nobody from this company is here now.'})},
+    p15refSend(){const f=P15.f;grab();if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.we||'')){toast('Please write your work email.','info');return}
+      run('rs',async()=>{await API.fn('ref-email',{email:f.we});P15.f.codeSent=true},'Code sent. Check your work email.',{'domain':'This email is not at your company website. Please use your work email.','wait':'Please wait a minute before asking for a new code.','send':'The email could not be sent. Please try again.'})},
+    p15refCode(){const f=P15.f;grab();if(!/^\d{6}$/.test(f.wc||'')){toast('Please type the 6-digit code.','info');return}
+      run('rc',async()=>{const ok=await API.rpc('ref_verify15',{c:f.wc});if(!ok)throw new Error('wrong code');P15.f.codeSent=false;P15.f.wc='';P15.f.we='';P15.rf=undefined},'Checked. People can now ask you for a referral.',{'wrong code':'That code is not right. Please check it.','expired':'The code has expired. Please ask for a new one.','too many':'Too many tries. Please ask for a new code.'})},
+    p15refAgain(){P15.f.codeSent=false;P15.f.wc='';render()},
     p15refPack(){run('rp',async()=>{await API.rpc('ref_pack15',{});P15.rf=undefined},'5 referral credits added.')},
     p15refAns(el){run('rn',async()=>{await API.rpc('ref_answer15',{qid:el.dataset.id,yes:el.dataset.y==='1'});P15.rf=undefined},'Thank you. They can see your answer.')},
     p15refMe(){const f=P15.f;grab();if((f.myco||'').length<2||!(f.mydom||'').includes('.')){toast('Please write the company and its website.','info');return}
-      run('rm',async()=>{await API.rpc('referrer_set15',{co:f.myco,dom:f.mydom,lg:[]});P15.rf=undefined},'Done. People can now ask you for a referral.')},
+      run('rm',async()=>{await API.rpc('referrer_set15',{co:f.myco,dom:f.mydom,lg:[]});P15.rf=undefined},'Saved. Now check your work email below.')},
     p15connect(el){run('cn',async()=>{await API.rpc('connect15',{bid:el.dataset.id,nt:''})},'Sent. The expert will contact you by email.',{'plus needed':'Connect opens with NeuMarry Plus.'})},
     p15expBuy(){const f=P15.f;grab();const me=S.me||{},k=f.ek2||'expert';if((f.xn||'').length<2){toast('Please write your business name.','info');return}
       run('exp',async()=>{const id=await API.rpc('biz_upsert15',{k,nm:f.xn,cty:me.city||'',ctry:me.country||'',lg:[],ab:f.xa||'',cat:k==='expert'?(f.xc||'Immigration'):'',lic:f.xl||''});
@@ -4253,7 +4262,7 @@ Object.assign(P15V,{adcheck:adCheck15,biz:biz15v,services:svc15v,svcplan:svcPlan
   const keep=['p15-vn','p15-va','p15-v0t','p15-v0p','p15-v1t','p15-v1p','p15-v2t','p15-v2p','p15-at','p15-ab','p15-au'];
   const grab=()=>keep.forEach(id=>{const x=document.getElementById(id);if(x)P15.f[id.slice(4)]=x.value.trim()});
   const _f=A.p15f;A.p15f=function(el){grab();return _f(el)};
-  const err=(m,map)=>{m=String(m.message||m);for(const k in map)if(m.includes(k))return map[k];return m.includes('not open')?'Payments open soon.':'Something went wrong. Please try again.'};
+  const err=(m,map)=>{m=em15(m);for(const k in map)if(m.includes(k))return map[k];return m.includes('not open')?'Payments open soon.':'Something went wrong. Please try again.'};
   const run=async(busy,fn,ok,map)=>{if(P15.busy)return;grab();P15.busy=busy;render();try{await fn();if(ok)toast(ok,'tick2')}catch(e){toast(err(e,map||{}),'info')}P15.busy='';render()};
   const _rm=renderMe;renderMe=function(){if(P15on()&&!P15.v)return me15();return _rm()};
   const _h=home15;home15=function(){const h=_h();const a=adBox15();return a?h.replace(/<\/div><\/div>$/,a+'</div></div>'):h};

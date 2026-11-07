@@ -75,7 +75,7 @@ window.RM_API = (function () {
     else if (/Email not confirmed/i.test(msg)) code = 'email_not_confirmed';
     else if (rawCode === '42501' || /row-level security|permission denied/i.test(msg)) code = 'forbidden';
     var text = FRIENDLY[code] || (r.status >= 500 ? 'The server is busy. Please try again in a moment.' : 'Something went wrong. Please try again.');
-    return new ApiError(code || 'error_' + r.status, text, r.status);
+    var er = new ApiError(code || 'error_' + r.status, text, r.status); er.raw = msg + ' ' + rawCode; return er;
   }
 
   async function raw(path, opts) {
