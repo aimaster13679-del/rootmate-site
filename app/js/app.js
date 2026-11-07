@@ -3830,6 +3830,7 @@ function events15(){
   const t=[['heart','mint','Friend Meetups','Dinner tables, walks, games','meetups'],['tv2','lem','Watch Parties','Big matches on a big screen','watch'],['party','fern','Festivals','Diwali, Eid, Lunar New Year, Christmas','festival'],
     ['bus2','mint','Day Trips','Bus trips with a host','trip'],['ball2','lem','Sports Leagues','Join a team or find players','league']];
   return p15wrap(p15top('Events & Friends')+`<p class="p15-sub">Hosts from your city run them. You just book a seat.</p><div class="p15-bento">${t.map((x,i)=>p15tile(x[0],x[1],x[2],x[3],'p15open" data-v="ev-'+x[4],'').replace('p15-t"','p15-t'+(i===0?' span2':'')+'"')).join('')}</div>
+  <button class="p15-g p15-row" data-a="p15open" data-v="tickets"><span class="p15-b mint">${ic('qr')}</span><span class="tx"><b>My Tickets</b><small>QR tickets for the events you booked</small></span>${ic('chev2')}</button>
   ${P15.d&&!P15.d.plus?`<button class="p15-g p15-row" data-a="p15open" data-v="plus"><span class="p15-b lem">${ic('star2')}</span><span class="tx"><b>Event details open with Plus</b><small>You can see names and dates for free</small></span>${ic('chev2')}</button>`:''}`)}
 function plus15(){const d=P15.d||{};
   const perks=[['bed2','Find a Room','Contact and address of every room'],['party','Events & Friends','Full event details, book 24 hours early'],['shield2','Trusted Experts','Prices and contact of every expert'],['brief','Job Referral','2 requests every month']];
@@ -3848,7 +3849,7 @@ function tick15(){const d=P15.d||{},v=(S.me&&S.me.v)||{},idOk=!!(v.id&&v.selfie)
    `<button class="p15-btn" data-a="verify">Check my ID first</button><p class="p15-ex">The tick costs ${p15price('tick')} once your ID check is done.</p>`}`)}
 function soon15(t){return p15wrap(p15top(t,true)+`<div class="p15-g p15-note">${ic('clock')} This part is being built now. It opens for everyone together with the rest of the new NeuMarry.</div>`)}
 const P15V={plus:plus15,tick:tick15};
-const P15T={biz:'For Business',rooms:'Find a Room',buddy:'Travel Buddy for Parents',referral:'Job Referral',experts:'Trusted Experts',sale:'Moving-Out Sale','ev-meetups':'Friend Meetups','ev-watch':'Watch Parties','ev-festival':'Festivals','ev-trip':'Day Trips','ev-league':'Sports Leagues'};
+const P15T={host:'Host Plans',biz:'For Business',rooms:'Find a Room',buddy:'Travel Buddy for Parents',referral:'Job Referral',experts:'Trusted Experts',sale:'Moving-Out Sale','ev-meetups':'Friend Meetups','ev-watch':'Watch Parties','ev-festival':'Festivals','ev-trip':'Day Trips','ev-league':'Sports Leagues'};
 (function(){
   const _rm=renderMatches;renderMatches=function(){if(!P15on())return _rm();
     if(P15.v)return (P15V[P15.v]||(()=>soon15(P15T[P15.v]||'')))();
@@ -3869,6 +3870,48 @@ const P15T={biz:'For Business',rooms:'Find a Room',buddy:'Travel Buddy for Paren
   const _la=loadAll;loadAll=async function(){await Promise.all([_la(),load15()])};
   /* fast open: plan15 state comes from this phone at once, and loads beside the profile (never before it) */
   const _lm=loadMe;loadMe=async function(){warm15();const q=load15();const r=await _lm();await q;return r};
+})();
+
+/* ---------- Plan 15 phase 2: Events & Friends screens (list, detail, booking, tickets with QR) ---------- */
+const EVK={'ev-meetups':['meetup','Friend Meetups','heart','mint'],'ev-watch':['watch','Watch Parties','tv2','lem'],'ev-festival':['festival','Festivals','party','fern'],'ev-trip':['trip','Day Trips','bus2','mint'],'ev-league':['league','Sports Leagues','ball2','lem']};
+const WHO15={women:'Women only',men:'Men only',u30:'Under 30','30plus':'30 and over'};
+P15.ev={};P15.n=1;
+async function loadEv15(k){try{P15.ev[k]=await API.rpc('events15',{k,cty:''})}catch(e){P15.ev[k]=[]}render()}
+const evWhen=e=>new Date(e.startsAt).toLocaleString(RM_I18N.locale,{weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'});
+function evList15(v){const [k,t,icn,tone]=EVK[v],list=P15.ev[k];if(list===undefined){loadEv15(k);return p15wrap(p15top(t,true)+spinner('Loading'))}
+  return p15wrap(p15top(t,true)+(list.length?list.map(e=>`<button class="p15-g p15-row" data-a="p15open" data-v="evd:${e.id}"><span class="p15-b ${tone} big">${ic(icn)}</span><span class="tx"><b>${esc(e.title)}</b><small>${esc(evWhen(e))} · ${esc(e.city)}</small>${e.who!=='all'?`<small class="p15-acc">${esc(WHO15[e.who]||'')}</small>`:''}</span><span class="p15-pr0"><b>${money(e.price,e.currency)}</b><small>${e.left?`${e.left} left`:'Full'}</small></span></button>`).join(''):
+   `<div class="p15-g p15-note">${ic('cal')} No ${esc(t.toLowerCase())} in your city yet. Hosts add new ones every week.</div>`)+
+   `<button class="p15-g p15-row" data-a="p15open" data-v="host"><span class="p15-b fern">${ic('mega2')}</span><span class="tx"><b>Host your own</b><small>Host Plan from ${p15price('host_basic')} a month</small></span>${ic('chev2')}</button>`)}
+function evFind(id){for(const k in P15.ev){const e=(P15.ev[k]||[]).find(x=>x.id===id);if(e)return e}return null}
+function evDetail15(id){const e=evFind(id);if(!e)return p15wrap(p15top('Event',true)+`<div class="p15-g p15-note">This event is not open any more.</div>`);
+  const kk=Object.keys(EVK).find(x=>EVK[x][0]===e.kind)||'ev-meetups',[,,icn,tone]=EVK[kk],fee=(P15.d&&P15.d.prices&&P15.d.prices.booking_fee)||0;
+  return p15wrap(p15top(EVK[kk][1],true)+`<div class="p15-g p15-evhero"><div class="art ${tone}">${ic(icn)}</div><div class="p15-pad"><span class="p15-pill">${esc(EVK[kk][1])}</span><h2>${esc(e.title)}</h2><small>Hosted by ${esc(e.host)}${e.hostRating?` · ${Number(e.hostRating).toFixed(1)} rating`:''}</small></div></div>
+  <div class="p15-kv"><div><small>When</small><b>${esc(evWhen(e))}</b></div><div><small>Where</small><b>${esc(e.locked?e.city:(e.venue||e.city))}</b></div><div><small>Seats left</small><b>${e.left} / ${e.seats}</b></div></div>
+  ${e.locked?`<button class="p15-g p15-row" data-a="p15open" data-v="plus"><span class="p15-b lem">${ic('lock2')}</span><span class="tx"><b>Place and details open with Plus</b><small>Or book a seat: they show on your ticket</small></span>${ic('chev2')}</button>`:
+   (e.notes||[]).length?`<div class="p15-g p15-steps">${e.notes.map(n=>`<div class="p15-step"><span class="p15-dot">${ic('tick2')}</span><span><b>${esc(n)}</b></span></div>`).join('')}</div>`:''}
+  ${e.left?`<div class="p15-qty"><span>Seats</span><button data-a="p15n" data-d="-1" aria-label="Fewer">−</button><b>${P15.n}</b><button data-a="p15n" data-d="1" aria-label="More">+</button></div>
+  <div class="p15-buy"><span><b>${money(e.price,e.currency)}</b><small>+ ${money(fee,e.currency)} booking fee per seat</small></span><button class="p15-btn" data-a="p15book" data-id="${e.id}"${P15.busy==='book'?' disabled':''}>${P15.busy==='book'?'Booking…':`Pay ${money(e.price*P15.n+fee*P15.n,e.currency)}`}</button></div>
+  <p class="p15-ex">Host cancels: all money back. You cancel 48 hours before: ticket money back, booking fee kept.${P15.d&&P15.d.payTest?' Test mode: no real money is taken.':''}</p>`:`<div class="p15-g p15-note">${ic('info')} This event is full.</div>`}`)}
+function tickets15(){const l=P15.tk;if(l===undefined){API.rpc('my_tickets15',{}).then(r=>{P15.tk=r;render()}).catch(()=>{P15.tk=[];render()});return p15wrap(p15top('My Tickets',true)+spinner('Loading'))}
+  return p15wrap(p15top('My Tickets',true)+(l.length?l.map(t=>`<div class="p15-g p15-ticket"><span class="p15-pill">${ic('tick2')} Paid · ${t.qty} seat${t.qty>1?'s':''}</span><h2>${esc(t.event.title)}</h2><small>${esc(evWhen(t.event))} · ${esc(t.event.venue||t.event.city)}</small>
+    <div class="p15-qr">${qrSvg15(t.code)}</div><small>Show this at the door</small>
+    ${new Date(t.event.startsAt)-Date.now()>48*36e5?`<button class="p15-btn ghost" data-a="p15cancelT" data-id="${t.id}">Cancel and get ticket money back</button>`:''}</div>`).join(''):`<div class="p15-g p15-note">${ic('cal')} No tickets yet. Book a seat in Events &amp; Friends.</div>`))}
+function qrSvg15(c){try{const q=qrcode(0,'M');q.addData('NM15:'+c);q.make();return q.createSvgTag({cellSize:6,margin:2,scalable:true})}catch(e){return ''}}
+Object.keys(EVK).forEach(k=>P15V[k]=()=>evList15(k));
+P15V.tickets=tickets15;
+(function(){
+  const _o=P15V;const get=v=>v&&v.startsWith('evd:')?()=>evDetail15(v.slice(4)):null;
+  const _rm=renderMatches;renderMatches=function(){if(P15on()&&P15.v&&get(P15.v))return get(P15.v)();return _rm()};
+  const _me=renderMe;renderMe=function(){if(P15on()&&P15.v&&get(P15.v))return get(P15.v)();return _me()};
+  Object.assign(A,{
+    p15n(el){P15.n=Math.max(1,Math.min(10,P15.n+Number(el.dataset.d)));render()},
+    async p15book(el){if(P15.busy)return;const id=el.dataset.id,e=evFind(id);if(!e)return;P15.busy='book';render();
+      try{await API.rpc('book15',{eid:id,n:P15.n});P15.tk=undefined;P15.ev[e.kind]=undefined;P15.n=1;P15.v='tickets';toast('Booked. Your ticket is ready.','tick2')}
+      catch(x){const m=String(x.message||x);toast(m.includes('plus members')?'For the first 24 hours only Plus members can book.':m.includes('not enough')?'Not enough seats left.':m.includes('not open')?'Payments open soon.':'Could not book. Please try again.','info')}
+      P15.busy='';render()},
+    async p15cancelT(el){try{await API.rpc('cancel_ticket15',{tid:el.dataset.id});P15.tk=undefined;toast('Cancelled. Ticket money comes back.','tick2')}catch(x){toast(String(x.message||x).includes('too late')?'Less than 48 hours left, so it can no longer be cancelled.':'Could not cancel. Please try again.','info')}render()}
+  });
+  const _open=A.p15open;A.p15open=function(el){P15.n=1;return _open(el)};
 })();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
