@@ -3735,9 +3735,10 @@ function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^
     const k=html.indexOf('id="chat-scroll"');if(k<0)return html;const s=html.lastIndexOf('<',k);return html.slice(0,s)+bar+fam+html.slice(s)};
 
   /* ===== Me: your Roots Signature ===== */
-  const _me=renderMe;renderMe=function(){const html=_me();if(!RL())return html;const me=S.me||{};
+  const _me=renderMe;renderMe=function(){let html=_me();if(!RL())return html;const me=S.me||{};
     const t=`<div class="rl-mesig"><span class="rl-sgw">${rlSig(me.id||me.name||'me',initials(me.name)||'',4)}</span><div><p class="eb">Your Roots Signature</p><b>${esc(me.os||me.oc||'')} → ${esc(me.city||me.country||'')}</b><small>A pattern only you have. It shows on your introduction card.</small></div></div>`;
-    const k=html.indexOf('<div class="scroll');if(k<0)return html;const e=html.indexOf('>',k)+1;return html.slice(0,e)+t+html.slice(e)};
+    html=html.replace(/<button class="likes" data-a="openAdmin">[\s\S]*?<\/button>/,'');const ad=me.isAdmin?`<button class="rl-admin" data-a="openAdmin"><span>${ic('shield')}</span><div><b>Admin panel</b><small>Members, events, reports, robots</small></div><i>›</i></button>`:'';
+    const k=html.indexOf('<div class="scroll');if(k<0)return html;const e=html.indexOf('>',k)+1;return html.slice(0,e)+ad+t+html.slice(e)};
 
 
   /* ===== Sign-up: your Roots Signature grows with every part (zero typing; seed = your own answers) ===== */
@@ -3749,11 +3750,11 @@ function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^
   RLX.OPTS.events=()=>{let evs=[];try{evs=events().filter(e=>e.date>Date.now()-864e5)}catch(e){}const me=S.me||{};const h0=meHome();
     const pins=evs.slice(0,12).map(e=>({ll:ll({country:e.country,city:e.city}),html:`<i></i>${esc(e.city||'')}`,cls:'on',a:'openEvent',id:e.id}));
     if(h0)pins.unshift({ll:h0,html:`<i></i>You`,cls:'me'});const c=h0||(pins[0]&&pins[0].ll)||[0,20];
-    return {center:[c[0],Math.max(-20,Math.min(45,c[1]))],zoom:innerWidth<500?1.6:2.2,spin:0,arcs:[],roots:[],lives:[me.country].filter(Boolean),pins}};
+    return {center:[c[0],Math.max(-20,Math.min(45,c[1]))],zoom:innerWidth<500?0.55:1.1,spin:0,arcs:[],roots:[],lives:[me.country].filter(Boolean),pins}};
   const _re=renderEvents;renderEvents=function(){const h=_re();if(!RL()||!RLX.webgl())return h;const k=h.indexOf('<div class="main-inner pad">');if(k<0)return h;const e=k+'<div class="main-inner pad">'.length;
     let n=0;try{n=events().filter(x=>x.date>Date.now()).length}catch(x){}
     return h.slice(0,e)+`<div class="rl-tile rl-evt"><div class="rl-slot" data-rl="events"></div><div class="rl-cap"><p class="eb">Family tables near you</p><b>${n} upcoming event${n===1?'':'s'}</b></div></div>`+h.slice(e)};
-  const _are=afterRenderEvents;afterRenderEvents=function(){const r=_are.apply(this,arguments);try{if(RL()){RLX.attach();if(S.rlAsk&&S.screen!=='welcome'){const d=document.createElement('div');d.innerHTML=askSheet();if(d.firstChild)app.appendChild(d.firstChild)}}}catch(e){}return r};
+  const _are=afterRenderEvents;afterRenderEvents=function(){const r=_are.apply(this,arguments);try{if(S.screen==='events'){const seen=new Set();document.querySelectorAll('#app .fu-tk').forEach(c=>{const b=c.querySelector('[data-id]');const id=b&&b.dataset.id;if(!id)return;if(seen.has(id))c.remove();else seen.add(id)})}if(RL()){RLX.attach();if(S.rlAsk&&S.screen!=='welcome'){const d=document.createElement('div');d.innerHTML=askSheet();if(d.firstChild)app.appendChild(d.firstChild)}}}catch(e){}return r};
 })();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()}}; /* used by automated tests */
