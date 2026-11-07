@@ -3781,6 +3781,96 @@ function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^
     const t0=Date.now();try{await loadAll();cacheSave&&cacheSave()}catch(x){}const w=Math.max(0,700-(Date.now()-t0));setTimeout(()=>{render();e.classList.remove('go');set(0,true);busyR=false},w)}
 })();
 
+/* ---------- Plan 15 (his ok 7 Nov 2026 23:28 on mocks handoff/mocks/plan15/*.pdf) ----------
+   The new NeuMarry: 4 doors (Settle In, Events & Friends, Membership, For Business). Shown only when the
+   server says plan15 is on (app_flags.plan15, admin first). The old matrimony screens stay in the code,
+   hidden while plan15 is on. Bottom bar: Home · Settle In · Events · Me. Styles: 'Plan 15' block in app.css.
+   Real data only: a section with no data is not shown. Money: test mode until his payment account is ready. */
+Object.assign(IC,{
+  key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/>',
+  plane2:'<path d="M2 16l20-8-6 12-3-5-5 3z"/><path d="M13 15l3-3"/>',
+  brief:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/>',
+  tag2:'<path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9z"/><circle cx="8" cy="8" r="1.6"/>',
+  party:'<path d="M4 20l5-14 9 9z"/><path d="M14 4v2M19 9h2M17 6l2-2"/>',
+  tv2:'<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/>',
+  bus2:'<rect x="4" y="3" width="16" height="15" rx="3"/><path d="M4 11h16M8 21v-3M16 21v-3"/>',
+  ball2:'<circle cx="12" cy="12" r="9"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/>',
+  store2:'<path d="M4 9l1-5h14l1 5M4 9h16v11H4zM9 20v-6h6v6"/>',
+  bed2:'<path d="M3 18V8M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="11" r="2"/>',
+  star2:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+  home2:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  chev2:'<path d="M9 5l7 7-7 7"/>', back2:'<path d="M15 5l-7 7 7 7"/>', tick2:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  lock2:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+  shield2:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
+  mega2:'<path d="M3 10v4h3l7 5V5L6 10z"/><path d="M17 9a4 4 0 0 1 0 6"/>'
+});
+const P15={d:null,busy:'',v:null};
+function P15on(){return !!(P15.d&&P15.d.on)}
+async function load15(){try{P15.d=await API.rpc('my15',{});try{localStorage.setItem('nm.p15.'+(API.userId()||''),JSON.stringify(P15.d))}catch(e){}}catch(e){}}
+function warm15(){try{const o=JSON.parse(localStorage.getItem('nm.p15.'+(API.userId()||''))||'null');if(o&&!P15.d)P15.d=o}catch(e){}}
+const p15price=k=>{const c=P15.d&&P15.d.prices&&P15.d.prices[k];return c==null?'':money(c,'USD')};
+const p15top=(t,back)=>`<div class="p15-top">${back?`<button class="p15-tb" data-a="p15back" aria-label="Back">${ic('back2')}</button>`:'<span class="p15-tb ghost"></span>'}<h1>${esc(t)}</h1><span class="p15-tb ghost"></span></div>`;
+const p15tile=(icn,tone,t,d,act,extra)=>`<button class="p15-g p15-t" data-a="${act}"><span class="p15-b ${tone}">${ic(icn)}</span><b>${esc(t)}</b><small>${esc(d)}</small>${extra||''}</button>`;
+function p15wrap(inner){return `<div class="scroll p15s" id="main"><div class="main-inner p15">${inner}</div></div>`}
+function home15(){
+  const me=S.me||{};
+  return p15wrap(`<div class="p15-brand"><img src="img/icon-192.png" alt=""><b>NeuMarry</b><span class="p15-city">${ic('pin')}${esc(me.city||me.country||'')}</span></div>
+  <h2 class="p15-h1">Your people,<br>wherever you live</h2><p class="p15-sub">Rooms, jobs, parents' travel, events and friends: all in one place.</p>
+  <div class="p15-bento">
+   <button class="p15-g p15-t span2 row" data-a="tab" data-k="settle"><span class="p15-b mint big">${ic('key')}</span><span class="tx"><b>Settle In</b><small>Room, job, parents' travel, trusted experts</small></span>${ic('chev2')}</button>
+   ${p15tile('party','lem','Events & Friends','Meetups, watch parties, festivals, trips','tab" data-k="ev15')}
+   ${p15tile('star2','fern','Membership','NeuMarry Plus and Verified Tick','p15open" data-v="plus')}
+   <button class="p15-g p15-t span2 row" data-a="p15open" data-v="biz"><span class="p15-b mint">${ic('store2')}</span><span class="tx"><b>For Business</b><small>Agents, hosts, event services, ads</small></span>${ic('chev2')}</button>
+  </div>`)}
+function settle15(){
+  const t=[['bed2','mint','Find a Room','Rooms and roommates, by area and budget','rooms'],['plane2','lem','Travel Buddy for Parents','A verified buddy on the same flight','buddy'],
+    ['brief','fern','Job Referral','Ask people inside the company','referral'],['shield2','mint','Trusted Experts','Licensed agents, consultants, movers','experts'],['tag2','lem','Moving-Out Sale','Buy and sell when people move','sale']];
+  return p15wrap(p15top('Settle In')+`<p class="p15-sub">Everything for your first months in a new country.</p><div class="p15-bento">${t.map((x,i)=>p15tile(x[0],x[1],x[2],x[3],'p15open" data-v="'+x[4],'').replace('p15-t"','p15-t'+(i===0?' span2':'')+'"')).join('')}</div>`)}
+function events15(){
+  const t=[['heart','mint','Friend Meetups','Dinner tables, walks, games','meetups'],['tv2','lem','Watch Parties','Big matches on a big screen','watch'],['party','fern','Festivals','Diwali, Eid, Lunar New Year, Christmas','festival'],
+    ['bus2','mint','Day Trips','Bus trips with a host','trip'],['ball2','lem','Sports Leagues','Join a team or find players','league']];
+  return p15wrap(p15top('Events & Friends')+`<p class="p15-sub">Hosts from your city run them. You just book a seat.</p><div class="p15-bento">${t.map((x,i)=>p15tile(x[0],x[1],x[2],x[3],'p15open" data-v="ev-'+x[4],'').replace('p15-t"','p15-t'+(i===0?' span2':'')+'"')).join('')}</div>
+  ${P15.d&&!P15.d.plus?`<button class="p15-g p15-row" data-a="p15open" data-v="plus"><span class="p15-b lem">${ic('star2')}</span><span class="tx"><b>Event details open with Plus</b><small>You can see names and dates for free</small></span>${ic('chev2')}</button>`:''}`)}
+function plus15(){const d=P15.d||{};
+  const perks=[['bed2','Find a Room','Contact and address of every room'],['party','Events & Friends','Full event details, book 24 hours early'],['shield2','Trusted Experts','Prices and contact of every expert'],['brief','Job Referral','2 requests every month']];
+  return p15wrap(p15top('Membership',true)+`<div class="p15-g p15-hero"><span class="p15-b lem big">${ic('star2')}</span><h2>NeuMarry Plus</h2><small>${d.plus?`Active until ${esc(new Date(d.plusUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'}))}`:'One membership opens everything'}</small></div>
+  <div class="p15-g p15-list">${perks.map(p=>`<div class="p15-li"><span class="p15-b mint">${ic(p[0])}</span><span class="tx"><b>${p[1]}</b><small>${p[2]}</small></span>${ic('tick2')}</div>`).join('')}</div>
+  ${d.plus?'':`<div class="p15-2"><button class="p15-g p15-pr${P15.y?'':' on'}" data-a="p15yr" data-y="0"><b>${p15price('plus_m')}</b><small>per month</small></button><button class="p15-g p15-pr${P15.y?' on':''}" data-a="p15yr" data-y="1"><b>${p15price('plus_y')}</b><small>per year · 2 months free</small></button></div>
+  <button class="p15-btn" data-a="p15buyPlus"${P15.busy==='plus'?' disabled':''}>${P15.busy==='plus'?'Starting…':'Start Plus'}</button><p class="p15-ex">${d.payTest?'Test mode: no real money is taken.':'Cancel any time. No hidden charges.'}</p>`}
+  <button class="p15-g p15-row" data-a="p15open" data-v="tick"><span class="p15-b mint">${ic('shield2')}</span><span class="tx"><b>Verified Tick</b><small>${d.tick?'Active':'People trust you faster'}</small></span>${ic('chev2')}</button>`)}
+function tick15(){const d=P15.d||{},v=(S.me&&S.me.v)||{},idOk=!!(v.id&&v.selfie);
+  const st=(ok,n,t,s)=>`<div class="p15-step"><span class="p15-dot${ok?'':' off'}">${ok?ic('tick2'):n}</span><span><b>${t}</b><small>${s}</small></span></div>`;
+  return p15wrap(p15top('Verified Tick',true)+`<p class="p15-sub">People trust you faster: rooms, buddies and referrals say yes sooner.</p>
+  <div class="p15-g p15-steps">${st(true,1,'Phone or email','Checked when you signed in · free')}${st(!!v.id,2,'Photo of your ID','Passport, PR card or driving licence')}${st(!!v.selfie,3,'Quick selfie check','Only to match the ID, never shown')}</div>
+  <div class="p15-g p15-note">${ic('lock2')} Your ID photo is deleted after the check (7 days at most). We keep only "verified: yes".</div>
+  ${d.tick?`<div class="p15-g p15-note">${ic('tick2')} Your tick is active until ${esc(new Date(d.tickUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'}))}.</div>`:
+   idOk?`<button class="p15-btn" data-a="p15buyTick"${P15.busy==='tick'?' disabled':''}>${P15.busy==='tick'?'Adding…':`Get the tick · ${p15price('tick')}`}</button>${d.payTest?'<p class="p15-ex">Test mode: no real money is taken.</p>':''}`:
+   `<button class="p15-btn" data-a="verify">Check my ID first</button><p class="p15-ex">The tick costs ${p15price('tick')} once your ID check is done.</p>`}`)}
+function soon15(t){return p15wrap(p15top(t,true)+`<div class="p15-g p15-note">${ic('clock')} This part is being built now. It opens for everyone together with the rest of the new NeuMarry.</div>`)}
+const P15V={plus:plus15,tick:tick15};
+const P15T={biz:'For Business',rooms:'Find a Room',buddy:'Travel Buddy for Parents',referral:'Job Referral',experts:'Trusted Experts',sale:'Moving-Out Sale','ev-meetups':'Friend Meetups','ev-watch':'Watch Parties','ev-festival':'Festivals','ev-trip':'Day Trips','ev-league':'Sports Leagues'};
+(function(){
+  const _rm=renderMatches;renderMatches=function(){if(!P15on())return _rm();
+    if(P15.v)return (P15V[P15.v]||(()=>soon15(P15T[P15.v]||'')))();
+    return S.tab==='settle'?settle15():S.tab==='ev15'?events15():home15()};
+  const _me=renderMe;renderMe=function(){if(P15on()&&P15.v){return (P15V[P15.v]||(()=>soon15(P15T[P15.v]||'')))()}return _me()};
+  const _ar=afterRenderEvents;afterRenderEvents=function(vk){_ar(vk);if(!P15on())return;const nav=document.querySelector('.navwrap .nav');if(!nav)return;
+    const cur=P15.v&&S.tab==='me'?'me':S.tab==='settle'||S.tab==='ev15'||S.tab==='me'?S.tab:'matches';
+    nav.className='nav n4';nav.innerHTML=[['matches','Home','home2'],['settle','Settle In','key'],['ev15','Events','party'],['me','Me','user']].map(([k,l,i])=>
+      `<button data-a="tab" data-k="${k}" class="${cur===k?'on':''}" aria-current="${cur===k?'page':'false'}">${ic(i)}<span>${l}</span></button>`).join('')};
+  const _tab=A.tab;A.tab=function(el){P15.v=null;return _tab(el)};
+  Object.assign(A,{
+    p15open(el){P15.v=el.dataset.v;view=null;sheet=null;render();const m=document.getElementById('main');if(m)m.scrollTop=0},
+    p15back(){P15.v=null;render()},
+    p15yr(el){P15.y=el.dataset.y==='1';render()},
+    async p15buyPlus(){if(P15.busy)return;P15.busy='plus';render();try{await API.rpc('buy_plus15',{yearly:!!P15.y});await load15();toast('NeuMarry Plus is active.','star2')}catch(e){toast(String(e.message||e).includes('not open')?'Payments open soon.':'Could not start Plus. Please try again.','info')}P15.busy='';render()},
+    async p15buyTick(){if(P15.busy)return;P15.busy='tick';render();try{await API.rpc('buy_tick15',{});await load15();toast('Your Verified Tick is active.','shield2')}catch(e){toast(String(e.message||e).includes('ID and selfie')?'Please finish your ID check first.':'Could not add the tick. Please try again.','info')}P15.busy='';render()}
+  });
+  const _la=loadAll;loadAll=async function(){await Promise.all([_la(),load15()])};
+  /* fast open: plan15 state comes from this phone at once, and loads beside the profile (never before it) */
+  const _lm=loadMe;loadMe=async function(){warm15();const q=load15();const r=await _lm();await q;return r};
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 boot();
 })();
