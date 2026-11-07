@@ -1881,3 +1881,29 @@ html.p15on .navwrap{background:transparent}
 .p15-rank{width:20px;font-size:14px}
 .p15-pts{display:flex;align-items:center;gap:8px}.p15-pts button{width:32px;height:32px;border-radius:10px;border:1px solid var(--p-edge);background:var(--p-gl2);color:inherit;font-size:17px;font-weight:800}
 .p15-li .p15-chip{padding:6px 10px;font-size:11.5px}
+.p15-room,.p15-pad{padding:14px;margin-bottom:10px}.p15-rh{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}.p15-rh .tx{flex:1;display:flex;flex-direction:column;min-width:0}.p15-rh b{font-size:15px;font-weight:800}.p15-rh small{font-size:12px;color:var(--p-mut)}
+.p15-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.p15-unlock{display:flex;align-items:center;gap:8px;width:100%;margin-top:10px;padding:10px 12px;border-radius:12px;border:0;background:var(--p-l1);color:var(--p-lt);font:inherit;font-size:12.5px;font-weight:700;text-align:left;cursor:pointer}.p15-unlock .ic{width:16px;height:16px}
+.p15-contact{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--p-m1);color:var(--p-mt);font-size:13px;font-weight:700;line-height:1.7}.p15-contact .ic{width:15px;height:15px;vertical-align:-3px}
+.p15-lockrow{font-size:12.5px;color:var(--p-mut)}
+.p15-note0{display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--p-mut);padding:10px 0}.p15-note0 .ic{width:16px;height:16px}
+.p15-libtn{width:100%;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.p15-link{display:inline-block;margin:6px 0;font-size:13px;font-weight:700;color:var(--p-acc)}
+.p15-item{padding:12px;display:flex;flex-direction:column;gap:6px}.p15-item>b{font-size:14px;font-weight:800}.p15-item>small{font-size:11.5px;color:var(--p-mut)}.p15-price{font-size:17px;font-weight:800}
+.p15-svc{display:flex;gap:8px}.p15-svc input:last-child{width:96px;flex:0 0 96px}
+/* Plan 15 'majedar' + real glass (his 8 Nov 00:04: glass looks premium only when something sits behind it):
+   soft living colour shapes BEHIND the glass (mint, lemon, fern; slow drift = the one quiet movement),
+   cards blur them. Tiles give a soft press. Reduce motion = still shapes. */
+html.p15on #app::before,html.p15on #app::after{content:"";position:absolute;pointer-events:none;z-index:0;border-radius:50%;filter:blur(8px)}
+html.p15on #app::before{width:260px;height:260px;left:-70px;top:120px;background:radial-gradient(circle at 35% 35%,rgba(120,228,186,.55),rgba(120,228,186,.0) 70%);animation:p15drift1 18s ease-in-out infinite alternate}
+html.p15on #app::after{width:300px;height:300px;right:-90px;top:380px;background:radial-gradient(circle at 60% 40%,rgba(255,214,90,.42),rgba(255,214,90,0) 70%);animation:p15drift2 22s ease-in-out infinite alternate}
+html.p15on.gl-lt #app::before{background:radial-gradient(circle at 35% 35%,rgba(74,214,160,.55),rgba(74,214,160,0) 70%)}
+html.p15on.gl-lt #app::after{background:radial-gradient(circle at 60% 40%,rgba(255,200,40,.45),rgba(255,200,40,0) 70%)}
+html.p15on #app>.scroll,html.p15on #app>.navwrap,html.p15on #app>.view,html.p15on #app>.sheet-wrap,html.p15on #app>.toast{position:relative;z-index:1}
+html.p15on #app>.scroll{background:radial-gradient(220px 220px at 85% 8%,rgba(190,235,150,.16),transparent 70%)}
+@keyframes p15drift1{0%{transform:translate(0,0) scale(1)}100%{transform:translate(70px,90px) scale(1.15)}}
+@keyframes p15drift2{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-80px,-120px) scale(.9)}}
+@media (prefers-reduced-motion:reduce){html.p15on #app::before,html.p15on #app::after{animation:none}}
+.p15-t,.p15-row,.p15-plan,.p15-pr,.p15-chip,.p15-btn{transition:transform .15s ease}
+.p15-t:active,.p15-row:active,.p15-plan:active,.p15-pr:active,.p15-chip:active,.p15-btn:active{transform:scale(.97)}
+.p15-t .p15-b{transition:transform .25s ease}.p15-t:active .p15-b{transform:rotate(-8deg) scale(1.08)}
