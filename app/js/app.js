@@ -4345,8 +4345,10 @@ Object.assign(P15V,{adcheck:adCheck15,biz:biz15v,services:svc15v,svcplan:svcPlan
     if(p.state===2)throw new Error('Your payment is pending. It switches on when Google Play confirms it.');
     return API.fn('play15',{productId:pid,purchaseToken:p.purchaseToken})}
   P15.playBuy=playBuy;
+  /* OFF (owner 8 Nov 2026 09:24: "sab kuch website par bechenge abhi ke liye"): nothing is sold inside the Android app for now. */
+  const PLAY_ON=false;
   const _rpc=API.rpc.bind(API);
-  API.rpc=async function(name,args){
+  if(PLAY_ON)API.rpc=async function(name,args){
     if(name==='buy_plus15'&&Bill()&&P15.d&&!P15.d.payTest){const v=await playBuy('neumarry_plus',true,!!(args&&args.yearly));if(!v||!v.entitled)throw new Error('Google Play has not confirmed this payment yet.');return v}
     let tries=0;
     for(;;){try{return await _rpc(name,args)}catch(e){
