@@ -2042,3 +2042,14 @@ html.p15mat.gl-lt .tpp .btn.primary,html.p15mat.gl-lt .tp-strip .btn.primary{bac
 /* Photos always shown whole (his rule 8 Nov 13:37): every photo frame has the photo's own 3:2 shape, nothing cut. */
 .p15-t>.p15-ph,.p15-t.span2>.p15-ph,.p15-hero.ph>.p15-ph,.p15-evhero .art.ph{height:auto!important;aspect-ratio:3/2}
 .p15-banner{height:auto!important;aspect-ratio:3/2}
+.p15-theme{margin-left:auto;width:36px;height:36px;border-radius:99px;display:grid;place-items:center;background:var(--p-gl);border:1px solid var(--p-edge);color:inherit;padding:0}.p15-theme .ic{width:18px;height:18px}.p15-theme+.p15-city{margin-left:8px}
+/* Light welcome (default light, his rule 8 Nov 2026 13:46) */
+html.p15pub.gl-lt.c3 .c3w,html.p15pub.gl-lt .c3w{background:radial-gradient(120% 60% at 50% 0%,#FFFFFF,#F1EFFB 70%)!important;color:#1B1830}
+html.p15pub.gl-lt .c3w .c3topl,html.p15pub.gl-lt .c3w .c3h1,html.p15pub.gl-lt .c3w .c3cyc,html.p15pub.gl-lt .c3w .c3cyc.y,html.p15pub.gl-lt .c3w .c3chips,html.p15pub.gl-lt .c3w .link,html.p15pub.gl-lt .c3w .c3w-body{color:#1B1830!important}
+html.p15pub.gl-lt .c3w .c3kick{color:#4A4766!important}
+html.p15pub.gl-lt .c3w .c3cyc.p{color:#5B4FD6!important}
+html.p15pub.gl-lt .c3w .c3lede{color:#3D3A57!important}
+html.p15pub.gl-lt .c3w .c3note{color:#6B6880!important}
+html.p15pub.gl-lt .c3w .c3lang,html.p15pub.gl-lt .c3w .c3dist,html.p15pub.gl-lt .c3w .c3chips>*{background:rgba(255,255,255,.78)!important;color:#1B1830!important;border-color:rgba(91,79,214,.18)!important}
+html.p15pub.gl-lt .c3w .btn.c3cta{background:linear-gradient(140deg,#6A5FE0,#4A3FC4)!important;color:#fff!important}
+html.p15pub.gl-lt .c3w .btn.block:not(.c3cta){background:#fff!important;color:#2F2690!important;border:1px solid rgba(91,79,214,.25)!important}

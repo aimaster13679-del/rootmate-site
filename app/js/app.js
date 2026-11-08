@@ -3411,7 +3411,7 @@ function GLASS(){try{if(/127\.0\.0\.1/.test(CFG.url||'')){const t=localStorage.g
 (function(){
   const mq=window.matchMedia?matchMedia('(prefers-color-scheme: light)'):null;
   const apply=()=>{const on=GLASS();const h=document.documentElement;h.classList.toggle('gl',on);
-    let lt=false;try{const t=localStorage.getItem('nm.glassmode');lt=t?t==='light':!!(mq&&mq.matches)}catch(e){}
+    let lt=false;try{const t=localStorage.getItem('nm.glassmode');lt=t!=='dark'   /* default LIGHT (his rule 8 Nov 13:46); dark only when chosen with the theme button */}catch(e){}
     h.classList.toggle('gl-lt',on&&lt);
     const m=document.querySelector('meta[name=theme-color]');if(m&&on)m.setAttribute('content',lt?'#F7F8F5':'#0A0C0B')};
   const _r=render;render=function(){apply();_r()};
@@ -3651,7 +3651,7 @@ function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^
   /* ===== Welcome: live globe instead of the flat map ===== */
   const W=[[[3.38,6.52],[-79.38,43.65],'Nigeria','Canada'],[[129.07,35.18],[151.21,-33.87],'South Korea','Australia'],[[-103.35,20.66],[-3.7,40.42],'Mexico','Spain'],
     [[72.57,23.02],[-0.12,51.5],'India','United Kingdom'],[[120.98,14.6],[55.27,25.2],'Philippines','United Arab Emirates'],[[35.5,33.89],[-46.63,-23.55],'Lebanon','Brazil']];
-  RLX.OPTS.welcome=()=>({dark:!!document.querySelector('.c3w'),center:[60,20],zoom:innerWidth<500?1.25:1.6,spin:.035,arcs:W.map((w,i)=>[w[0],w[1],i%2?'y':'g']),roots:W.filter((_,i)=>i%2).map(w=>w[2]),lives:W.filter((_,i)=>!(i%2)).map(w=>w[3]),pins:[]});
+  RLX.OPTS.welcome=()=>({dark:!!document.querySelector('.c3w')&&!document.documentElement.classList.contains('gl-lt'),center:[60,20],zoom:innerWidth<500?1.25:1.6,spin:.035,arcs:W.map((w,i)=>[w[0],w[1],i%2?'y':'g']),roots:W.filter((_,i)=>i%2).map(w=>w[2]),lives:W.filter((_,i)=>!(i%2)).map(w=>w[3]),pins:[]});
   const _c3m=c3map;c3map=function(){return RL()&&RLX.webgl()?`<div class="rl-slot rl-wel" data-rl="welcome"><div class="rl-fb">${_c3m()}</div></div>`:_c3m()};
 
   /* ===== Matches: globe tile + introductions as signature cards ===== */
@@ -3825,7 +3825,7 @@ const p15tile=(icn,tone,t,d,act,extra)=>`<button class="p15-g p15-t" data-a="${a
 function p15wrap(inner){return `<div class="scroll p15s" id="main"><div class="main-inner p15">${inner}</div></div>`}
 function home15(){
   const me=S.me||{};
-  return p15wrap(`<div class="p15-brand"><img src="img/icon-192.png" alt=""><b>NeuMarry</b><span class="p15-city">${ic('pin')}${esc(me.city||me.country||'')}</span></div>
+  return p15wrap(`<div class="p15-brand"><img src="img/icon-192.png" alt=""><b>NeuMarry</b><button class="p15-theme" data-a="p15theme" aria-label="${document.documentElement.classList.contains('gl-lt')?'Dark theme':'Light theme'}">${ic(document.documentElement.classList.contains('gl-lt')?'moon':'sun')}</button><span class="p15-city">${ic('pin')}${esc(me.city||me.country||'')}</span></div>
   <h2 class="p15-h1">Your people,<br>wherever you live</h2><p class="p15-sub">Rooms, jobs, parents' travel, events and friends: all in one place.</p>
   ${(typeof RL==='function'&&RL()&&RLX.webgl())?`<div class="p15-earth"><div class="rl-slot" data-rl="p15"></div><span class="p15-earth-h">${ic('globe')} Spin it · tap a flag</span><span class="p15-earth-t">One app for people living abroad, in every country</span></div>`:''}
   <div class="p15-bento">
@@ -4507,6 +4507,9 @@ function guests15(eid){const l=P15.gs[eid],e=(P15.hb||[]).find(x=>x.id===eid);
   });
   const _bk=A.p15back;A.p15back=function(el){if(P15.v&&P15.v.startsWith('guests:')){P15.v='hostboard';P15.f={};render();return}return _bk(el)};
 })();
+
+/* Theme button in the Home header (his rule 8 Nov 2026 13:46: light by default, dark only if the member picks it). */
+Object.assign(A,{p15theme(){const lt=document.documentElement.classList.contains('gl-lt');try{localStorage.setItem('nm.glassmode',lt?'dark':'light')}catch(e){}render()}});
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 boot();
