@@ -3807,6 +3807,7 @@ Object.assign(IC,{
   chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'
 });
 const P15={d:null,busy:'',v:null};
+const P15_PUBLIC=true;  /* public first screens of the new NeuMarry (launch 8 Nov 2026) */
 const em15=e=>`${(e&&e.raw)||''} ${(e&&e.code)||''} ${(e&&e.message)||e}`;
 const FL15=[['Canada',-106,57],['United States',-98,39],['Mexico',-102,23],['Brazil',-51,-10],['Argentina',-64,-34],['Colombia',-73,4],['Peru',-75,-9],['Chile',-71,-30],['United Kingdom',-2,53],['Ireland',-8,53],['France',2,46.5],['Spain',-3.7,40],['Portugal',-8,39.5],['Germany',10,51],['Italy',12.5,42.5],['Netherlands',5.3,52.2],['Poland',19,52],['Sweden',16,62],['Norway',9,61],['Greece',22,39],['Turkey',35,39],['Ukraine',31,49],['Egypt',30,26.5],['Morocco',-6,32],['Nigeria',8,9.5],['Ghana',-1,7.9],['Kenya',38,0.2],['Ethiopia',39.5,8.6],['South Africa',24,-29],['Lebanon',35.8,33.9],['Saudi Arabia',45,24],['United Arab Emirates',54,24],['Iran',53,32],['Pakistan',69,30],['India',79,22],['Nepal',84,28.2],['Bangladesh',90,23.7],['Sri Lanka',80.7,7.8],['China',104,35],['South Korea',127.8,36.3],['Japan',138,36.5],['Philippines',122,12.5],['Vietnam',106,16],['Thailand',101,15],['Malaysia',102,4],['Indonesia',113,-1],['Singapore',103.8,1.35],['Australia',134,-25],['New Zealand',172,-41],['Russia',90,60]];
 const fg15=n=>{try{return flag(n)||''}catch(e){return ''}};
@@ -4420,7 +4421,7 @@ function mat15bar(){const m=document.querySelector('#app .main-inner');if(!m||m.
 (function(){
   const _mfs=meFromServer;meFromServer=function(m){const r=_mfs(m);r.p15light=!!(m&&m.profile&&m.profile.p15_light);return r};
   const _ss=startSignup;startSignup=function(){if(P15on()&&!P15.lifeFlow){S.screen='p15join';render();return}return _ss.apply(this,arguments)};
-  const _r=render;render=function(){if(S.screen==='p15join'){const html=renderJoin15()+(sheet?renderSheet():'');app.innerHTML=html;return}return _r.apply(this,arguments)};
+  const _r=render;render=function(){document.documentElement.classList.toggle('p15mat',P15on()||P15_PUBLIC);if(S.screen==='p15join'){const html=renderJoin15()+(sheet?renderSheet():'');app.innerHTML=html;return}return _r.apply(this,arguments)};
   const grab=()=>{const v=id=>{const x=document.getElementById(id);return x?(x.type==='checkbox'?x.checked:x.value.trim()):undefined};
     Object.assign(join15,{name:v('j-name'),ctry:v('j-ctry'),city:v('j-city'),oc:v('j-oc'),c18:v('j-18'),terms:v('j-terms'),mk:v('j-mk')})};
   Object.assign(A,{
@@ -4455,7 +4456,6 @@ function mat15bar(){const m=document.querySelector('#app .main-inner');if(!m||m.
   const _sh=renderSheet;renderSheet=function(){if(sheet&&sheet.type==='legal'){const on=P15on()&&!P15.mat;LEGAL.terms=on?T15:OLD.terms;LEGAL.privacy=on?P15P:OLD.privacy}return _sh.apply(this,arguments)};
 })();
 /* Public first screens for the new NeuMarry (before sign-in): switched on with P15_PUBLIC on launch day. */
-const P15_PUBLIC=true;
 (function(){
   if(!P15_PUBLIC)return;
   const fix=h=>h.replace('NeuMarry · verified matrimony','NeuMarry · for people living abroad')

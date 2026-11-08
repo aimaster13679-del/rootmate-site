@@ -2009,3 +2009,31 @@ html.p15pub.c3.gl .su-head small,html.p15pub .auth .link{color:#5B4FD6}
 html.p15pub.c3.gl:not(.gl-lt) .su-head small,html.p15pub:not(.gl-lt) .auth .link{color:#CFC9FF}
 html.p15pub .auth-h em,html.p15pub.c3.gl .auth-h em{color:#5B4FD6!important;-webkit-text-fill-color:#5B4FD6!important;background:none!important}
 html.p15pub:not(.gl-lt) .auth-h em,html.p15pub.c3.gl:not(.gl-lt) .auth-h em{color:#CFC9FF!important;-webkit-text-fill-color:#CFC9FF!important}
+/* P15MAT-START  Life Partner: green parts only (dark = white glass, light = lilac) */
+html.p15mat{--m15a:#FFFFFF;--m15t:#111114;--m15s:rgba(255,255,255,.14);--m15b:rgba(255,255,255,.28)}
+html.p15mat.gl-lt{--m15a:#5B4FD6;--m15t:#FFFFFF;--m15s:rgba(91,79,214,.10);--m15b:rgba(91,79,214,.28)}
+html.p15mat.c3 .btn.primary,html.p15mat.c3.gl .btn.primary,html.p15mat .tp-next{background:var(--m15a)!important;background-image:none!important;color:var(--m15t)!important;border-color:transparent!important;box-shadow:none!important}
+html.p15mat .btn.primary svg,html.p15mat .tp-next svg{color:var(--m15t)!important;stroke:currentColor}
+html.p15mat.c3 .nav button.on,html.p15mat.c3 .nav button.on svg,html.p15mat.c3 .nav button.on span{color:var(--m15a)!important}
+html.p15mat.c3 .nav button.on{background:var(--m15s)!important;background-image:none!important;box-shadow:none!important}
+html.p15mat .v2chip.on{background:var(--m15s)!important;color:var(--m15a)!important;border-color:var(--m15b)!important}
+html.p15mat .v2mic{background:var(--m15a)!important;color:var(--m15t)!important}
+html.p15mat .callout,html.p15mat .callout.gold,html.p15mat .rl-mesig{background:var(--m15s)!important;background-image:none!important;border:1px solid var(--m15b)!important}
+html.p15mat .callout svg,html.p15mat .eic,html.p15mat .eic svg,html.p15mat .pi,html.p15mat .pi svg,html.p15mat .rowi svg,html.p15mat .vrow svg,html.p15mat .likes svg{color:var(--m15a)!important}
+html.p15mat .eic{background:var(--m15s)!important}
+html.p15mat.c3 .topbar .hello em,html.p15mat .hello em,html.p15mat .tp-tile em,html.p15mat .on>span{color:var(--m15a)!important;-webkit-text-fill-color:var(--m15a)!important;background:none!important}
+html.p15mat .bar>i,html.p15mat .tgl>i{background:var(--m15a)!important;border-color:var(--m15a)!important}
+html.p15mat .tpp,html.p15mat .tp-strip{background:rgba(255,255,255,.10)!important;background-image:none!important;border:1px solid rgba(255,255,255,.22)!important;color:#fff!important}
+html.p15mat.gl-lt .tpp,html.p15mat.gl-lt .tp-strip{background:linear-gradient(150deg,#5B4FD6,#2F2690)!important;border-color:transparent!important}
+html.p15mat .tpp *,html.p15mat .tp-strip *{color:#fff;-webkit-text-fill-color:currentColor}
+html.p15mat .tpp .tp-s>i,html.p15mat .tp-strip .tp-s>i,html.p15mat .tp-s>i{background:rgba(255,255,255,.16)!important;border:1px solid rgba(255,255,255,.40)!important;color:#fff!important}
+html.p15mat .tp-s>i svg{color:#fff!important;stroke:#fff!important}
+html.p15mat .tp-ring .fg{stroke:#fff!important}html.p15mat .tp-ring .bg{stroke:rgba(255,255,255,.22)!important}
+html.p15mat.gl-lt .tp-mini .tp-ring .fg,html.p15mat.gl-lt .tp-badge .tp-ring .fg{stroke:#5B4FD6!important}
+html.p15mat.c3.gl.gl-lt .nav button.on,html.p15mat.c3.gl.gl-lt .nav button.on *{background-color:transparent;color:#3F35A6!important}
+html.p15mat.c3.gl.gl-lt .nav button.on{background:linear-gradient(140deg,#EEEBFF,#DCD6FF)!important}
+html.p15mat.c3.gl:not(.gl-lt) .nav button.on{background:rgba(255,255,255,.14)!important;color:#fff!important}
+html.p15mat .tp-tile.ok>i{background:var(--m15s)!important;color:var(--m15a)!important}
+html.p15mat .tp-tile>i{background:var(--m15s)!important;color:var(--m15a)!important}
+html.p15mat.gl-lt .tpp .btn.primary,html.p15mat.gl-lt .tp-strip .btn.primary{background:#fff!important;color:#2F2690!important;-webkit-text-fill-color:#2F2690}
+/* P15MAT-END */
