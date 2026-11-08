@@ -4328,6 +4328,35 @@ Object.assign(P15V,{adcheck:adCheck15,biz:biz15v,services:svc15v,svcplan:svcPlan
     const j=h.indexOf('</h1>',i);const k=j<0?-1:h.indexOf('</div>',j);if(k<0)return h;return h.slice(0,k+6)+`<div class="p15-banner">${ph15(VPH[v])}</div>`+h.slice(k+6)}});
 })();
 
+/* Google Play for member products inside the Android app (his Play rule, 8 Nov 2026). When the server says a payment
+   is needed and this phone has Google Play billing, Play's own payment sheet opens; the server checks the purchase
+   with Google (play15) and keeps it as a credit; then the same action runs again and uses that credit.
+   Plus is a Play subscription. Business plans and Ad Spot are not sold inside the app. */
+(function(){
+  const FN={buy_tick15:'nm_tick',ref_pack15:'nm_ref_5',ref_ask15:'nm_ref_1',sale_top15:'nm_sale_top',room_post15:'nm_room_post'};
+  const BYP={tick:'nm_tick',tick_renew:'nm_tick',room_post:'nm_room_post',room_top:'nm_room_top',ref_1:'nm_ref_1',ref_5:'nm_ref_5',sale_top:'nm_sale_top'};
+  const notOpen=e=>/payments are not open yet/.test(em15(e));
+  async function playBuy(pid,sub,yearly){const B=Bill();if(!B||!S.me)throw new Error('payments are not open yet');
+    const r=await B.getProducts(sub?{ids:[pid]}:{ids:[pid],type:'inapp'});const pd=((r&&r.products)||[]).find(x=>x.productId===pid);
+    if(!pd)throw new Error('store_unavailable');let args={productId:pid,accountId:S.me.id};
+    if(sub){const o=(pd.offers||[]).find(x=>x.basePlanId===(yearly?'plus-y':'plus-m')&&!x.offerId)||(pd.offers||[])[0];if(!o)throw new Error('store_unavailable');args.offerToken=o.offerToken}
+    let res;try{res=await B.purchase(args)}catch(e){const c=String((e&&e.code)||'');if(c==='cancelled'){P15.lastCancel=Date.now();const x=new Error('cancelled');x.code='cancelled';throw x}throw new Error(c==='billing_3'?'Google Play billing is not available on this phone.':'Google Play could not finish the payment.')}
+    const p=((res&&res.purchases)||[]).find(x=>(x.products||[]).includes(pid));if(!p){P15.lastCancel=Date.now();throw new Error('cancelled')}
+    if(p.state===2)throw new Error('Your payment is pending. It switches on when Google Play confirms it.');
+    return API.fn('play15',{productId:pid,purchaseToken:p.purchaseToken})}
+  P15.playBuy=playBuy;
+  const _rpc=API.rpc.bind(API);
+  API.rpc=async function(name,args){
+    if(name==='buy_plus15'&&Bill()&&P15.d&&!P15.d.payTest){const v=await playBuy('neumarry_plus',true,!!(args&&args.yearly));if(!v||!v.entitled)throw new Error('Google Play has not confirmed this payment yet.');return v}
+    let tries=0;
+    for(;;){try{return await _rpc(name,args)}catch(e){
+      if(!(FN[name]&&Bill()&&notOpen(e))||tries>=2)throw e;
+      const m=/not open yet: (\w+)/.exec(em15(e));const pid=(m&&BYP[m[1]])||(name==='room_post15'&&args&&args.top&&tries?'nm_room_top':FN[name]);
+      tries++;await playBuy(pid,false)}}};
+  /* a cancelled Play sheet says nothing */
+  const _t=toast;toast=function(m,i){if(m==='cancelled'||/^Something went wrong/.test(m)&&P15.lastCancel&&Date.now()-P15.lastCancel<1500)return;return _t.apply(this,arguments)};
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 boot();
 })();
