@@ -2303,7 +2303,7 @@ const liveUpd={id:null,v:null,hid:0,
   apply(){const U=this.U();if(!U||!this.id||S.screen!=='app'||Date.now()-this.hid<20000)return false;try{cacheSave()}catch(e){}U.set({id:this.id}).catch(()=>{});return true},
   async check(){const U=this.U();if(!U)return;try{
     const cur=await fetch('bundle.json',{cache:'no-store'}).then(r=>r.json()).catch(()=>({}));
-    const L=await fetch('https://neumarry.com/app-update/latest.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json());
+    const L=await fetch('https://neumarry.com/nm-update/latest.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json());
     if(!L||!L.version||!L.url||L.version===cur.v||L.version===this.v)return;
     const b=await U.download({url:L.url,version:L.version,checksum:L.checksum||''});await U.next({id:b.id});this.id=b.id;this.v=L.version}catch(e){}}};
 if(liveUpd.U()){try{liveUpd.U().notifyAppReady()}catch(e){}setTimeout(()=>liveUpd.check(),5000);setInterval(()=>liveUpd.check(),6*3600e3);
@@ -3810,7 +3810,7 @@ Object.assign(IC,{
   chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'
 });
 const P15={d:null,busy:'',v:null};
-const P15_PUBLIC=true;  /* public first screens of the new NeuMarry (launch 8 Nov 2026) */
+const P15_PUBLIC=false;  /* public first screens of the new NeuMarry (launch 8 Nov 2026) */
 const em15=e=>`${(e&&e.raw)||''} ${(e&&e.code)||''} ${(e&&e.message)||e}`;
 const FL15=[['Canada',-106,57],['United States',-98,39],['Mexico',-102,23],['Brazil',-51,-10],['Argentina',-64,-34],['Colombia',-73,4],['Peru',-75,-9],['Chile',-71,-30],['United Kingdom',-2,53],['Ireland',-8,53],['France',2,46.5],['Spain',-3.7,40],['Portugal',-8,39.5],['Germany',10,51],['Italy',12.5,42.5],['Netherlands',5.3,52.2],['Poland',19,52],['Sweden',16,62],['Norway',9,61],['Greece',22,39],['Turkey',35,39],['Ukraine',31,49],['Egypt',30,26.5],['Morocco',-6,32],['Nigeria',8,9.5],['Ghana',-1,7.9],['Kenya',38,0.2],['Ethiopia',39.5,8.6],['South Africa',24,-29],['Lebanon',35.8,33.9],['Saudi Arabia',45,24],['United Arab Emirates',54,24],['Iran',53,32],['Pakistan',69,30],['India',79,22],['Nepal',84,28.2],['Bangladesh',90,23.7],['Sri Lanka',80.7,7.8],['China',104,35],['South Korea',127.8,36.3],['Japan',138,36.5],['Philippines',122,12.5],['Vietnam',106,16],['Thailand',101,15],['Malaysia',102,4],['Indonesia',113,-1],['Singapore',103.8,1.35],['Australia',134,-25],['New Zealand',172,-41],['Russia',90,60]];
 const fg15=n=>{try{return flag(n)||''}catch(e){return ''}};
@@ -4659,5 +4659,8 @@ function brand15(html) {
 }
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
+
+/* NeuMarry matrimony-only build */
+P15on=function(){return false};brand15=function(h){return h};window.NM_APP=true;
 boot();
 })();
