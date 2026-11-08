@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NeuMarry : mariage vérifié pour les personnes qui vivent à l’étranger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap">
+<style>
+:root{--bg:#F3F2F8;--bg2:#ECEAF5;--tx:#16152A;--mt:#5E5C74;--gl:rgba(255,255,255,.72);--gl2:rgba(255,255,255,.9);--edge:rgba(255,255,255,.95);--ln:rgba(40,36,80,.08);
+ --mint1:#EEEBFF;--mint2:#D7D0FF;--mintx:#3F35A6;--lem:#E7F2FF;--lemx:#1D4C86;--sh:0 18px 40px -24px rgba(60,50,140,.26),0 2px 6px -2px rgba(60,50,140,.08);color-scheme:light}
+@media (prefers-color-scheme:dark){body{background:radial-gradient(900px 600px at 10% -10%,rgba(255,255,255,.06),transparent 60%),var(--bg)!important}:root{--bg:#08080A;--bg2:#101013;--tx:#F3F3F5;--mt:rgba(243,243,245,.7);--gl:rgba(30,30,34,.62);--gl2:rgba(36,36,42,.82);--edge:rgba(255,255,255,.1);--ln:rgba(255,255,255,.08);
+ --mint1:rgba(255,255,255,.14);--mint2:rgba(255,255,255,.22);--mintx:#FFFFFF;--lem:rgba(255,255,255,.06);--lemx:#EDEDF1;--sh:0 20px 44px -26px rgba(0,0,0,.7);color-scheme:dark}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font:500 16px/1.55 'Plus Jakarta Sans',system-ui,sans-serif;color:var(--tx);background:radial-gradient(900px 600px at 10% -10%,var(--mint1),transparent 60%),radial-gradient(800px 600px at 100% 0%,var(--lem),transparent 55%),radial-gradient(700px 500px at 50% 100%,#FFEFF4,transparent 60%),var(--bg);-webkit-user-select:none;user-select:none}
+main{overflow-x:clip}img{display:block;max-width:100%;height:auto}a{color:inherit}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+.g{background:var(--gl);border:1px solid var(--edge);-webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3);box-shadow:var(--sh);border-radius:24px}
+nav{position:sticky;top:0;z-index:5;padding:12px 0}
+nav .wrap{display:flex;align-items:center;gap:14px}
+nav .bar{display:flex;align-items:center;gap:12px;width:100%;padding:8px 8px 8px 14px;border-radius:999px}
+.logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:18px;text-decoration:none}.logo img{width:30px;height:30px;border-radius:9px}
+.nl{display:flex;gap:4px;margin-left:auto}.nl a{text-decoration:none;font-weight:700;font-size:14px;padding:8px 12px;border-radius:999px;color:var(--mt)}.nl a:hover{color:var(--tx);background:var(--ln)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:800 15px 'Plus Jakarta Sans',sans-serif;text-decoration:none;padding:13px 22px;border-radius:999px;border:1px solid transparent;cursor:pointer;white-space:nowrap}
+.btn.p{background:linear-gradient(150deg,#EEEBFF,#D7D0FF);color:#2F2690;border-color:rgba(255,255,255,.9);box-shadow:0 10px 24px -12px rgba(91,79,214,.55)}
+@media (prefers-color-scheme:dark){.btn.p{background:linear-gradient(150deg,rgba(255,255,255,.22),rgba(255,255,255,.08));color:#fff;border-color:rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}}
+.btn.s{background:var(--gl2);border-color:var(--edge);color:var(--tx)}
+.btn.sm{padding:9px 16px;font-size:14px}
+.hero{padding:34px 0 10px}
+.hero .wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:34px;align-items:center}
+.kick{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:800;padding:7px 13px;border-radius:999px;color:var(--mintx);background:var(--mint1);border:1px solid var(--edge)}
+.kick i{width:8px;height:8px;border-radius:50%;background:#5B4FD6;animation:pl 2.4s infinite}
+@keyframes pl{0%{box-shadow:0 0 0 0 rgba(91,79,214,.5)}70%{box-shadow:0 0 0 9px rgba(91,79,214,0)}100%{box-shadow:0 0 0 0 rgba(91,79,214,0)}}
+h1{font-size:clamp(36px,5.4vw,60px);line-height:1.06;font-weight:800;margin:16px 0 14px;letter-spacing:0}
+h1 em{font-style:normal;background:linear-gradient(120deg,#5B4FD6,#3B82C4);-webkit-background-clip:text;background-clip:text;color:transparent}
+@media (prefers-color-scheme:dark){h1 em{background:linear-gradient(120deg,#FFFFFF,#BDBDC8);-webkit-background-clip:text;background-clip:text}}
+.lead{font-size:18px;color:var(--mt);max-width:520px;margin:0 0 22px}
+.cta{display:flex;gap:10px;flex-wrap:wrap}
+.trust{display:flex;gap:16px;flex-wrap:wrap;margin-top:18px;font-size:13.5px;font-weight:700;color:var(--mt)}
+.trust span{display:flex;align-items:center;gap:6px}.trust svg{width:16px;height:16px;color:var(--mintx)}
+.mosaic{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:170px 150px 170px;gap:12px}
+.ph{position:relative;overflow:hidden;border-radius:22px;border:1px solid var(--edge);box-shadow:var(--sh)}
+.ph img{width:100%;height:100%;object-fit:cover}
+.ph b{position:absolute;left:10px;bottom:10px;font-size:13px;font-weight:800;padding:6px 11px;border-radius:999px;background:var(--gl2);border:1px solid var(--edge);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.mosaic .a{grid-row:span 2}.mosaic .d{grid-column:span 2}
+.flags{margin:26px 0 6px;overflow:hidden;-webkit-mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.flags .row{display:flex;gap:10px;width:max-content;animation:mq 60s linear infinite}
+.flags span{display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:700;padding:8px 13px;border-radius:999px;background:var(--gl);border:1px solid var(--edge);white-space:nowrap}
+.flags span i{font-style:normal;font-size:17px}
+@keyframes mq{to{transform:translateX(-50%)}}
+section{padding:56px 0 8px}
+.sh{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px}
+h2{font-size:clamp(26px,3.4vw,38px);line-height:1.15;margin:0;font-weight:800}
+.sh p{margin:6px 0 0;color:var(--mt);max-width:560px}
+.bento{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.t{overflow:hidden;display:flex;flex-direction:column;text-decoration:none}
+.t .ph{border:0;border-radius:0;box-shadow:none;height:150px}
+.t .tx{padding:14px 16px 16px}.t .tx b{display:block;font-size:17px;font-weight:800}.t .tx small{display:block;color:var(--mt);font-size:14px;margin-top:3px}
+.t .pr{display:inline-block;margin-top:10px;font-size:12.5px;font-weight:800;padding:5px 10px;border-radius:999px;background:var(--mint1);color:var(--mintx)}
+.t.w2{grid-column:span 2}.t.w2 .ph{height:190px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.st{padding:22px}.st .n{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:800;background:linear-gradient(150deg,var(--mint1),var(--mint2));color:var(--mintx)}
+.st b{display:block;font-size:18px;margin:12px 0 4px}.st small{color:var(--mt);font-size:14.5px}
+.pl{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:14px}
+.pc{padding:22px}.pc h3{margin:0;font-size:20px}.pc .big{font-size:34px;font-weight:800;margin:8px 0 2px}.pc small{color:var(--mt)}
+.pc ul{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:8px;font-size:14.5px}.pc li{display:flex;gap:8px}.pc li:before{content:'';flex:0 0 18px;height:18px;border-radius:50%;background:var(--mint1) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B4FD6' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 12.5l4 4L18 8'/%3E%3C/svg%3E") center/12px no-repeat;margin-top:2px}
+.pc.hi{background:linear-gradient(150deg,var(--mint1),var(--gl))}
+.biz{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch}
+.bz{text-decoration:none;display:grid;grid-template-columns:150px 1fr;overflow:hidden}.bz .ph{border:0;border-radius:0;box-shadow:none;height:100%}
+.bz .tx{padding:16px}.bz b{font-size:17px}.bz small{display:block;color:var(--mt);font-size:14px;margin-top:3px}.bz .pr{display:inline-block;margin-top:8px;font-size:12.5px;font-weight:800;color:var(--mintx)}
+.faq{display:grid;gap:10px;max-width:820px}
+details{padding:16px 18px}summary{font-weight:800;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:12px}summary::-webkit-details-marker{display:none}
+summary:after{content:'+';font-size:22px;line-height:1;color:var(--mintx)}details[open] summary:after{content:'–'}details p{margin:10px 0 0;color:var(--mt)}
+.final{margin:56px 0 0;padding:36px;text-align:center;background:linear-gradient(150deg,var(--mint1),var(--lem))}
+.final h2{margin-bottom:8px}.final p{color:var(--mt);margin:0 0 18px}.final .cta{justify-content:center}
+footer{padding:34px 0 40px;color:var(--mt);font-size:14px}footer .wrap{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center}footer a{text-decoration:none;font-weight:700}
+.lang{margin-left:auto}
+@media (max-width:900px){.hero .wrap{grid-template-columns:1fr}.bento{grid-template-columns:1fr 1fr}.t.w2{grid-column:span 2}.pl{grid-template-columns:1fr}.biz{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.nl{display:none}}
+@media (max-width:520px){.wrap{padding:0 16px}.bento{gap:10px}.t .ph{height:110px}.t.w2 .ph{height:150px}.t .tx{padding:11px 12px 13px}.t .tx b{font-size:15px}.t .tx small{font-size:13px}
+ .mosaic{grid-template-rows:130px 120px 130px;gap:10px}.bz{grid-template-columns:110px 1fr}.final{padding:26px 18px}.lead{font-size:16.5px}.sh{display:block}}
+@media (prefers-reduced-motion:reduce){.flags .row,.kick i{animation:none}}
+</style></head>
+<body><main>
+<nav><div class="wrap"><div class="bar g"><a class="logo" href="#"><img src="img/icon-192.png" alt="">NeuMarry</a>
+ <div class="nl"><a href="#how">Comment ça marche</a><a href="#trust">Sécurité</a><a href="#family">Famille</a><a href="#plans">Forfaits</a></div>
+ <a class="btn p sm" href="#">Ouvrir l’app</a></div></div></nav>
+
+<header class="hero"><div class="wrap">
+ <div><span class="kick"><i></i>Mariage vérifié pour la vie à l’étranger</span>
+  <h1>Vos racines.<br>Votre ville.<br><em>Votre personne.</em></h1>
+  <p class="lead">Pour les personnes nées dans un pays et qui vivent dans un autre. Rencontrez quelqu’un de vos racines, dans votre ville, dont les projets de mariage ressemblent aux vôtres.</p>
+  <div class="cta"><a class="btn p" href="#">Créer mon profil gratuit</a><a class="btn s" href="#">Disponible sur Google Play</a></div>
+  <div class="trust"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>Pièce d’identité + égoportrait vérifiés</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Vos numéros restent privés</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Votre famille peut participer</span></div></div>
+ <div class="mosaic">
+ <div class="ph a"><img src="img/rings.webp" alt="Deux alliances"><b>Le mariage, pas le swipe</b></div>
+ <div class="ph"><img src="img/plane.webp" alt="Vue d’un hublot au-dessus des nuages"><b>Racines lointaines</b></div>
+ <div class="ph"><img src="img/lantern.webp" alt="Lanternes de fête"><b>Mêmes fêtes</b></div>
+ <div class="ph d"><img src="img/table.webp" alt="Une table de repas en famille"><b>Salon familial</b></div>
+ </div>
+ </div>
+ <div class="flags" aria-label="Des gens de nombreux pays"><div class="row" id="fl"></div></div>
+</header>
+
+<section id="how"><div class="wrap">
+ <div class="sh"><div><h2>Comment ça marche</h2><p>Trois étapes simples. Presque tout se fait en touchant, sans longs textes à écrire.</p></div></div>
+ <div class="steps"><div class="st g"><span class="n">1</span><b>Tracez votre ligne de racines</b><small>Où vous avez grandi et où vous vivez. Puis quelques touches sur la famille, la foi et vos projets.</small></div>
+ <div class="st g"><span class="n">2</span><b>Faites-vous vérifier</b><small>Pièce d’identité officielle et égoportrait en direct, vérifiés par une vraie personne. La photo de la pièce est supprimée après la vérification.</small></div>
+ <div class="st g"><span class="n">3</span><b>Rencontrez avec soin</b><small>Dites bonjour avec votre voix d’abord. Le clavardage montre les deux heures, pour parler quand vous êtes tous deux éveillés.</small></div></div>
+</div></section>
+<section id="trust"><div class="wrap">
+ <div class="sh"><div><h2>Sécuritaire dès la conception</h2><p>Le mariage est l’une des plus grandes décisions de la vie. NeuMarry est fait pour ça.</p></div></div>
+ <div class="bento">
+ <a class="t g w2" href="#"><div class="ph"><img src="img/keys.webp" alt="Des clés"></div><div class="tx"><b>Chaque profil est vérifié</b><small>Pièce d’identité, égoportrait et preuve des racines et de la ville, vérifiés par notre équipe avant tout intérêt envoyé.</small></div></a>
+ <a class="t g" href="#"><div class="ph"><img src="img/docs.webp" alt="Des papiers"></div><div class="tx"><b>Vos numéros restent privés</b><small>Téléphone, courriel et lieu exact ne sont jamais montrés.</small></div></a>
+ <a class="t g" href="#"><div class="ph"><img src="img/city.webp" alt="Une ville"></div><div class="tx"><b>Votre ville, pour vrai</b><small>La ville où vous vivez est vérifiée une fois par an.</small></div></a>
+ <a class="t g" href="#"><div class="ph"><img src="img/office.webp" alt="Un bureau calme"></div><div class="tx"><b>Signaler et bloquer</b><small>Une vraie personne lit chaque signalement, souvent en moins de 24 heures.</small></div></a>
+ <a class="t g" href="#"><div class="ph"><img src="img/trip.webp" alt="Une route"></div><div class="tx"><b>Bonjour avec votre voix</b><small>Une courte présentation vocale en dit plus qu’une photo.</small></div></a>
+ <a class="t g w2" href="#"><div class="ph"><img src="img/house.webp" alt="Une maison"></div><div class="tx"><b>Pas de dot, pas de demandes d’argent</b><small>Les messages qui demandent de l’argent, des coordonnées bancaires ou des cartes-cadeaux sont bloqués automatiquement.</small></div></a>
+ </div></div></section>
+<section id="family"><div class="wrap">
+ <div class="sh"><div><h2>Votre famille à vos côtés</h2><p>Même quand elle vit dans un autre pays.</p></div></div>
+ <div class="bento">
+ <a class="t g w2" href="#"><div class="ph"><img src="img/table.webp" alt="Une table de repas en famille"></div><div class="tx"><b>Salon familial</b><small>Partagez une personne avec vos parents grâce à un lien privé de 7 jours. Ils voient l’essentiel, jamais les photos ni les coordonnées, et peuvent répondre « Ça me plaît ».</small></div></a>
+ <a class="t g" href="#"><div class="ph"><img src="img/lantern.webp" alt="Lanternes"></div><div class="tx"><b>Mêmes racines, vos valeurs</b><small>Pays, région, langue et communauté, si c’est important pour vous.</small></div></a>
+ <a class="t g" href="#"><div class="ph"><img src="img/plane.webp" alt="Hublot"></div><div class="tx"><b>Tous les pays</b><small>Né n’importe où, vivant n’importe où. On commence au Canada, ouvert au monde.</small></div></a>
+ </div></div></section>
+<section id="plans"><div class="wrap"><div class="sh"><div><h2>Forfaits</h2><p>L’inscription et la vérification sont gratuites. Gold ouvre les profils complets et le clavardage.</p></div></div>
+ <div class="pl"><div class="pc g hi"><h3>Gold</h3><div class="big">119,99 $ CA<small style="font-size:15px"> / mois</small></div><small>Prix au Canada; les autres pays voient leur prix local avant de payer</small>
+ <ul><li>Profils et photos complets (selon chaque membre)</li><li>Envoyer des intérêts et clavarder</li><li>Suggestions du jour et qui vous aime</li></ul></div>
+ <div class="pc g"><h3>Gratuit</h3><div class="big">0 $</div><small>toujours</small><ul><li>Profil et vérification</li><li>Voir combien de personnes vous correspondent</li><li>Outils de sécurité</li></ul></div></div></div></section>
+<section><div class="wrap"><div class="sh"><div><h2>Questions</h2></div></div><div class="faq">
+ <details class="g" open><summary>À qui s’adresse NeuMarry ?</summary><p>Aux personnes de tous les pays qui vivent loin du pays où elles ont grandi et qui veulent se marier avec quelqu’un qui comprend leurs deux mondes.</p></details>
+ <details class="g"><summary>Est-ce une app de rencontres ?</summary><p>Non. NeuMarry sert seulement au mariage. Pas de swipe, et chaque membre est vérifié.</p></details>
+ <details class="g"><summary>Mes parents peuvent-ils créer mon profil ?</summary><p>Oui, avec votre consentement. Vous faites vous-même la vérification d’identité, et le profil indique qui l’a créé.</p></details>
+ <details class="g"><summary>Où sont les chambres, événements et amis ?</summary><p>Ils sont maintenant dans notre app distincte NeuAmigo, sur neuamigo.com.</p></details>
+ </div></div></section>
+<div class="wrap"><div class="final g"><h2>Votre personne vit peut-être dans votre ville</h2><p>Inscription gratuite. Membres vérifiés seulement.</p><div class="cta"><a class="btn p" href="#">Ouvrir l’app</a><a class="btn s" href="#">Disponible sur Google Play</a></div></div></div>
+</main>
+<footer><div class="wrap"><span>NeuMarry · © 2026</span><a href="#">Politique de confidentialité</a><a href="#">Conditions d’utilisation</a><a href="#">Delete account</a><a href="#">Child safety</a><a href="#">support@neumarry.com</a><a class="lang" href="#">English</a></div></footer>
+<script>
+const C=[['🇨🇦','Canada'],['🇺🇸','États-Unis'],['🇲🇽','Mexique'],['🇧🇷','Brésil'],['🇨🇴','Colombie'],['🇬🇧','Royaume-Uni'],['🇮🇪','Irlande'],['🇫🇷','France'],['🇩🇪','Allemagne'],['🇮🇹','Italie'],['🇪🇸','Espagne'],['🇵🇱','Pologne'],['🇺🇦','Ukraine'],['🇹🇷','Turquie'],['🇪🇬','Égypte'],['🇳🇬','Nigéria'],['🇬🇭','Ghana'],['🇰🇪','Kenya'],['🇪🇹','Éthiopie'],['🇿🇦','Afrique du Sud'],['🇱🇧','Liban'],['🇦🇪','Émirats'],['🇮🇷','Iran'],['🇵🇰','Pakistan'],['🇮🇳','Inde'],['🇳🇵','Népal'],['🇧🇩','Bangladesh'],['🇱🇰','Sri Lanka'],['🇨🇳','Chine'],['🇰🇷','Corée'],['🇯🇵','Japon'],['🇵🇭','Philippines'],['🇻🇳','Viêt Nam'],['🇮🇩','Indonésie'],['🇦🇺','Australie'],['🇳🇿','Nouvelle-Zélande']];
+const h=C.map(c=>`<span><i>${c[0]}</i>${c[1]}</span>`).join('');document.getElementById('fl').innerHTML=h+h;
+</script>
+</body></html>
