@@ -1,5 +1,8 @@
 <h1>Payment</h1>
-<div class="box rose"><p><b>Go back to the NeuMarry app.</b> This page is no longer used for payments. Gold is bought inside the app.</p></div>
-<p>If anything looks wrong, write to <a href="mailto:support@neumarry.com?subject=Payment">support@neumarry.com</a>.</p>
+<div class="box rose" id="pp-ok"><p><b>Thank you, your PayPal payment is done.</b> Go back to the NeuMarry app: your purchase shows there within a minute, after PayPal confirms it.</p></div>
+<div class="box rose" id="pp-no" hidden><p><b>The payment was cancelled.</b> Nothing was charged. Go back to the NeuMarry app to try again whenever you like.</p></div>
+<p>If anything looks wrong, write to <a href="mailto:support@neumarry.com?subject=Payment">support@neumarry.com</a> with the time of your payment.</p>
 <h2 lang="fr">Paiement</h2>
-<p lang="fr"><b>Retournez dans l’application NeuMarry.</b> Cette page ne sert plus aux paiements. Gold s’achète dans l’application.</p>
+<p lang="fr" id="pp-okf"><b>Merci, votre paiement PayPal est fait.</b> Retournez dans l’application NeuMarry : votre achat y apparaît en une minute environ, une fois confirmé par PayPal.</p>
+<p lang="fr" id="pp-nof" hidden><b>Le paiement a été annulé.</b> Rien n’a été débité. Retournez dans l’application NeuMarry pour réessayer.</p>
+<script>if(/pp15=cancel/.test(location.search)){['pp-ok','pp-okf'].forEach(function(i){document.getElementById(i).hidden=true});['pp-no','pp-nof'].forEach(function(i){document.getElementById(i).hidden=false})}</script>
