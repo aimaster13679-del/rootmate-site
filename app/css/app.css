@@ -1927,7 +1927,7 @@ html.p15on #app>.scroll{background:none}
 .p15-t.row{flex-direction:column;align-items:flex-start}
 .p15-t.row>.tx{padding:4px 12px 12px;width:100%;box-sizing:border-box}.p15-t.row>.ic:last-child{position:absolute;right:12px;bottom:14px}
 .p15-t.row>.p15-b.big{width:46px;height:46px}
-.p15-earth{position:relative;height:320px;margin:0 0 12px;border-radius:24px;overflow:hidden;border:1px solid var(--p-edge);box-shadow:var(--p-sh)}
+.p15-earth{position:relative;height:372px;margin:0 0 12px;border-radius:24px;overflow:hidden;border:1px solid var(--p-edge);box-shadow:var(--p-sh)}
 .p15-earth .rl-slot{position:absolute;inset:0}
 .p15-earth-t{position:absolute;left:10px;right:10px;bottom:10px;display:flex;align-items:center;gap:7px;padding:8px 12px;border-radius:14px;font-size:12.5px;font-weight:700;background:var(--p-gl2);border:1px solid var(--p-edge);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 .p15-earth-t .ic{width:16px;height:16px}
@@ -2039,3 +2039,6 @@ html.p15mat.gl-lt .tpp .btn.primary,html.p15mat.gl-lt .tp-strip .btn.primary{bac
 /* P15MAT-END */
 .p15-paybox{margin:12px 0 4px;padding:14px;display:grid;gap:5px;text-align:center;justify-items:center}.p15-paybox>b{font-size:26px;line-height:1.1}.p15-paybox>span:not(.p15-pill){font-weight:700;word-break:break-word}
 .p15-evhero .art.ph{height:170px;display:block;padding:0}.p15-evhero .art.ph .p15-ph,.p15-evhero .art.ph img{display:block;width:100%;height:100%;object-fit:cover}
+/* Photos always shown whole (his rule 8 Nov 13:37): every photo frame has the photo's own 3:2 shape, nothing cut. */
+.p15-t>.p15-ph,.p15-t.span2>.p15-ph,.p15-hero.ph>.p15-ph,.p15-evhero .art.ph{height:auto!important;aspect-ratio:3/2}
+.p15-banner{height:auto!important;aspect-ratio:3/2}
