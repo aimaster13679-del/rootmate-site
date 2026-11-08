@@ -2037,3 +2037,4 @@ html.p15mat .tp-tile.ok>i{background:var(--m15s)!important;color:var(--m15a)!imp
 html.p15mat .tp-tile>i{background:var(--m15s)!important;color:var(--m15a)!important}
 html.p15mat.gl-lt .tpp .btn.primary,html.p15mat.gl-lt .tp-strip .btn.primary{background:#fff!important;color:#2F2690!important;-webkit-text-fill-color:#2F2690}
 /* P15MAT-END */
+.p15-paybox{margin:12px 0 4px;padding:14px;display:grid;gap:5px;text-align:center;justify-items:center}.p15-paybox>b{font-size:26px;line-height:1.1}.p15-paybox>span:not(.p15-pill){font-weight:700;word-break:break-word}
