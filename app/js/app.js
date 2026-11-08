@@ -1689,6 +1689,7 @@ function render(){
     if(celebrate)html+=renderCelebrate();
   }
   const t=document.querySelector('.toast');
+  if(typeof brand15==='function')html=brand15(html);
   app.innerHTML=html;
   if(CFG.web&&S.screen==='auth')gsiAfterRender();else if(CFG.web&&S.screen==='welcome')gsiInit(); /* load Google's button early */
   if(t){t.classList.add('still');app.appendChild(t)}
@@ -4130,7 +4131,7 @@ function sale15v(){const l=P15.sl;if(l===undefined){API.rpc('sales15',{}).then(r
      ${s.mine?(s.status==='open'?`<button class="p15-chip" data-a="p15saleTop" data-id="${s.id}">Show at Top ${p15price('sale_top')}</button>`:`<span class="p15-pill">${s.status==='paid'?'Paid · waiting for pickup':'Done'}</span>`):
        s.bought?(s.status==='paid'?`<button class="p15-chip on" data-a="p15saleGot" data-id="${s.id}">I got it</button>`:'<span class="p15-pill">Done</span>'):`<button class="p15-chip on" data-a="p15saleBuy" data-id="${s.id}">Buy</button>`}</div>`).join('')}</div>`:
    `<div class="p15-g p15-note">${ic('tag2')} Nothing for sale in your city yet.</div>`)+
-   `<div class="p15-g p15-note">${ic('shield2')} Pay in the app. The seller gets the money after you tap "I got it".</div>
+   `<div class="p15-g p15-note">${ic('shield2')} Paying here opens soon. Until then nothing is charged.</div>
    <div class="p15-g p15-form"><label>Sell something</label><input id="p15-st" maxlength="60" placeholder="e.g. 3-seat sofa" value="${esc(f.st||'')}">
     <label>Price (${esc(cur15())})</label>${chips15('sp',[['10','10'],['25','25'],['50','50'],['100','100'],['150','150'],['300','300']],f.sp||'50')}
     <label>Pick-up area</label><input id="p15-sa" maxlength="60" placeholder="e.g. Etobicoke" value="${esc(f.sa||'')}"></div>
@@ -4388,7 +4389,7 @@ Object.assign(P15V,{adcheck:adCheck15,biz:biz15v,services:svc15v,svcplan:svcPlan
       if(/p2p payments coming soon/.test(em15(e)))throw own('Paying here opens soon. Until then nothing is charged.','p2p coming soon');
       const prod=need(e);if(!prod)throw e;
       if(isNative)throw own('This is not available in the app yet.','not in app');
-      let r;try{r=await API.fn('pay15',{action:'start',product:prod,web:true})}catch(z){throw own('PayPal could not open. Please try again.','paypal')}
+      let r;try{r=await API.fn('pay15',{action:'start',product:prod,web:true,site:(typeof naOn==='function'&&naOn())?'neuamigo':'neumarry'})}catch(z){throw own('PayPal could not open. Please try again.','paypal')}
       if(!r||!r.url)throw own('PayPal could not open. Please try again.','paypal');
       try{localStorage.setItem(KEY,JSON.stringify({order:r.order,name,args,at:Date.now(),v:P15.v}))}catch(z){}
       location.href=r.url;
@@ -4472,7 +4473,7 @@ function mat15bar(){const m=document.querySelector('#app .main-inner');if(!m||m.
   if(!P15_PUBLIC)return;
   const fix=h=>h.replace('NeuMarry · verified matrimony','NeuMarry · for people living abroad')
     .replace(/Ready to marry\./,'Your people are here.')
-    .replace('Verified matrimony for marrying someone of your roots, in the country you live in now.','Rooms, job referrals, a flight buddy for your parents, events and friends. And a life partner from your roots, if you want one.')
+    .replace('Verified matrimony for marrying someone of your roots, in the country you live in now.','Rooms, job referrals, a flight buddy for your parents, events and friends.')
     .replace(/<div class="c3chips">[\s\S]*?<\/div>/,`<div class="c3chips">${['🏠 Rooms','✈️ Flight buddy','🎉 Events','💼 Referrals'].map(t=>`<span>${t}</span>`).join('')}</div>`)
     .replace('Draw your roots line →','Create my account →');
   if(typeof renderWelcomeC3==='function'){const _w=renderWelcomeC3;renderWelcomeC3=function(){return fix(_w.apply(this,arguments))}}
@@ -4642,6 +4643,18 @@ function cityRows15(q) {
   const _up = A.a3up; A.a3up = function () { if (MORE.includes(A3.tab) && !A3.mem && !A3.ev && !A3.list && !A3.open && !A3.bot && !A3.p15k) { A3.tab = 'more'; render(); return } return _up.apply(this, arguments) };
   const _tb = A.a3tab; A.a3tab = function (el) { const s = document.querySelector('.a3v .scroll'); const r = _tb.apply(this, arguments); const s2 = document.querySelector('.a3v .scroll'); if (s2) s2.scrollTop = 0; return r };
 })();
+
+/* ---------- NeuAmigo brand (his split 8 Nov 2026 19:36-22:31): this app becomes NeuAmigo; matrimony moves to the separate NeuMarry app.
+   NA_LIVE stays false until his ok; testers see it with localStorage nm.brandtest = '1'. ---------- */
+const NA_LIVE = false;
+function naOn() { try { return NA_LIVE || localStorage.getItem('nm.brandtest') === '1' } catch (e) { return NA_LIVE } }
+function brand15(html) {
+  if (!naOn()) return html;
+  return html
+    .replace(/<button class="p15-g p15-t span2 row" data-a="p15life">[\s\S]*?<\/button>/, '')
+    .replace(/img\/icon-192\.png/g, 'img/na-icon-192.png').replace(/img\/nm-mark\.png/g, 'img/na-mark.png')
+    .replace(/NeuMarry/g, 'NeuAmigo');
+}
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 boot();
