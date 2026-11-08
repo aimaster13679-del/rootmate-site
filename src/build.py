@@ -470,4 +470,34 @@ for _root, _dirs, _files in os.walk(OUT):
             continue
         _href = ('../' * (0 if _rel == '.' else len(_rel.split(os.sep)))) + 'glass.css'
         open(_p, 'w', encoding='utf-8').write(_h.replace('</head>', f'<link rel="stylesheet" href="{_href}"></head>', 1))
+
+# ---------- New NeuMarry home (Plan 15; owner ok 8 Nov 2026 01:11). Switched on together with the new app. ----------
+LAUNCH15 = True
+if LAUNCH15:
+    PLAY = 'https://play.google.com/store/apps/details?id=com.neuconet.rootmate'
+    for src_name, out_rel, lang, other, legal in (('home15.html', 'index.html', 'en', 'fr/', ''), ('home15_fr.html', os.path.join('fr', 'index.html'), 'fr', '../', 'fr/')):
+        h = rd(os.path.join('next', src_name))
+        up = '../' if lang == 'fr' else ''
+        h = h.replace('src="img/icon-192.png"', 'src="/app/img/icon-192.png"').replace('src="img/', 'src="/app/img/p15/')
+        h = h.replace('<a class="logo" href="#">', '<a class="logo" href="/' + ('fr/' if lang == 'fr' else '') + '">')
+        h = h.replace('class="btn p sm" href="#"', 'class="btn p sm" href="/app/"').replace('class="btn p" href="#"', 'class="btn p" href="/app/"').replace('class="btn s" href="#"', 'class="btn s" href="' + PLAY + '" rel="noopener"')
+        h = h.replace('class="t g w2" href="#"', 'class="t g w2" href="/app/"').replace('class="t g" href="#"', 'class="t g" href="/app/"').replace('class="bz g" href="#"', 'class="bz g" href="/app/"')
+        fl = ['privacy.html', 'terms.html', 'delete-account.html', 'child-safety.html']
+        for i, m in enumerate(re.findall(r'<footer>.*?</footer>', h, flags=re.S)[:1]):
+            f2 = m
+            links = re.findall(r'<a href="#">', f2)
+            for j in range(min(4, len(links))):
+                tgt = (up + legal if j < 2 else up) + fl[j] if lang == 'fr' else fl[j]
+                f2 = f2.replace('<a href="#">', '<a href="' + tgt + '">', 1)
+            f2 = f2.replace('<a href="#">support@neumarry.com</a>', '<a href="mailto:support@neumarry.com">support@neumarry.com</a>')
+            f2 = f2.replace('<a class="lang" href="#">', '<a class="lang" href="' + other + '" hreflang="' + ('fr' if lang == 'en' else 'en') + '">')
+            h = h.replace(m, f2)
+        desc = ('Rooms, job referrals, a flight buddy for parents, events and friends for people living abroad. Now open in Toronto.' if lang == 'en'
+                else 'Chambres, recommandations d’emploi, compagnon de voyage pour les parents, événements et amis pour les personnes qui vivent à l’étranger.')
+        url = SITE + ('fr/' if lang == 'fr' else '')
+        h = h.replace('</title>', '</title>\n<meta name="description" content="' + desc + '"><link rel="canonical" href="' + url + '">'
+                      '<link rel="alternate" hreflang="en" href="' + SITE + '"><link rel="alternate" hreflang="fr" href="' + SITE + 'fr/">'
+                      '<meta property="og:title" content="NeuMarry"><meta property="og:description" content="' + desc + '"><meta property="og:url" content="' + url + '">', 1)
+        open(os.path.join(OUT, out_rel), 'w', encoding='utf-8').write(h)
+    print('new home (Plan 15) built')
 print('site built')

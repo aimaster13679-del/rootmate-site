@@ -1986,3 +1986,26 @@ html.p15on:not(.gl-lt) .toast{background:rgba(34,34,40,.9);color:#F3F3F5;border-
 html.p15on:not(.gl-lt) .toast .ic{color:#fff}
 .p15-banner{height:132px;border-radius:22px;overflow:hidden;margin:0 0 12px;border:1px solid var(--p-edge);box-shadow:var(--p-sh)}
 .p15-banner>.p15-ph{display:block;height:100%}.p15-banner img{display:block;width:100%;height:100%;object-fit:cover}
+.p15join{position:absolute;inset:0;display:flex;flex-direction:column;background:#F3F2F8}
+html:not(.gl-lt) .p15join{background:#08080A}
+.p15join .p15{padding-top:24px}
+.p15-err{color:#B4234B!important;font-weight:700}
+html:not(.gl-lt) .p15-err{color:#FF9DB5!important}
+.p15-form select{width:100%;height:46px;border-radius:14px;border:1px solid var(--p-edge);background:var(--p-gl2);color:var(--p-ink);padding:0 10px;font:inherit;font-size:15px}
+.p15-ck{display:flex;gap:10px;align-items:flex-start;font-size:13.5px!important;font-weight:600!important;color:var(--p-ink)!important;line-height:1.45;margin:4px 0!important}
+.p15-ck input{width:20px!important;height:20px!important;flex:0 0 20px;margin-top:1px;accent-color:#5B4FD6}
+.p15-ck a{color:#5B4FD6;font-weight:800}html:not(.gl-lt) .p15-ck a{color:#fff}
+.p15-matback{position:relative;z-index:5;display:inline-flex;align-items:center;gap:6px;margin:6px 0 10px;padding:8px 14px 8px 10px;border-radius:999px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;color:inherit;background:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 8px 20px -12px rgba(0,0,0,.4)}
+html:not(.gl-lt) .p15-matback{background:rgba(30,30,34,.8);border-color:rgba(255,255,255,.14)}
+.p15-matback .ic{width:16px;height:16px}
+html.p15on .sheet .btn.primary,html.p15on.c3.gl .sheet .btn.primary{background:linear-gradient(140deg,#EEEBFF,#D7D0FF)!important;color:#2F2690!important;border:1px solid #fff!important;box-shadow:0 12px 26px -14px rgba(91,79,214,.55)!important}
+html.p15on:not(.gl-lt) .sheet .btn.primary,html.p15on.c3.gl:not(.gl-lt) .sheet .btn.primary{background:linear-gradient(140deg,rgba(255,255,255,.2),rgba(255,255,255,.07))!important;color:#fff!important;border-color:rgba(255,255,255,.2)!important;box-shadow:none!important}
+/* public screens of the new NeuMarry (launch 8 Nov 2026): glassy black, white highlights, lilac buttons; no green */
+html.p15pub.c3 .c3w{background:radial-gradient(120% 60% at 50% 0%,#18181D,#08080A 70%)}
+html.p15pub .c3cyc.y{color:#FFFFFF}html.p15pub .c3cyc.p{color:#CFC9FF}
+html.p15pub .btn.c3cta{background:linear-gradient(140deg,#EEEBFF,#D7D0FF);color:#2F2690}
+html.p15pub .c3kick{color:#E9E8F0}
+html.p15pub.c3.gl .su-head small,html.p15pub .auth .link{color:#5B4FD6}
+html.p15pub.c3.gl:not(.gl-lt) .su-head small,html.p15pub:not(.gl-lt) .auth .link{color:#CFC9FF}
+html.p15pub .auth-h em,html.p15pub.c3.gl .auth-h em{color:#5B4FD6!important;-webkit-text-fill-color:#5B4FD6!important;background:none!important}
+html.p15pub:not(.gl-lt) .auth-h em,html.p15pub.c3.gl:not(.gl-lt) .auth-h em{color:#CFC9FF!important;-webkit-text-fill-color:#CFC9FF!important}

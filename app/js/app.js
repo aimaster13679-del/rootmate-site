@@ -3818,7 +3818,7 @@ async function load15(){try{P15.d=await API.rpc('my15',{});try{localStorage.setI
 function warm15(){try{const o=JSON.parse(localStorage.getItem('nm.p15.'+(API.userId()||''))||'null');if(o&&!P15.d)P15.d=o}catch(e){}}
 const p15price=k=>{const c=P15.d&&P15.d.prices&&P15.d.prices[k];return c==null?'':money(c,'USD')};
 const p15top=(t,back)=>`<div class="p15-top">${back?`<button class="p15-tb" data-a="p15back" aria-label="Back">${ic('back2')}</button>`:'<span class="p15-tb ghost"></span>'}<h1>${esc(t)}</h1><span class="p15-tb ghost"></span></div>`;
-const PH15={'Settle In':'house','Events & Friends':'hall','Membership':'keys','For Business':'store','Find a Room':'room','Travel Buddy for Parents':'plane','Job Referral':'office','Trusted Experts':'docs','Moving-Out Sale':'sofa','Friend Meetups':'table','Watch Parties':'stadium','Festivals':'lantern','Day Trips':'trip','Sports Leagues':'league'};
+const PH15={'Life Partner':'rings','Settle In':'house','Events & Friends':'hall','Membership':'keys','For Business':'store','Find a Room':'room','Travel Buddy for Parents':'plane','Job Referral':'office','Trusted Experts':'docs','Moving-Out Sale':'sofa','Friend Meetups':'table','Watch Parties':'stadium','Festivals':'lantern','Day Trips':'trip','Sports Leagues':'league'};
 const ph15=t=>PH15[t]?`<span class="p15-ph"><img src="img/p15/${PH15[t]}.webp" alt="" loading="lazy" decoding="async"></span>`:'';
 const p15tile=(icn,tone,t,d,act,extra)=>`<button class="p15-g p15-t" data-a="${act}">${ph15(t)}<span class="p15-b ${tone}">${ic(icn)}</span><b>${esc(t)}</b><small>${esc(d)}</small>${extra||''}</button>`;
 function p15wrap(inner){return `<div class="scroll p15s" id="main"><div class="main-inner p15">${inner}</div></div>`}
@@ -3832,6 +3832,7 @@ function home15(){
    ${p15tile('party','lem','Events & Friends','Meetups, watch parties, festivals, trips','tab" data-k="ev15')}
    ${p15tile('star2','fern','Membership','NeuMarry Plus and Verified Tick','p15open" data-v="plus')}
    <button class="p15-g p15-t span2 row" data-a="p15open" data-v="biz">${ph15('For Business')}<span class="p15-b mint">${ic('store2')}</span><span class="tx"><b>For Business</b><small>Agents, hosts, event services, ads</small></span>${ic('chev2')}</button>
+   <button class="p15-g p15-t span2 row" data-a="p15life">${ph15('Life Partner')}<span class="p15-b lem">${ic('heart')}</span><span class="tx"><b>Life Partner</b><small>Verified matrimony: meet someone from your roots</small></span>${ic('chev2')}</button>
   </div>`)}
 function settle15(){
   const t=[['bed2','mint','Find a Room','Rooms and roommates, by area and budget','rooms'],['plane2','lem','Travel Buddy for Parents','A verified buddy on the same flight','buddy'],
@@ -3862,11 +3863,11 @@ function soon15(t){return p15wrap(p15top(t,true)+`<div class="p15-g p15-note">${
 const P15V={plus:plus15,tick:tick15};
 const P15T={host:'Host Plans',biz:'For Business',rooms:'Find a Room',buddy:'Travel Buddy for Parents',referral:'Job Referral',experts:'Trusted Experts',sale:'Moving-Out Sale','ev-meetups':'Friend Meetups','ev-watch':'Watch Parties','ev-festival':'Festivals','ev-trip':'Day Trips','ev-league':'Sports Leagues'};
 (function(){
-  const _rm=renderMatches;renderMatches=function(){if(!P15on())return _rm();
+  const _rm=renderMatches;renderMatches=function(){if(!P15on()||(P15.mat&&!P15.v))return _rm();
     if(P15.v)return (P15V[P15.v]||(()=>soon15(P15T[P15.v]||'')))();
     return S.tab==='settle'?settle15():S.tab==='ev15'?events15():home15()};
   const _me=renderMe;renderMe=function(){if(P15on()&&P15.v){return (P15V[P15.v]||(()=>soon15(P15T[P15.v]||'')))()}return _me()};
-  const _ar=afterRenderEvents;afterRenderEvents=function(vk){_ar(vk);document.documentElement.classList.toggle('p15on',P15on()&&S.screen==='app');if(!P15on())return;const nav=document.querySelector('.navwrap .nav');if(!nav)return;
+  const _ar=afterRenderEvents;afterRenderEvents=function(vk){_ar(vk);document.documentElement.classList.toggle('p15on',P15on()&&S.screen==='app'&&!P15.mat);if(!P15on())return;if(P15.mat){mat15bar();return}const nav=document.querySelector('.navwrap .nav');if(!nav)return;
     const cur=P15.v&&S.tab==='me'?'me':S.tab==='settle'||S.tab==='ev15'||S.tab==='me'?S.tab:'matches';
     nav.className='nav n4';nav.innerHTML=[['matches','Home','home2'],['settle','Settle In','key'],['ev15','Events','party'],['me','Me','user']].map(([k,l,i])=>
       `<button data-a="tab" data-k="${k}" class="${cur===k?'on':''}" aria-current="${cur===k?'page':'false'}">${ic(i)}<span>${l}</span></button>`).join('')};
@@ -4139,7 +4140,7 @@ Object.assign(P15V,{rooms:rooms15v,postroom:postRoom15,buddy:buddy15v,referral:r
   const keep=['p15-we','p15-wc','p15-rtl','p15-rar','p15-rct','p15-rad','p15-fc','p15-tc','p15-fno','p15-jl','p15-jn','p15-myco','p15-mydom','p15-st','p15-sa','p15-xn','p15-xl','p15-xa','p15-s0t','p15-s0p','p15-s1t','p15-s1p','p15-s2t','p15-s2p'];
   const grab=()=>keep.forEach(id=>{const x=document.getElementById(id);if(x)P15.f[id.slice(4)]=x.value.trim()});
   const _f=A.p15f;A.p15f=function(el){grab();const k=el.dataset.k;if(k==='max')P15.rooms=undefined;if(k==='ek'||k==='ec')P15.ex=P15.ex;if(k==='co'){P15.f.jl='';P15.f.jn=''}return _f(el)};
-  const err=(m,map)=>{m=em15(m);for(const k in map)if(m.includes(k))return map[k];return m.includes('not open')?'Payments open soon.':'Something went wrong. Please try again.'};
+  const err=(m,map)=>{m=em15(m);for(const k in map)if(m.includes(k))return map[k];const own=/(Paying here opens soon\. Until then nothing is charged\.|This is not available in the app yet\.|PayPal could not open\. Please try again\.)/.exec(m);if(own)return own[1];return m.includes('not open')?'Payments open soon.':'Something went wrong. Please try again.'};
   const run=async(busy,fn,ok,map)=>{if(P15.busy)return;grab();P15.busy=busy;render();try{await fn();if(ok)toast(ok,'tick2')}catch(e){toast(err(e,map||{}),'info')}P15.busy='';render()};
   Object.assign(A,{
     p15roomPost(){const f=P15.f;grab();if((f.rtl||'').length<4){toast('Please write a short title.','info');return}if((f.rar||'').length<2){toast('Please write the area.','info');return}if((f.rct||'').length<5){toast('Please add a phone or email for replies.','info');return}
@@ -4262,9 +4263,9 @@ Object.assign(P15V,{adcheck:adCheck15,biz:biz15v,services:svc15v,svcplan:svcPlan
   const keep=['p15-vn','p15-va','p15-v0t','p15-v0p','p15-v1t','p15-v1p','p15-v2t','p15-v2p','p15-at','p15-ab','p15-au'];
   const grab=()=>keep.forEach(id=>{const x=document.getElementById(id);if(x)P15.f[id.slice(4)]=x.value.trim()});
   const _f=A.p15f;A.p15f=function(el){grab();return _f(el)};
-  const err=(m,map)=>{m=em15(m);for(const k in map)if(m.includes(k))return map[k];return m.includes('not open')?'Payments open soon.':'Something went wrong. Please try again.'};
+  const err=(m,map)=>{m=em15(m);for(const k in map)if(m.includes(k))return map[k];const own=/(Paying here opens soon\. Until then nothing is charged\.|This is not available in the app yet\.|PayPal could not open\. Please try again\.)/.exec(m);if(own)return own[1];return m.includes('not open')?'Payments open soon.':'Something went wrong. Please try again.'};
   const run=async(busy,fn,ok,map)=>{if(P15.busy)return;grab();P15.busy=busy;render();try{await fn();if(ok)toast(ok,'tick2')}catch(e){toast(err(e,map||{}),'info')}P15.busy='';render()};
-  const _rm=renderMe;renderMe=function(){if(P15on()&&!P15.v)return me15();return _rm()};
+  const _rm=renderMe;renderMe=function(){if(P15on()&&!P15.v&&!P15.mat)return me15();return _rm()};
   const _h=home15;home15=function(){const h=_h();const a=adBox15();return a?h.replace(/<\/div><\/div>$/,a+'</div></div>'):h};
   Object.assign(A,{
     p15svcAsk(el){run('va',async()=>{await API.rpc('connect15',{bid:el.dataset.id,nt:'Event booking request'})},'Sent. The business will contact you by email.',{'plus needed':'Booking opens for hosts and Plus members.'})},
@@ -4357,6 +4358,119 @@ Object.assign(P15V,{adcheck:adCheck15,biz:biz15v,services:svc15v,svcplan:svcPlan
       tries++;await playBuy(pid,false)}}};
   /* a cancelled Play sheet says nothing */
   const _t=toast;toast=function(m,i){if(m==='cancelled'||/^Something went wrong/.test(m)&&P15.lastCancel&&Date.now()-P15.lastCancel<1500)return;return _t.apply(this,arguments)};
+})();
+
+/* Website payments with PayPal (owner 8 Nov 2026 09:38: personal PayPal until the company bank + GST). When an action
+   needs a payment, the website opens PayPal for that one product; after paying, the member comes back to the app,
+   the payment is checked with PayPal, and the same action runs again and uses it. Nothing is sold inside the
+   Android app (Google's rule); there the member sees a plain note. Payments that go on to other members (tickets,
+   team fees, sale items) open later with a licensed payment partner. */
+(function(){
+  const KEY='nm.pp15';
+  const _rpc=API.rpc.bind(API);
+  const need=e=>{const m=/payments are not open yet: (\w+)/.exec(em15(e));return m&&m[1]};
+  API.rpc=async function(name,args){
+    try{return await _rpc(name,args)}catch(e){
+      const own=(t,raw)=>{toast(t,'info');P15.shownAt=Date.now();P15.shownMsg=t;const x=new Error(t);x.raw=raw;return x};
+      if(/p2p payments coming soon/.test(em15(e)))throw own('Paying here opens soon. Until then nothing is charged.','p2p coming soon');
+      const prod=need(e);if(!prod)throw e;
+      if(isNative)throw own('This is not available in the app yet.','not in app');
+      let r;try{r=await API.fn('pay15',{action:'start',product:prod,web:true})}catch(z){throw own('PayPal could not open. Please try again.','paypal')}
+      if(!r||!r.url)throw own('PayPal could not open. Please try again.','paypal');
+      try{localStorage.setItem(KEY,JSON.stringify({order:r.order,name,args,at:Date.now(),v:P15.v}))}catch(z){}
+      location.href=r.url;
+      await new Promise(()=>{})}};
+  /* back from PayPal: check the payment, then finish what the member started */
+  async function resume(){let p=null;try{p=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){}
+    const q=new URLSearchParams(location.search).get('pp15');if(!p||!p.order){if(q)history.replaceState(null,'',location.pathname);return}
+    if(q==='cancel'||Date.now()-p.at>36e5){try{localStorage.removeItem(KEY)}catch(e){}history.replaceState(null,'',location.pathname);if(q==='cancel')toast('Payment cancelled. Nothing was charged.','info');return}
+    let r=null;for(let i=0;i<4;i++){try{r=await API.fn('pay15',{action:'check',order:p.order})}catch(e){r=null}if(r&&r.status!=='waiting')break;await new Promise(f=>setTimeout(f,1500))}
+    if(!r||r.status!=='paid'){toast(r&&r.status==='waiting'?'PayPal has not confirmed it yet. Please open this again in a minute.':'The payment did not go through. Nothing was charged.','info');if(!r||r.status!=='waiting'){try{localStorage.removeItem(KEY)}catch(e){}}return}
+    try{localStorage.removeItem(KEY)}catch(e){}history.replaceState(null,'',location.pathname);
+    try{await _rpc(p.name,p.args);await load15();P15.v=p.v||null;Object.keys(P15).forEach(k=>{if(['rooms','bd','rf','sl','ld','ads','tk'].includes(k))P15[k]=undefined});P15.ex={};render();toast('Paid with PayPal. Done.','tick2')}
+    catch(e){await load15();render();toast('Paid. Please tap the button once more to finish.','info')}}
+  const _lm=loadMe;loadMe=async function(){const r=await _lm.apply(this,arguments);if(P15on())setTimeout(resume,300);return r};
+  /* the note shown above is the only one: the screen's own error toast right after it stays quiet */
+  const _t=toast;toast=function(m){if(P15.shownAt&&Date.now()-P15.shownAt<1500&&m!==P15.shownMsg)return;return _t.apply(this,arguments)};
+})();
+
+
+/* ---------- Plan 15 go-live: short sign-up + "Life Partner" (the matrimony part, as before) (owner 8 Nov 2026) ---------- */
+const join15={};
+function cOpts15(sel){return (typeof COUNTRIES!=='undefined'?COUNTRIES:[]).map(c=>`<option value="${esc(c[0])}"${c[0]===sel?' selected':''}>${c[6]||''} ${esc(c[0])}</option>`).join('')}
+function renderJoin15(){const j=join15,e=j.err||{};
+  return `<div class="p15join"><div class="scroll p15s" id="main"><div class="main-inner p15">
+   <div class="p15-brand"><img src="img/icon-192.png" alt=""><b>NeuMarry</b></div>
+   <h2 class="p15-h1">Welcome. Three quick things.</h2><p class="p15-sub">So we can show rooms, events and people near you.</p>
+   <div class="p15-g p15-form">
+    <label for="j-name">Your name</label><input id="j-name" maxlength="60" autocomplete="name" value="${esc(j.name||'')}">${e.name?`<small class="p15-err">${esc(e.name)}</small>`:''}
+    <label for="j-ctry">Country you live in</label><select id="j-ctry"><option value="">Choose</option>${cOpts15(j.ctry)}</select>
+    <label for="j-city">City</label><input id="j-city" maxlength="60" autocomplete="address-level2" placeholder="e.g. Toronto" value="${esc(j.city||'')}">
+    <label for="j-oc">Where you grew up (your roots)</label><select id="j-oc"><option value="">Choose</option>${cOpts15(j.oc)}</select>${e.ctry?`<small class="p15-err">${esc(e.ctry)}</small>`:''}
+   </div>
+   <div class="p15-g p15-form">
+    <label class="p15-ck"><input type="checkbox" id="j-18"${j.c18?' checked':''}><span>I am 18 or older.</span></label>
+    <label class="p15-ck"><input type="checkbox" id="j-terms"${j.terms?' checked':''}><span>I agree to the <a href="#" data-a="legal" data-k="terms">Terms of Service</a> and the <a href="#" data-a="legal" data-k="privacy">Privacy Policy</a>.</span></label>
+    <label class="p15-ck"><input type="checkbox" id="j-mk"${j.mk?' checked':''}><span>Optional: send me event news by email. I can stop it any time.</span></label>${e.ck?`<small class="p15-err">${esc(e.ck)}</small>`:''}
+   </div>
+   <button class="p15-btn" data-a="p15join"${j.busy?' disabled':''}>${j.busy?'Saving…':'Start'}</button>
+   <button class="p15-btn ghost" data-a="logout">Log out</button>
+  </div></div></div>`}
+function mat15bar(){const m=document.querySelector('#app .main-inner');if(!m||m.querySelector('.p15-matback'))return;const b=document.createElement('button');b.className='p15-matback';b.dataset.a='p15matExit';b.innerHTML=ic('back2')+'<span>NeuMarry home</span>';m.insertBefore(b,m.firstChild)}
+(function(){
+  const _mfs=meFromServer;meFromServer=function(m){const r=_mfs(m);r.p15light=!!(m&&m.profile&&m.profile.p15_light);return r};
+  const _ss=startSignup;startSignup=function(){if(P15on()&&!P15.lifeFlow){S.screen='p15join';render();return}return _ss.apply(this,arguments)};
+  const _r=render;render=function(){if(S.screen==='p15join'){const html=renderJoin15()+(sheet?renderSheet():'');app.innerHTML=html;return}return _r.apply(this,arguments)};
+  const grab=()=>{const v=id=>{const x=document.getElementById(id);return x?(x.type==='checkbox'?x.checked:x.value.trim()):undefined};
+    Object.assign(join15,{name:v('j-name'),ctry:v('j-ctry'),city:v('j-city'),oc:v('j-oc'),c18:v('j-18'),terms:v('j-terms'),mk:v('j-mk')})};
+  Object.assign(A,{
+    async p15join(){grab();const j=join15,e={};if((j.name||'').length<2)e.name='Please write your name.';if(!j.ctry||!j.oc)e.ctry='Please choose both countries.';if(!(j.c18&&j.terms))e.ck='Please tick the first two boxes.';
+      j.err=e;if(Object.keys(e).length){render();return}j.busy=true;render();
+      try{saveConsent({mkt:!!j.mk});await API.rpc('p15_join',{nm:j.name,ctry:j.ctry,cty:j.city||'',oc:j.oc,mk:!!j.mk});location.reload()}
+      catch(x){j.busy=false;render();toast('Could not save. Please try again.','info')}},
+    p15life(){const me=S.me||{};if(!me.p15light){P15.mat=true;P15.v=null;S.tab='matches';render();return}
+      sheet={type:'p15life'};render()},
+    p15lifeGo(){sheet=null;P15.lifeFlow=true;const me=S.me||{};startSignup();if(S.draft){Object.assign(S.draft,{name:S.draft.name||me.name||'',country:S.draft.country||me.country||'',city:S.draft.city||me.city||'',oc:S.draft.oc||me.oc||''});render()}},
+    p15matExit(){P15.mat=false;P15.v=null;S.tab='matches';view=null;render()}
+  });
+  const _sh=renderSheet;renderSheet=function(){if(sheet&&sheet.type==='p15life')return sheetShell('Life Partner',`<p>Meet someone from your roots for marriage. Your marriage profile takes about 10 minutes: a few details, a photo, and an ID and selfie check, so everyone here is real.</p><p class="hint">Only for people who are 18 or older, legally free to marry, and looking for a marriage partner. You can leave it any time.</p>`,`<button class="btn ghost" data-a="closeSheet">Not now</button><button class="btn primary" data-a="p15lifeGo">Make my profile</button>`);return _sh.apply(this,arguments)};
+  const _n=A.suNext;A.suNext=async function(){const r=await _n.apply(this,arguments);if(P15.lifeFlow&&S.screen==='app'){P15.lifeFlow=false;try{await API.rpc('p15_life_on',{});await loadMe()}catch(e){}P15.mat=true;S.tab='matches';render()}return r};
+  const _cancel=A.suBack;A.suBack=function(){if(P15.lifeFlow&&S.step===1&&!S.editMode){P15.lifeFlow=false;S.draft=null;S.screen='app';render();return}return _cancel.apply(this,arguments)};
+})();
+/* In-app key points of the Terms and Privacy for the new NeuMarry (from the approved Part B / section 10, owner ok 8 Nov 00:40). */
+(function(){
+  const T15=['Terms of Service: the key points',['You must be 18 or older. One account per person, in your real name.',
+    'NeuMarry is a platform: hosts, experts, agents, sellers and buddies are independent members or businesses, not our staff.',
+    'Every price and fee is shown before you pay. Nothing is sold inside the Android app for now; payments are made on neumarry.com.',
+    'Event tickets: if the host cancels, you get all your money back. Never pay anyone outside NeuMarry for these services.',
+    'Life Partner (matrimony) is only for people who are legally free to marry; ID and selfie are checked as before.',
+    'We can suspend accounts that break these rules, including fake listings, harassment and asking for money.']];
+  const P15P=['Privacy Policy: the key points',['We collect only what you give for each service (rooms, trips, referrals, events, your business page) and use it to provide it and keep members safe.',
+    'Your phone number and email are never shown to other members, except the contact you choose to add to a room post or a business page.',
+    'When you tap Connect me or Request booking, only that one business receives your name and email.',
+    'We never see or store your full card or bank numbers. Payment records are kept for 8 years because tax law requires it.',
+    'You can correct or delete your data at any time: Me, then Delete my account.',
+    'Questions or complaints go to our Grievance Officer, who replies within 30 days.']];
+  const OLD={terms:LEGAL.terms,privacy:LEGAL.privacy};
+  const _sh=renderSheet;renderSheet=function(){if(sheet&&sheet.type==='legal'){const on=P15on()&&!P15.mat;LEGAL.terms=on?T15:OLD.terms;LEGAL.privacy=on?P15P:OLD.privacy}return _sh.apply(this,arguments)};
+})();
+/* Public first screens for the new NeuMarry (before sign-in): switched on with P15_PUBLIC on launch day. */
+const P15_PUBLIC=true;
+(function(){
+  if(!P15_PUBLIC)return;
+  const fix=h=>h.replace('NeuMarry · verified matrimony','NeuMarry · for people living abroad')
+    .replace(/Ready to marry\./,'Your people are here.')
+    .replace('Verified matrimony for marrying someone of your roots, in the country you live in now.','Rooms, job referrals, a flight buddy for your parents, events and friends. And a life partner from your roots, if you want one.')
+    .replace(/<div class="c3chips">[\s\S]*?<\/div>/,`<div class="c3chips">${['🏠 Rooms','✈️ Flight buddy','🎉 Events','💼 Referrals'].map(t=>`<span>${t}</span>`).join('')}</div>`)
+    .replace('Draw your roots line →','Create my account →');
+  if(typeof renderWelcomeC3==='function'){const _w=renderWelcomeC3;renderWelcomeC3=function(){return fix(_w.apply(this,arguments))}}
+  const _w0=renderWelcome;renderWelcome=function(){return fix(_w0.apply(this,arguments))};
+  const _a=renderAuth;renderAuth=function(){return _a.apply(this,arguments).replace('I am 18 or older, and I am joining NeuMarry to find a marriage partner.','I am 18 or older.')
+    .replace('Choose how you want to sign in. Next you build your profile and upload an ID and a selfie, so everyone here is real.','Choose how you want to sign in. Then three quick things, and you are in.')
+    .replace(/, including how NeuMarry verifies members and uses my details to suggest matches\./,'.')
+    .replace('Optional: send me event invitations and offers by email and WhatsApp. I can stop them at any time.','Optional: send me event news by email. I can stop it any time.')};
+  document.documentElement.classList.add('p15pub');
+  if(typeof v2near==='function'){const _v=v2near;v2near=function(){return ''}}
 })();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */

@@ -1,627 +1,157 @@
-<!doctype html><html lang="fr-CA"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Application matrimoniale vérifiée pour qui vit loin du pays où il a grandi, de toutes les communautés. Suggestions selon origines, ville et valeurs. Gratuit."><link rel="canonical" href="https://neumarry.com/fr/"><meta name="robots" content="index,follow,max-image-preview:large"><meta property="og:type" content="website"><meta property="og:site_name" content="NeuMarry"><meta property="og:locale" content="fr_CA"><meta property="og:title" content="NeuMarry : mariage vérifié pour ceux qui vivent à l’étranger"><meta property="og:description" content="Application matrimoniale vérifiée pour qui vit loin du pays où il a grandi, de toutes les communautés. Suggestions selon origines, ville et valeurs. Gratuit."><meta property="og:url" content="https://neumarry.com/fr/"><meta property="og:image" content="https://neumarry.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="NeuMarry, verified matrimony for people living abroad"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="NeuMarry : mariage vérifié pour ceux qui vivent à l’étranger"><meta name="twitter:description" content="Application matrimoniale vérifiée pour qui vit loin du pays où il a grandi, de toutes les communautés. Suggestions selon origines, ville et valeurs. Gratuit."><meta name="twitter:image" content="https://neumarry.com/og-image.png"><link rel="icon" href="../icon-192.png" sizes="192x192"><link rel="apple-touch-icon" href="../apple-touch-icon.png"><meta name="theme-color" content="#FFF8F6"><link rel="alternate" hreflang="en" href="https://neumarry.com/"><link rel="alternate" hreflang="fr" href="https://neumarry.com/fr/"><link rel="alternate" hreflang="x-default" href="https://neumarry.com/"><title>NeuMarry : mariage vérifié pour ceux qui vivent à l’étranger</title>
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NeuMarry : chambres, emplois, événements et amis pour les personnes qui vivent à l’étranger</title>
+<meta name="description" content="Chambres, recommandations d’emploi, compagnon de voyage pour les parents, événements et amis pour les personnes qui vivent à l’étranger."><link rel="canonical" href="https://neumarry.com/fr/"><link rel="alternate" hreflang="en" href="https://neumarry.com/"><link rel="alternate" hreflang="fr" href="https://neumarry.com/fr/"><meta property="og:title" content="NeuMarry"><meta property="og:description" content="Chambres, recommandations d’emploi, compagnon de voyage pour les parents, événements et amis pour les personnes qui vivent à l’étranger."><meta property="og:url" content="https://neumarry.com/fr/">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap">
 <style>
-:root{--bg:#0E0B12;--bg2:#15101A;--tx:#F7F3FA;--mt:rgba(247,243,250,.7);--ln:rgba(255,255,255,.1);--gl1:rgba(255,255,255,.12);--gl2:rgba(255,255,255,.04);--gb:rgba(255,255,255,.13);
- --card:#17121C;--field:rgba(255,255,255,.06);--fieldb:rgba(255,255,255,.18);--rose:#E2136E;--rose2:#FF5C9E;--rosetx:#FFB3D2;--gold:#FFC93C;--goldtx:#FFE08A;--good:#9AF0CB;--bad:#FF8FA8;
- --hero:radial-gradient(90% 70% at 75% 10%,#4A1438,#0E0B12 65%);--navbg:rgba(14,11,18,.62);--sh:0 24px 50px -26px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.12);
- --cardsh:none;--ring:var(--bg);--mapbg:radial-gradient(120% 100% at 50% 0%,#241A2E,#120E17);color-scheme:dark}
-@media (prefers-color-scheme:light){:root{--bg:#FBF8FC;--bg2:#F3EEF6;--tx:#141018;--mt:#564F62;--ln:#E6E0EE;--gl1:rgba(255,255,255,.92);--gl2:rgba(255,255,255,.72);--gb:rgba(255,255,255,.95);
- --card:#fff;--field:#fff;--fieldb:#DCD4E6;--rosetx:#B80E58;--goldtx:#8A6100;--good:#0F8A5A;--bad:#B3123F;
- --hero:radial-gradient(90% 70% at 75% 10%,#FBE3F0,#FBF8FC 65%);--navbg:rgba(251,248,252,.78);--sh:0 24px 50px -28px rgba(60,20,120,.35),inset 0 1px 0 #fff;
- --cardsh:0 14px 34px -24px rgba(60,20,120,.35);--mapbg:radial-gradient(120% 100% at 50% 0%,#F6F1FA,#ECE5F3);color-scheme:light}}
-*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:80px}
-body{margin:0;background:var(--bg);color:var(--tx);font:500 16px/1.6 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:0;overflow-x:hidden}
-a{color:inherit;text-decoration:none}
-.w{max-width:1160px;margin:0 auto;padding:0 20px}
-.glass{background:linear-gradient(160deg,var(--gl1),var(--gl2));border:1px solid var(--gb);-webkit-backdrop-filter:blur(22px) saturate(140%);backdrop-filter:blur(22px) saturate(140%);box-shadow:var(--sh)}
-.card{background:var(--card);border:1px solid var(--ln);border-radius:24px;box-shadow:var(--cardsh)}
-.eb{font:800 12.5px/1.4 "Plus Jakarta Sans",system-ui,sans-serif;text-transform:uppercase;letter-spacing:.1em;color:var(--rosetx);margin:0}
-h1,h2,h3{margin:0;font-weight:800;line-height:1.15;text-wrap:balance;letter-spacing:0}
-h1{font-size:clamp(36px,6.4vw,64px)}h2{font-size:clamp(28px,4vw,42px)}h3{font-size:19px;line-height:1.3}
-p{margin:0}.mt{color:var(--mt)}.sub{color:var(--mt);font-size:17px}
-.ic{width:22px;height:22px;flex:none}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 24px;border-radius:999px;font:800 16px "Plus Jakarta Sans",system-ui,sans-serif;background:linear-gradient(150deg,#F0287F,#D10F65 55%,#A80C50);color:#fff;box-shadow:0 16px 30px -12px rgba(226,19,110,.7);position:relative;overflow:hidden;white-space:nowrap;border:0;cursor:pointer;text-align:center}
-.btn::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.3) 50%,transparent 65%);transform:translateX(-100%);animation:sheen 3.8s ease-in-out infinite;pointer-events:none}
-.btn.gh{background:transparent;border:1px solid var(--fieldb);box-shadow:none;color:var(--tx)}.btn.gh::after{display:none}
-.btn:focus-visible,a:focus-visible,summary:focus-visible,button:focus-visible{outline:3px solid var(--rose2);outline-offset:3px}
-.btn[disabled]{opacity:.7;cursor:wait}
-.chip{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;font:700 14px "Plus Jakarta Sans",system-ui,sans-serif;background:var(--gl2);border:1px solid var(--ln);white-space:nowrap}
-.chip .ic{width:17px;height:17px}
-.tl{color:var(--rosetx);font-weight:800;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
-/* nav */
-.nav{position:sticky;top:0;z-index:50;background:var(--navbg);border-bottom:1px solid var(--ln);-webkit-backdrop-filter:blur(20px) saturate(140%);backdrop-filter:blur(20px) saturate(140%)}
-.nav .w{display:flex;align-items:center;gap:20px;height:68px}
-.brand{display:flex;align-items:center;gap:9px;font:800 20px "Plus Jakarta Sans",system-ui,sans-serif;white-space:nowrap}
-.brand svg{flex:none}
-.links{display:flex;gap:24px;font-weight:700;font-size:15px;color:var(--mt);margin-left:auto}
-.links a:hover{color:var(--tx)}
-.langh{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--fieldb);font-weight:800;font-size:14px;color:var(--rosetx);white-space:nowrap}
-.nav .btn{min-height:44px;padding:0 18px;font-size:14.5px}
-.menu{display:none;width:44px;height:44px;border-radius:50%;place-items:center;border:1px solid var(--gb);background:transparent;color:var(--tx);padding:0;cursor:pointer;flex:none}
-.langhero{display:none}
-/* hero */
-.hero{background:var(--hero);position:relative;overflow:hidden}
-.hero .w{display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:center;padding-top:56px;padding-bottom:64px}
-.hero h1{margin-top:14px}
-.hero h1 em{font-style:normal;background:linear-gradient(100deg,#FF5C9E,#FFC93C);-webkit-background-clip:text;background-clip:text;color:transparent}
-@media (prefers-color-scheme:light){.hero h1 em{background-image:linear-gradient(100deg,#D10F65,#B07A00)}}
-.lead{font-size:18px;margin-top:18px;max-width:34em;color:var(--mt)}
-.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
-.gbtn svg{background:#fff;border-radius:50%;padding:2px;width:24px;height:24px}
-.avail{margin-top:14px;font-size:14px;color:var(--mt)}
-.trust{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
-.stage{position:relative;height:520px}
-.stage .map{position:absolute;inset:0 -40px 40px -40px;opacity:.95}
-.stage .map svg,.mapcard svg{display:block;width:100%;height:100%}
-.face{position:absolute;border-radius:50%;overflow:hidden;box-shadow:0 0 0 3px var(--bg),0 0 0 5.5px var(--rose2),0 18px 30px -12px rgba(0,0,0,.6);animation:floaty 5s ease-in-out infinite}
-.face.g{box-shadow:0 0 0 3px var(--bg),0 0 0 5.5px var(--gold),0 18px 30px -12px rgba(0,0,0,.6)}
-.face img{width:100%;height:100%;object-fit:cover;display:block;animation:breathe2 6s ease-in-out infinite}
-.hi{position:absolute;padding:7px 12px;border-radius:16px;background:#fff;color:#141018;font:700 13.5px "Plus Jakarta Sans",system-ui,sans-serif;white-space:nowrap;box-shadow:0 12px 24px -10px rgba(0,0,0,.5);opacity:0;animation:bub 9s ease-in-out infinite}
-.hi b{color:#C20F5F}
-.hi::after{content:"";position:absolute;bottom:-5px;left:18px;width:12px;height:12px;background:#fff;transform:rotate(45deg);border-radius:2px}
-.phone{position:absolute;right:30px;bottom:0;width:250px;height:510px;border-radius:38px;background:#0B080D;padding:8px;box-shadow:0 40px 80px -30px rgba(0,0,0,.8),inset 0 0 0 1.5px #2E2833;animation:floaty 7s ease-in-out infinite}
-.phone .sc{width:100%;height:100%;border-radius:31px;overflow:hidden;position:relative;background:#14101A}
-.phone .sc img{width:100%;height:62%;object-fit:cover;display:block;animation:breathe2 6s ease-in-out infinite}
-.phone .gc{position:absolute;left:10px;right:10px;bottom:12px;border-radius:20px;padding:13px;color:#F7F3FA;background:linear-gradient(160deg,rgba(255,255,255,.14),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.16)}
-.phone .gc b{font-size:17px}.phone .gc .from{font-size:12.5px;color:rgba(247,243,250,.78)}
-.phone .gc .chips{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}.phone .gc .chip{padding:4px 9px;font-size:11.5px;color:#F7F3FA;background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)}
-.ex{display:inline-block;font:700 11px/1.3 "Plus Jakarta Sans",system-ui,sans-serif;padding:3px 8px;border-radius:7px;background:rgba(0,0,0,.55);color:#fff;border:1px solid rgba(255,255,255,.2)}
-.phone .ex{position:absolute;right:16px;top:16px}
-.stage .exs{position:absolute;left:0;bottom:-30px}
-/* sections */
-section{padding:84px 0}
-.band{background:var(--bg2)}
-.head{display:grid;gap:12px;max-width:760px;margin-bottom:34px}
-.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:0;padding:0;list-style:none}
-.step{padding:22px;border-radius:24px;display:grid;gap:12px;align-content:start;position:relative;overflow:hidden}
-.step .n{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font:800 17px "Plus Jakarta Sans",system-ui,sans-serif;background:linear-gradient(150deg,#F0287F,#C20F5F);color:#fff}
-.step .bar{height:4px;border-radius:4px;background:var(--ln);overflow:hidden}.step .bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#FF5C9E,#FFC93C);animation:fill 3s ease-in-out infinite}
-.split{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}
-.split.top{align-items:start}
-.stack{display:grid;gap:16px;align-content:start}
-.mapcard{border-radius:28px;overflow:hidden;height:380px;position:relative;background:var(--mapbg);border:1px solid var(--ln)}
-.chips{display:flex;gap:10px;flex-wrap:wrap}
-.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.feat .card{padding:24px;display:grid;gap:10px;align-content:start}
-.fi{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;background:rgba(226,19,110,.16);color:var(--rosetx)}
-.checks{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:18px 0 0;padding:0;list-style:none}
-.checks li{display:flex;gap:10px;align-items:flex-start;padding:14px;border-radius:18px;font-size:14px;font-weight:700;line-height:1.45}
-.checks .ic{color:var(--good);width:20px;height:20px;margin-top:1px}
-.row{display:flex;gap:14px 20px;flex-wrap:wrap;align-items:center;margin-top:24px}
-/* gold pass */
-.pass{border-radius:28px;padding:2px;background:linear-gradient(115deg,#8A6100,#FFD978 28%,#FFF3C4 40%,#C99227 55%,#FFE29A 72%,#8A6100);background-size:300% 100%;animation:shim 6s linear infinite;max-width:440px;width:100%}
-.pass>div{border-radius:26px;background:linear-gradient(160deg,#1E1A14,#0E0B0A);padding:24px;color:#F7F3FA;position:relative;overflow:hidden}
-.pass .top{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.pass .adm{display:flex;gap:8px;align-items:center;color:#fff}.pass .adm .eb{color:#FFE08A}
-.pass .pchip{color:#FFE08A;border-color:rgba(255,201,60,.4);background:rgba(255,201,60,.12)}
-.pass .t{font:800 44px/1.05 "Plus Jakarta Sans",system-ui,sans-serif;background:linear-gradient(115deg,#C99227,#FFE29A 40%,#FFF3C4 50%,#C99227);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shim 6s linear infinite;margin-top:14px}
-.pass dl{display:flex;gap:22px;margin:12px 0 0;flex-wrap:wrap}.pass dt{font-size:11px;color:rgba(247,243,250,.65);font-weight:800;text-transform:uppercase;letter-spacing:.06em}.pass dd{margin:0;font-weight:800}
-.cd{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px}
-.cd div{text-align:center;border:1px solid rgba(255,217,120,.25);border-radius:14px;padding:8px 0;background:rgba(255,255,255,.05);min-width:0}
-.cd b{display:block;font:800 24px "Plus Jakarta Sans",system-ui,sans-serif;font-variant-numeric:tabular-nums}.cd span{font:700 10.5px "Plus Jakarta Sans",system-ui,sans-serif;text-transform:uppercase;letter-spacing:.06em;color:rgba(247,243,250,.68)}
-.cdl{font-size:13px;margin-top:10px;text-align:center;color:var(--mt)}
-.price{display:flex;gap:12px;flex-wrap:wrap}
-.price .card{padding:16px 18px;flex:1;min-width:180px}
-.price b{font-size:26px;display:block;line-height:1.3}
-.price .k{font-size:14px;color:var(--mt)}.price .s{font-size:13px;color:var(--mt)}
-.note{font-size:13.5px;color:var(--mt)}
-.nearcount{font-weight:800;color:var(--good)}
-.cities{margin-top:18px;color:var(--mt);font-size:15px}.cities b{color:var(--tx);font-weight:700}
-.cities .chips{margin-top:12px}
-/* app + forms */
-.stores{display:flex;gap:12px;flex-wrap:wrap}
-.store{display:inline-flex;align-items:center;gap:12px;min-height:58px;padding:8px 18px;border-radius:16px;border:1px solid var(--fieldb);background:var(--gl2)}
-.store svg{width:26px;height:26px;flex:none}.store small{display:block;font-size:12px;color:var(--mt);line-height:1.2}.store b{display:block;font-size:16px;line-height:1.3}
-.store.live,#st-web{border-color:var(--rose2)}
-.ticks{display:grid;gap:12px;margin:0;padding:24px;list-style:none;border-radius:24px}
-.ticks li{display:flex;gap:12px;align-items:flex-start;font-weight:600}
-.ticks .ic{color:var(--good);margin-top:1px}
-.perks{display:grid;gap:12px;margin:8px 0 0;padding:0;list-style:none}
-.perks li{display:flex;gap:12px;align-items:flex-start;color:var(--mt)}.perks li b{color:var(--tx)}
-.perks .ic{color:var(--rosetx);margin-top:1px}
-form.card{padding:26px;display:grid;gap:16px;border-radius:28px}
-.fld{display:grid;gap:7px;min-width:0;margin:0;padding:0;border:0}
-.fld>span,.fld legend{font-weight:800;font-size:14.5px;padding:0}
-.fld input,.fld select{width:100%;min-height:50px;padding:0 14px;border-radius:14px;border:1px solid var(--fieldb);background:var(--field);color:var(--tx);font:600 16px "Plus Jakarta Sans",system-ui,sans-serif}
-.fld select option{color:#141018;background:#fff}
-.fld input::placeholder{color:var(--mt);opacity:.8;font-size:14.5px}
-.fld input:focus,.fld select:focus{outline:2px solid var(--rose2);outline-offset:1px}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}.seg.three{grid-template-columns:repeat(3,1fr)}
-.seg label{position:relative;min-width:0}.seg input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
-.seg span{display:flex;align-items:center;justify-content:center;text-align:center;min-height:48px;padding:6px 10px;border-radius:14px;border:1px solid var(--fieldb);font-weight:700;font-size:14.5px;line-height:1.25;background:var(--field)}
-.seg input:checked+span{background:rgba(226,19,110,.18);border-color:var(--rose2);color:var(--tx)}
-.seg input:focus-visible+span{outline:3px solid var(--rose2);outline-offset:2px}
-.check{display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--mt);flex-wrap:wrap;cursor:pointer}
-.check input{width:20px;height:20px;margin:2px 0 0;accent-color:#E2136E;flex:none}
-.check>span:not(.err){flex:1 1 0;min-width:0}
-.err{color:var(--bad);font-size:13.5px;font-weight:700}
-.check .err{flex-basis:100%;padding-left:32px}
-.bad input,.bad select,.bad .seg span{border-color:var(--bad)}
-.done{display:grid;gap:10px;justify-items:start;outline:none}.done .big{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:rgba(15,138,90,.18);color:var(--good)}
-.done .code{font-weight:800;color:var(--rosetx)}
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:70;background:#141018;color:#fff;padding:12px 18px;border-radius:14px;font-weight:700;max-width:calc(100% - 32px);box-shadow:0 14px 30px rgba(0,0,0,.4)}
-/* faq */
-.faq{display:grid;gap:12px;max-width:860px}
-.faq details{border-radius:20px;padding:18px 22px;background:linear-gradient(160deg,var(--gl1),var(--gl2));border:1px solid var(--gb);box-shadow:var(--sh)}
-.faq summary{cursor:pointer;font-weight:800;font-size:17px;list-style:none;display:flex;justify-content:space-between;gap:16px}
-.faq summary::-webkit-details-marker{display:none}
-.faq summary::after{content:"+";color:var(--rosetx);font-size:22px;line-height:1;flex:none}
-.faq details[open] summary::after{content:"\2013"}
-.faq p{margin-top:10px;color:var(--mt)}
-/* closing, delete, guides, footer */
-.close{border-radius:32px;padding:44px;text-align:center;display:grid;gap:16px;justify-items:center;background:radial-gradient(100% 120% at 50% 0%,#5B1748,#1E0B1A);color:#fff}
-.close h2{color:#fff;max-width:760px}.close .eb{color:#FFB3D2}
-.del{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:0;padding:0;list-style:none}
-.del li{padding:22px;display:grid;gap:8px;align-content:start}.del b{font-size:17px}.del span{color:var(--mt);font-size:15px}
-.guides{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:6px}
-.guides a{display:flex;align-items:center;justify-content:space-between;gap:10px;border-radius:16px;padding:14px 16px;font-weight:700;background:linear-gradient(160deg,var(--gl1),var(--gl2));border:1px solid var(--gb);box-shadow:var(--sh)}
-.guides a::after{content:"\2192";color:var(--rosetx);flex:none}
-.guides a:hover{border-color:var(--rose2)}
-footer.foot{padding:44px 0 34px;border-top:1px solid var(--ln);color:var(--mt);font-size:14.5px}
-.foot .wrap{max-width:1160px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1fr;gap:24px}
-.foot b{color:var(--tx);display:block;margin-bottom:8px}.foot a{display:block;padding:4px 0}.foot a:hover{color:var(--tx)}
-.foot .brand{color:var(--tx);margin-bottom:10px}.foot p{margin-top:6px}
-.foot .nm-alink{grid-column:1/-1;justify-self:start;color:var(--mt);font-size:14px}
-/* motion */
-@keyframes sheen{0%,55%{transform:translateX(-100%)}80%,100%{transform:translateX(100%)}}
-@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-@keyframes breathe2{0%,100%{transform:scale(1.02)}50%{transform:scale(1.06)}}
-@keyframes bub{0%,10%{opacity:0;transform:translateY(8px) scale(.7)}14%,38%{opacity:1;transform:none}43%,100%{opacity:0}}
-@keyframes shim{0%{background-position:-160% 0}100%{background-position:260% 0}}
-@keyframes fill{0%{width:0}60%,100%{width:100%}}
-@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
-.r{animation:rise .9s cubic-bezier(.2,.8,.2,1) both}.r1{animation-delay:.12s}.r2{animation-delay:.24s}.r3{animation-delay:.36s}
-@media (max-width:1060px){.links{gap:18px;font-size:14.5px}.checks{grid-template-columns:repeat(3,1fr)}.foot .wrap{grid-template-columns:1fr 1fr 1fr}.foot .wrap>div:first-child{grid-column:1/-1}}
-@media (max-width:900px){
- .links{display:none;position:absolute;top:68px;left:12px;right:12px;flex-direction:column;gap:0;padding:8px;border-radius:20px;background:var(--card);border:1px solid var(--ln);box-shadow:0 24px 50px -20px rgba(0,0,0,.6);margin:0}
- .links a{padding:13px 14px;border-radius:12px;color:var(--tx)}
- .nav.open .links{display:flex}
- .nav .w{gap:10px}.nav .btn{margin-left:auto}.nav .langh{display:none}.menu{display:grid}
- .langhero{display:flex;justify-content:flex-end;margin:0 0 6px}
- .hero .w{grid-template-columns:1fr;padding-top:18px;padding-bottom:40px;gap:10px}
- .stage{height:400px;order:-1;margin-bottom:34px}.phone{right:4px;width:184px;height:380px}.stage .exs{bottom:-28px}.stage .map{inset:0 -20px 30px -20px}
- .steps{grid-template-columns:1fr 1fr}.feat{grid-template-columns:1fr}.split{grid-template-columns:1fr;gap:28px}.del{grid-template-columns:1fr}
- section{padding:60px 0}.close{padding:32px 22px}.mapcard{height:300px}
-}
-@media (max-width:620px){.checks{grid-template-columns:1fr 1fr}.row2{grid-template-columns:1fr}.foot .wrap{grid-template-columns:1fr 1fr}}
-@media (max-width:520px){.steps{grid-template-columns:1fr}.lead{font-size:16.5px}.cta .btn{flex:1 1 100%}.seg.three{grid-template-columns:1fr}
- .stage{height:360px}.phone{width:172px;height:350px}.phone .gc{padding:10px}
- .stage .f1{left:2%!important;top:6%!important;width:76px!important;height:76px!important}.stage .f2{left:27%!important;top:30%!important;width:56px!important;height:56px!important}.stage .h2b{left:20%!important;top:21%!important}
- .stage .f3{left:2%!important;top:50%!important;width:68px!important;height:68px!important}.stage .f4{left:24%!important;top:72%!important;width:58px!important;height:58px!important}.fld input::placeholder{font-size:13.5px}.checks{grid-template-columns:1fr}.pass .t{font-size:38px}.nav .btn{padding:0 14px;font-size:14px}.brand{font-size:19px}
- form.card{padding:20px}.store{flex:1 1 100%}}
-@media (prefers-color-scheme:light){.phone .gc{background:linear-gradient(160deg,rgba(20,16,24,.62),rgba(20,16,24,.42));border-color:rgba(255,255,255,.22)}}
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important}.hi{opacity:1}}
-</style>
-<style>
-.globe{background:radial-gradient(ellipse at 50% 45%,rgba(60,90,170,.18),transparent 62%),radial-gradient(1px 1px at 12% 22%,#fff8,transparent),radial-gradient(1px 1px at 72% 12%,#fff6,transparent),radial-gradient(1.2px 1.2px at 88% 66%,#fff7,transparent),radial-gradient(1px 1px at 30% 84%,#fff5,transparent),radial-gradient(1px 1px at 52% 6%,#fff6,transparent)}
-@media (prefers-color-scheme:light){.globe{background:radial-gradient(ellipse at 50% 45%,rgba(120,160,255,.18),transparent 62%)}}
-.mapcard.globe{background-color:#07060C}@media (prefers-color-scheme:light){.mapcard.globe{background-color:#EEF1FA}}
-.stage .map.globe{opacity:1;inset:-40px 110px -10px -40px;cursor:grab}
-.globe .gl-c{position:absolute;inset:0;width:100%!important;height:100%!important;display:block}
-.gl-lay{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-.gl-l{position:absolute;left:0;top:0;white-space:nowrap;font:700 12px/1 "Plus Jakarta Sans",system-ui,sans-serif;padding:6px 9px;border-radius:999px;color:#fff;background:rgba(14,11,18,.55);border:1px solid rgba(255,255,255,.22);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:opacity .35s}
-.gl-l.from{border-color:rgba(255,92,158,.6)}.gl-l.to{border-color:rgba(255,255,255,.5)}
-@media (prefers-color-scheme:light){.gl-l{background:rgba(255,255,255,.82);color:#141018;border-color:#fff;box-shadow:0 6px 16px -8px rgba(40,20,80,.4)}}
-.mapcard.tall{height:460px}
-.tryw .lbl{font-weight:800;font-size:14px;margin:18px 0 8px}
-.chips.pick{display:flex;flex-wrap:wrap;gap:8px}
-.chip.pk{cursor:pointer;font:inherit;font-weight:700;font-size:14px;padding:9px 13px;border-radius:999px;transition:transform .15s,background .2s}
-.chip.pk:active{transform:scale(.95)}
-.chip.pk.on{background:linear-gradient(150deg,#FF4F97,#E2136E 55%,#B80E58);color:#fff;border-color:transparent;box-shadow:0 10px 22px -10px rgba(226,19,110,.8)}
-.chip.pk[data-k="to"].on{background:linear-gradient(150deg,#FFE29A,#C99227);color:#1E1508}
-.kmout{display:grid;gap:2px;margin:18px 0;padding:16px 18px;border-radius:20px}
-.kmout b{font-size:34px;line-height:1.1;font-weight:800;font-variant-numeric:tabular-nums}
-.kmout span{font-size:14.5px;opacity:.85}
-.gbtn2{display:inline-flex}
-@media (max-width:860px){.mapcard.tall{height:380px}.stage .map.globe{inset:-6px -70px 0 -40px}.stage .phone{width:150px;height:310px;right:0;bottom:-6px}.stage .phone .sc{border-radius:26px}}
-</style>
-<style id="bento">
-/* ===== Bento glass (his ok 7 Nov 2026 02:42, mock K9PGagZvdiBRTzTqNaQLzM): white glass bento (light) + black glass bento (dark), no faces ===== */
-html[data-theme=light]{--bg:#F7F8F5;--bg2:#FFFFFF;--tx:#14231C;--mt:#4E5E57;--ln:rgba(20,35,28,.08);--gl1:rgba(255,255,255,.78);--gl2:rgba(255,255,255,.5);--gb:rgba(255,255,255,.95);--card:rgba(255,255,255,.66);--field:rgba(255,255,255,.85);--fieldb:rgba(20,60,40,.14);--rose:#0E9F6E;--rose2:#3BBF8A;--rosetx:#0E5B43;--gold:#E9B800;--goldtx:#7A5F00;--good:#0F8A5A;--hero:transparent;--navbg:rgba(255,255,255,.66);--sh:0 1px 0 #fff inset,0 26px 50px -30px rgba(30,80,60,.38);--cardsh:0 1px 0 #fff inset,0 14px 30px -22px rgba(30,80,60,.35);--mapbg:transparent;--tile:rgba(255,255,255,.6);--tileb:rgba(255,255,255,.95);--hi:rgba(255,255,255,.8);--b1:#FFF6C8;--b2:#D9F6EA;--b3:#ECF8DF;--lemonT:linear-gradient(160deg,rgba(255,248,206,.82),rgba(255,230,130,.42));--mintT:linear-gradient(160deg,rgba(220,249,236,.84),rgba(160,230,200,.4));--leafT:linear-gradient(160deg,rgba(238,250,224,.86),rgba(200,238,166,.42));color-scheme:light}
-html[data-theme=dark]{--bg:#0A0C0B;--bg2:#121615;--tx:#EEF7F1;--mt:#A6BCB2;--ln:rgba(255,255,255,.09);--gl1:rgba(255,255,255,.08);--gl2:rgba(255,255,255,.03);--gb:rgba(255,255,255,.12);--card:rgba(255,255,255,.05);--field:rgba(255,255,255,.06);--fieldb:rgba(255,255,255,.16);--rose:#5FD3A2;--rose2:#8DEBC3;--rosetx:#8DEBC3;--gold:#F2C94C;--goldtx:#FFE27A;--good:#8DEBC3;--hero:transparent;--navbg:rgba(14,18,16,.62);--sh:0 1px 0 rgba(255,255,255,.1) inset,0 30px 60px -34px rgba(0,0,0,.85);--cardsh:0 1px 0 rgba(255,255,255,.08) inset;--mapbg:transparent;--tile:rgba(255,255,255,.055);--tileb:rgba(255,255,255,.11);--hi:rgba(255,255,255,.1);--b1:#3A3412;--b2:#123A30;--b3:#1E2A18;--lemonT:linear-gradient(160deg,rgba(255,226,120,.13),rgba(255,255,255,.04));--mintT:linear-gradient(160deg,rgba(150,235,200,.11),rgba(255,255,255,.04));--leafT:linear-gradient(160deg,rgba(200,240,160,.10),rgba(255,255,255,.04));color-scheme:dark}
-body.nm-home{background:radial-gradient(560px 560px at 0% 0%,var(--b1),transparent 70%),radial-gradient(620px 620px at 100% 20%,var(--b2),transparent 70%),radial-gradient(520px 520px at 30% 75%,var(--b3),transparent 70%),var(--bg) fixed;background-attachment:fixed}
-html[data-theme=dark] body.nm-home{background:radial-gradient(560px 560px at 0% 0%,rgba(58,52,18,.45),transparent 70%),radial-gradient(620px 620px at 100% 20%,rgba(18,58,48,.55),transparent 70%),radial-gradient(520px 520px at 30% 75%,rgba(30,42,24,.5),transparent 70%),var(--bg);background-attachment:fixed}
-/* no faces: example people and the phone with a face are gone */
-.nm-home .face,.nm-home .hi,.nm-home .phone,.nm-home .ex.exs,.nm-home .stage .ex{display:none!important}
-/* sections become bento tiles */
-.nm-home main>section{padding:8px 0!important;background:none!important}
-.nm-home main>section>.w{position:relative;border-radius:30px;padding:30px;background:var(--tile);border:1px solid var(--tileb);-webkit-backdrop-filter:blur(26px) saturate(170%);backdrop-filter:blur(26px) saturate(170%);box-shadow:var(--sh);overflow:hidden}
-.nm-home main>section>.w::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(180deg,var(--hi),transparent 38%);opacity:.7}
-.nm-home main>section>.w>*{position:relative}
-/* hero: two tiles, text + real globe */
-.nm-home #hero>.w{background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;padding:0;overflow:visible;gap:14px;grid-template-columns:1.15fr 1fr;align-items:stretch;padding-top:14px}
-.nm-home #hero>.w::before{display:none}
-.nm-home #hero>.w>div:first-child{border-radius:30px;padding:38px;background:var(--leafT),var(--tile);border:1px solid var(--tileb);-webkit-backdrop-filter:blur(26px) saturate(170%);backdrop-filter:blur(26px) saturate(170%);box-shadow:var(--sh)}
-.nm-home #hero .stage{height:auto;min-height:440px;border-radius:30px;background:radial-gradient(circle at 50% 46%,rgba(255,255,255,.55),transparent 62%),var(--mintT),var(--tile);border:1px solid var(--tileb);box-shadow:var(--sh);overflow:hidden;margin:0}
-html[data-theme=dark] .nm-home #hero .stage{background:radial-gradient(circle at 50% 46%,rgba(80,170,140,.14),transparent 62%),var(--tile)}
-.nm-home .stage .map.globe{inset:0!important}
-.nm-home h1 em{background-image:linear-gradient(100deg,#0E7A55,#3BBF8A 45%,#C9A300);-webkit-background-clip:text;background-clip:text;color:transparent}
-html[data-theme=dark] .nm-home h1 em{background-image:linear-gradient(100deg,#8DEBC3,#C8F0A0 45%,#FFE27A)}
-/* tinted tiles */
-.nm-home #event>.w{background:var(--lemonT),var(--tile)}.nm-home #try>.w,.nm-home #app>.w{background:var(--mintT),var(--tile)}.nm-home #join>.w,.nm-home #why>.w{background:var(--leafT),var(--tile)}
-/* inner pieces = small glass tiles */
-.nm-home .card,.nm-home .step,.nm-home .store,.nm-home .checks li,.nm-home .faq details,.nm-home .kmout,.nm-home .mapcard{background:var(--card)!important;border:1px solid var(--tileb)!important;border-radius:22px;box-shadow:var(--cardsh)!important;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
-.nm-home .mapcard.globe{background:radial-gradient(circle at 50% 46%,rgba(255,255,255,.5),transparent 62%),var(--card)!important}
-html[data-theme=dark] .nm-home .mapcard.globe{background:radial-gradient(circle at 50% 46%,rgba(80,170,140,.14),transparent 62%),rgba(255,255,255,.03)!important}
-.nm-home .chip{background:var(--field);border-color:var(--tileb);color:var(--tx)}
-.nm-home .btn:not(.gh):not(.gbtn){background:linear-gradient(150deg,#D6F7E8,#9FE6C6)!important;color:#0B4D36!important;box-shadow:0 1px 0 #fff inset,0 12px 26px -14px rgba(14,91,67,.55)!important;border:0}
-html[data-theme=dark] .nm-home .btn:not(.gh):not(.gbtn){background:linear-gradient(150deg,#A8F0CF,#5FD3A2)!important;color:#05291D!important;box-shadow:0 12px 26px -14px rgba(95,211,162,.5)!important}
-.nm-home .btn.gbtn{background:linear-gradient(150deg,#D6F7E8,#9FE6C6)!important;color:#0B4D36!important;border:0}
-html[data-theme=dark] .nm-home .btn.gbtn{background:linear-gradient(150deg,#A8F0CF,#5FD3A2)!important;color:#05291D!important}
-.nm-home .btn.gh{background:var(--field);border:1px solid var(--tileb)}
-.nm-home .chip.pk.on{background:linear-gradient(150deg,#D6F7E8,#9FE6C6);color:#0B4D36;border-color:transparent}
-.nm-home .chip.pk[data-k=to].on{background:linear-gradient(150deg,#FFF6C4,#FFE27A);color:#5A4600}
-html[data-theme=dark] .nm-home .chip.pk.on{background:linear-gradient(150deg,#A8F0CF,#5FD3A2);color:#05291D}html[data-theme=dark] .nm-home .chip.pk[data-k=to].on{background:linear-gradient(150deg,#FFF0A8,#F2C94C);color:#2E2400}
-.nm-home .gl-l{background:rgba(255,255,255,.88);color:#14231C;border-color:#fff}
-html[data-theme=dark] .nm-home .gl-l{background:rgba(10,24,19,.72);color:#EEF7F1;border-color:rgba(255,255,255,.2)}
-.nm-home header.nav{background:var(--navbg);-webkit-backdrop-filter:blur(26px) saturate(170%);backdrop-filter:blur(26px) saturate(170%)}
-.nm-home .brand svg path:first-child{stroke:var(--rosetx)}
-.nm-tg{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--tileb);background:var(--field);color:var(--tx);cursor:pointer;flex:none;margin-left:8px}
-.nm-tg svg{width:19px;height:19px}
-@media (max-width:860px){.nm-home main>section>.w{padding:22px 18px;border-radius:24px;margin:0 12px}.nm-home #hero>.w{margin:0 12px;grid-template-columns:1fr}.nm-home #hero>.w>div:first-child{padding:24px 20px;border-radius:24px}.nm-home #hero .stage{min-height:340px;order:0;border-radius:24px}}
-.nm-home .step .n{background:linear-gradient(150deg,#D6F7E8,#9FE6C6);color:#0B4D36}html[data-theme=dark] .nm-home .step .n{background:linear-gradient(150deg,#A8F0CF,#5FD3A2);color:#05291D}
-.nm-home .bar i{background:linear-gradient(90deg,#9FE6C6,#FFE27A)}
-.nm-home .pass{background:linear-gradient(115deg,#FFF3C4,#FFE29A 40%,#C9F0DD 70%,#FFF3C4);background-size:300% 100%}
-.nm-home .pass>div{background:var(--lemonT),var(--bg2);color:var(--tx)}
-.nm-home .pass .adm{color:var(--tx)}.nm-home .pass .adm .eb,.nm-home .pass .pchip{color:var(--goldtx)}.nm-home .pass dt{color:var(--mt)}
-.nm-home .pass .t{background-image:linear-gradient(115deg,#0E7A55,#3BBF8A 40%,#C9A300 60%,#0E7A55)}
-html[data-theme=dark] .nm-home .pass .t{background-image:linear-gradient(115deg,#8DEBC3,#C8F0A0 40%,#FFE27A 60%,#8DEBC3)}
-html[data-theme=dark] .nm-home .pass{background:linear-gradient(115deg,rgba(255,226,120,.5),rgba(141,235,195,.4),rgba(255,226,120,.5));background-size:300% 100%}
-@media (prefers-reduced-motion:reduce){.nm-home *{animation:none!important}}
-</style>
-<script>try{var t=localStorage.getItem('nm.theme');document.documentElement.dataset.theme=t||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){document.documentElement.dataset.theme='light'}</script>
-<style id="rlive">
-/* Roots Live (same look as the app) */
-.rl-g{position:relative;overflow:hidden}.rl-g .maplibregl-ctrl-attrib{background:transparent!important;font-size:9px;opacity:.6}
-.hero .stage{position:relative}
-.hero #g-hero,#g-roots,#g-try{background:radial-gradient(120% 80% at 50% 30%,#fff 0%,#E6F3EA 55%,#DDEDE2 100%)}
-html[data-theme=dark] .hero #g-hero,html[data-theme=dark] #g-roots,html[data-theme=dark] #g-try{background:radial-gradient(120% 80% at 50% 30%,#13221B 0%,#08100C 60%,#050807 100%)}
-.rl-mk{display:flex;align-items:center;gap:6px;padding:5px 10px 5px 7px;border-radius:999px;font:800 12px/1 inherit;color:#0F1C16;background:rgba(255,255,255,.86);border:1px solid #fff;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 10px 20px -12px rgba(0,0,0,.5);white-space:nowrap}
-.rl-mk i{width:9px;height:9px;border-radius:50%;background:#E2B500}.rl-mk.to i{background:#0E9F6E;animation:rlpl 2.4s infinite}
-html[data-theme=dark] .rl-mk{background:rgba(28,36,32,.82);color:#ECF4EF;border-color:rgba(255,255,255,.14)}
-@keyframes rlpl{0%{box-shadow:0 0 0 0 rgba(95,211,162,.7)}70%{box-shadow:0 0 0 9px rgba(95,211,162,0)}100%{box-shadow:0 0 0 0 rgba(95,211,162,0)}}
-.rl-today{position:absolute;left:4%;right:4%;bottom:4%;z-index:3;max-width:380px;margin:0 auto;padding:12px;border-radius:26px;background:rgba(255,255,255,.72);border:1px solid #fff;-webkit-backdrop-filter:blur(22px) saturate(160%);backdrop-filter:blur(22px) saturate(160%);box-shadow:0 30px 50px -30px rgba(20,70,50,.55);pointer-events:none}
-html[data-theme=dark] .rl-today{background:rgba(18,24,21,.66);border-color:rgba(255,255,255,.12)}
-.rl-pill{display:inline-flex;gap:7px;align-items:center;font-size:12.5px;font-weight:800;margin:0 0 8px 4px}.rl-pill i{width:8px;height:8px;border-radius:50%;background:#0E9F6E;animation:rlpl 2.2s infinite}
-.rl-c{display:flex;gap:12px;align-items:center}.rl-sg{width:84px;height:84px;flex:none}.rl-sg svg{width:100%;height:100%;overflow:visible}
-.rl-t{display:flex;flex-direction:column;gap:3px;min-width:0}.rl-t b{font-size:18px}.rl-t small{font-size:12.5px;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rl-t small.rlw{color:#0E7A55;opacity:1;font-weight:700}
-html[data-theme=dark] .rl-t small.rlw{color:#AEF3D4}
-.rl-t .fit{align-self:flex-start;margin-top:4px;font-size:12px;font-weight:800;padding:5px 10px;border-radius:999px;background:linear-gradient(150deg,#DDF8EC,#A3E8C9);color:#0B4D36}
-.stage .rl-today{top:auto!important;height:auto!important;inset:auto 4% 4% 4%!important}
-.rl-today .ex{position:absolute;right:12px;top:12px}
-.rl-r{transform-box:view-box;transform-origin:50% 50%;animation:rlspin linear infinite}@keyframes rlspin{to{transform:rotate(360deg)}}
-.rl-bento{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px}
-.rl-f{margin:0;border-radius:28px;padding:12px;background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.95);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 24px 44px -30px rgba(20,70,50,.45)}
-html[data-theme=dark] .rl-f{background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.12)}
-.rl-ph{aspect-ratio:390/844;border-radius:22px;overflow:hidden;border:6px solid #101513}.rl-ph img{width:100%;height:100%;object-fit:cover;display:block}
-.rl-f figcaption{padding:12px 4px 2px}.rl-f figcaption b{display:block;font-size:17px}.rl-f figcaption span{display:block;font-size:14px;opacity:.75;margin-top:4px;line-height:1.45}
-.rl-ph .dk{display:none}html[data-theme=dark] .rl-ph .dk{display:block}html[data-theme=dark] .rl-ph .lt{display:none}
-html:not([data-theme=dark]) .gbtn{box-shadow:0 14px 26px -14px rgba(14,91,67,.55)!important}
-html[data-theme=dark] .gbtn{box-shadow:0 14px 26px -14px rgba(95,211,162,.45)!important}
-.hero h1 .hl,.hero h1 em{display:block}
-h1,h2,h3{text-wrap:balance}p,.sub,.lead{text-wrap:pretty}
-header .btn{white-space:nowrap;padding:10px 16px!important;line-height:1.1;flex:none!important}
-@media (max-width:420px){header .w{gap:6px!important;padding-left:12px!important;padding-right:12px!important}.nm-tg,header .menu{width:40px!important;height:40px!important;flex:none}header .btn{padding:9px 12px!important;font-size:14px!important}header .brand,header .logo{font-size:19px}}
-@media (max-width:370px){header .btn{padding:8px 10px!important;font-size:13px!important}header .w>a:first-child{font-size:17px!important;gap:6px!important}.nm-tg,header .menu{width:36px!important;height:36px!important}}
-.rl-note{font-size:12.5px;opacity:.65;margin-top:12px}
-@media (max-width:900px){.rl-bento{grid-template-columns:1fr 1fr}}
-@media (max-width:560px){.rl-bento{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:22px -20px 0;padding:0 20px 6px}.rl-bento::-webkit-scrollbar{display:none}.rl-f{flex:0 0 78%;scroll-snap-align:start}}
-@media (prefers-reduced-motion:reduce){.rl-r,.rl-mk i,.rl-pill i{animation:none}}
-</style>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","@id":"https://neumarry.com/fr/","url":"https://neumarry.com/fr/","name":"NeuMarry : mariage vérifié pour ceux qui vivent à l’étranger","description":"Application matrimoniale vérifiée pour qui vit loin du pays où il a grandi, de toutes les communautés. Suggestions selon origines, ville et valeurs. Gratuit.","inLanguage":"fr-CA","isPartOf":{"@id":"https://neumarry.com/#site"},"publisher":{"@type":"Organization","@id":"https://neumarry.com/#org","name":"NeuMarry","url":"https://neumarry.com/","logo":"https://neumarry.com/icon-512.png","email":"support@neumarry.com","description":"Verified matrimony app for people living away from the country they grew up in.","sameAs":["https://www.instagram.com/neumarry_match","https://www.facebook.com/profile.php?id=61595614954211","https://www.linkedin.com/company/144030892/"]}}</script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',region:["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE", "IS", "LI", "NO", "GB", "CH"]});gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'granted'});try{var nmC=localStorage.getItem('nm.analytics');if(nmC==='granted'||nmC==='denied')gtag('consent','update',{analytics_storage:nmC})}catch(e){}gtag('js',new Date());gtag('config','G-N3V0JG9X0D',{allow_google_signals:false,allow_ad_personalization_signals:false});</script><script async src="https://www.googletagmanager.com/gtag/js?id=G-N3V0JG9X0D"></script><script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');(function(){var tz='',c=null;try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';c=localStorage.getItem('nm.ads')}catch(e){}var eu=/^(Europe\/|Atlantic\/(Reykjavik|Canary|Madeira|Faroe|Azores))/.test(tz);window.nmEU=eu;var gpc=navigator.globalPrivacyControl===true;window.nmGPC=gpc;if(c==='denied'||((eu||gpc)&&c!=='granted'))fbq('consent','revoke');fbq('init','1427089529012759');fbq('track','PageView');document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a[href]');if(a&&/(^|\/)app\/?(\?|#|$)/.test(a.getAttribute('href')))fbq('track','Lead')},true)})();</script></head><body class="nm-home">
-<header class="nav" id="top"><div class="w">
- <a class="brand" href="../__FRHOME__" aria-label="Accueil NeuMarry"><svg width="30" height="30" viewBox="0 0 64 64" aria-hidden="true"><path d="M25 50S8 40 8 26c0-7 5-11 10.5-11 3.6 0 6 2 7.5 4.5" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><path d="M39 50s17-10 17-24c0-7-5-11-10.5-11-6 0-10 5-13.5 10.5C28.5 31 25 35 25 39" fill="none" stroke="#FFC93C" stroke-width="6" stroke-linecap="round"/></svg>NeuMarry</a>
- <nav class="links" id="mnav" aria-label="Sections du site"><a href="#how">Comment ça marche</a><a href="#safety">Sécurité</a><a href="#faq">FAQ</a><a href="work-with-us.html">Travailler avec nous</a></nav>
- <a class="langh" href="../" hreflang="en" lang="en" aria-label="Read in English" onclick="try{localStorage.setItem('rm.lang','en')}catch(e){}">English</a>
- <a class="btn" href="../app/" onclick="try{localStorage.setItem('rm.lang','fr')}catch(e){}">Ouvrir l’app</a>
- <button class="menu" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Menu du site"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-</div></header>
+:root{--bg:#F3F2F8;--bg2:#ECEAF5;--tx:#16152A;--mt:#5E5C74;--gl:rgba(255,255,255,.72);--gl2:rgba(255,255,255,.9);--edge:rgba(255,255,255,.95);--ln:rgba(40,36,80,.08);
+ --mint1:#EEEBFF;--mint2:#D7D0FF;--mintx:#3F35A6;--lem:#E7F2FF;--lemx:#1D4C86;--sh:0 18px 40px -24px rgba(60,50,140,.26),0 2px 6px -2px rgba(60,50,140,.08);color-scheme:light}
+@media (prefers-color-scheme:dark){body{background:radial-gradient(900px 600px at 10% -10%,rgba(255,255,255,.06),transparent 60%),var(--bg)!important}:root{--bg:#08080A;--bg2:#101013;--tx:#F3F3F5;--mt:rgba(243,243,245,.7);--gl:rgba(30,30,34,.62);--gl2:rgba(36,36,42,.82);--edge:rgba(255,255,255,.1);--ln:rgba(255,255,255,.08);
+ --mint1:rgba(255,255,255,.14);--mint2:rgba(255,255,255,.22);--mintx:#FFFFFF;--lem:rgba(255,255,255,.06);--lemx:#EDEDF1;--sh:0 20px 44px -26px rgba(0,0,0,.7);color-scheme:dark}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;font:500 16px/1.55 'Plus Jakarta Sans',system-ui,sans-serif;color:var(--tx);background:radial-gradient(900px 600px at 10% -10%,var(--mint1),transparent 60%),radial-gradient(800px 600px at 100% 0%,var(--lem),transparent 55%),radial-gradient(700px 500px at 50% 100%,#FFEFF4,transparent 60%),var(--bg);-webkit-user-select:none;user-select:none}
+main{overflow-x:clip}img{display:block;max-width:100%;height:auto}a{color:inherit}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+.g{background:var(--gl);border:1px solid var(--edge);-webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3);box-shadow:var(--sh);border-radius:24px}
+nav{position:sticky;top:0;z-index:5;padding:12px 0}
+nav .wrap{display:flex;align-items:center;gap:14px}
+nav .bar{display:flex;align-items:center;gap:12px;width:100%;padding:8px 8px 8px 14px;border-radius:999px}
+.logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:18px;text-decoration:none}.logo img{width:30px;height:30px;border-radius:9px}
+.nl{display:flex;gap:4px;margin-left:auto}.nl a{text-decoration:none;font-weight:700;font-size:14px;padding:8px 12px;border-radius:999px;color:var(--mt)}.nl a:hover{color:var(--tx);background:var(--ln)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:800 15px 'Plus Jakarta Sans',sans-serif;text-decoration:none;padding:13px 22px;border-radius:999px;border:1px solid transparent;cursor:pointer;white-space:nowrap}
+.btn.p{background:linear-gradient(150deg,#EEEBFF,#D7D0FF);color:#2F2690;border-color:rgba(255,255,255,.9);box-shadow:0 10px 24px -12px rgba(91,79,214,.55)}
+@media (prefers-color-scheme:dark){.btn.p{background:linear-gradient(150deg,rgba(255,255,255,.22),rgba(255,255,255,.08));color:#fff;border-color:rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}}
+.btn.s{background:var(--gl2);border-color:var(--edge);color:var(--tx)}
+.btn.sm{padding:9px 16px;font-size:14px}
+.hero{padding:34px 0 10px}
+.hero .wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:34px;align-items:center}
+.kick{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:800;padding:7px 13px;border-radius:999px;color:var(--mintx);background:var(--mint1);border:1px solid var(--edge)}
+.kick i{width:8px;height:8px;border-radius:50%;background:#5B4FD6;animation:pl 2.4s infinite}
+@keyframes pl{0%{box-shadow:0 0 0 0 rgba(91,79,214,.5)}70%{box-shadow:0 0 0 9px rgba(91,79,214,0)}100%{box-shadow:0 0 0 0 rgba(91,79,214,0)}}
+h1{font-size:clamp(36px,5.4vw,60px);line-height:1.06;font-weight:800;margin:16px 0 14px;letter-spacing:0}
+h1 em{font-style:normal;background:linear-gradient(120deg,#5B4FD6,#3B82C4);-webkit-background-clip:text;background-clip:text;color:transparent}
+@media (prefers-color-scheme:dark){h1 em{background:linear-gradient(120deg,#FFFFFF,#BDBDC8);-webkit-background-clip:text;background-clip:text}}
+.lead{font-size:18px;color:var(--mt);max-width:520px;margin:0 0 22px}
+.cta{display:flex;gap:10px;flex-wrap:wrap}
+.trust{display:flex;gap:16px;flex-wrap:wrap;margin-top:18px;font-size:13.5px;font-weight:700;color:var(--mt)}
+.trust span{display:flex;align-items:center;gap:6px}.trust svg{width:16px;height:16px;color:var(--mintx)}
+.mosaic{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:170px 150px 170px;gap:12px}
+.ph{position:relative;overflow:hidden;border-radius:22px;border:1px solid var(--edge);box-shadow:var(--sh)}
+.ph img{width:100%;height:100%;object-fit:cover}
+.ph b{position:absolute;left:10px;bottom:10px;font-size:13px;font-weight:800;padding:6px 11px;border-radius:999px;background:var(--gl2);border:1px solid var(--edge);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.mosaic .a{grid-row:span 2}.mosaic .d{grid-column:span 2}
+.flags{margin:26px 0 6px;overflow:hidden;-webkit-mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.flags .row{display:flex;gap:10px;width:max-content;animation:mq 60s linear infinite}
+.flags span{display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:700;padding:8px 13px;border-radius:999px;background:var(--gl);border:1px solid var(--edge);white-space:nowrap}
+.flags span i{font-style:normal;font-size:17px}
+@keyframes mq{to{transform:translateX(-50%)}}
+section{padding:56px 0 8px}
+.sh{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px}
+h2{font-size:clamp(26px,3.4vw,38px);line-height:1.15;margin:0;font-weight:800}
+.sh p{margin:6px 0 0;color:var(--mt);max-width:560px}
+.bento{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.t{overflow:hidden;display:flex;flex-direction:column;text-decoration:none}
+.t .ph{border:0;border-radius:0;box-shadow:none;height:150px}
+.t .tx{padding:14px 16px 16px}.t .tx b{display:block;font-size:17px;font-weight:800}.t .tx small{display:block;color:var(--mt);font-size:14px;margin-top:3px}
+.t .pr{display:inline-block;margin-top:10px;font-size:12.5px;font-weight:800;padding:5px 10px;border-radius:999px;background:var(--mint1);color:var(--mintx)}
+.t.w2{grid-column:span 2}.t.w2 .ph{height:190px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.st{padding:22px}.st .n{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:800;background:linear-gradient(150deg,var(--mint1),var(--mint2));color:var(--mintx)}
+.st b{display:block;font-size:18px;margin:12px 0 4px}.st small{color:var(--mt);font-size:14.5px}
+.pl{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:14px}
+.pc{padding:22px}.pc h3{margin:0;font-size:20px}.pc .big{font-size:34px;font-weight:800;margin:8px 0 2px}.pc small{color:var(--mt)}
+.pc ul{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:8px;font-size:14.5px}.pc li{display:flex;gap:8px}.pc li:before{content:'';flex:0 0 18px;height:18px;border-radius:50%;background:var(--mint1) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B4FD6' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 12.5l4 4L18 8'/%3E%3C/svg%3E") center/12px no-repeat;margin-top:2px}
+.pc.hi{background:linear-gradient(150deg,var(--mint1),var(--gl))}
+.biz{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch}
+.bz{text-decoration:none;display:grid;grid-template-columns:150px 1fr;overflow:hidden}.bz .ph{border:0;border-radius:0;box-shadow:none;height:100%}
+.bz .tx{padding:16px}.bz b{font-size:17px}.bz small{display:block;color:var(--mt);font-size:14px;margin-top:3px}.bz .pr{display:inline-block;margin-top:8px;font-size:12.5px;font-weight:800;color:var(--mintx)}
+.faq{display:grid;gap:10px;max-width:820px}
+details{padding:16px 18px}summary{font-weight:800;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:12px}summary::-webkit-details-marker{display:none}
+summary:after{content:'+';font-size:22px;line-height:1;color:var(--mintx)}details[open] summary:after{content:'–'}details p{margin:10px 0 0;color:var(--mt)}
+.final{margin:56px 0 0;padding:36px;text-align:center;background:linear-gradient(150deg,var(--mint1),var(--lem))}
+.final h2{margin-bottom:8px}.final p{color:var(--mt);margin:0 0 18px}.final .cta{justify-content:center}
+footer{padding:34px 0 40px;color:var(--mt);font-size:14px}footer .wrap{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center}footer a{text-decoration:none;font-weight:700}
+.lang{margin-left:auto}
+@media (max-width:900px){.hero .wrap{grid-template-columns:1fr}.bento{grid-template-columns:1fr 1fr}.t.w2{grid-column:span 2}.pl{grid-template-columns:1fr}.biz{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.nl{display:none}}
+@media (max-width:520px){.wrap{padding:0 16px}.bento{gap:10px}.t .ph{height:110px}.t.w2 .ph{height:150px}.t .tx{padding:11px 12px 13px}.t .tx b{font-size:15px}.t .tx small{font-size:13px}
+ .mosaic{grid-template-rows:130px 120px 130px;gap:10px}.bz{grid-template-columns:110px 1fr}.final{padding:26px 18px}.lead{font-size:16.5px}.sh{display:block}}
+@media (prefers-reduced-motion:reduce){.flags .row,.kick i{animation:none}}
+</style></head>
+<body><main>
+<nav><div class="wrap"><div class="bar g"><a class="logo" href="/fr/"><img src="/app/img/icon-192.png" alt="">NeuMarry</a>
+ <div class="nl"><a href="#settle">S’installer</a><a href="#events">Événements</a><a href="#plus">Abonnement</a><a href="#biz">Entreprises</a></div>
+ <a class="btn p sm" href="/app/">Ouvrir l’app</a></div></div></nav>
 
-<main>
-<section class="hero" id="hero" style="padding:0"><div class="w">
- <div>
-  <p class="langhero"><a class="langh" href="../" hreflang="en" lang="en" aria-label="Read in English" onclick="try{localStorage.setItem('rm.lang','en')}catch(e){}">English</a></p>
-  <p class="eb r">Le mariage vérifié pour la vie à l’étranger</p>
-  <h1 class="r r1"><span class="hl">Vos racines.</span> <span class="hl">Votre ville.</span> <em>Votre personne.</em></h1>
-  <p class="lead r r2">Pour les personnes nées dans un pays qui vivent dans un autre. Rencontrez quelqu’un de vos racines qui vit dans votre ville, et dont les projets de mariage rejoignent les vôtres.</p>
-  <div class="cta r r3"><a class="btn gbtn" href="../app/" onclick="try{localStorage.setItem('rm.lang','fr')}catch(e){}"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>S’inscrire avec Google</a><a class="btn gh" href="#how">Voir comment ça marche</a></div>
-  <p class="avail r r3">Inscription gratuite · Fonctionne déjà dans votre navigateur · Android bientôt sur Google Play, iPhone ensuite</p>
-  <div class="trust r r3"><span class="chip"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.2-7.5 9.5-4.3-1.3-7.5-4.9-7.5-9.5V6z"/><path d="M8.6 12l2.3 2.3 4.6-4.6"/></svg>Identité + égoportrait vérifiés</span><span class="chip"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 018 0v2.5"/></svg>Numéros privés</span><span class="chip"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 19.5c.9-3.3 3.4-5 6.5-5s5.6 1.7 6.5 5"/><circle cx="17" cy="9" r="2.8"/><path d="M17.5 14.5c2.3.3 3.6 1.8 4 4"/></svg>Parents bienvenus</span></div>
+<header class="hero"><div class="wrap">
+ <div><span class="kick"><i></i>Maintenant ouvert à Toronto</span>
+  <h1>Les vôtres,<br><em>où que vous viviez</em></h1>
+  <p class="lead">Chambres, recommandations d’emploi, un compagnon pour le vol de vos parents, événements et nouveaux amis de vos racines. Une seule app pour les personnes qui vivent à l’étranger.</p>
+  <div class="cta"><a class="btn p" href="/app/">Ouvrir l’app, gratuit</a><a class="btn s" href="https://play.google.com/store/apps/details?id=com.neuconet.rootmate" rel="noopener">Disponible sur Google Play</a></div>
+  <div class="trust"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>Membres vérifiés</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Paiement dans l’app</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Aucun faux chiffre, aucun frais caché</span></div></div>
+ <div class="mosaic">
+  <div class="ph a"><img src="/app/img/p15/room.webp" alt="Une chambre meublée lumineuse"><b>Trouver une chambre</b></div>
+  <div class="ph"><img src="/app/img/p15/plane.webp" alt="Vue du hublot au-dessus des nuages"><b>Compagnon de voyage</b></div>
+  <div class="ph"><img src="/app/img/p15/lantern.webp" alt="Lanternes de festival"><b>Festivals</b></div>
+  <div class="ph d"><img src="/app/img/p15/stadium.webp" alt="Un stade la nuit"><b>Soirées match</b></div>
  </div>
- <div class="stage" role="img" aria-label="Exemple : des membres originaires du Liban, de Corée, du Mexique, de l’Inde et du Brésil, reliés sur une carte du monde aux villes où ils vivent aujourd’hui">
-  <div class="map globe" id="g-hero" aria-hidden="true"></div>
-  <div class="rl-today" aria-hidden="true"><span class="rl-pill"><i></i>3 présentations aujourd’hui</span><div class="rl-c"><span class="rl-sg" data-seed="ana-sao-toronto"></span><div class="rl-t"><b>Ana, 29</b><small>🇧🇷 São Paulo → 🇨🇦 Toronto</small><small class="rlw">✓ Tous deux veulent rester à Toronto</small><small class="rlw">✓ Tous deux proches de leur famille</small><span class="fit">86 % en commun</span></div></div><span class="ex">Exemple</span></div>
-  <div class="face f1" style="left:4%;top:8%;width:84px;height:84px" aria-hidden="true"><img src="../img/home/layla.jpg" alt="" width="84" height="84"></div><div class="hi" style="left:3%;top:-1%;animation-delay:0s" aria-hidden="true"><b>Marhaba!</b> 🇱🇧</div>
-  <div class="face g f2" style="left:36%;top:2%;width:70px;height:70px;animation-delay:-2s" aria-hidden="true"><img src="../img/home/jiwoo.jpg" alt="" width="70" height="70"></div><div class="hi h2b" style="left:34%;top:-6%;animation-delay:-3s" aria-hidden="true"><b>Annyeong!</b> 🇰🇷</div>
-  <div class="face g f3" style="left:2%;top:52%;width:76px;height:76px;animation-delay:-1s" aria-hidden="true"><img src="../img/home/diego.jpg" alt="" width="76" height="76"></div><div class="hi" style="left:1%;top:43%;animation-delay:-6s" aria-hidden="true"><b>¡Hola!</b> 🇲🇽</div>
-  <div class="face f4" style="left:30%;top:68%;width:66px;height:66px;animation-delay:-3s" aria-hidden="true"><img src="../img/home/priya.jpg" alt="" width="66" height="66"></div>
-  <div class="phone" aria-hidden="true"><div class="sc"><img src="../img/home/ana.jpg" alt="" width="240" height="320"><span class="ex">Exemple</span><div class="gc"><b>Ana, 29</b><div class="from">🇧🇷 São Paulo → 🇨🇦 Toronto</div><div class="chips"><span class="chip">💍 D’ici 1 à 2 ans</span><span class="chip">✓ 5 vérifications sur 5</span></div></div></div></div>
-  <span class="ex exs" aria-hidden="true">Photos d’exemple, créées par IA. Pas de vrais membres.</span>
- </div>
-</div></section>
+</div>
+<div class="flags" aria-label="Des gens de nombreux pays"><div class="row" id="fl"></div></div>
+</header>
 
-<section class="band" id="try"><div class="w split tryw">
- <div class="mapcard globe tall" id="g-try" role="img" aria-label="Un vrai globe avec votre ligne de racines"></div>
- <div class="stack"><p class="eb">Essayez · 10 secondes</p><h2>Tracez votre <em>ligne de racines.</em></h2>
-  <p class="sub">Touchez l’endroit où vous avez grandi et celui où vous vivez. Chaque profil NeuMarry porte cette ligne : vous rencontrez des gens qui comprennent vos deux chez-soi.</p>
-  <p class="lbl">Où j’ai grandi</p><div class="chips pick"><button type="button" class="chip pk on" data-k="from" data-v="Lagos" aria-pressed="true">🇳🇬 Lagos</button><button type="button" class="chip pk" data-k="from" data-v="Gujarat" aria-pressed="false">🇮🇳 Gujarat</button><button type="button" class="chip pk" data-k="from" data-v="Jalisco" aria-pressed="false">🇲🇽 Jalisco</button><button type="button" class="chip pk" data-k="from" data-v="Manila" aria-pressed="false">🇵🇭 Manila</button><button type="button" class="chip pk" data-k="from" data-v="Beirut" aria-pressed="false">🇱🇧 Beirut</button><button type="button" class="chip pk" data-k="from" data-v="Busan" aria-pressed="false">🇰🇷 Busan</button><button type="button" class="chip pk" data-k="from" data-v="São Paulo" aria-pressed="false">🇧🇷 São Paulo</button><button type="button" class="chip pk" data-k="from" data-v="Warsaw" aria-pressed="false">🇵🇱 Warsaw</button><button type="button" class="chip pk" data-k="from" data-v="Nairobi" aria-pressed="false">🇰🇪 Nairobi</button><button type="button" class="chip pk" data-k="from" data-v="Karachi" aria-pressed="false">🇵🇰 Karachi</button><button type="button" class="chip pk" data-k="from" data-v="Punjab" aria-pressed="false">🇮🇳 Punjab</button></div>
-  <p class="lbl">Où je vis</p><div class="chips pick"><button type="button" class="chip pk on" data-k="to" data-v="Toronto" aria-pressed="true">🇨🇦 Toronto</button><button type="button" class="chip pk" data-k="to" data-v="London" aria-pressed="false">🇬🇧 London</button><button type="button" class="chip pk" data-k="to" data-v="Dubai" aria-pressed="false">🇦🇪 Dubai</button><button type="button" class="chip pk" data-k="to" data-v="New York" aria-pressed="false">🇺🇸 New York</button><button type="button" class="chip pk" data-k="to" data-v="Sydney" aria-pressed="false">🇦🇺 Sydney</button><button type="button" class="chip pk" data-k="to" data-v="Berlin" aria-pressed="false">🇩🇪 Berlin</button><button type="button" class="chip pk" data-k="to" data-v="Vancouver" aria-pressed="false">🇨🇦 Vancouver</button><button type="button" class="chip pk" data-k="to" data-v="Houston" aria-pressed="false">🇺🇸 Houston</button></div>
-  <div class="kmout glass" aria-live="polite"><b id="kmv">–</b><span id="kmt"></span></div>
-  <a class="btn gbtn2" href="../app/" onclick="try{localStorage.setItem('rm.lang','fr')}catch(e){}">Commencez avec votre ligne →</a></div>
-</div></section>
-<section id="how"><div class="w">
- <div class="head"><p class="eb">Comment ça marche</p><h2>De l’inscription à la rencontre des familles, sans discussions interminables.</h2></div>
- <ol class="steps">
-  <li class="step glass"><span class="n" aria-hidden="true">1</span><h3>Inscription en quelques touches</h3><p class="mt">Où vous avez grandi, où vous vivez, vos projets. Rien à écrire.</p><div class="bar" aria-hidden="true"><i></i></div></li>
-  <li class="step glass"><span class="n" aria-hidden="true">2</span><h3>Une personne vous vérifie</h3><p class="mt">Pièce d’identité, égoportrait en direct et photo. Les badges origines et ville vous mènent à 100 %.</p><div class="bar" aria-hidden="true"><i style="animation-delay:.6s"></i></div></li>
-  <li class="step glass"><span class="n" aria-hidden="true">3</span><h3>Trois présentations par jour</h3><p class="mt">Seulement des personnes vérifiées dont les projets de vie rejoignent les vôtres.</p><div class="bar" aria-hidden="true"><i style="animation-delay:1.2s"></i></div></li>
-  <li class="step glass"><span class="n" aria-hidden="true">4</span><h3>Faites participer votre famille</h3><p class="mt">Partagez un profil avec votre famille. Elle voit les infos sûres et donne un 👍.</p><div class="bar" aria-hidden="true"><i style="animation-delay:1.8s"></i></div></li>
- </ol>
-</div></section>
+<section id="settle"><div class="wrap">
+ <div class="sh"><div><h2>S’installer</h2><p>Tout pour vos premiers mois dans un nouveau pays, grâce à ceux qui l’ont fait avant vous.</p></div></div>
+ <div class="bento">
+  <a class="t g w2" href="/app/"><div class="ph"><img src="/app/img/p15/room.webp" alt="Une chambre meublée"></div><div class="tx"><b>Trouver une chambre</b><small>Chambres et colocations par quartier et budget. Contacts visibles avec Plus.</small><span class="pr">Publier une chambre · 29 $</span></div></a>
+  <a class="t g" href="/app/"><div class="ph"><img src="/app/img/p15/plane.webp" alt="Hublot d’avion"></div><div class="tx"><b>Compagnon de voyage pour les parents</b><small>Un membre vérifié sur le même vol les aide.</small><span class="pr">49 $ une fois jumelé</span></div></a>
+  <a class="t g" href="/app/"><div class="ph"><img src="/app/img/p15/office.webp" alt="Des bureaux"></div><div class="tx"><b>Recommandation d’emploi</b><small>Demandez à quelqu’un dans l’entreprise. Sans réponse en 7 jours, votre demande vous revient.</small><span class="pr">9 $ · 5 pour 35 $</span></div></a>
+  <a class="t g" href="/app/"><div class="ph"><img src="/app/img/p15/docs.webp" alt="Des papiers et une calculatrice"></div><div class="tx"><b>Experts de confiance</b><small>Immigration, impôts, assurance, déménageurs. Permis vérifié.</small><span class="pr">Prix sur chaque page</span></div></a>
+  <a class="t g" href="/app/"><div class="ph"><img src="/app/img/p15/sofa.webp" alt="Un canapé dans un salon"></div><div class="tx"><b>Vente de déménagement</b><small>Achetez et vendez quand les gens déménagent. Payez dans l’app.</small><span class="pr">Forfait Vendeur · 4,99 $</span></div></a>
+  <a class="t g w2" href="/app/"><div class="ph"><img src="/app/img/p15/house.webp" alt="Une maison moderne"></div><div class="tx"><b>De la première nuit à votre propre maison</b><small>Commencez par une chambre, trouvez les vôtres, puis prenez racine dans votre nouvelle ville.</small></div></a>
+ </div></div></section>
 
-<section id="inside"><div class="w">
- <div class="head"><p class="eb">Dans l’app</p><h2>Les vôtres, sur un <em>globe vivant.</em></h2><p class="sub">Pas de swipe, pas de piles de photos. Vous explorez la carte du monde de vos racines, lisez d’abord l’histoire d’une personne et commencez par une vraie question.</p></div>
- <div class="rl-bento">
-  <figure class="rl-f big"><div class="rl-ph"><img class="lt" src="../img/app/atlas.webp" alt="Atlas des racines : touchez une ville du globe pour voir les personnes de vos racines qui y vivent" loading="lazy" width="390" height="844"><img class="dk" src="../img/app/atlas-dark.webp" alt="" aria-hidden="true" loading="lazy" width="390" height="844"></div><figcaption><b>Atlas des racines</b><span>Touchez une ville du globe et rencontrez les personnes de vos racines qui y vivent.</span></figcaption></figure>
-  <figure class="rl-f"><div class="rl-ph"><img class="lt" src="../img/app/why.webp" alt="Pourquoi on vous présente, ce que vous partagez et un Livre de vie en cinq chapitres" loading="lazy" width="390" height="844"><img class="dk" src="../img/app/why-dark.webp" alt="" aria-hidden="true" loading="lazy" width="390" height="844"></div><figcaption><b>Livre de vie</b><span>La voix d’abord, puis trois vraies raisons et une vie en cinq chapitres.</span></figcaption></figure>
-  <figure class="rl-f"><div class="rl-ph"><img class="lt" src="../img/app/ask.webp" alt="Commencez par une question tirée de son histoire" loading="lazy" width="390" height="844"><img class="dk" src="../img/app/ask-dark.webp" alt="" aria-hidden="true" loading="lazy" width="390" height="844"></div><figcaption><b>Pas de « j’aime » vides</b><span>Chaque intérêt commence par une question tirée de son histoire.</span></figcaption></figure>
-  <figure class="rl-f"><div class="rl-ph"><img class="lt" src="../img/app/bridge.webp" alt="Le Pont : vos deux heures locales et un Espace famille" loading="lazy" width="390" height="844"><img class="dk" src="../img/app/bridge-dark.webp" alt="" aria-hidden="true" loading="lazy" width="390" height="844"></div><figcaption><b>Le Pont</b><span>Vos deux heures locales et un Espace famille que vos parents peuvent suivre.</span></figcaption></figure>
- </div>
- <p class="rl-note">Écrans de l’app. Les noms et les chiffres sont des exemples.</p>
-</div></section>
+<section id="events"><div class="wrap">
+ <div class="sh"><div><h2>Événements et amis</h2><p>Des hôtes de votre ville les organisent. Vous réservez simplement une place. Billets avec code QR, remboursés si l’hôte annule.</p></div></div>
+ <div class="bento">
+  <a class="t g w2" href="/app/"><div class="ph"><img src="/app/img/p15/table.webp" alt="Une table garnie"></div><div class="tx"><b>Rencontres entre amis</b><small>Repas, balades et jeux avec des gens de vos racines.</small></div></a>
+  <a class="t g" href="/app/"><div class="ph"><img src="/app/img/p15/stadium.webp" alt="Un stade"></div><div class="tx"><b>Soirées match</b><small>Les grands matchs sur grand écran, ensemble.</small></div></a>
+  <a class="t g" href="/app/"><div class="ph"><img src="/app/img/p15/lantern.webp" alt="Lanternes"></div><div class="tx"><b>Festivals</b><small>Diwali, Aïd, Nouvel An lunaire, Noël et plus.</small></div></a>
+  <a class="t g" href="/app/"><div class="ph"><img src="/app/img/p15/trip.webp" alt="Une excursion en route"></div><div class="tx"><b>Excursions</b><small>Sorties en autobus avec un hôte.</small></div></a>
+  <a class="t g" href="/app/"><div class="ph"><img src="/app/img/p15/league.webp" alt="Un terrain de sport"></div><div class="tx"><b>Ligues sportives</b><small>Rejoignez une équipe ou trouvez des joueurs.</small></div></a>
+  <a class="t g w2" href="/app/"><div class="ph"><img src="/app/img/p15/hall.webp" alt="Une salle de réception"></div><div class="tx"><b>Organisez les vôtres</b><small>Organisez des événements et gardez 90 % de chaque billet. Forfaits Hôte dès 19 $ par mois.</small></div></a>
+ </div></div></section>
 
-<section class="band" id="why"><div class="w split">
- <div class="mapcard globe" id="g-roots" role="img" aria-label="Carte : une personne de Beyrouth et une de Jalisco, qui vivent toutes deux à Toronto"></div>
- <div class="stack"><p class="eb">Conçue pour la vie à l’étranger</p><h2>Deux parcours, une ville.</h2><p class="sub">NeuMarry montre où une personne a grandi et où elle vit maintenant, pour que vous rencontriez des gens qui comprennent les deux endroits. Pas un simple filtre sur une application faite pour un seul pays.</p>
-  <div class="chips"><span class="chip">🇱🇧 Beyrouth → 🇨🇦 Toronto</span><span class="chip">🇲🇽 Jalisco → 🇨🇦 Toronto</span><span class="chip">🇳🇬 Lagos → 🇬🇧 Londres</span><span class="chip">🇵🇭 Manille → 🇦🇪 Dubaï</span></div>
-  <p><a class="tl" href="how-matching-works.html">Comment fonctionnent les suggestions</a></p></div>
-</div></section>
+<section><div class="wrap"><div class="sh"><div><h2>Comment ça marche</h2></div></div>
+ <div class="steps"><div class="st g"><span class="n">1</span><b>Ouvrez l’app</b><small>Gratuit. Connectez-vous avec Google ou un courriel. Dites-nous où vous vivez et d’où vous venez.</small></div>
+ <div class="st g"><span class="n">2</span><b>Choisissez ce qu’il vous faut</b><small>Une chambre, une recommandation, un compagnon pour vos parents ou une place à l’événement de ce week-end.</small></div>
+ <div class="st g"><span class="n">3</span><b>Payez dans l’app</b><small>Le prix et chaque frais sont affichés d’abord. Si l’hôte annule, tout vous est remboursé.</small></div></div></div></section>
 
-<section id="safety"><div class="w">
- <div class="head"><p class="eb">La sécurité d’abord</p><h2>NeuMarry ne vous propose que des profils vérifiés.</h2></div>
- <div class="feat">
-  <div class="card"><span class="fi"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.2-7.5 9.5-4.3-1.3-7.5-4.9-7.5-9.5V6z"/><path d="M8.6 12l2.3 2.3 4.6-4.6"/></svg></span><h3>Vérifié par une personne</h3><p class="mt">Chaque pièce d’identité, égoportrait en direct et photo est vérifié avant que quiconque puisse voir un profil.</p></div>
-  <div class="card"><span class="fi"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 018 0v2.5"/></svg></span><h3>Votre numéro reste privé</h3><p class="mt">Parlez d’abord dans l’application. Partagez vos coordonnées seulement quand vous le choisissez.</p></div>
-  <div class="card"><span class="fi"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 19.5c.9-3.3 3.4-5 6.5-5s5.6 1.7 6.5 5"/><circle cx="17" cy="9" r="2.8"/><path d="M17.5 14.5c2.3.3 3.6 1.8 4 4"/></svg></span><h3>La famille peut participer</h3><p class="mt">Partagez un lien familial privé avec des renseignements sûrs. Votre famille donne un 👍 ou un 🤔.</p></div>
- </div>
- <ul class="checks">
-  <li class="glass"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Photos vérifiées avec Google Cloud Vision</span></li>
-  <li class="glass"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Chaque pièce d’identité lue par Google et vérifiée par une personne</span></li>
-  <li class="glass"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Seuls les membres vérifiés sont affichés</span></li>
-  <li class="glass"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Les demandes d’argent dans le clavardage sont bloquées</span></li>
-  <li class="glass"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Données chiffrées en transit et au repos</span></li>
- </ul>
- <div class="row"><a class="btn gh" href="sample-verified-profile.html">Voir un exemple de profil vérifié</a><a class="tl" href="is-this-profile-real.html">Ce profil matrimonial est-il réel? Faites le test en 1 minute</a></div>
-</div></section>
+<section id="plus"><div class="wrap"><div class="sh"><div><h2>Abonnement</h2><p>La plupart de NeuMarry se consulte gratuitement. Plus ouvre les détails.</p></div></div>
+ <div class="pl"><div class="pc g hi"><h3>NeuMarry Plus</h3><div class="big">9,99 $<small style="font-size:15px"> / mois</small></div><small>ou 89 $ par an</small>
+  <ul><li>Contact et adresse de chaque chambre</li><li>Détails complets des événements, réservation 24 h plus tôt</li><li>Prix et contact de chaque expert</li><li>2 demandes de recommandation par mois</li></ul></div>
+  <div class="pc g"><h3>Badge vérifié</h3><div class="big">4,99 $</div><small>pour un an</small><ul><li>Pièce d’identité et selfie vérifiés</li><li>Photo de la pièce supprimée après la vérification</li><li>On vous dit oui plus vite</li></ul></div>
+  <div class="pc g"><h3>Gratuit</h3><div class="big">0 $</div><small>toujours</small><ul><li>Voir les chambres, événements et experts</li><li>Réserver des places</li><li>Demander un compagnon de voyage</li></ul></div></div></div></section>
 
+<section id="biz"><div class="wrap"><div class="sh"><div><h2>Pour les entreprises</h2><p>Rejoignez les personnes qui viennent d’arriver dans votre ville. Vous payez d’abord un forfait, sans commission cachée.</p></div></div>
+ <div class="biz">
+  <a class="bz g" href="/app/"><div class="ph"><img src="/app/img/p15/hall.webp" alt="Salle de réception"></div><div class="tx"><b>Forfaits Hôte</b><small>Rencontres, soirées match, festivals et excursions.</small><span class="pr">dès 19 $ par mois + 10 % par place</span></div></a>
+  <a class="bz g" href="/app/"><div class="ph"><img src="/app/img/p15/docs.webp" alt="Des papiers"></div><div class="tx"><b>Experts et agents de location</b><small>Une page avec votre permis, vos services et vos prix.</small><span class="pr">dès 99 $ par mois</span></div></a>
+  <a class="bz g" href="/app/"><div class="ph"><img src="/app/img/p15/catering.webp" alt="Un buffet traiteur"></div><div class="tx"><b>Services d’événements</b><small>Traiteur, décor, musique et photos pour les hôtes.</small><span class="pr">49 $ par mois</span></div></a>
+  <a class="bz g" href="/app/"><div class="ph"><img src="/app/img/p15/city.webp" alt="Les tours d’une ville"></div><div class="tx"><b>Espace publicitaire</b><small>Un seul encadré « Commandité » dans votre ville. Vrais affichages et vraies touches.</small><span class="pr">500 $ par ville et par mois</span></div></a>
+ </div></div></section>
 
-<section id="communities"><div class="w">
- <div class="head"><p class="eb">Every community, every country</p><h2>Rencontrez votre communauté, ou tout le monde.</h2><p class="sub">Certaines personnes veulent quelqu’un qui partage leur langue et leurs traditions. D’autres sont ouvertes à plus. Dans l’application, vous choisissez les communautés qui vous intéressent et voyez votre % de compatibilité avec chaque personne.</p></div>
- <div class="chips" aria-label="Communautés">
-  <span class="chip">Gujarati</span><span class="chip">Pendjabi</span><span class="chip">Sikh</span><span class="chip">Hindiphone</span><span class="chip">Marathi</span><span class="chip">Tamoul</span><span class="chip">Télougou</span><span class="chip">Malayali</span><span class="chip">Kannada</span><span class="chip">Bengali</span><span class="chip">Musulman</span><span class="chip">Pakistanais</span><span class="chip">Bangladais</span><span class="chip">Sri-lankais</span><span class="chip">Népalais</span><span class="chip">Chrétien</span><span class="chip">Jaïn</span><span class="chip">Arabe</span><span class="chip">Perse</span><span class="chip">Philippin</span><span class="chip">Chinois</span><span class="chip">Africain</span><span class="chip">Latino-américain</span><span class="chip">Toutes les communautés</span>
- </div>
- <div class="cities"><b>L’application fonctionne dans tous les pays. Des membres s’inscrivent depuis des villes comme celles-ci :</b>
-  <div class="chips"><span class="chip">New York et New Jersey</span><span class="chip">Londres</span><span class="chip">Leicester</span><span class="chip">Vancouver</span><span class="chip">Calgary</span><span class="chip">Région de la baie de San Francisco</span><span class="chip">Dallas</span><span class="chip">Sydney</span><span class="chip">Melbourne</span><span class="chip">Dubaï</span></div></div>
- <div class="row"><a class="btn gh" id="near-share" href="https://wa.me/?text=NeuMarry%20%3A%20le%20mariage%20v%C3%A9rifi%C3%A9%20pour%20les%20personnes%20qui%20vivent%20%C3%A0%20l%E2%80%99%C3%A9tranger.%20Chaque%20membre%20prouve%20son%20identit%C3%A9%2C%20ses%20origines%20et%20sa%20ville.%20https%3A%2F%2Fneumarry.com%2Ffr%2F" target="_blank" rel="noopener">Partager NeuMarry</a><p class="mt" style="flex:1 1 280px">Chaque personne invitée, c’est plus de profils près de chez vous.</p></div>
- <p class="nearcount" id="near-count" hidden></p>
-</div></section>
-
-<section class="band" id="app"><div class="w split">
- <div class="stack"><p class="eb">Obtenir l’application</p><h2>Tout se passe dans l’application.</h2>
-  <p class="sub">Votre profil, votre vérification, vos suggestions du jour et vos discussions sont tous dans l’application NeuMarry. Utilisez-la dès maintenant dans n’importe quel navigateur, sur votre téléphone ou votre ordinateur. Les applications Android et iPhone utilisent le même compte.</p>
-  <div class="stores">
-   <a class="store" id="st-web" href="../app/" onclick="try{localStorage.setItem('rm.lang','fr')}catch(e){}"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.6 3.6 5.5 3.6 8.5s-1 5.9-3.6 8.5c-2.6-2.6-3.6-5.5-3.6-8.5s1-5.9 3.6-8.5z"/></svg><span><small>Utilisez-la dès maintenant dans votre</small><b>Navigateur Web</b></span></a>
-   <a class="store" id="st-play" href="#join"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.5v17l14-8.5z" fill="currentColor"/></svg><span><small id="st-play-s">Bientôt sur</small><b>Google Play</b></span></a>
-   <a class="store" id="st-ios" href="#join"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10.5 18.5h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span><small id="st-ios-s">Bientôt sur l’</small><b>App Store</b></span></a>
-  </div>
-  <p class="note" id="st-note">Les applications pour téléphone ne sont pas encore offertes. Inscrivez-vous sur la liste d’attente ci-dessous et nous vous enverrons le lien de téléchargement par courriel le jour de leur lancement.</p></div>
- <ul class="ticks glass">
-  <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Créez votre profil et faites-vous vérifier en 5 minutes environ</span></li>
-  <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Des suggestions chaque jour selon les origines, la ville et la façon de penser, avec les raisons</span></li>
-  <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Commencez par une question, pas de like vide</span></li>
-  <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Partagez un profil avec votre famille pour un 👍</span></li>
-  <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Clavardez dans l’application, sans partager votre numéro</span></li>
- </ul>
-</div></section>
-
-<section id="join"><div class="w split top">
- <div class="stack"><p class="eb">Membres fondateurs</p><h2>Faites partie de nos membres fondateurs.</h2>
-  <ul class="perks">
-   <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Le lien de téléchargement le jour du lancement de l’application</span></li>
-   <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Les parents peuvent s’inscrire au nom d’un fils ou d’une fille</span></li>
-   <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Vos renseignements restent privés et ne sont jamais affichés publiquement</span></li>
-   <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span>Femmes : les 300 premières à se faire vérifier, dans tous les pays, reçoivent 3 mois de Gold gratuits</span></li>
-  </ul></div>
- <form class="card glass" id="wait" novalidate>
-  <div class="fld"><span id="who-label">Qui s’inscrit?</span><div class="seg" role="radiogroup" aria-labelledby="who-label"><label><input type="radio" name="who" value="self" checked><span>Pour moi</span></label><label><input type="radio" name="who" value="parent"><span>Parent ou famille</span></label></div></div>
-  <label class="fld" id="f-name"><span id="name-label">Votre nom complet</span><input name="name" autocomplete="name" maxlength="60" required></label>
-  <div class="row2">
-   <label class="fld" id="f-email"><span>Courriel</span><input name="email" type="email" autocomplete="email" maxlength="80" required></label>
-   <label class="fld" id="f-phone"><span>Cellulaire ou WhatsApp</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="+1 416 555 0142" required></label>
-  </div>
-  <div class="fld" id="f-gender"><span id="gender-label">Je suis</span><div class="seg" role="radiogroup" aria-labelledby="gender-label"><label><input type="radio" name="gender" value="M"><span id="g-m">Un homme</span></label><label><input type="radio" name="gender" value="F"><span id="g-f">Une femme</span></label></div></div>
-  <div class="row2">
-   <label class="fld" id="f-age"><span id="age-label">Âge</span><input name="age" type="number" inputmode="numeric" min="18" max="70" required></label>
-   <label class="fld" id="f-city"><span>Ville</span><select name="city" required><option value="">Choisir</option><option>Toronto</option><option>Mississauga</option><option>Brampton</option><option>Markham</option><option>Vaughan</option><option>Oakville</option><option>Milton</option><option>Scarborough</option><option>Hamilton</option><option>Kitchener-Waterloo</option><option>Ottawa</option><option value="Elsewhere in Canada">Ailleurs au Canada</option><option value="Outside Canada">Hors du Canada</option></select></label>
-  </div>
-  <label class="fld" id="f-roots"><span>Origines : pays où vous avez grandi</span><input name="roots" list="countries" autocomplete="off" maxlength="60" placeholder="Commencez à écrire, p. ex. India" required><datalist id="countries"></datalist></label>
-  <label class="check" id="f-consent"><input type="checkbox" name="consent"><span>J’accepte que NeuMarry me contacte au sujet du lancement. Mes renseignements sont conservés en sécurité et ne sont jamais affichés publiquement. Je peux demander leur suppression en tout temps.</span></label>
-  <button class="btn" type="submit">M’inscrire sur la liste d’attente</button>
- </form>
-</div></section>
-
-<section class="band" id="partners"><div class="w split top">
- <div class="stack"><p class="eb">Travailler avec nous</p><h2>Agences matrimoniales et groupes communautaires.</h2>
-  <ul class="perks">
-   <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.2"/></svg><span><b>Les agences matrimoniales et les associations communautaires</b> gagnent 10 % du premier achat Gold de chaque membre inscrit avec leur code partenaire, plus 1 500 ₹ quand un couple qu’elles ont amené se fiance. Les membres s’inscrivent toujours eux-mêmes.</span></li>
-  </ul>
-  <p><a class="tl" href="work-with-us.html">En savoir plus sur le travail avec NeuMarry</a></p></div>
- <form class="card glass" id="partner" novalidate>
-  <input type="hidden" name="role" value="bureau">
-  <label class="fld" id="w-name"><span>Votre nom</span><input name="name" autocomplete="name" maxlength="60" required></label>
-  <label class="fld" id="w-org"><span id="org-label">Nom de l’agence ou du groupe</span><input name="org" autocomplete="organization" maxlength="80"></label>
-  <div class="row2">
-   <label class="fld" id="w-city"><span>Ville et pays</span><input name="city" maxlength="60" placeholder="p. ex. Brampton, Canada" required></label>
-   <label class="fld" id="w-contact"><span>Téléphone ou courriel</span><input name="contact" maxlength="80" required></label>
-  </div>
-  <label class="fld" id="w-note"><span>Autre chose à nous dire (facultatif)</span><input name="note" maxlength="200" placeholder="Langues, communautés, taille de la salle"></label>
-  <label class="check" id="w-consent"><input type="checkbox" name="consent"><span>J’accepte que NeuMarry me contacte pour travailler ensemble. Mes renseignements servent seulement à cela.</span></label>
-  <button class="btn" type="submit">Envoyer</button>
- </form>
-</div></section>
-
-<section id="faq"><div class="w">
- <div class="head"><p class="eb">Questions</p><h2>Avant de vous inscrire.</h2></div>
- <div class="faq">
-  <details><summary>Faut-il un revenu ou un salaire minimum?</summary><p>Non. NeuMarry n’exige aucun revenu, salaire ni patrimoine, ni pour les hommes ni pour les femmes. Chaque membre est vérifié de la même façon : pièce d’identité et égoportrait, origines et ville de résidence. Les suggestions reposent sur les origines, les valeurs et les projets de vie, pas sur l’argent.</p></details>
-  <details><summary>NeuMarry est-elle gratuite?</summary><p>L’inscription est gratuite : créez votre profil, faites-vous vérifier, voyez combien de personnes correspondent à ce que vous cherchez et votre % de compatibilité avec chacune, et répondez quand un membre Gold vous écrit. NeuMarry Gold donne accès aux noms et aux photos, aux intérêts, à la discussion et aux suggestions du jour, à partir de 80 $ CA par mois.</p></details>
-  <details><summary>Qui peut s’inscrire?</summary><p>Toute personne de 18 ans ou plus qui vit loin du pays où elle a grandi et qui cherche à se marier. Ça fonctionne dans tous les pays.</p></details>
-  <details><summary>Comment évitez-vous les faux profils?</summary><p>Chaque membre vérifie une pièce d’identité officielle et un égoportrait en direct avant de pouvoir envoyer des intérêts ou des messages, et chaque signalement est examiné par une personne.</p></details>
-  <details><summary>Qui voit mes photos et mes renseignements?</summary><p>Seulement les membres vérifiés. Les photos restent floues et seuls votre prénom et l’initiale de votre nom s’affichent jusqu’à ce que vous acceptiez tous les deux. Votre numéro de téléphone n’est jamais affiché, sauf si vous choisissez tous les deux de le partager. La religion et la communauté sont facultatives.</p></details>
-  <details><summary>Mes parents peuvent-ils participer?</summary><p>Oui. Les parents peuvent s’inscrire en votre nom, et vous pouvez leur partager un profil pour un 👍 ou un 🤔. Ils ne peuvent écrire à personne à votre place.</p></details>
-  <details><summary>Puis-je utiliser NeuMarry sur le site Web?</summary><p>Oui. Ouvrez neumarry.com/app dans n’importe quel navigateur, sur votre téléphone ou votre ordinateur, pour créer votre profil, vous faire vérifier, voir vos suggestions et clavarder. L’application Android utilise le même compte.</p></details>
-  <details><summary>Mes parents peuvent-ils participer depuis un autre pays?</summary><p>Oui. Depuis Moi dans l’application, vous pouvez partager un lien privé de biodata familial : vos parents l’ouvrent depuis n’importe quel pays, sur un téléphone ou un ordinateur, sans rien installer. Le lien dure 7 jours et vous pouvez l’arrêter à tout moment.</p></details>
-  <details><summary>De quoi NeuMarry est-elle responsable?</summary><p>Nous vérifions les membres et suggérons des profils. Les décisions après une présentation, et toute relation ou tout mariage, appartiennent aux deux personnes et à leurs familles. Nous ne faisons pas de vérification des antécédents criminels : suivez nos conseils de sécurité et n’envoyez jamais d’argent à une personne rencontrée.</p></details>
-  <details><summary>Est-ce que ça fonctionne dans mon pays?</summary><p>Oui. L’application fonctionne déjà dans tous les pays. Plus il y a de personnes près de chez vous, plus vous avez de suggestions.</p></details>
-  <details><summary>Puis-je supprimer mon compte?</summary><p>Oui, en tout temps. Dans l’application, ouvrez Moi, puis Supprimer mon compte. Sans l’application, suivez les étapes de notre <a class="tl" href="../delete-account.html" hreflang="en">page de suppression de compte (en anglais)</a>.</p></details>
- </div>
-</div></section>
-
-<section style="padding-top:0"><div class="w"><div class="close">
- <p class="eb">Pour les femmes</p><h2>Les 300 premières femmes vérifiées de chaque pays reçoivent 3 mois de Gold gratuits.</h2><a class="btn" href="../app/" onclick="try{localStorage.setItem('rm.lang','fr')}catch(e){}">Créer mon profil gratuit</a>
+<section><div class="wrap"><div class="sh"><div><h2>Questions</h2></div></div><div class="faq">
+ <details class="g" open><summary>NeuMarry est-elle encore une app de mariage ?</summary><p>NeuMarry aide maintenant les personnes qui vivent à l’étranger pour tout ce qui entoure une nouvelle vie : chambres, emplois, voyages des parents, événements et amis de leurs racines.</p></details>
+ <details class="g"><summary>Qui organise les événements ?</summary><p>Des hôtes indépendants de votre ville. Ils paient un forfait pour organiser. Chaque billet a un code QR et, si l’hôte annule, tout vous est remboursé.</p></details>
+ <details class="g"><summary>Mon argent est-il en sécurité ?</summary><p>Vous payez dans l’app. L’argent destiné à un hôte ou à un vendeur est réparti automatiquement par notre partenaire de paiement agréé ; nous ne vous demandons jamais de payer quelqu’un en dehors de l’app.</p></details>
+ <details class="g"><summary>Quelles villes ?</summary><p>Toronto d’abord, puis d’autres villes au Canada, aux États-Unis, en Australie et en Allemagne.</p></details>
 </div></div></section>
 
-<section id="delete-account" style="padding-top:0"><div class="w">
- <div class="head"><p class="eb">Vos données</p><h2>Supprimer votre compte NeuMarry.</h2></div>
- <ol class="del">
-  <li class="glass" style="border-radius:22px"><b>Dans l’application</b><span>Ouvrez Moi, puis Supprimer mon compte. Votre profil, vos photos, vos correspondances et vos discussions sont supprimés dans les 30 jours.</span></li>
-  <li class="glass" style="border-radius:22px"><b>Sans l’application</b><span>Écrivez à notre équipe de soutien depuis le courriel de votre compte avec l’objet « Delete my account ». Nous confirmons par courriel et supprimons dans les 30 jours.</span></li>
-  <li class="glass" style="border-radius:22px"><b>Ce que nous gardons</b><span>Seulement ce que la loi exige, comme les dossiers de paiement pour l’impôt et les dossiers des comptes supprimés pour fraude. Annulez tout abonnement Gold dans votre compte Google Play ou App Store.</span></li>
- </ol>
- <p style="margin-top:16px"><a class="tl" href="../delete-account.html" hreflang="en">Page complète de suppression de compte (en anglais)</a></p>
-</div></section>
-
-<section id="guides" style="padding-top:0"><div class="w">
- <div class="head" style="margin-bottom:18px"><p class="eb">Guides</p><h2>Le mariage à l’étranger, expliqué.</h2></div>
- <nav class="guides" aria-label="Guides pratiques"><a href="matrimony-abroad-canada.html">Mariage à l’étranger : Canada</a><a href="toronto-matrimony.html">Mariage à Toronto et dans le Grand Toronto</a><a href="community-matrimony-canada.html">Mariage par communauté au Canada</a><a href="matrimony-for-parents.html">Pour les parents</a><a href="verified-matrimony.html">Profils vérifiés et sécurité</a><a href="matrimony-abroad-usa-uk.html">Mariage à l’étranger : États-Unis et Royaume-Uni</a><a href="find-life-partner-abroad.html">Trouver un partenaire à l’étranger</a><a href="safe-matrimony-for-women.html">Sûr pour les femmes</a></nav>
-</div></section>
+<div class="wrap"><div class="final g"><h2>Trouvez les vôtres dans votre nouvelle ville</h2><p>Gratuit à ouvrir. Payez seulement ce que vous utilisez.</p><div class="cta"><a class="btn p" href="/app/">Ouvrir l’app</a><a class="btn s" href="https://play.google.com/store/apps/details?id=com.neuconet.rootmate" rel="noopener">Disponible sur Google Play</a></div></div></div>
 </main>
-
-<footer class="foot"><div class="wrap">
- <div><a class="brand" href="../__FRHOME__"><svg width="26" height="26" viewBox="0 0 64 64" aria-hidden="true"><path d="M25 50S8 40 8 26c0-7 5-11 10.5-11 3.6 0 6 2 7.5 4.5" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><path d="M39 50s17-10 17-24c0-7-5-11-10.5-11-6 0-10 5-13.5 10.5C28.5 31 25 35 25 39" fill="none" stroke="#FFC93C" stroke-width="6" stroke-linecap="round"/></svg>NeuMarry</a>
-  <p>Un produit de NEUCONET PRIVATE LIMITED, Surat, Gujarat, Inde.</p><p><a href="mailto:support@neumarry.com" style="display:inline">support@neumarry.com</a></p><p>Les membres doivent avoir 18 ans ou plus · © 2026</p></div>
- <div><b>Application</b><a href="../app/" onclick="try{localStorage.setItem('rm.lang','fr')}catch(e){}">Ouvrir l’app</a><a href="how-matching-works.html">Comment fonctionnent les suggestions</a><a href="verified-matrimony.html">Mariage vérifié</a><a href="pricing.html">Prix</a></div>
- <div><b>Aide</b><a href="faq.html">FAQ</a><a href="about.html">À propos de NeuMarry</a><a href="safe-matrimony-for-women.html">Sécurité des femmes</a><a href="is-this-profile-real.html">Ce profil est-il réel?</a><a href="privacy-and-safety.html">Confidentialité et sécurité</a><a href="work-with-us.html">Travailler avec nous</a></div>
- <div><b>Par pays et par ville</b><a href="uk-matrimony.html">Royaume-Uni</a><a href="usa-matrimony.html">États-Unis</a><a href="australia-matrimony.html">Australie</a><a href="uae-matrimony.html">Émirats arabes unis</a><a href="brampton-matrimony.html">Brampton</a><a href="mississauga-matrimony.html">Mississauga</a></div>
- <div><b>Juridique</b><a href="terms.html">Conditions d’utilisation</a><a href="privacy.html">Politique de confidentialité</a><a href="../delete-account.html" hreflang="en">Supprimer mon compte (en anglais)</a><a href="../child-safety.html" hreflang="en">Sécurité des enfants (en anglais)</a><b style="margin-top:14px">Suivez-nous</b><a href="https://www.instagram.com/neumarry_match" target="_blank" rel="noopener me">Instagram</a><a href="https://www.facebook.com/profile.php?id=61595614954211" target="_blank" rel="noopener me">Facebook</a><a href="https://www.linkedin.com/company/144030892/" target="_blank" rel="noopener me">LinkedIn</a></div>
-</div></footer>
-
-<script src="../js/premap.js"></script>
-<script src="../js/home-rlive.js"></script>
-<script>(function(){var n=document.querySelector('header .menu');if(!n)return;var b=document.createElement('button');b.type='button';b.className='nm-tg';b.setAttribute('aria-label','Light or dark');b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>';b.onclick=function(){var h=document.documentElement,v=h.dataset.theme==='dark'?'light':'dark';h.dataset.theme=v;try{localStorage.setItem('nm.theme',v)}catch(e){}};n.parentNode.insertBefore(b,n)})();</script>
+<footer><div class="wrap"><span>NeuMarry · © 2026</span><a href="../fr/privacy.html">Politique de confidentialité</a><a href="../fr/terms.html">Conditions d’utilisation</a><a href="../delete-account.html">Delete account</a><a href="../child-safety.html">Child safety</a><a href="mailto:support@neumarry.com">support@neumarry.com</a><a class="lang" href="../" hreflang="en">English</a></div></footer>
 <script>
-const COUNTRY_NAMES=["Afghanistan","Aland Islands","Albania","Algeria","American Samoa","Andorra","Angola","Anguilla","Antarctica","Antigua And Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","The Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana","Bouvet Island","Brazil","British Indian Ocean Territory","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Central African Republic","Chad","Chile","China","Christmas Island","Cocos (Keeling) Islands","Colombia","Comoros","Congo","Democratic Republic of the Congo","Cook Islands","Costa Rica","Cote D'Ivoire (Ivory Coast)","Croatia","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","East Timor","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji Islands","Finland","France","French Guiana","French Polynesia","French Southern Territories","Gabon","The Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guadeloupe","Guam","Guatemala","Guernsey and Alderney","Guinea","Guinea-Bissau","Guyana","Haiti","Heard Island and McDonald Islands","Honduras","Hong Kong S.A.R.","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kiribati","North Korea","South Korea","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau S.A.R.","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Man (Isle of)","Marshall Islands","Martinique","Mauritania","Mauritius","Mayotte","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Myanmar","Namibia","Nauru","Nepal","Bonaire, Sint Eustatius and Saba","Netherlands","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Niue","Norfolk Island","Northern Mariana Islands","Norway","Oman","Pakistan","Palau","Palestinian Territory Occupied","Panama","Papua new Guinea","Paraguay","Peru","Philippines","Pitcairn Island","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Helena","Saint Kitts And Nevis","Saint Lucia","Saint Pierre and Miquelon","Saint Vincent And The Grenadines","Saint-Barthelemy","Saint-Martin (French part)","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Georgia","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Svalbard And Jan Mayen Islands","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Togo","Tokelau","Tonga","Trinidad And Tobago","Tunisia","Turkey","Turkmenistan","Turks And Caicos Islands","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","United States Minor Outlying Islands","Uruguay","Uzbekistan","Vanuatu","Vatican City State (Holy See)","Venezuela","Vietnam","Virgin Islands (British)","Virgin Islands (US)","Wallis And Futuna Islands","Western Sahara","Yemen","Zambia","Zimbabwe","Kosovo","Curaçao","Sint Maarten (Dutch part)"];
-(function(){
-"use strict";
-const BACKEND={url:'https://ndxlguuywifovqdzdvtq.supabase.co',anonKey:'sb_publishable_oBR1e77Tx1mNysmxcZ2cgw_qDOpS4gt'};
-const LIVE=!!(BACKEND.url&&BACKEND.anonKey);
-const $=s=>document.querySelector(s);
-const LAUNCH=Date.parse('2026-11-28T22:30:00Z'); // first Family Mixer, doors 5:30 pm in Toronto
-/* Store links: paste each listing URL when it goes live. Empty = 'Coming soon', button scrolls to the waitlist. */
-const STORE={play:'',ios:''};
-
-/* Mobile menu */
-const nav=$('.nav'),mb=$('.menu');
-mb.addEventListener('click',()=>{const o=nav.classList.toggle('open');mb.setAttribute('aria-expanded',o)});
-document.querySelectorAll('#mnav a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');mb.setAttribute('aria-expanded','false')}));
-addEventListener('keydown',e=>{if(e.key==='Escape'&&nav.classList.contains('open')){nav.classList.remove('open');mb.setAttribute('aria-expanded','false');mb.focus()}});
-
-/* Maps (real country shapes, js/premap.js) */
-const mq=matchMedia('(prefers-color-scheme: light)');
-function maps(){if(typeof PM==='undefined')return;const lt=mq.matches;
- document.querySelectorAll('[data-map]').forEach(e=>{const k=e.dataset.map;const r=e.getBoundingClientRect();const ar=(r.width||600)/(r.height||400);
-  const o=k==='hero'?{fit:['guad','lagos','busan','beirut','toronto','london','sydney','sao'],pad:20,fsr:.026,seq:[{hl:{'484':'#FFC93C','124':'#E2136E'},arcs:[['guad','toronto']]},{hl:{'422':'#FFC93C','124':'#E2136E'},arcs:[['beirut','toronto']]},{hl:{'566':'#FFC93C','826':'#E2136E'},arcs:[['lagos','london']]},{hl:{'410':'#FFC93C','036':'#E2136E'},arcs:[['busan','sydney']]}]}
-   :{fit:['beirut','guad','toronto'],pad:80,fsr:.04,hl:{'422':'rgba(255,92,158,.7)','484':'rgba(255,201,60,.6)','124':lt?'rgba(20,16,24,.12)':'rgba(255,255,255,.22)'},arcs:[['beirut','toronto','#FF5C9E'],['guad','toronto','#FFC93C']],pins:[['beirut','Beyrouth','#FF5C9E'],['guad','Jalisco','#FFC93C'],['toronto','Toronto',lt?'#141018':'#FFFFFF']]};
-  e.innerHTML=PM.draw(Object.assign({vb:PM.fit(o.fit,ar,o.pad),theme:lt?'light':'dark'},o))})}
-try{const st=document.createElement('style');st.textContent=PM.CSS;document.head.appendChild(st);maps();
- if(mq.addEventListener)mq.addEventListener('change',maps);let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(maps,250)})}catch(e){}
-
-/* Live member counts (real numbers from the database; hidden when there are none) */
-(async()=>{try{const r=await fetch(`${BACKEND.url}/rest/v1/rpc/public_counts`,{method:'POST',headers:{'apikey':BACKEND.anonKey,'Authorization':`Bearer ${BACKEND.anonKey}`,'Content-Type':'application/json'},body:'{}'});const c=await r.json();
-if(c&&c.joined){const el=document.getElementById('near-count');el.textContent=(document.documentElement.lang.indexOf('fr')===0?`${c.joined} membres inscrits · ${c.waiting} en attente de vérification`:`${c.joined} members joined · ${c.waiting} waiting for verification`);el.hidden=false}}catch(e){}})();
-try{const sh=document.getElementById('near-share');if(navigator.share&&sh)sh.addEventListener('click',ev=>{ev.preventDefault();navigator.share({title:'NeuMarry',text:'Le mariage vérifié pour les personnes qui vivent à l’étranger. Chaque membre prouve son identité, ses origines et sa ville.',url:'https://neumarry.com'}).catch(()=>{})})}catch(e){}
-try{const q=new URLSearchParams(location.search).get('p');if(q&&/^[A-Za-z0-9]{2,20}$/.test(q))localStorage.setItem('rm.p',q.toUpperCase())}catch(e){}
-
-[['play','#st-play'],['ios','#st-ios']].forEach(([k,sel])=>{if(STORE[k]){const a=$(sel);a.href=STORE[k];a.target='_blank';a.rel='noopener';a.classList.add('live');$(sel+'-s').textContent=k==='play'?'Disponible sur':'Télécharger dans l’'}});
-if(STORE.play||STORE.ios)$('#st-note').textContent=STORE.play&&STORE.ios?'Téléchargement gratuit.':(STORE.play?'Téléchargement gratuit sur Android. iPhone bientôt : inscrivez-vous sur la liste d’attente et nous vous écrirons.':'Téléchargement gratuit sur iPhone. Android bientôt : inscrivez-vous sur la liste d’attente et nous vous écrirons.');
-const dl=$('#countries');dl.innerHTML=COUNTRY_NAMES.map(n=>`<option value="${n.replace(/"/g,'&quot;')}">`).join('');
-
-/* Countdown to doors of the first Family Mixer */
-function tick(){let s=Math.max(0,Math.floor((LAUNCH-Date.now())/1000));const v={d:Math.floor(s/86400),h:Math.floor(s%86400/3600),m:Math.floor(s%3600/60),s:s%60};
- for(const u in v)document.querySelectorAll('.cd-'+u).forEach(e=>e.textContent=String(v[u]).padStart(2,'0'));
- if(s<=0&&$('#cd-l'))$('#cd-l').textContent='See you at the next Family Mixer'}
-tick();setInterval(tick,1000);
-
-/* Helpers */
-let toastT;function toast(t){clearTimeout(toastT);let el=$('.toast');if(!el){el=document.createElement('div');el.className='toast';el.setAttribute('role','status');document.body.appendChild(el)}el.textContent=t;toastT=setTimeout(()=>el.remove(),3600)}
-function setErr(wrapSel,msg){const w=$(wrapSel);if(!w)return;w.classList.toggle('bad',!!msg);let e=w.querySelector('.err');if(msg){if(!e){e=document.createElement('span');e.className='err';e.setAttribute('role','alert');w.appendChild(e)}e.textContent=msg}else if(e)e.remove()}
-const EMAIL=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-function phoneOk(v){const d=v.replace(/\D/g,'');return d.length>=10&&d.length<=15}
-function code(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='RM-';for(let i=0;i<6;i++)s+=c[Math.floor(Math.random()*c.length)];return s}
-async function send(table,row){
-  if(!LIVE)return {ok:true,preview:true};
-  try{const r=await fetch(`${BACKEND.url}/rest/v1/${table}`,{method:'POST',headers:{'apikey':BACKEND.anonKey,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(row)});
-    if(r.status===409)return {ok:false,dup:true};return {ok:r.ok}}catch(e){return {ok:false}}}
-function remember(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-function recall(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}}
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function doneHTML(title,body,ref){return `<div class="done" tabindex="-1"><span class="big"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><h3>${title}</h3><p class="mt">${body}</p>${ref?`<p class="mt">Votre référence : <span class="code">${ref}</span></p>`:''}${LIVE?'':'<p class="note">Aperçu : rien n’a été enregistré. Les inscriptions ouvrent au lancement.</p>'}</div>`}
-function clearOne(t){const w=t.closest('.fld,.check');if(w&&w.classList.contains('bad')){w.classList.remove('bad');const e=w.querySelector('.err');if(e)e.remove()}}
-
-/* Waitlist form */
-const wait=$('#wait');
-function syncWho(){const parent=wait.who.value==='parent';$('#name-label').textContent=parent?'Votre nom complet (parent ou famille)':'Votre nom complet';
-  $('#gender-label').textContent=parent?'J’inscris mon ou ma':'Je suis';$('#g-m').textContent=parent?'Fils':'Un homme';$('#g-f').textContent=parent?'Fille':'Une femme';$('#age-label').textContent=parent?'Son âge':'Âge'}
-wait.addEventListener('change',e=>{if(e.target.name==='who')syncWho();clearOne(e.target)});
-wait.addEventListener('input',e=>clearOne(e.target));
-wait.addEventListener('submit',async e=>{e.preventDefault();const f=wait;let first=null;const bad=(sel,msg)=>{setErr(sel,msg);if(msg&&!first)first=sel};
-  const parent=f.who.value==='parent';
-  bad('#f-name',f.name.value.trim().length<2?'Entrez un nom complet':'');
-  bad('#f-email',!EMAIL.test(f.email.value.trim())?'Entrez un courriel valide, comme nom@exemple.com':'');
-  bad('#f-phone',!phoneOk(f.phone.value)?'Entrez un numéro de téléphone avec l’indicatif régional':'');
-  bad('#f-gender',!f.gender.value?'Choisissez une option':'');
-  const age=+f.age.value;bad('#f-age',!f.age.value?'Entrez un âge':(age<18?'Les membres doivent avoir 18 ans ou plus':(age>70?'Vérifiez l’âge':'')));
-  bad('#f-city',!f.city.value?'Choisissez une ville':'');
-  bad('#f-roots',f.roots.value.trim().length<2?'Choisissez le pays où vous avez grandi':'');
-  bad('#f-consent',!f.consent.checked?'Veuillez accepter pour que nous puissions vous contacter':'');
-  if(first){const el=$(first).querySelector('input,select');if(el)el.focus();return}
-  const btn=f.querySelector('button[type=submit]');btn.disabled=true;btn.textContent='Inscription…';
-  const ref=code();
-  const row={ref,signup_for:parent?'child':'self',name:f.name.value.trim(),email:f.email.value.trim().toLowerCase(),phone:f.phone.value.trim(),gender:f.gender.value,age,city:f.city.value,roots:f.roots.value.trim(),consent_at:new Date().toISOString()};
-  const r=await send('waitlist',row);
-  btn.disabled=false;btn.textContent='M’inscrire sur la liste d’attente';
-  if(!r.ok){toast(r.dup?'Ce courriel est déjà sur la liste d’attente.':'Inscription impossible pour le moment. Vérifiez votre connexion et réessayez.');return}
-  remember('rm.wait',{ref,first:row.name.split(' ')[0]});
-  f.innerHTML=doneHTML(`Vous êtes sur la liste, ${esc(row.name.split(' ')[0])}`,`Nous vous enverrons par courriel le lien de téléchargement le jour du lancement.`,ref);
-  f.querySelector('.done').focus();
-});
-/* Work-with-us form */
-const pf=$('#partner');
-pf.addEventListener('input',e=>clearOne(e.target));pf.addEventListener('change',e=>{clearOne(e.target);if(e.target.name==='role'){$('#org-label').textContent=e.target.value==='host'?'Organisation (facultatif)':e.target.value==='restaurant'?'Nom du restaurant':'Nom de l’agence ou du groupe'}});
-pf.addEventListener('submit',async e=>{e.preventDefault();const f=pf;let first=null;const bad=(sel,msg)=>{setErr(sel,msg);if(msg&&!first)first=sel};
-  const role=f.role.value;bad('#w-role',!role?'Choisissez une option':'');bad('#w-name',f.name.value.trim().length<2?'Entrez votre nom':'');
-  bad('#w-org',role&&role!=='host'&&f.org.value.trim().length<2?'Entrez le nom':'');
-  bad('#w-city',f.city.value.trim().length<2?'Entrez une ville':'');const c=f.contact.value.trim();bad('#w-contact',!(EMAIL.test(c)||phoneOk(c))?'Entrez un numéro de téléphone avec l’indicatif régional, ou un courriel':'');
-  bad('#w-consent',!f.consent.checked?'Veuillez accepter pour que nous puissions vous contacter':'');
-  if(first){const el=$(first).querySelector('input');if(el)el.focus();return}
-  const btn=f.querySelector('button[type=submit]');btn.disabled=true;btn.textContent='Envoi…';
-  const row={role,name:f.name.value.trim(),org:f.org.value.trim(),city:f.city.value.trim(),contact:c,note:f.note.value.trim(),consent_at:new Date().toISOString()};
-  const r=await send('work_with_us',row);btn.disabled=false;btn.textContent='Envoyer';
-  if(!r.ok){toast('Envoi impossible pour le moment. Vérifiez votre connexion et réessayez.');return}
-  f.innerHTML=doneHTML(`Merci, ${esc(row.name.split(' ')[0])}`,'Notre équipe vous appellera dans les 3 jours ouvrables.');f.querySelector('.done').focus()});
-const prev=recall('rm.wait');if(prev&&prev.ref){wait.innerHTML=doneHTML(`Vous êtes sur la liste, ${esc(prev.first||'')}`.replace(/, $/,''),'We’ll email you the download link the day the app goes live, with first access to event seats.',esc(prev.ref))}
-})();
+const C=[['🇨🇦','Canada'],['🇺🇸','États-Unis'],['🇲🇽','Mexique'],['🇧🇷','Brésil'],['🇨🇴','Colombie'],['🇬🇧','Royaume-Uni'],['🇮🇪','Irlande'],['🇫🇷','France'],['🇩🇪','Allemagne'],['🇮🇹','Italie'],['🇪🇸','Espagne'],['🇵🇱','Pologne'],['🇺🇦','Ukraine'],['🇹🇷','Turquie'],['🇪🇬','Égypte'],['🇳🇬','Nigéria'],['🇬🇭','Ghana'],['🇰🇪','Kenya'],['🇪🇹','Éthiopie'],['🇿🇦','Afrique du Sud'],['🇱🇧','Liban'],['🇦🇪','Émirats'],['🇮🇷','Iran'],['🇵🇰','Pakistan'],['🇮🇳','Inde'],['🇳🇵','Népal'],['🇧🇩','Bangladesh'],['🇱🇰','Sri Lanka'],['🇨🇳','Chine'],['🇰🇷','Corée'],['🇯🇵','Japon'],['🇵🇭','Philippines'],['🇻🇳','Viêt Nam'],['🇮🇩','Indonésie'],['🇦🇺','Australie'],['🇳🇿','Nouvelle-Zélande']];
+const h=C.map(c=>`<span><i>${c[0]}</i>${c[1]}</span>`).join('');document.getElementById('fl').innerHTML=h+h;
 </script>
-<div id="nm-consent" role="dialog" aria-live="polite" aria-label="Paramètres des témoins" hidden><style>#nm-consent{position:fixed;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));z-index:60;max-width:560px;margin:0 auto;background:#fff;color:#13201A;border:1px solid #DDEEE5;border-radius:18px;box-shadow:0 10px 30px rgba(20,60,40,.16);padding:14px 16px;font:14px/1.5 "Nunito Sans",system-ui,-apple-system,"Segoe UI",sans-serif}#nm-consent p{margin:0 0 10px}#nm-consent a{color:#0E7A55;font-weight:700}#nm-consent .b{display:flex;gap:10px}#nm-consent button{flex:1;min-height:42px;border-radius:999px;font:700 14px/1 "Nunito Sans",system-ui,sans-serif;cursor:pointer}#nm-consent .y{background:linear-gradient(150deg,#D8F8EA,#9FE6C6);color:#0B4D36;border:1px solid #fff}#nm-consent .n{background:#fff;color:#13201A;border:1px solid #D0E3C9}.nm-alink{background:none;border:0;padding:0;font:inherit;color:inherit;text-decoration:underline;cursor:pointer}</style><p>Ce site utilise Google Analytics pour compter les visites et le pixel Meta pour mesurer nos publicités sur Facebook et Instagram. Nous ne vendons jamais vos données. <a href="../privacy.html">Politique de confidentialité</a></p><div class="b"><button type="button" class="n" data-c="denied">Refuser</button><button type="button" class="y" data-c="granted">Accepter</button></div></div><script>(function(){var tz='';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||''}catch(e){}var eu=/^(Europe\/|Atlantic\/(Reykjavik|Canary|Madeira|Faroe|Azores))/.test(tz);var d=document.getElementById('nm-consent'),c=null;try{c=localStorage.getItem('nm.ads')}catch(e){}function set(v){try{localStorage.setItem('nm.ads',v);if(eu||v==='denied')localStorage.setItem('nm.analytics',v)}catch(e){}if(eu||v==='denied')gtag('consent','update',{analytics_storage:v});if(window.fbq)fbq('consent',v==='granted'?'grant':'revoke');d.hidden=true}d.addEventListener('click',function(e){var v=e.target&&e.target.getAttribute('data-c');if(v)set(v)});if(c!=='granted'&&c!=='denied')d.hidden=false;var f=document.querySelector('footer .wrap');if(f){var a=document.createElement('button');a.type='button';a.className='nm-alink link';a.textContent='Paramètres des témoins';a.addEventListener('click',function(){d.hidden=false});f.appendChild(a)}})();</script></body></html>
+</body></html>
