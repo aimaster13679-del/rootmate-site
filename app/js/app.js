@@ -4511,6 +4511,138 @@ function guests15(eid){const l=P15.gs[eid],e=(P15.hb||[]).find(x=>x.id===eid);
 /* Theme button in the Home header (his rule 8 Nov 2026 13:46: light by default, dark only if the member picks it). */
 Object.assign(A,{p15theme(){const lt=document.documentElement.classList.contains('gl-lt');try{localStorage.setItem('nm.glassmode',lt?'dark':'light')}catch(e){}render()}});
 
+/* ---------- part13: City picker on Home (his ok 8 Nov 2026 17:49) ----------
+   The pin chip shows the city you are in NOW (saved on this phone), not only the profile city.
+   Tap it: search a city or 'Use my location' (nearest city, phone asks permission once).
+   If the phone's time zone shows another country than the chosen city, Home asks once: change city? Never silent. */
+const WORLD15 = `Surat|India|21.17|72.83;Mumbai|India|19.08|72.88;Delhi|India|28.61|77.21;Bengaluru|India|12.97|77.59;Ahmedabad|India|23.02|72.57;Hyderabad|India|17.39|78.49;Chennai|India|13.08|80.27;Kolkata|India|22.57|88.36;Pune|India|18.52|73.86;Jaipur|India|26.91|75.79;Vadodara|India|22.31|73.18;Rajkot|India|22.30|70.80;Chandigarh|India|30.73|76.78;Lucknow|India|26.85|80.95;Kochi|India|9.93|76.27;Goa|India|15.49|73.83;Indore|India|22.72|75.86;Amritsar|India|31.63|74.87;Noida|India|28.54|77.39;Gurugram|India|28.46|77.03;
+Lagos|Nigeria|6.52|3.38;Abuja|Nigeria|9.08|7.40;Accra|Ghana|5.60|-0.19;Nairobi|Kenya|-1.29|36.82;Johannesburg|South Africa|-26.20|28.05;Cairo|Egypt|30.04|31.24;Casablanca|Morocco|33.57|-7.59;Addis Ababa|Ethiopia|9.03|38.74;Kampala|Uganda|0.35|32.58;Dakar|Senegal|14.72|-17.47;
+Manila|Philippines|14.60|120.98;Cebu|Philippines|10.32|123.89;Jakarta|Indonesia|-6.21|106.85;Bangkok|Thailand|13.76|100.50;Ho Chi Minh City|Vietnam|10.82|106.63;Hanoi|Vietnam|21.03|105.85;Seoul|South Korea|37.57|126.98;Busan|South Korea|35.18|129.08;Tokyo|Japan|35.68|139.69;Osaka|Japan|34.69|135.50;Beijing|China|39.90|116.40;Shanghai|China|31.23|121.47;Shenzhen|China|22.54|114.06;Taipei|Taiwan|25.03|121.57;Kuala Lumpur|Malaysia|3.14|101.69;Karachi|Pakistan|24.86|67.01;Lahore|Pakistan|31.55|74.34;Islamabad|Pakistan|33.68|73.05;Dhaka|Bangladesh|23.81|90.41;Kathmandu|Nepal|27.72|85.32;Colombo|Sri Lanka|6.93|79.86;
+Riyadh|Saudi Arabia|24.71|46.68;Jeddah|Saudi Arabia|21.49|39.19;Doha|Qatar|25.29|51.53;Abu Dhabi|United Arab Emirates|24.45|54.38;Sharjah|United Arab Emirates|25.35|55.42;Muscat|Oman|23.59|58.41;Beirut|Lebanon|33.89|35.50;Amman|Jordan|31.95|35.93;Istanbul|Turkey|41.01|28.98;Tehran|Iran|35.69|51.39;Tel Aviv|Israel|32.09|34.78;
+Mexico City|Mexico|19.43|-99.13;Guadalajara|Mexico|20.66|-103.35;Monterrey|Mexico|25.69|-100.32;São Paulo|Brazil|-23.55|-46.63;Rio de Janeiro|Brazil|-22.91|-43.17;Buenos Aires|Argentina|-34.60|-58.38;Bogotá|Colombia|4.71|-74.07;Lima|Peru|-12.05|-77.04;Santiago|Chile|-33.45|-70.67;Kingston|Jamaica|18.02|-76.80;Port of Spain|Trinidad and Tobago|10.65|-61.52;
+Warsaw|Poland|52.23|21.01;Kraków|Poland|50.06|19.94;Kyiv|Ukraine|50.45|30.52;Bucharest|Romania|44.43|26.10;Budapest|Hungary|47.50|19.04;Prague|Czech Republic|50.08|14.44;Athens|Greece|37.98|23.73;Moscow|Russia|55.76|37.62;Helsinki|Finland|60.17|24.94;Luxembourg|Luxembourg|49.61|6.13`
+  .split(';').map(s => s.trim()).filter(Boolean).map(s => { const p = s.split('|'); return [p[0], p[1], '', +p[2], +p[3]] });
+const TZC15 = {'Asia/Calcutta':'India','Asia/Kolkata':'India','America/Toronto':'Canada','America/Vancouver':'Canada','America/Edmonton':'Canada','America/Winnipeg':'Canada','America/Halifax':'Canada','America/Regina':'Canada','America/St_Johns':'Canada','America/Montreal':'Canada',
+  'America/New_York':'United States','America/Chicago':'United States','America/Denver':'United States','America/Los_Angeles':'United States','America/Phoenix':'United States','America/Anchorage':'United States','America/Detroit':'United States','Pacific/Honolulu':'United States',
+  'Australia/Sydney':'Australia','Australia/Melbourne':'Australia','Australia/Brisbane':'Australia','Australia/Perth':'Australia','Australia/Adelaide':'Australia','Australia/Hobart':'Australia','Australia/Darwin':'Australia',
+  'Europe/London':'United Kingdom','Europe/Dublin':'Ireland','Asia/Dubai':'United Arab Emirates','Asia/Singapore':'Singapore','Pacific/Auckland':'New Zealand','Europe/Berlin':'Germany','Europe/Paris':'France','Europe/Amsterdam':'Netherlands','Europe/Madrid':'Spain','Europe/Rome':'Italy','Europe/Lisbon':'Portugal','Europe/Warsaw':'Poland','Europe/Zurich':'Switzerland','Europe/Stockholm':'Sweden','Europe/Oslo':'Norway','Europe/Copenhagen':'Denmark','Europe/Brussels':'Belgium','Europe/Vienna':'Austria',
+  'Asia/Manila':'Philippines','Africa/Lagos':'Nigeria','Africa/Accra':'Ghana','Africa/Nairobi':'Kenya','Africa/Johannesburg':'South Africa','Africa/Cairo':'Egypt','America/Mexico_City':'Mexico','America/Sao_Paulo':'Brazil','America/Bogota':'Colombia','America/Lima':'Peru','America/Argentina/Buenos_Aires':'Argentina',
+  'Asia/Seoul':'South Korea','Asia/Tokyo':'Japan','Asia/Shanghai':'China','Asia/Hong_Kong':'Hong Kong S.A.R.','Asia/Karachi':'Pakistan','Asia/Dhaka':'Bangladesh','Asia/Kathmandu':'Nepal','Asia/Katmandu':'Nepal','Asia/Colombo':'Sri Lanka','Asia/Riyadh':'Saudi Arabia','Asia/Qatar':'Qatar','Asia/Kuala_Lumpur':'Malaysia','Asia/Bangkok':'Thailand','Asia/Jakarta':'Indonesia','Asia/Ho_Chi_Minh':'Vietnam','Asia/Saigon':'Vietnam','Asia/Beirut':'Lebanon','Europe/Istanbul':'Turkey','Europe/Kiev':'Ukraine','Europe/Kyiv':'Ukraine'};
+function cities15() { if (!cities15.l) { const seen = new Set(); cities15.l = ALL_CITIES.concat(WORLD15).filter(c => { const k = c[0] + '|' + c[1]; if (seen.has(k)) return false; seen.add(k); return true }) } return cities15.l }
+function cityNow15() {
+  try { const s = JSON.parse(localStorage.getItem('nm.city15') || 'null'); if (s && s.c) return s } catch (e) {}
+  const me = S.me || {}; return { c: me.city || '', k: me.country || '' };
+}
+function setCityNow15(c, k) { try { localStorage.setItem('nm.city15', JSON.stringify({ c, k })) } catch (e) {} }
+function tzCountry15() { try { return TZC15[Intl.DateTimeFormat().resolvedOptions().timeZone] || '' } catch (e) { return '' } }
+function cityRows15(q) {
+  const cur = cityNow15(), n = norm(q || ''), tzk = tzCountry15();
+  let l = cities15();
+  if (n) l = l.filter(c => norm(c[0]).includes(n) || norm(c[1]).includes(n));
+  else l = l.slice().sort((a, b) => (b[1] === tzk) - (a[1] === tzk) || (b[1] === cur.k) - (a[1] === cur.k));
+  l = l.slice(0, 40);
+  if (!l.length) return `<p class="hint" style="text-align:center;padding:18px 0">No city found. Try another spelling.</p>`;
+  return l.map(c => `<button class="p15c-row${c[0] === cur.c && c[1] === cur.k ? ' on' : ''}" data-a="p15cityPick" data-c="${esc(c[0])}" data-k="${esc(c[1])}"><span class="tx"><b>${esc(c[0])}</b><small>${esc(c[1])}</small></span>${c[0] === cur.c && c[1] === cur.k ? ic('tick2') : ''}</button>`).join('');
+}
+(function () {
+  if (typeof home15 !== 'function') return;
+  // Home header: the city chip becomes a button; a one-time suggestion card when the phone is in another country
+  const _h = home15; home15 = function () {
+    let h = _h.apply(this, arguments); const cur = cityNow15();
+    h = h.replace(/<span class="p15-city">[\s\S]*?<\/span>/, `<button class="p15-city" data-a="p15city" aria-label="City: ${esc(cur.c || 'choose')}. Change city">${ic('pin')}<span>${esc(cur.c || cur.k || 'Choose city')}</span>${ic('chev') || ''}</button>`);
+    const tzk = tzCountry15(); let seen = ''; try { seen = localStorage.getItem('nm.citytz') || '' } catch (e) {}
+    let tz = ''; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone } catch (e) {}
+    if (tzk && cur.k && tzk !== cur.k && seen !== tz) {
+      const card = `<div class="p15-g p15c-ask" role="status">${ic('pin')}<span class="tx"><b>Looks like you are in ${esc(tzk)} now</b><small>Change your city so you see things near you?</small></span><span class="p15c-btns"><button class="p15c-no" data-a="p15cityNo">No</button><button class="p15c-yes" data-a="p15city" data-q="${esc(tzk)}">Change</button></span></div>`;
+      h = h.replace(/(<\/div>)(\s*<h1)/, `$1${card}$2`); if (!h.includes('p15c-ask')) h = h.replace('</div>', '</div>' + card);
+    }
+    return h;
+  };
+  const _sh = renderSheet; renderSheet = function () {
+    if (sheet && sheet.type === 'p15city') {
+      const q = sheet.q || '';
+      return sheetShell('Your city', `<p class="hint" style="margin:-4px 0 10px">Events, rooms and people near this city show first. It is saved on this phone only.</p>
+        <button class="p15c-loc" data-a="p15cityLoc">${ic('pin')}<span><b>Use my location</b><small>Finds the nearest city. Your phone asks once.</small></span></button>
+        <input id="p15cq" class="p15c-q" type="search" placeholder="Search city or country" value="${esc(q)}" autocomplete="off" aria-label="Search city or country">
+        <div id="p15cl" class="p15c-list">${cityRows15(q)}</div>
+        <label class="p15c-home"><input type="checkbox" id="p15ch"${sheet.home ? ' checked' : ''}> <span>Also make it the city on my profile (where I live)</span></label>`, '');
+    }
+    return _sh.apply(this, arguments);
+  };
+  document.addEventListener('input', e => { if (e.target && e.target.id === 'p15cq') { if (sheet) sheet.q = e.target.value; const l = document.getElementById('p15cl'); if (l) l.innerHTML = cityRows15(e.target.value) } });
+  document.addEventListener('change', e => { if (e.target && e.target.id === 'p15ch' && sheet) sheet.home = e.target.checked });
+  async function pick(c, k) {
+    const home = !!(sheet && sheet.home); setCityNow15(c, k); try { localStorage.setItem('nm.citytz', Intl.DateTimeFormat().resolvedOptions().timeZone) } catch (e) {}
+    sheet = null; if (typeof P15 === 'object') { P15.ev = {}; P15.rooms = undefined } render();
+    if (home && S.me) { try { await API.update('profiles', { id: 'eq.' + S.me.id }, { city: c, country: k }); S.me.city = c; S.me.country = k; toast('City saved on your profile too.', 'tick2') } catch (e) { toast('Saved on this phone. Profile city could not be changed now.', 'info') } }
+    else toast('City changed to ' + c + '.', 'tick2');
+    render();
+  }
+  Object.assign(A, {
+    p15city(el) { sheet = { type: 'p15city', q: (el && el.dataset.q) || '', home: false }; render(); },
+    p15cityNo() { try { localStorage.setItem('nm.citytz', Intl.DateTimeFormat().resolvedOptions().timeZone) } catch (e) {} render() },
+    p15cityPick(el) { pick(el.dataset.c, el.dataset.k) },
+    p15cityLoc() {
+      if (!navigator.geolocation) { toast('Location is not available here. Search your city instead.', 'info'); return }
+      toast('Finding your city…', 'pin');
+      navigator.geolocation.getCurrentPosition(pos => {
+        const la = pos.coords.latitude, lo = pos.coords.longitude, R = Math.PI / 180;
+        let best = null, bd = 1e9;
+        for (const c of cities15()) { if (!isFinite(c[3])) continue; const d = Math.acos(Math.min(1, Math.sin(la * R) * Math.sin(c[3] * R) + Math.cos(la * R) * Math.cos(c[3] * R) * Math.cos((lo - c[4]) * R))) * 6371; if (d < bd) { bd = d; best = c } }
+        if (best && bd < 150) pick(best[0], best[1]);
+        else { if (sheet) { sheet.q = ''; render() } toast('No city from our list is close to you. Please search it.', 'info') }
+      }, () => toast('Location was not allowed. Search your city instead.', 'info'), { enableHighAccuracy: false, timeout: 12000, maximumAge: 600000 });
+    }
+  });
+  // lists: things in your chosen city come first (nothing is hidden)
+  const first = (arr, f) => Array.isArray(arr) ? arr.slice().sort((a, b) => (f(b) ? 1 : 0) - (f(a) ? 1 : 0)) : arr;
+  if (typeof API === 'object' && API.rpc && !API.rpc._c15) {
+    const _rpc = API.rpc.bind(API);
+    API.rpc = async function (fn, args) {
+      const r = await _rpc(fn, args); const c = cityNow15();
+      if (!c.c) return r;
+      const same = x => x && norm(x.city || '') === norm(c.c);
+      if (fn === 'events15' || fn === 'rooms15' || fn === 'experts15') return first(r, same);
+      return r;
+    };
+    API.rpc._c15 = true;
+  }
+  // new events and business pages use the city you chose on Home
+  if (API.rpc._c15) { const _r2 = API.rpc; API.rpc = function (fn, args) { const c = cityNow15(), me = S.me || {};
+      if ((fn === 'event_create15' || fn === 'biz_upsert15') && args && c.c && args.cty === (me.city || '')) args = Object.assign({}, args, { cty: c.c, ctry: c.k || args.ctry });
+      return _r2(fn, args) }; API.rpc._c15 = true }
+})();
+
+/* ---------- Admin panel: 5 tabs (Today, Members, Money, Events, More), follows the app theme, no scroll line (his ok 8 Nov 17:49) ---------- */
+(function () {
+  if (typeof a3tabsHtml !== 'function' || typeof A3 !== 'object') return;
+  const MORE = ['new', 'activity', 'robots', 'help', 'checks'];
+  a3tabsHtml = function () {
+    const o = A3.ov, t = A3.tab, chk = o ? (o.checks_waiting || 0) + (o.reports_open || 0) : 0;
+    const moreN = chk + (o && o.help_open ? o.help_open : 0) + (o && (o.bots || []).some(b => b.status === 'failed') ? 1 : 0);
+    const tabs = [['home', 'Today'], ['members', 'People'], ['money', 'Money'], ['events', 'Events'], ['more', 'More']];
+    return `<div class="a3tabs a3t5 pad" role="tablist">${tabs.map(([k, l]) => { const on = t === k || (k === 'more' && MORE.includes(t));
+      return `<button role="tab" aria-selected="${on}" class="${on ? 'on' : ''}" data-a="a3tab" data-k="${k}">${l}${k === 'more' && moreN ? ` <em>${moreN}</em>` : ''}</button>` }).join('')}</div>`;
+  };
+  function a3more() {
+    const o = A3.ov || {}, chk = (o.checks_waiting || 0) + (o.reports_open || 0), failed = (o.bots || []).filter(b => b.status === 'failed').length;
+    const row = (k, i, t, s, n) => `<button class="a3c a3mrow" data-a="a3tab" data-k="${k}">${ic(i)}<span><b>${t}</b><small>${s}</small></span>${n ? `<em>${n}</em>` : ''}${ic('chev')}</button>`;
+    return row('new', 'sparkle', 'New app', 'Plus members, businesses, rooms, events, ads to check', '') +
+      row('checks', 'shield', 'Checks', 'Photos, ID and selfie checks, reports', chk) +
+      row('help', 'chat', 'Help inbox', 'Members who asked for help', o.help_open || 0) +
+      row('activity', 'bolt', 'Activity', 'Who is active, messages, matches', '') +
+      row('robots', 'refresh', 'Robots', 'Daily jobs and reports', failed ? '!' : '');
+  }
+  const _h = a3home; a3home = function () { return A3.tab === 'more' ? a3more() : _h.apply(this, arguments) };
+  const _r = renderAdmin3; renderAdmin3 = function () {
+    const h = _r.apply(this, arguments);
+    return A3.tab === 'home' ? h.replace(/<h2>[^<]*<\/h2>/, '<h2>Today</h2>') : A3.tab === 'more' ? h.replace(/<h2>[^<]*<\/h2>/, '<h2>More</h2>') : h;
+  };
+  // sub pages of More go back to More, not to Today
+  const _up = A.a3up; A.a3up = function () { if (MORE.includes(A3.tab) && !A3.mem && !A3.ev && !A3.list && !A3.open && !A3.bot && !A3.p15k) { A3.tab = 'more'; render(); return } return _up.apply(this, arguments) };
+  const _tb = A.a3tab; A.a3tab = function (el) { const s = document.querySelector('.a3v .scroll'); const r = _tb.apply(this, arguments); const s2 = document.querySelector('.a3v .scroll'); if (s2) s2.scrollTop = 0; return r };
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 boot();
 })();
