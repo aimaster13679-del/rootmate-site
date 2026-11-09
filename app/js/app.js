@@ -4808,6 +4808,53 @@ function renderEPB(full){if(EPS.mine===undefined)setTimeout(epLoadMine,0);const 
   const _sc=A.suCancel;A.suCancel=function(){S.editEntry=null;return _sc.apply(this,arguments)};
 })();
 
+/* "Peek inside" before sign-up (his ask 9 Nov 19:10; MOCK, waiting his ok): what the app does, the real live count for
+   the visitor's country, and ONE clearly marked example introduction card (no real member is shown before sign-up). */
+const pkFlag=n=>{try{return flag(n)||''}catch(e){return ''}};
+const PEEK_ON=()=>EP_ON()&&(()=>{try{return localStorage.getItem('nm.peektest')==='1'}catch(e){return false}})();
+function renderPeek(){const c=(typeof tzCountry==='function'&&tzCountry())||'';const n=c?V2N[c]:null;if(c&&n===undefined)setTimeout(()=>{try{v2near()}catch(e){}},0);
+  const live=n&&n.live||0;
+  const lock=(t,s)=>`<li><span class="pk-lk">${ic('lock')}</span><div><b>${t}</b><small>${s}</small></div></li>`;
+  return `<div class="ep-full pk"><div class="topbar pad ep-top"><button class="iconbtn" data-a="peekX" aria-label="Back">${ic('back')}</button><div class="grow"><h2>A look inside</h2><div class="sub">Before you make an account</div></div></div>
+   <div class="scroll" id="main"><div class="main-inner pad ep-in">
+    <div class="pk-live">${ic('shield')}<div><b>${live>=20?live.toLocaleString()+' verified members':'Only verified members'}</b><small>${live>=20?'live in '+esc(c)+' now':'Every member shows an ID and a live selfie to a person before anyone can see them'+(c?'. We are new in '+esc(c)+'.':'.')}</small></div></div>
+    <p class="pk-h">This is how an introduction looks</p>
+    <div class="pk-card"><i class="pk-ex">EXAMPLE</i>
+     <div class="pk-top"><span class="pk-sig">${typeof rlSig==='function'?rlSig('example-amara','',4):''}</span><div><b>A●●●●, 30</b><small>${pkFlag('Nigeria')} Anambra → ${pkFlag('Canada')} Toronto</small><small>Nurse · speaks Igbo and English</small></div><span class="pk-pct"><b>88%</b><small>match</small></span></div>
+     <ul class="pk-why"><li>${ic('check')} Both from Anambra</li><li>${ic('check')} Both want to stay in their city</li><li>${ic('check')} Same view on careers after marriage</li></ul>
+     <div class="pk-blur" aria-hidden="true"><span></span><span></span><span></span></div>
+    </div>
+    <p class="pk-h">What opens after you join</p>
+    <ul class="pk-locks">${lock('Who fits you','How many people fit you, and your match % with each. Free.')}${lock('Names and photos','When you both say yes, or with Gold. Photos can stay blurred.')}${lock('Chat and family','Talk, and share a match with your family.')}</ul>
+    <button class="btn primary block" data-a="start">Create my free profile</button>
+    <p class="ep-fine pk-fine">About 5 minutes, mostly taps. The example above is not a real member.</p>
+   </div></div></div>`}
+(function(){
+  const _w=renderWelcome;renderWelcome=function(){if(PEEK_ON()&&EPS.peek)return renderPeek();const h=_w.apply(this,arguments);
+    if(!PEEK_ON()||EPS.full)return h;return h.replace(/(<button class="btn block c3ghost" data-a="login">)/,'<button class="btn block c3ghost pk-btn" data-a="peek">'+ic('eye')+' Take a look inside first</button>$1')};
+  Object.assign(A,{peek(){EPS.peek=true;render()},peekX(){EPS.peek=false;render()}});
+  const _st=A.start;A.start=function(){EPS.peek=false;return _st.apply(this,arguments)};
+})();
+
+/* Install from the website (his 10 Nov 01:10: users must be able to get the app from neumarry.com). Until NeuMarry is
+   public on Google Play, the website button opens /app/?install=1: Android Chrome shows its own "Install app" prompt,
+   iPhone gets the two taps (Share, Add to Home Screen). Nothing shows inside the Android app or when already installed. */
+(function(){
+  if(isNative)return;let dp=null,shown=false;
+  const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+  const want=()=>/[?&]install=1/.test(location.search);
+  const ios=/iPhone|iPad|iPod/.test(navigator.userAgent);
+  function bar(){if(shown||standalone()||!want())return;if(!dp&&!ios)return;shown=true;
+    const d=document.createElement('div');d.className='nm-inst';d.setAttribute('role','dialog');d.setAttribute('aria-label','Install NeuMarry');
+    d.innerHTML=`<img src="img/icon-192.png" alt=""><div><b>Install NeuMarry</b><small>${dp?'Opens like an app, from your home screen. Free.':'Tap the Share button, then “Add to Home Screen”.'}</small></div>${dp?'<button class="btn primary" id="nm-inst-go">Install</button>':''}<button class="iconbtn" id="nm-inst-x" aria-label="Close">✕</button>`;
+    document.body.appendChild(d);
+    const go=document.getElementById('nm-inst-go');if(go)go.onclick=async()=>{try{dp.prompt();await dp.userChoice}catch(e){}d.remove()};
+    document.getElementById('nm-inst-x').onclick=()=>d.remove()}
+  addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;bar()});
+  addEventListener('appinstalled',()=>{const d=document.querySelector('.nm-inst');if(d)d.remove()});
+  setTimeout(bar,1500);
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 
 /* NeuMarry matrimony-only build */

@@ -476,14 +476,15 @@ LAUNCH15 = True
 if LAUNCH15:
     # Split go-live (his 'A', 9 Nov 2026 00:39): neumarry.com = matrimony only. Home = next/homenm*.html (bento, no faces);
     # the broad home (home15) now lives on neuamigo.com (built from these same sources by rootmate/scripts/build_neuamigo_site.py).
-    PLAY = 'https://play.google.com/store/apps/details?id=com.neuconet.neumarry'
+    # Until NeuMarry is public on Google Play (closed test first), the app button installs the web app (his 10 Nov 01:10).
+    PLAY = '/app/?install=1'
     NM_HOME = os.environ.get('NM_HOME', 'homenm')
     for src_name, out_rel, lang, other, legal in ((NM_HOME + '.html', 'index.html', 'en', 'fr/', ''), (NM_HOME + '_fr.html', os.path.join('fr', 'index.html'), 'fr', '../', 'fr/')):
         h = rd(os.path.join('next', src_name))
         up = '../' if lang == 'fr' else ''
         h = h.replace('src="img/icon-192.png"', 'src="/app/img/icon-192.png"').replace('src="img/', 'src="/app/img/p15/')
         h = h.replace('<a class="logo" href="#">', '<a class="logo" href="/' + ('fr/' if lang == 'fr' else '') + '">')
-        h = h.replace('class="btn p sm" href="#"', 'class="btn p sm" href="/app/"').replace('class="btn p" href="#"', 'class="btn p" href="/app/"').replace('class="btn s" href="#"', 'class="btn s" href="' + PLAY + '" rel="noopener"')
+        h = h.replace('class="btn p sm" href="#"', 'class="btn p sm" href="/app/"').replace('class="btn p" href="#"', 'class="btn p" href="/app/"').replace('class="btn s" href="#"', 'class="btn s" href="' + PLAY + '"')
         h = h.replace('class="t g w2" href="#"', 'class="t g w2" href="/app/"').replace('class="t g" href="#"', 'class="t g" href="/app/"').replace('class="bz g" href="#"', 'class="bz g" href="/app/"')
         fl = ['privacy.html', 'terms.html', 'delete-account.html', 'child-safety.html']
         for i, m in enumerate(re.findall(r'<footer>.*?</footer>', h, flags=re.S)[:1]):
