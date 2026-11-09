@@ -33,7 +33,7 @@ def guide_meta(slug):
     get = lambda k: re.search(r'<!--%s: (.*?)-->' % k, t).group(1)
     return dict(slug=slug, title=get('title'), desc=get('desc'), short=get('short'), body=re.sub(r'<!--.*?-->\n?', '', t))
 G = [guide_meta(g) for g in GUIDES]
-PAGES = ['about', 'how-matching-works', 'pricing', 'privacy-and-safety', 'faq', 'is-this-profile-real', 'is-this-profile-real-hi', 'is-this-profile-real-gu', 'sample-verified-profile', 'brampton-matrimony', 'mississauga-matrimony',
+PAGES = ['about', 'how-matching-works', 'pricing', 'event-partners', 'privacy-and-safety', 'faq', 'is-this-profile-real', 'is-this-profile-real-hi', 'is-this-profile-real-gu', 'sample-verified-profile', 'brampton-matrimony', 'mississauga-matrimony',
          'uk-matrimony', 'usa-matrimony', 'australia-matrimony', 'uae-matrimony']
 def page_meta(slug):
     t = rd('pages/%s.html' % slug)
@@ -209,7 +209,7 @@ for p in P:
     others = near + [o for o in P if o['slug'] != p['slug'] and o not in near] + [g for g in G if g['slug'] in ('verified-matrimony', 'toronto-matrimony')]
     if p['kind'] in loc: others = near[:3] + [o for o in P if o['slug'] in ('how-matching-works', 'privacy-and-safety')]
     related = '<h2>Read next</h2><ul class="rel">' + ''.join(f'<li><a href="{o["slug"]}.html">{o["short"]}</a></li>' for o in others[:5]) + '</ul>'
-    main = f'<p class="crumbs"><a href="./">NeuMarry</a> › {p["short"]}</p>' + p['body'] + CTA + related
+    main = f'<p class="crumbs"><a href="./">NeuMarry</a> › {p["short"]}</p>' + p['body'] + ('' if p['slug'] == 'event-partners' else CTA) + related  # partner page has its own buttons
     kind = {'about': 'AboutPage', 'feature': 'WebPage', 'city': 'WebPage', 'country': 'WebPage'}[p['kind']]
     if p['slug'] == 'faq': kind = 'FAQPage'
     node = {'@type': kind, '@id': url, 'url': url, 'name': p['title'], 'description': p['desc'], 'inLanguage': 'en',
