@@ -2,7 +2,7 @@
 
 All rules, the status page and the edit lock live in the app repo **aimaster13679-del/rootmate**:
 read its `CLAUDE.md`, `STATUS.md` and `LOCK.md` first, and run `bash tools/session.sh start "..."` from that repo
-before changing anything here. One lock covers both repos. Never touch the Neutant repo.
+before changing anything here. The NeuMarry lock (LOCK.md) covers both repos. Exception: app-update/ is NeuAmigo's live-update folder, written only by the NeuAmigo chat (session.sh na save). Never touch the Neutant repo.
 
 - Pages are built by `python3 src/build.py` (sources in `src/`: landing, guides, pages, legal). Never edit the built
   `.html` files by hand; edit `src/` and rebuild.
