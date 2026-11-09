@@ -4423,7 +4423,7 @@ Object.assign(P15V,{adcheck:adCheck15,biz:biz15v,services:svc15v,svcplan:svcPlan
     try{localStorage.removeItem(KEY)}catch(e){}history.replaceState(null,'',location.pathname);
     try{await _rpc(p.name,p.args);await load15();P15.v=['book15','team_join15'].includes(p.name)?'tickets':(p.v||null);Object.keys(P15).forEach(k=>{if(['rooms','bd','rf','sl','ld','ads','tk'].includes(k))P15[k]=undefined});P15.ex={};render();toast('Paid with PayPal. Done.','tick2')}
     catch(e){await load15();render();toast('Paid. Please tap the button once more to finish.','info')}}
-  const _lm=loadMe;loadMe=async function(){const r=await _lm.apply(this,arguments);if(P15on())setTimeout(resume,300);return r};
+  const _lm=loadMe;loadMe=async function(){const r=await _lm.apply(this,arguments);if(P15on()||(typeof EP_ON==='function'&&EP_ON()))setTimeout(resume,300);return r};
   /* the note shown above is the only one: the screen's own error toast right after it stays quiet */
   const _t=toast;toast=function(m){if(P15.shownAt&&Date.now()-P15.shownAt<1500&&m!==P15.shownMsg)return;return _t.apply(this,arguments)};
 })();
@@ -4675,6 +4675,128 @@ function brand15(html) {
     .replace(/img\/icon-192\.png/g, 'img/na-icon-192.png').replace(/img\/nm-mark\.png/g, 'img/na-mark.png')
     .replace(/NeuMarry/g, 'NeuAmigo');
 }
+
+/* ---------- NeuMarry Event Partners (his ok 9 Nov 2026 18:32 on the Event Partners mock) ----------
+   Families (any signed-in member) see verified venues and wedding services with their prices, free, and send a request
+   (date, guests, short note). Businesses get a page: Event Partner US$29 / Pro US$59 a month, 14 days free without a card,
+   paid on the website with PayPal (never inside the Android app). Pro = shown first in the city, marked "Sponsored".
+   NeuMarry only (the NeuAmigo build has its own partner plans). Server: migration 20261109190000_event_partners. */
+const EP_ON=()=>!(typeof P15on==='function'&&P15on());
+const EPS={cat:'',list:undefined,req:null,mine:undefined,busy:'',rows:null,full:false};
+const EP_CATS=[['Venue','dish'],['Catering','gift'],['Photo and video','camera'],['Decor and flowers','sparkle'],['Music and DJ','mic'],['Planner','cal'],['Makeup and henna','star'],['Sweets and cakes','heart']];
+const epCur=()=>{try{const c=((EPS.mine||{}).biz||{}).country||(S.me||{}).country;return (c&&typeof CMAP!=='undefined'&&CMAP[c]&&CMAP[c][3])||'USD'}catch(e){return 'USD'}};
+const epErr=e=>String((e&&(e.message||e.msg||e.error_description))||e||'');
+async function epLoadList(){EPS.list=null;render();try{EPS.list=await API.rpc('ep_list',{ctry:(S.me||{}).country||'',cat:EPS.cat||''})}catch(e){EPS.list=false}render()}
+async function epLoadMine(){try{EPS.mine=await API.rpc('ep_mine')}catch(e){EPS.mine=false}EPS.rows=null;render()}
+function epTop(title,sub,full){return `<div class="topbar pad ep-top">${full?'':`<button class="iconbtn" data-a="closeView" aria-label="Back">${ic('back')}</button>`}<div class="grow"><h2>${esc(title)}</h2>${sub?`<div class="sub">${esc(sub)}</div>`:''}</div>${full?`<button class="btn ghost sm" data-a="epSignOut">Sign out</button>`:''}</div>`}
+function epSvc(s,n){return (s||[]).slice(0,n).map(x=>`<li><span>${esc(x.t)}</span><b>${x.p?money(x.p,x.cur):'Ask'}</b></li>`).join('')}
+
+/* Families: the list */
+function renderEP(){if(EPS.list===undefined)setTimeout(epLoadList,0);const me=S.me||{};const L=EPS.list;
+  const chips=`<div class="ep-chips" role="tablist">${[['','All','sparkle'],...EP_CATS.map(([k,i])=>[k,k,i])].map(([k,t,i])=>`<button class="ep-chip${EPS.cat===k?' on':''}" data-a="epCat" data-k="${esc(k)}" aria-pressed="${EPS.cat===k}">${ic(i)}<span>${esc(t)}</span></button>`).join('')}</div>`;
+  const card=b=>`<article class="ep-card${b.sponsored?' spon':''}"><div class="ep-ch"><span class="ep-ic">${ic((EP_CATS.find(c=>c[0]===b.category)||['','sparkle'])[1])}</span><div class="grow"><b>${esc(b.name)}</b><small>${esc(b.category)} · ${esc(b.city)}</small></div>${b.sponsored?'<i class="ep-spon">Sponsored</i>':''}</div>
+    <p class="ep-ver">${ic('shield')} Verified business</p>${b.about?`<p class="ep-ab">${esc(b.about)}</p>`:''}
+    ${(b.services||[]).length?`<ul class="ep-svc">${epSvc(b.services,4)}</ul>`:''}
+    ${EPS.req===b.id?epReqForm(b):`<button class="btn primary block" data-a="epReq" data-id="${b.id}">Send a request</button>`}</article>`;
+  return `<div class="view ep-v" role="dialog" aria-label="Event Partners">${epTop('Event Partners','Venues and wedding services'+(me.country?' in '+me.country:''))}
+   <div class="scroll" id="view-scroll"><div class="main-inner pad ep-in">
+    <div class="ep-hero"><b>Plan the family dinner or the wedding</b><span>Every business here was checked by a person. Sending a request is free.</span></div>
+    ${chips}
+    ${L===null||L===undefined?spinner('Loading'):L===false?`<div class="ep-empty">${ic('alert')}<b>Could not load</b><button class="btn ghost" data-a="epReload">Try again</button></div>`
+      :L.length?L.map(card).join(''):`<div class="ep-empty">${ic('store2')}<b>No partners${EPS.cat?' for '+esc(EPS.cat):''}${me.country?' in '+esc(me.country):''} yet</b><span>New businesses join every week. Check again soon.</span></div>`}
+    <button class="ep-own" data-a="epBiz"><span>${ic('store2')}</span><div><b>Own a venue or wedding service?</b><small>List your business · 14 days free</small></div><i>›</i></button>
+   </div></div></div>`}
+function epReqForm(b){const f=EPS.rf||{};const g=[['10','10'],['25','25'],['50','50'],['100','100'],['200','200'],['500','500+']];
+  return `<div class="ep-rf"><label>Date (optional)</label><input id="ep-d" type="date" min="${new Date().toISOString().slice(0,10)}" value="${esc(f.d||'')}">
+   <label>Guests</label><div class="ep-g">${g.map(([v,t])=>`<button class="ep-chip sm${(f.g||'50')===v?' on':''}" data-a="epG" data-k="${v}">${t}</button>`).join('')}</div>
+   <label>Note (optional)</label><input id="ep-n" maxlength="300" placeholder="e.g. Vegetarian menu, Saturday evening" value="${esc(f.n||'')}">
+   <p class="ep-fine">${esc(b.name)} will see your first name and your email, so they can reply to you.</p>
+   <div class="ep-2"><button class="btn ghost" data-a="epReqX">Cancel</button><button class="btn primary" data-a="epSend" data-id="${b.id}"${EPS.busy==='req'?' disabled':''}>${EPS.busy==='req'?'Sending…':'Send request'}</button></div></div>`}
+
+/* Businesses: my page */
+function renderEPB(full){if(EPS.mine===undefined)setTimeout(epLoadMine,0);const M=EPS.mine;const me=S.me||{};
+  const shell=inner=>`<div class="${full?'ep-full':'view ep-v'}" role="dialog" aria-label="My business on NeuMarry">${epTop('Your business','NeuMarry Event Partners',full)}<div class="scroll" id="${full?'main':'view-scroll'}"><div class="main-inner pad ep-in">${inner}</div></div></div>`;
+  if(M===undefined||M===null)return shell(spinner('Loading'));
+  if(M===false)return shell(`<div class="ep-empty">${ic('alert')}<b>Could not load</b><button class="btn ghost" data-a="epMineReload">Try again</button></div>`);
+  const b=M.biz,P=M.prices||{};const f=EPS.f||(EPS.f={cat:(b&&b.category)||'Venue'});
+  const form=`<div class="ep-box"><h3>${b?'Business details':'Create your business page'}</h3>
+    <label>Business name</label><input id="ep-bn" maxlength="80" value="${esc((b&&b.name)||'')}" placeholder="e.g. Casa Lumière Banquet Hall">
+    <label>What you offer</label><div class="ep-chips wrap">${EP_CATS.map(([k,i])=>`<button class="ep-chip${f.cat===k?' on':''}" data-a="epFcat" data-k="${esc(k)}">${ic(i)}<span>${esc(k)}</span></button>`).join('')}</div>
+    <div class="ep-2"><div><label>City</label><input id="ep-bc" maxlength="60" value="${esc((b&&b.city)||me.city||'')}"></div><div><label>Country</label><input id="ep-bk" maxlength="60" value="${esc((b&&b.country)||me.country||'')}"></div></div>
+    <label>Business registration number <small>(checked by a person, never shown)</small></label><input id="ep-bl" maxlength="60" value="${esc((b&&b.licence)||'')}">
+    <label>One line about you</label><input id="ep-ba" maxlength="200" value="${esc((b&&b.about)||'')}" placeholder="e.g. Hall for up to 300 guests, halal and vegetarian kitchens">
+    <button class="btn primary block" data-a="epSave"${EPS.busy==='save'?' disabled':''}>${EPS.busy==='save'?'Saving…':b?'Save details':'Create my page'}</button></div>`;
+  if(!b)return shell(`<div class="ep-hero"><b>Show families your services and prices</b><span>14 days free, no card. Then US$29 or US$59 a month, paid on neumarry.com. Nothing renews by itself.</span></div>${form}`);
+  const until=b.planUntil?new Date(b.planUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'}):'';
+  const status=`<div class="ep-st"><div class="ep-sti ${b.active?'ok':'off'}">${ic(b.active?'check':'clock')}<div><b>${b.active?(b.plan==='ep_pro'?'Event Partner Pro':'Event Partner'):'Page not showing'}</b><small>${b.active?'Active until '+until:'Pick a plan below to show your page'}</small></div></div>
+    <div class="ep-sti ${b.verified?'ok':'wait'}">${ic(b.verified?'shield':'clock')}<div><b>${b.verified?'Verified business':b.licence?'Checking your registration':'Add your registration number'}</b><small>${b.verified?'Families see the badge':b.licence?'Usually within 24 hours':'Needed before families can see you'}</small></div></div>
+    ${b.plan==='ep_pro'&&b.active?`<div class="ep-sti ok">${ic('eye')}<div><b>${b.views} page views · ${(M.requests||[]).length} requests</b><small>All time</small></div></div>`:''}</div>`;
+  const lim=b.plan==='ep_pro'?40:10;const rows=EPS.rows||(EPS.rows=(M.services||[]).map(s=>({t:s.t,p:s.p?String(s.p/100):''})));if(!rows.length)rows.push({t:'',p:''});
+  const svc=`<div class="ep-box"><h3>Services and prices <small>${epCur()}</small></h3>${rows.map((r,i)=>`<div class="ep-row"><input id="ep-st${i}" maxlength="80" placeholder="Service ${i+1}, e.g. Dinner for 100 guests" value="${esc(r.t)}"><input id="ep-sp${i}" inputmode="decimal" maxlength="9" placeholder="Price" value="${esc(r.p)}"><button class="iconbtn" data-a="epRowX" data-k="${i}" aria-label="Remove">${ic('x')}</button></div>`).join('')}
+    ${rows.length<lim?`<button class="btn ghost block" data-a="epRowAdd">${ic('plus')} Add a service</button>`:`<p class="ep-fine">Up to ${lim} services on this plan.</p>`}
+    <button class="btn primary block" data-a="epSvcSave"${EPS.busy==='svc'?' disabled':''}>${EPS.busy==='svc'?'Saving…':'Save services'}</button></div>`;
+  const plan=(k,t,items,pro)=>`<div class="ep-plan${pro?' pro':''}${b.plan===k&&b.active?' on':''}"><div class="ep-ph"><b>${t}</b><span>${P[k]?money(P[k],'USD'):''}<small> a month</small></span></div><ul>${items.map(x=>`<li>${ic('check')}${esc(x)}</li>`).join('')}</ul>
+    <button class="btn ${pro?'':'primary'} block" data-a="epPlan" data-k="${k}"${EPS.busy===k?' disabled':''}>${EPS.busy===k?'One moment…':!M.trialUsed&&!b.active?'Start 14 days free · no card':b.plan===k&&b.active?'Add 1 more month · '+money(P[k],'USD'):'Pay 1 month · '+money(P[k],'USD')}</button></div>`;
+  const plans=`<h3 class="ep-h3">Plans</h3>${plan('ep_basic','Event Partner',['Your page with services and prices','Up to 10 services','Families send you requests'],false)}${plan('ep_pro','Event Partner Pro',['Everything in Event Partner','Unlimited services','Shown first in your city, marked "Sponsored"','Your venue can be picked for NeuMarry dinners','Page views and requests'],true)}
+    <p class="ep-fine">${isNative?'Plans are paid on the NeuMarry website, not in this app.':'Paid once with PayPal. Nothing renews by itself.'} NeuMarry takes no share of what families pay you.</p>`;
+  const reqs=`<h3 class="ep-h3">Requests from families <small>${(M.requests||[]).length}</small></h3>${(M.requests||[]).length?(M.requests||[]).map(r=>`<div class="ep-req"><b>${esc(r.name)}${r.guests?' · '+r.guests+' guests':''}</b><small>${r.date?esc(new Date(r.date+'T12:00:00').toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'})):'Date open'}${r.note?' · '+esc(r.note):''}</small>${r.email?`<a class="link" href="mailto:${esc(r.email)}">${esc(r.email)}</a>`:''}</div>`).join(''):`<p class="ep-fine">No requests yet. Families can send one once your page is showing.</p>`}`;
+  return shell(status+plans+svc+reqs+form)}
+
+/* hooks: Me tiles, views, the business-only account, auth text, website link (#ep-biz) */
+(function(){
+  try{if(/#ep-biz/.test(location.hash)){sessionStorage.setItem('nm.epbiz','1');history.replaceState(null,'',location.pathname+location.search)}}catch(e){}
+  const bizMode=()=>{try{return sessionStorage.getItem('nm.epbiz')==='1'}catch(e){return false}};
+  const _me=renderMe;renderMe=function(){const h=_me();if(!EP_ON())return h;const t=`<button type="button" class="fu-t ep-t1" data-a="epOpen"><span>${ic('dish')}</span><b>Event Partners</b><em>Venues and wedding services</em></button><button type="button" class="fu-t ep-t2" data-a="epBiz"><span>${ic('store2')}</span><b>Your business</b><em>List a venue or service</em></button>`;
+    const k=h.indexOf('<div class="fu-tiles">');if(k>=0){const e=h.indexOf('</div>',h.indexOf('data-r="me"',k));if(e>=0)return h.slice(0,e)+t+h.slice(e)}
+    const box=`<div class="ep-me">${t.replace(/fu-t /g,'fu-t ep-mt ')}</div>`;const n=h.indexOf('class="likes nm-bio"');if(n>=0){const e=h.indexOf('</button>',n);if(e>=0)return h.slice(0,e+9)+box+h.slice(e+9)}
+    const v=h.indexOf('<div class="panel"><h3');return v>=0?h.slice(0,v)+box+h.slice(v):h};
+  const _pv=renderProfileView;renderProfileView=function(){if(view&&view.type==='ep')return renderEP();if(view&&view.type==='epbiz')return renderEPB(false);return _pv.apply(this,arguments)};
+  const _w=renderWelcome;renderWelcome=function(){if(EPS.full)return renderEPB(true);
+    if(EP_ON()&&bizMode()&&!(API.email&&API.email()))return `<div class="ep-full"><div class="scroll" id="main"><div class="main-inner pad ep-in ep-welc">
+      <img src="img/nm-mark.png" alt="" class="ep-mk"><h1>NeuMarry Event Partners</h1><p>Show families your venue or wedding service, with your prices. 14 days free, no card.</p>
+      <ul class="ep-svc"><li><span>Event Partner</span><b>US$29 a month</b></li><li><span>Event Partner Pro</span><b>US$59 a month</b></li></ul>
+      <button class="btn primary block" data-a="start">Create my business account</button><button class="btn ghost block" data-a="login">I already have an account</button>
+      <button class="link" data-a="epNotBiz">I am looking for a partner, not a business</button></div></div></div>`;
+    return _w.apply(this,arguments)};
+  const _ss=startSignup;startSignup=function(){if(EP_ON()&&bizMode()&&API.email&&API.email()){EPS.full=true;S.screen='welcome';render();return}
+    _ss.apply(this,arguments);if(EP_ON()&&API.email&&API.email())API.rpc('ep_mine').then(r=>{if(r&&r.biz&&S.screen==='signup'&&S.step===1){EPS.mine=r;EPS.full=true;S.screen='welcome';render()}}).catch(()=>{})};
+  const _au=renderAuth;renderAuth=function(){const h=_au.apply(this,arguments);return EP_ON()&&bizMode()?h.replace(/I am 18 or older, and I am joining NeuMarry to find a marriage partner\./g,'I am 18 or older and I am registering a business as a NeuMarry Event Partner.'):h};
+  const rd=()=>{EPS.list=undefined;EPS.req=null;EPS.rf=null};
+  Object.assign(A,{
+    epOpen(){if(!EP_ON())return;rd();view={type:'ep'};render()},
+    epBiz(){if(!EP_ON())return;EPS.mine=undefined;EPS.f=null;view={type:'epbiz'};render()},
+    epCat(el){EPS.cat=el.dataset.k||'';EPS.req=null;epLoadList()},
+    epReload(){epLoadList()}, epMineReload(){EPS.mine=undefined;render()},
+    epReq(el){EPS.req=el.dataset.id;EPS.rf={g:'50'};render()},
+    epReqX(){EPS.req=null;render()},
+    epG(el){const f=EPS.rf||(EPS.rf={});f.d=(document.getElementById('ep-d')||{}).value||f.d;f.n=(document.getElementById('ep-n')||{}).value||f.n;f.g=el.dataset.k;render()},
+    async epSend(el){const f=EPS.rf||{};const d=(document.getElementById('ep-d')||{}).value||null,n=(document.getElementById('ep-n')||{}).value||'';EPS.busy='req';render();
+      try{await API.rpc('ep_request',{bid:el.dataset.id,d,g:+(f.g||50),nt:n});EPS.req=null;EPS.rf=null;toast('Request sent. The business will reply to your email.','tick2')}
+      catch(e){const m=epErr(e);toast(/too many/.test(m)?'You sent many requests today. Please try again tomorrow.':/date/.test(m)?'Please pick a date from today on.':/own business/.test(m)?'This is your own business.':'Could not send. Please try again.','info')}
+      EPS.busy='';render()},
+    epFcat(el){const f=EPS.f||(EPS.f={});['bn','bc','bk','bl','ba'].forEach(k=>{const i=document.getElementById('ep-'+k);if(i)f[k]=i.value});f.cat=el.dataset.k;render();['bn','bc','bk','bl','ba'].forEach(k=>{const i=document.getElementById('ep-'+k);if(i&&f[k]!=null)i.value=f[k]})},
+    async epSave(){const v=k=>((document.getElementById('ep-'+k)||{}).value||'').trim();const f=EPS.f||{};
+      if(v('bn').length<2){toast('Please write your business name.','info');return}if(v('bc').length<2||v('bk').length<2){toast('Please write your city and country.','info');return}
+      const a={nm:v('bn'),cty:v('bc'),ctry:v('bk'),cat:f.cat||'Venue',ab:v('ba'),lic:v('bl')};const keep=()=>{['bn','bc','bk','bl','ba'].forEach(k=>{const i=document.getElementById('ep-'+k);if(i)i.value=({bn:a.nm,bc:a.cty,bk:a.ctry,bl:a.lic,ba:a.ab})[k]})};
+      EPS.busy='save';render();keep();try{await API.rpc('ep_save',a);toast('Saved.','tick2');EPS.busy='';await epLoadMine()}
+      catch(e){EPS.busy='';render();keep();toast('Could not save. Please check the details and try again.','info')}},
+    epRowAdd(){epKeepRows();EPS.rows.push({t:'',p:''});render()},
+    epRowX(el){epKeepRows();EPS.rows.splice(+el.dataset.k,1);render()},
+    async epSvcSave(){epKeepRows();const svc=EPS.rows.filter(r=>r.t.trim().length>=2).map(r=>({t:r.t.trim(),p:Math.max(0,parseFloat(String(r.p).replace(',','.'))||0)}));
+      EPS.busy='svc';render();try{const n=await API.rpc('ep_services',{svc,cur:epCur()});toast(n+' service'+(n===1?'':'s')+' saved.','tick2');EPS.busy='';await epLoadMine()}
+      catch(e){EPS.busy='';render();toast(/too many/.test(epErr(e))?'Too many services for this plan.':'Could not save. Please try again.','info')}},
+    async epPlan(el){const k=el.dataset.k,M=EPS.mine||{},b=M.biz;if(!b)return;EPS.busy=k;render();
+      try{if(!M.trialUsed&&!b.active){await API.rpc('start_trial15',{bid:b.id,prod:k});toast('Your 14 free days have started. No card, nothing renews by itself.','tick2')}
+        else{await API.rpc('buy_biz_plan15',{bid:b.id,prod:k});toast('Paid. Your page shows for one more month.','tick2')}}
+      catch(e){const m=epErr(e);if(/trial used/.test(m))toast('Your free days were already used. Please pick a paid month.','info')}
+      EPS.busy='';await epLoadMine()},
+    epNotBiz(){try{sessionStorage.removeItem('nm.epbiz')}catch(e){}render()},
+    async epSignOut(){EPS.full=false;try{sessionStorage.removeItem('nm.epbiz')}catch(e){}await API.signOut();signedOut()}
+  });
+  function epKeepRows(){const R=EPS.rows||[];R.forEach((r,i)=>{const t=document.getElementById('ep-st'+i),p=document.getElementById('ep-sp'+i);if(t)r.t=t.value;if(p)r.p=p.value})}
+  /* a family member opening a partner counts as a view (Pro sees it) */
+  const _rq=A.epReq;A.epReq=function(el){try{API.rpc('ep_view',{bid:el.dataset.id}).catch(()=>{})}catch(e){}return _rq.apply(this,arguments)};
+})();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 
