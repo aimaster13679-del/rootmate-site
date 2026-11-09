@@ -4798,6 +4798,16 @@ function renderEPB(full){if(EPS.mine===undefined)setTimeout(epLoadMine,0);const 
   const _rq=A.epReq;A.epReq=function(el){try{API.rpc('ep_view',{bid:el.dataset.id}).catch(()=>{})}catch(e){}return _rq.apply(this,arguments)};
 })();
 
+/* Back goes straight home when a screen was opened from Home (his 9 Nov 19:10 video: tapping "City" and then Back
+   walked back through every earlier part of the profile). Applies to every part opened with a shortcut. */
+(function(){
+  const _gv=A.goVerify;A.goVerify=function(el){const r=_gv.apply(this,arguments);if(S.screen==='signup'&&S.editMode)S.editEntry={step:S.step,vs:(S.draft&&S.draft.vs)||0};return r};
+  const home=()=>{S.editEntry=null;A.suCancel()};
+  const _vb=A.vBack;A.vBack=function(){const e=S.editEntry,d=S.draft;if(e&&S.editMode&&d&&S.step===e.step&&(d.vs||0)<=e.vs){home();return}return _vb.apply(this,arguments)};
+  const _sb=A.suBack;A.suBack=function(){const e=S.editEntry,d=S.draft;if(e&&S.editMode&&S.step===e.step&&(!d||(d.vs||0)<=e.vs)){home();return}if(e&&S.editMode&&S.step===e.step&&d&&(d.vs||0)>e.vs){d.vs=e.vs;render();return}return _sb.apply(this,arguments)};
+  const _sc=A.suCancel;A.suCancel=function(){S.editEntry=null;return _sc.apply(this,arguments)};
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 
 /* NeuMarry matrimony-only build */
