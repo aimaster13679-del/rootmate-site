@@ -1300,7 +1300,7 @@ function renderChatView(id){
       `<div class="msg ${m.f}${m.pending?' pending':''}">${esc(m.x)}${m.f!=='sys'?`<time>${m.pending?'Sending…':timeStr(m.ts)}</time>`:''}</div>${m.flag&&m.f==='them'?`<div class="msg sys">${ic('shield')} This message mentions money or visas. Never send money or pay for visa help, and report anyone who asks.</div>`:''}`).join('')}
    </div></div>
    ${canChat(id)&&msgs.filter(m=>m.f!=='sys').length<6?starters(p):''}
-   ${typeof jhMeet==='function'?jhMeet(id):''}${typeof jhBlockNote==='function'?jhBlockNote():''}${canChat(id)?`<div class="composer pad"><label class="sr" for="chat-in">Message</label><input id="chat-in" type="text" maxlength="1000" placeholder="Message ${esc(p.first||'')}" autocomplete="off" enterkeyhint="send"><button class="btn primary" data-a="send" data-id="${id}" aria-label="Send">${ic('send')}</button></div>`:
+   ${typeof famCard==='function'&&FAM_ON()?famCard(id):typeof jhMeet==='function'?jhMeet(id):''}${typeof jhBlockNote==='function'?jhBlockNote():''}${canChat(id)?`<div class="composer pad"><label class="sr" for="chat-in">Message</label><input id="chat-in" type="text" maxlength="1000" placeholder="Message ${esc(p.first||'')}" autocomplete="off" enterkeyhint="send"><button class="btn primary" data-a="send" data-id="${id}" aria-label="Send">${ic('send')}</button></div>`:
    `<div class="lockbar pad"><span class="tx"><b>Read and reply to ${esc(p.first||'your match')}</b><small>Chat opens when either of you has Gold</small></span><button class="btn gold" data-a="upgrade" data-r="chat" data-id="${id}">${ic('crown')}Unlock</button></div>`}
   </div>`;
 }
@@ -4962,6 +4962,40 @@ function pxSell(){const x=S.px&&S.px.gold_m1;return !x||x.sell!==false}
 function pxPrice(){const P=S.px;if(!P||!P.gold_m1||!P.gold_m1.cents)return null;const cur=P.gold_m1.currency,f=c=>pxFmt(c,cur).replace(PX_SYM[cur]||cur+' ','');
   return {sym:PX_SYM[cur]||cur+' ',gold:f(P.gold_m1.cents),m3:f(P.gold_m3.cents),m6:f(P.gold_m6.cents),pm3:(Math.round(P.gold_m3.cents/3)/100).toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:2}),pm6:(Math.round(P.gold_m6.cents/6)/100).toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:2})}}
 (function(){const _lm=loadMe;loadMe=async function(){const r=await _lm.apply(this,arguments);if(S.me&&!S.pxAt){S.pxAt=Date.now();API.rpc('my_prices15').then(x=>{S.px=x||null;render()}).catch(()=>{S.pxAt=0})}return r}})();
+
+/* ---------- Family Mulaqat (his ok on the plan 11 Nov 19:07; MOCK stage 20:05) ----------
+   After a booked first meetup has happened, each member privately says "Continue" or "Not for me" (the other sees it only
+   when both say Continue). Then "Family Mulaqat": each side picks who comes (taps), a verified restaurant with a family table,
+   day and time; fee per side (family_fee, country price); details reach each family in their own app language.
+   MOCK: localStorage nm.famtest = 1..5 picks the step shown in chat; no booking is made. */
+const FAM_ON=()=>{try{return +localStorage.getItem('nm.famtest')||0}catch(e){return 0}};
+const FAM_WHO=[['Mother','heart'],['Father','users'],['Sister','heart'],['Brother','users'],['Grandparent','home'],['Guardian','shield']];
+function famCard(id){const st=FAM_ON();if(!st||!canChat(id))return '';const p=byId(id)||{},nm=esc(p.first||'them'),fee=pxs('family_fee','US$14.99');
+  if(st===1)return `<div class="mt-card fm-q"><span class="mt-ic" aria-hidden="true">${ic('heart')}</span><span class="mt-tx"><b>How was your first meetup?</b><small>Only you see your answer. ${nm} sees it only if you both choose Continue.</small></span><span class="mt-yn"><button class="btn ghost sm" data-a="famNo">Not for me</button><button class="btn gold sm" data-a="famYes">Continue</button></span></div>`;
+  if(st===2)return `<div class="mt-card"><span class="mt-ic" aria-hidden="true">${ic('check')}</span><span class="mt-tx"><b>You chose Continue</b><small>Waiting for their answer. Nothing is shown to ${nm} until they choose too.</small></span></div>`;
+  if(st===3)return `<div class="mt-card fm-go"><span class="mt-ic" aria-hidden="true">${ic('users')}</span><span class="mt-tx"><b>You both chose Continue</b><small>Ready for your families to meet? A family table at a verified restaurant, set menu and price.</small></span><button class="btn gold sm" data-a="famOpen" data-id="${id}">${ic('users')}Family Mulaqat</button></div>`;
+  if(st===4)return `<div class="mt-card"><span class="mt-ic" aria-hidden="true">${ic('users')}</span><span class="mt-tx"><b>${nm}'s family invited your family</b><small><b>Saffron &amp; Sage, Toronto</b> · Sat 21 Nov, 1:00 pm · Family table for 6</small><small>Booking fee for your side: <b>${fee}</b></small></span><span class="mt-yn"><button class="btn ghost sm" data-a="famNo">Not now</button><button class="btn gold sm" data-a="famYes">Yes, we will come</button></span></div>`;
+  return `<div class="mt-card ok"><span class="mt-ic" aria-hidden="true">${ic('check')}</span><span class="mt-tx"><b>Family Mulaqat booked</b><small><b>Saffron &amp; Sage, Toronto</b> · Sat 21 Nov, 1:00 pm · 6 people</small><small>Each family gets the details in its own language.</small></span><button class="btn ghost sm" data-a="famShare">${ic('share')}Send to family</button></div>`}
+function famSheet(){const p=byId(sheet.id)||{},pk=sheet.pick||{who:['Mother','Father'],place:1,day:2,time:1},fee=pxs('family_fee','US$14.99');
+  const days=mtDays(),L=(window.RM_I18N&&RM_I18N.locale)||'en';
+  const places=[['Saffron & Sage','Family table up to 8 · lunch set menu','CA$38 per person'],['Casa Lumbre','Private room up to 12 · dinner set menu','CA$52 per person']];
+  return sheetShell('Family Mulaqat',`<p class="mt-sub">Both families meet at a verified restaurant. Nothing is booked until both sides say yes.</p>
+   <div class="mt-steps"><span><b>1</b>Who comes</span><span><b>2</b>Place and time</span><span><b>3</b>Both families say yes</span></div>
+   <p class="mt-ex">From your side</p><div class="mt-chips">${FAM_WHO.map(w=>`<button class="${pk.who.includes(w[0])?'on':''}" data-a="famWho" data-k="${w[0]}">${w[0]}</button>`).join('')}</div>
+   <p class="fm-n">${ic('users')}<span>You + ${pk.who.length} from your family</span></p>
+   <p class="mt-ex">Example places, for this preview</p>
+   ${places.map((v,i)=>`<button class="mt-v${pk.place===i+1?' on':''}" data-a="famPlace" data-k="${i+1}"><span class="mt-vi">${ic('pin')}</span><span class="grow"><b>${v[0]}</b><small>Restaurant · Toronto</small><small class="mt-menu">${v[1]}</small></span><span class="mt-pr">${v[2].split(' ')[0]}<small>per person</small></span></button>`).join('')}
+   <p class="mt-ex">Day</p><div class="mt-chips">${days.slice(0,7).map((d,i)=>`<button class="${pk.day===i?'on':''}" data-a="famDay" data-k="${i}">${d.toLocaleDateString(L,{weekday:'short',day:'numeric'})}</button>`).join('')}</div>
+   <p class="mt-ex">Time</p><div class="mt-chips">${MT_TIMES.map((t,i)=>`<button class="${pk.time===i?'on':''}" data-a="famTime" data-k="${i}">${t[1]}</button>`).join('')}</div>
+   <div class="fm-lang">${ic('globe')}<span><b>Each family in its own language</b>Your family reads the plan in your app language; ${esc(p.first||'their')}'s family reads it in theirs. Both see the time in their own city.</span></div>
+   <div class="mt-note">${ic('shield')}<span><b class="mt-fee"><span>Booking fee for each side:</span> ${fee}</b><span>Paid on neumarry.com. Food is paid at the restaurant. The restaurant sees only first names. No phone numbers are shared. No money back once booked.</span></span></div>`,
+   `<button class="btn ghost" data-a="closeSheet">Not now</button><button class="btn gold" data-a="famSoon">${ic('users')}Invite their family · ${fee}</button>`)}
+(function(){const _rs=renderSheet;renderSheet=function(){if(sheet&&sheet.type==='fam')return famSheet();return _rs.apply(this,arguments)};
+  const pk=()=>sheet.pick||(sheet.pick={who:['Mother','Father'],place:1,day:2,time:1});
+  Object.assign(A,{famOpen(el){sheet={type:'fam',id:el.dataset.id};render()},
+    famWho(el){const k=el.dataset.k,w=pk().who;sheet.pick.who=w.includes(k)?w.filter(x=>x!==k):[...w,k];render()},
+    famPlace(el){pk().place=+el.dataset.k;render()},famDay(el){pk().day=+el.dataset.k;render()},famTime(el){pk().time=+el.dataset.k;render()},
+    famYes(){toast('Preview only. Nothing was sent.','info')},famNo(){toast('Preview only. Nothing was sent.','info')},famShare(){toast('Preview only.','info')},famSoon(){toast('Preview only. Booking opens after your ok.','info')}})})();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 

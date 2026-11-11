@@ -2273,3 +2273,8 @@ button.mt-v{width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer
 html:not(.gl-lt) .mt-chips button{color:#fff;background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.16)}html:not(.gl-lt) .mt-chips button.on{color:#2B1A00;background:linear-gradient(135deg,#FFE29A,#F6C453)}
 .mt-none{display:flex;gap:10px;padding:14px;border-radius:16px;background:rgba(35,27,58,.05);font-size:13px;line-height:1.4}.mt-none b{display:block}.mt-none svg{flex:0 0 18px;width:18px;height:18px}
 .mt-fee{display:block;margin-bottom:3px}.mt-note>span{display:grid;gap:2px}
+.fm-n{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;margin:2px 0 8px}.fm-n svg{width:16px;height:16px}
+.fm-lang{display:flex;gap:10px;align-items:flex-start;margin:10px 0 0;padding:12px;border-radius:16px;font-size:12.5px;line-height:1.4;background:linear-gradient(140deg,rgba(237,230,255,.9),rgba(227,240,255,.9));border:1px solid #fff}
+.fm-lang svg{flex:0 0 18px;width:18px;height:18px;color:#7C5CD6}.fm-lang b{display:block;font-size:13.5px}
+html:not(.gl-lt) .fm-lang{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.14)}html:not(.gl-lt) .fm-lang svg{color:#F3D58A}
+.mt-card.fm-go>.btn,.mt-card.ok>.btn{flex-basis:100%;min-height:42px}
