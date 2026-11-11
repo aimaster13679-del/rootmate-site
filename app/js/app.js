@@ -3149,9 +3149,11 @@ function a3events(){const w=a3need();if(w)return w;const E=A3.st.events||[];if(!
      ${a3kv2('Women',e.women,e.seats_women,'#3BBF8A')}${a3kv2('Men',e.men,e.seats_men,'#9D7CFF')}
      ${row('Seats',`${e.women}/${e.seats_women} women · ${e.men}/${e.seats_men} men`)}${row('Paid tickets',e.paid)}${row('Money (before tax)',money(e.cents,e.currency))}${row('Checked in at the door',e.checked_in)}</div>${a3evPeople(e)}`}}
   const bar=(l,n,t,c)=>`<span class="a3sr"><span class="a3sl">${l}</span><span class="a3seat"><i style="width:${Math.round(n/Math.max(1,t)*100)}%;background:${c}"></i></span><b>${n} of ${t}</b></span>`;
-  return E.map(e=>`<button class="a3c a3ev" data-a="a3ev" data-k="${esc(e.id)}"><span class="a3h"><b>${esc(e.title)}</b><span class="a3st ${e.status}">${esc(e.status)}</span></span><small>${esc(new Date(e.starts_at).toLocaleString([], {weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}))} · ${esc([e.city,e.country].filter(Boolean).join(', '))}</small>
+  const card=e=>`<button class="a3c a3ev" data-a="a3ev" data-k="${esc(e.id)}"><span class="a3h"><b>${esc(e.title)}</b><span class="a3st ${e.status}">${esc(e.status)}</span></span><small>${esc(new Date(e.starts_at).toLocaleString([], {weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}))} · ${esc([e.city,e.country].filter(Boolean).join(', '))}</small>
     ${bar('Women',e.women,e.seats_women,'#3BBF8A')}${bar('Men',e.men,e.seats_men,'#9D7CFF')}
-    <span class="a3evf"><span><b>${e.paid||0}</b> paid</span><span><b>${money(e.cents,e.currency)}</b> taken</span><span><b>${e.checked_in||0}</b> at the door</span></span><em class="a3more">People and details ›</em></button>`).join('')}
+    <span class="a3evf"><span><b>${e.paid||0}</b> paid</span><span><b>${money(e.cents,e.currency)}</b> taken</span><span><b>${e.checked_in||0}</b> at the door</span></span><em class="a3more">People and details ›</em></button>`;
+  const on=E.filter(e=>e.status==='open'||e.status==='confirmed'||e.status==='draft'),off=E.filter(e=>!on.includes(e));
+  return (on.length?on.map(card).join(''):`<div class="a3c"><p class="a3m">No open events right now.</p></div>`)+(off.length?`<button class="a3back" data-a="a3evoff">${A3.evOff?'Hide':'Show'} closed events (${off.length}) ${A3.evOff?'▴':'▾'}</button>${A3.evOff?off.map(card).join(''):''}`:'')}
 (function(){
   Object.assign(A,{
     a3go(el){const k=el.dataset.k||'';
@@ -3167,7 +3169,7 @@ function a3events(){const w=a3need();if(w)return w;const E=A3.st.events||[];if(!
   /* phone back button and the top back arrow: one step back inside the admin panel first, then close it */
   const _gb=goBack;goBack=function(){if(view&&view.type==='admin'&&!sheet&&!picker&&!celebrate&&(A3.mem||A3.ev||A3.list||A3.open||A3.bot||A3.tab!=='home')){A.a3up();return true}return _gb()};
   const _ta=A.a3tab;A.a3tab=function(el){A3.list=null;A3.mem=null;A3.ev=null;return _ta.apply(this,arguments)};
-  Object.assign(A,{a3ev(el){A3.ev=el.dataset.k;render();const sc=document.querySelector('.a3v .scroll');if(sc)sc.scrollTop=0},
+  Object.assign(A,{a3evoff(){A3.evOff=!A3.evOff;render()},a3ev(el){A3.ev=el.dataset.k;render();const sc=document.querySelector('.a3v .scroll');if(sc)sc.scrollTop=0},
     a3find(el){A3.tab='members';const q=el.dataset.k||'';render();a3search(q)}});
   let a3t=null;document.addEventListener('input',e=>{if(e.target&&e.target.dataset&&e.target.dataset.a3q){clearTimeout(a3t);const v=e.target.value;a3t=setTimeout(()=>{a3search(v.trim());setTimeout(()=>{const i=document.getElementById('a3q');if(i){i.focus();i.setSelectionRange(v.length,v.length)}},50)},450)}});
   const _rl=A.a3reload;A.a3reload=function(){A3.st=null;A3.mlist=undefined;if(A3.mem)a3loadMem(A3.mem);return _rl.apply(this,arguments)};
