@@ -4862,8 +4862,8 @@ function renderPeek(){const c=(typeof tzCountry==='function'&&tzCountry())||'';c
    With no match yet: no "0" headline; we show the real number of members who joined (public_counts, only when >= 50)
    and keep the Gold button, with an honest small line. Chat: phone numbers, emails, outside IDs are stopped
    ("for your safety"), in the app and on the server (migration 20261111120000).
-   Mock stage: on only with localStorage nm.jhalak=1 until his ok. */
-const JH=()=>{try{return localStorage.getItem('nm.jhalak')==='1'}catch(e){return false}};
+   Live for everyone since his ok 11 Nov 12:53 (local tests can turn it off with nm.jhalak=0). */
+const JH=()=>{try{return localStorage.getItem('nm.jhalak')!=='0'}catch(e){return true}};  /* LIVE FOR EVERYONE (his ok 11 Nov 12:53) */
 let JHC=null;
 function jhCounts(){if(JHC!==null)return JHC;JHC=false;API.rpc('public_counts').then(r=>{JHC=r&&r.joined?r:false;render()}).catch(()=>{});return false}
 function jhPeek(p,c){
