@@ -246,7 +246,7 @@ function today(){const d=new Date();return `${d.getFullYear()}-${d.getMonth()+1}
 function timeStr(ts){const d=new Date(ts),n=new Date();const same=d.toDateString()===n.toDateString();return same?d.toLocaleTimeString(RM_I18N.lang==='fr'?'fr-CA':[],{hour:'numeric',minute:'2-digit'}):d.toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short'})}
 function shown(p){return p.name||'Member'}
 function isBlurred(p){return !(p.photos&&p.photos.length)&&p.photoCount>0}
-function price(){const c=CMAP[S.me.country];const cur=(typeof isNative!=='undefined'&&!isNative)?'USD':(c?c[3]:'USD');const pr=PRICE[cur]||PRICE.USD;const n=v=>parseFloat(String(v).replace(/,/g,''));
+function price(){if(typeof pxPrice==='function'){const z=pxPrice();if(z)return z}const c=CMAP[S.me.country];const cur=(typeof isNative!=='undefined'&&!isNative)?'USD':(c?c[3]:'USD');const pr=PRICE[cur]||PRICE.USD;const n=v=>parseFloat(String(v).replace(/,/g,''));
   const per=(v,m)=>{const x=n(v)/m;return cur==='AED'?String(Math.round(x)):x.toFixed(2)};
   return {sym:pr[0],gold:pr[1],m3:pr[2],m6:pr[3],pm3:per(pr[2],3),pm6:per(pr[3],6)}}
 /* Fork and knife, for partner restaurants. */
@@ -1635,7 +1635,7 @@ function renderSheet(){
      <div class="plans" role="radiogroup" aria-label="Gold plans">${opts.map(([k,l,tot,pm,tag])=>`<button class="plan pick${pick===k?' on':''}" data-a="pickPlan" data-k="${k}" role="radio" aria-checked="${pick===k}"><span class="ph"><b>${l}</b>${tag?`<span class="pill ${k==='m3'?'gold':'good'}">${tag}</span>`:''}</span><span class="price">${pm}<small> /month</small></span>${k==='m1'?'':`<small class="hint">${!isNative&&!canBuy?`${tot} paid once for ${l}`:`${tot} billed every ${l}`}</small>`}</button>`).join('')}</div>
      <ul class="incl">${['Full profiles, names and photos','Send interests and chat','Daily introductions, and see who likes you','Browse privately'].map(x=>`<li>${ic('check')}<span>${x}</span></li>`).join('')}</ul>
      ${BETA?`<div class="callout gold">${ic('gift')}<span><b>Test version:</b> ${canBuy?'testers can switch on Gold for free to try everything, or buy it with Google Play.':'buying opens when NeuMarry launches. Until then, testers can switch on Gold for free to try everything.'}</span></div>`:''}
-     <p class="note">${!isNative&&!canBuy?'Paid once on neumarry.com with PayPal, in US dollars. Nothing renews by itself. No money back once Gold starts. Safety features, verification and reporting are always free.':'Cancel anytime in your Google Play account. Safety features, verification and reporting are always free.'}</p>`,
+     <p class="note">${!isNative&&!canBuy?(pxSell()?'Paid once on neumarry.com with PayPal. The price is for the country you live in and includes any tax we must collect. Nothing renews by itself. No money back once Gold starts, except where the law says otherwise. Safety features, verification and reporting are always free.':'Gold cannot be bought from the country you live in yet. Safety features, verification and reporting are always free.'):'Cancel anytime in your Google Play account. Safety features, verification and reporting are always free.'}</p>`,
      canBuy?`${BETA?busyBtn('ghost','betaGold','Try Gold free'):`<button class="btn ghost" data-a="closeSheet">Not now</button>`}${busyBtn('gold','buyGold',ic('crown')+'Get Gold')}`:
      !isNative?`${BETA?busyBtn('ghost','betaGold','Try Gold free'):`<button class="btn ghost" data-a="closeSheet">Not now</button>`}${busyBtn('gold','buyGoldWeb',ic('crown')+'Get Gold · PayPal')}`:
      `<button class="btn ghost" data-a="closeSheet">Not now</button>${BETA?busyBtn('gold','betaGold',ic('crown')+'Try Gold free'):`<button class="btn gold" data-a="buySoon">${ic('crown')}Get Gold</button>`}`);}
@@ -4727,7 +4727,7 @@ function renderEPB(full){if(EPS.mine===undefined)setTimeout(epLoadMine,0);const 
     <label>Business registration number <small>(checked by a person, never shown)</small></label><input id="ep-bl" maxlength="60" value="${esc((b&&b.licence)||'')}">
     <label>One line about you</label><input id="ep-ba" maxlength="200" value="${esc((b&&b.about)||'')}" placeholder="e.g. Hall for up to 300 guests, halal and vegetarian kitchens">
     <button class="btn primary block" data-a="epSave"${EPS.busy==='save'?' disabled':''}>${EPS.busy==='save'?'Saving…':b?'Save details':'Create my page'}</button></div>`;
-  if(!b)return shell(`<div class="ep-hero"><b>Show families your services and prices</b><span>7 days free, no card. Then US$29 or US$59 a month, paid on neumarry.com. Nothing renews by itself.</span></div>${form}`);
+  if(!b)return shell(`<div class="ep-hero"><b>Show families your services and prices</b><span>7 days free, no card. Then ${pxs('ep_basic','US$29')} or ${pxs('ep_pro','US$59')} a month, paid on neumarry.com. Nothing renews by itself.</span></div>${form}`);
   const until=b.planUntil?new Date(b.planUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'}):'';
   const status=`<div class="ep-st"><div class="ep-sti ${b.active?'ok':'off'}">${ic(b.active?'check':'clock')}<div><b>${b.active?(b.plan==='ep_pro'?'Event Partner Pro':'Event Partner'):'Page not showing'}</b><small>${b.active?'Active until '+until:'Pick a plan below to show your page'}</small></div></div>
     <div class="ep-sti ${b.verified?'ok':'wait'}">${ic(b.verified?'shield':'clock')}<div><b>${b.verified?'Verified business':b.licence?'Checking your registration':'Add your registration number'}</b><small>${b.verified?'Families see the badge':b.licence?'Usually within 24 hours':'Needed before families can see you'}</small></div></div>
@@ -4736,7 +4736,7 @@ function renderEPB(full){if(EPS.mine===undefined)setTimeout(epLoadMine,0);const 
   const svc=`<div class="ep-box"><h3>Services and prices <small>${epCur()}</small></h3>${rows.map((r,i)=>`<div class="ep-row"><input id="ep-st${i}" maxlength="80" placeholder="Service ${i+1}, e.g. Dinner for 100 guests" value="${esc(r.t)}"><input id="ep-sp${i}" inputmode="decimal" maxlength="9" placeholder="Price" value="${esc(r.p)}"><button class="iconbtn" data-a="epRowX" data-k="${i}" aria-label="Remove">${ic('x')}</button></div>`).join('')}
     ${rows.length<lim?`<button class="btn ghost block" data-a="epRowAdd">${ic('plus')} Add a service</button>`:`<p class="ep-fine">Up to ${lim} services on this plan.</p>`}
     <button class="btn primary block" data-a="epSvcSave"${EPS.busy==='svc'?' disabled':''}>${EPS.busy==='svc'?'Saving…':'Save services'}</button></div>`;
-  const plan=(k,t,items,pro)=>`<div class="ep-plan${pro?' pro':''}${b.plan===k&&b.active?' on':''}"><div class="ep-ph"><b>${t}</b><span>${P[k]?money(P[k],'USD'):''}<small> a month</small></span></div><ul>${items.map(x=>`<li>${ic('check')}${esc(x)}</li>`).join('')}</ul>
+  const plan=(k,t,items,pro)=>`<div class="ep-plan${pro?' pro':''}${b.plan===k&&b.active?' on':''}"><div class="ep-ph"><b>${t}</b><span>${pxs(k,P[k]?money(P[k],'USD'):'')}<small> a month</small></span></div><ul>${items.map(x=>`<li>${ic('check')}${esc(x)}</li>`).join('')}</ul>
     <button class="btn ${pro?'':'primary'} block" data-a="epPlan" data-k="${k}"${EPS.busy===k?' disabled':''}>${EPS.busy===k?'One moment…':!M.trialUsed&&!b.active?'Start 7 days free · no card':b.plan===k&&b.active?'Add 1 more month · '+money(P[k],'USD'):'Pay 1 month · '+money(P[k],'USD')}</button></div>`;
   const plans=`<h3 class="ep-h3">Plans</h3>${plan('ep_basic','Event Partner',['Your page with services and prices','Up to 10 services','Families send you requests'],false)}${plan('ep_pro','Event Partner Pro',['Everything in Event Partner','Unlimited services','Shown first in your city, marked "Sponsored"','Your venue can be picked for NeuMarry dinners','Page views and requests'],true)}
     <p class="ep-fine">${isNative?'Plans are paid on the NeuMarry website, not in this app.':'Paid once with PayPal. Nothing renews by itself.'} NeuMarry takes no share of what families pay you.</p>`;
@@ -4755,7 +4755,7 @@ function renderEPB(full){if(EPS.mine===undefined)setTimeout(epLoadMine,0);const 
   const _w=renderWelcome;renderWelcome=function(){if(EPS.full)return renderEPB(true);
     if(EP_ON()&&bizMode()&&!(API.email&&API.email()))return `<div class="ep-full"><div class="scroll" id="main"><div class="main-inner pad ep-in ep-welc">
       <img src="img/nm-mark.png" alt="" class="ep-mk"><h1>NeuMarry Event Partners</h1><p>Show families your venue or wedding service, with your prices. 7 days free, no card.</p>
-      <ul class="ep-svc"><li><span>Event Partner</span><b>US$29 a month</b></li><li><span>Event Partner Pro</span><b>US$59 a month</b></li></ul>
+      <ul class="ep-svc"><li><span>Event Partner</span><b>${pxs('ep_basic','US$29')} a month</b></li><li><span>Event Partner Pro</span><b>${pxs('ep_pro','US$59')} a month</b></li></ul>
       <button class="btn primary block" data-a="start">Create my business account</button><button class="btn ghost block" data-a="login">I already have an account</button>
       <button class="link" data-a="epNotBiz">I am looking for a partner, not a business</button></div></div></div>`;
     return _w.apply(this,arguments)};
@@ -4910,7 +4910,7 @@ function jhMeet(id){if(!MEET_ON()||!canChat(id))return '';const p=byId(id)||{},m
   const mt=st.meet;
   if(mt&&mt.status==='booked')return `<div class="mt-card ok"><span class="mt-ic" aria-hidden="true">${ic('check')}</span><span class="mt-tx"><b>Meetup booked</b><small>${esc(mt.place)}, ${esc(mt.city||'')} · ${mtWhen(mt.at)}${mt.svc?` · ${esc(mt.svc)}`:''}</small></span><button class="btn ghost sm" data-a="meetShare" data-id="${id}">${ic('share')}Share plan</button></div>`;
   if(mt&&mt.mine)return `<div class="mt-card"><span class="mt-ic" aria-hidden="true">${ic('cal')}</span><span class="mt-tx"><b>Invite sent</b><small>${esc(mt.place)} · ${mtWhen(mt.at)}. Waiting for ${nm} to say yes.</small></span><button class="btn ghost sm" data-a="meetCancel" data-mid="${mt.id}" data-id="${id}">Cancel</button></div>`;
-  if(mt)return `<div class="mt-card"><span class="mt-ic" aria-hidden="true">${ic('cal')}</span><span class="mt-tx"><b>${nm} invited you to meet</b><small>${esc(mt.place)}, ${esc(mt.city||'')} · ${mtWhen(mt.at)}${mt.svc?` · ${esc(mt.svc)}`:''}. US$4.99 booking fee.</small></span><span class="mt-yn"><button class="btn ghost sm" data-a="meetNo" data-mid="${mt.id}" data-id="${id}">No</button><button class="btn gold sm" data-a="meetYes" data-mid="${mt.id}" data-id="${id}">${st.gold?'Yes':'Gold to say yes'}</button></span></div>`;
+  if(mt)return `<div class="mt-card"><span class="mt-ic" aria-hidden="true">${ic('cal')}</span><span class="mt-tx"><b>${nm} invited you to meet</b><small>${esc(mt.place)}, ${esc(mt.city||'')} · ${mtWhen(mt.at)}${mt.svc?` · ${esc(mt.svc)}`:''}. ${pxs('meet_fee','US$4.99')} booking fee.</small></span><span class="mt-yn"><button class="btn ghost sm" data-a="meetNo" data-mid="${mt.id}" data-id="${id}">No</button><button class="btn gold sm" data-a="meetYes" data-mid="${mt.id}" data-id="${id}">${st.gold?'Yes':'Gold to say yes'}</button></span></div>`;
   if(!st.ready){const both=m.some(x=>x.f==='me')&&m.some(x=>x.f==='them');return `<div class="mt-line">${step(true,'Talk','1')}<b></b>${step(false,'Meet','2')}<small>${both?'Meeting opens after you have talked for a day':'Meeting opens after you both talk for a day'}</small></div>`}
   const first=Math.min(...m.map(x=>x.ts||Date.now())),days=Math.max(1,Math.floor((Date.now()-first)/864e5));
   return `<div class="mt-card"><span class="mt-ic" aria-hidden="true">${ic('cal')}</span><span class="mt-tx"><b>${days>=2?`${days} days of talking`:'A day of talking'}. Ready to meet?</b><small>A first meetup with ${nm} at a verified cafe, a public place, set menu and price.</small></span><button class="btn gold sm" data-a="meetOpen" data-id="${id}">${ic('cal')}Plan</button></div>`}
@@ -4927,8 +4927,8 @@ function jhMeetSheet(){const p=byId(sheet.id)||{},city=(S.me&&(S.me.city||S.me.c
   return sheetShell('First meetup',`<p class="mt-sub">Pick a verified place in ${esc(city)}. ${esc(p.first||'They')} says yes before anything is booked.</p>
    <div class="mt-steps"><span><b>1</b>Choose a place</span><span><b>2</b>${esc(p.first||'They')} says yes</span><span><b>3</b>Table is ready</span></div>
    ${list}${when}
-   <div class="mt-note">${ic('shield')}<span>Booking fee US$4.99 each, paid on neumarry.com. Food is paid at the place. Always a busy public place. The place sees only first names. No money back once booked.</span></div>`,
-   `<button class="btn ghost" data-a="closeSheet">Not now</button><button class="btn gold" data-a="meetAsk"${ready&&!MT.busy?'':' disabled'}>${ic('cal')}${MT.busy?'One moment…':'Invite · US$4.99'}</button>`)}
+   <div class="mt-note">${ic('shield')}<span>Booking fee ${pxs('meet_fee','US$4.99')} each, paid on neumarry.com. Food is paid at the place. Always a busy public place. The place sees only first names. No money back once booked.</span></div>`,
+   `<button class="btn ghost" data-a="closeSheet">Not now</button><button class="btn gold" data-a="meetAsk"${ready&&!MT.busy?'':' disabled'}>${ic('cal')}${MT.busy?'One moment…':'Invite · '+pxs('meet_fee','US$4.99')}</button>`)}
 (function(){const _rs=renderSheet;renderSheet=function(){if(sheet&&sheet.type==='meet')return jhMeetSheet();return _rs.apply(this,arguments)};
   const re=id=>{delete MT.st[id];render()};
   Object.assign(A,{
@@ -4947,9 +4947,20 @@ function jhMeetSheet(){const p=byId(sheet.id)||{},city=(S.me&&(S.me.city||S.me.c
       if(navigator.share)navigator.share({text:t}).catch(()=>{});else{try{navigator.clipboard.writeText(t);toast('Plan copied. Send it to a friend.','ok')}catch(e){}}}})})();
 /* ---------- Gold on the website with PayPal (his ok 10 Nov: new prices; nothing sold inside the Android app) ----------
    gold_web15 needs a paid PayPal credit; without one the pay15 flow (part12) opens PayPal and finishes on return. */
-A.buyGoldWeb=async function(){if(busy||isNative)return;const plan=(sheet&&sheet.pick)||'m3';busy='buyGoldWeb';render();
+A.buyGoldWeb=async function(){if(busy||isNative)return;if(!pxSell()){toast('Gold cannot be bought from the country you live in yet.','info');return}const plan=(sheet&&sheet.pick)||'m3';busy='buyGoldWeb';render();
   try{await API.rpc('gold_web15',{plan});await loadMe();sheet=null;toast('Gold is on. Enjoy full profiles and chat.','ok')}
   catch(e){if(!/PayPal|not available/i.test(e&&e.message||''))fail(e)}finally{busy='';render()}};
+
+/* ---------- Prices for the member's country (his ok 11 Nov 19:40) ----------
+   my_prices15 returns what the server will really charge (country where the member lives, 4 levels, local currency
+   where PayPal takes it, one € price for the EU). Every price on screen uses it, so shown = charged. */
+const PX_SYM={USD:'US$',CAD:'CA$',GBP:'£',EUR:'€',AUD:'A$',NZD:'NZ$',SGD:'S$',CHF:'CHF ',MXN:'MX$',PHP:'₱'};
+function pxFmt(c,cur){const v=c/100,t=v%1?v.toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:2}):v.toLocaleString('en');return (PX_SYM[cur]||cur+' ')+t}
+function pxs(k,fb){const x=S.px&&S.px[k];return x&&x.cents?pxFmt(x.cents,x.currency):(fb||'')}
+function pxSell(){const x=S.px&&S.px.gold_m1;return !x||x.sell!==false}
+function pxPrice(){const P=S.px;if(!P||!P.gold_m1||!P.gold_m1.cents)return null;const cur=P.gold_m1.currency,f=c=>pxFmt(c,cur).replace(PX_SYM[cur]||cur+' ','');
+  return {sym:PX_SYM[cur]||cur+' ',gold:f(P.gold_m1.cents),m3:f(P.gold_m3.cents),m6:f(P.gold_m6.cents),pm3:(Math.round(P.gold_m3.cents/3)/100).toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:2}),pm6:(Math.round(P.gold_m6.cents/6)/100).toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:2})}}
+(function(){const _lm=loadMe;loadMe=async function(){const r=await _lm.apply(this,arguments);if(S.me&&!S.pxAt){S.pxAt=Date.now();API.rpc('my_prices15').then(x=>{S.px=x||null;render()}).catch(()=>{S.pxAt=0})}return r}})();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 
