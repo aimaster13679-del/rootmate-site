@@ -43,6 +43,7 @@ window.RM_API = (function () {
     not_open: 'Only an event that is still filling can be moved.',
     daily_message_limit: 'You reached today’s message limit. Try again tomorrow.',
     rude_words: 'Please keep it respectful. Remove the rude words and try again.',
+    contact_info: 'For your safety, phone numbers, emails and outside app IDs cannot be shared in chat. Keep talking here until you both feel ready.',
     money_request: 'Asking for or sending money is not allowed on NeuMarry, and payment details cannot be shared. Never send money to anyone you meet here.',
     admins_only: 'Only the NeuMarry team can do this.',
     purchase_not_found: 'Google Play could not find this purchase. If you were charged, contact us and we will fix it.',

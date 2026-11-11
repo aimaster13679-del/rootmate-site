@@ -2184,3 +2184,38 @@ html.gl:not(.gl-lt) .pk-live{background:rgba(255,255,255,.1);color:#F3F1F7}html.
 .nm-inst{position:fixed;left:12px;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:9999;display:flex;align-items:center;gap:12px;padding:12px 12px 12px 14px;border-radius:20px;background:#fff;color:#1d1a2e;border:1px solid #fff;box-shadow:0 18px 40px -16px rgba(30,20,60,.45);max-width:520px;margin:0 auto}
 .nm-inst img{width:44px;height:44px;border-radius:12px;flex:none}.nm-inst div{flex:1;min-width:0}.nm-inst b{display:block;font-size:15px}.nm-inst small{display:block;font-size:12.5px;opacity:.75;line-height:1.35}
 .nm-inst .btn{min-height:42px;padding:0 16px;flex:none}.nm-inst .iconbtn{flex:none;width:34px;height:34px;border:0;background:transparent;font-size:15px;opacity:.6}
+/* Jhalak Gold teaser v2 (part15) */
+.jh-peek{position:relative;overflow:hidden;display:grid;gap:12px;width:calc(100% - 24px);margin:2px 12px 12px;padding:14px;border-radius:22px;text-align:left;cursor:pointer;font:inherit;color:#231B3A;
+ background:linear-gradient(150deg,rgba(255,255,255,.92),rgba(238,232,255,.78) 55%,rgba(255,236,242,.8));border:1px solid #fff;box-shadow:0 14px 30px -18px rgba(70,40,120,.45),inset 0 1px 0 #fff}
+.jh-shine{position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.75) 50%,transparent 65%);transform:translateX(-120%);animation:jhSh 5.5s ease-in-out 1.2s infinite}
+@keyframes jhSh{0%,70%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+.jh-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.jh-k{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#7A4E00}.jh-k svg{width:14px;height:14px}
+.jh-ph{position:relative;display:flex;align-items:center;height:38px;padding-left:4px}
+.jh-ph i{width:30px;height:38px;margin-left:-12px;border-radius:9px;border:2px solid #fff;box-shadow:0 4px 10px -4px rgba(40,20,80,.35);transform:rotate(calc((var(--i) - 1)*7deg));
+ background:radial-gradient(circle at 30% 30%,#FFE8B8,transparent 60%),linear-gradient(160deg,#C9B8FF,#FFC4D6);filter:blur(.3px)}
+.jh-ph b{position:absolute;right:-6px;bottom:-4px;display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:999px;font-size:11px;font-weight:800;background:#231B3A;color:#fff}.jh-ph b svg{width:11px;height:11px}
+.jh-bars{display:grid;gap:7px}
+.jh-bar{display:grid;grid-template-columns:70px 1fr 38px;align-items:center;gap:8px;font-size:12.5px;font-weight:700}
+.jh-bar em{font-style:normal;color:#4A4166}.jh-bar s{text-decoration:none;text-align:right;font-weight:800;color:#231B3A}
+.jh-bar i{height:8px;border-radius:99px;background:rgba(35,27,58,.08);overflow:hidden}
+.jh-bar i b{display:block;height:100%;width:var(--w);border-radius:inherit;background:linear-gradient(90deg,#F6C453,#F08BA8);transform-origin:left;animation:jhGrow .9s cubic-bezier(.2,.8,.2,1) var(--d) both}
+@keyframes jhGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.jh-words{display:grid;gap:6px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.7);border:1px solid rgba(35,27,58,.06)}
+.jh-q{font-size:11.5px;font-weight:800;color:#6B5E8C}
+.jh-words i{display:block;height:7px;border-radius:99px;background:linear-gradient(90deg,rgba(35,27,58,.14),rgba(35,27,58,.06))}.jh-words i.s{width:60%}
+.jh-tags{display:flex;flex-wrap:wrap;gap:6px}
+.jh-tags i{font-style:normal;display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;font-size:12px;font-weight:700;background:rgba(255,255,255,.85);border:1px solid rgba(35,27,58,.08)}.jh-tags svg{width:13px;height:13px}
+.jh-cta{display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px;border-radius:15px;font-weight:800;font-size:15px;color:#2B1A00;background:linear-gradient(135deg,#FFE29A,#F6C453 55%,#E9A93A);box-shadow:0 8px 18px -10px rgba(200,140,20,.8),inset 0 1px 0 rgba(255,255,255,.7)}.jh-cta svg{width:17px;height:17px}
+html:not(.gl-lt) .jh-peek{color:#fff;background:linear-gradient(150deg,rgba(255,255,255,.09),rgba(255,255,255,.03));border-color:rgba(255,255,255,.14);box-shadow:0 14px 30px -18px #000,inset 0 1px 0 rgba(255,255,255,.12)}
+html:not(.gl-lt) .jh-shine{background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.12) 50%,transparent 65%)}
+html:not(.gl-lt) .jh-k{color:#F3D58A}html:not(.gl-lt) .jh-bar em{color:rgba(255,255,255,.7)}html:not(.gl-lt) .jh-bar s{color:#fff}html:not(.gl-lt) .jh-bar i{background:rgba(255,255,255,.1)}
+html:not(.gl-lt) .jh-words{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1)}html:not(.gl-lt) .jh-q{color:rgba(255,255,255,.65)}html:not(.gl-lt) .jh-words i{background:linear-gradient(90deg,rgba(255,255,255,.22),rgba(255,255,255,.08))}
+html:not(.gl-lt) .jh-tags i{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.14);color:#fff}html:not(.gl-lt) .jh-ph i{border-color:rgba(255,255,255,.5)}html:not(.gl-lt) .jh-ph b{background:#fff;color:#111}
+.jh-none{position:relative;overflow:hidden}.jh-orb{position:absolute;right:14px;top:14px;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.25)}.jh-orb svg{width:20px;height:20px}
+.jh-nn span{font-size:20px;font-weight:800}.jh-hon{opacity:.85;text-align:center}
+.jh-safe{display:flex;gap:10px;align-items:flex-start;margin:0 14px 8px;padding:11px 13px;border-radius:16px;font-size:13px;line-height:1.4;background:rgba(255,246,222,.95);border:1px solid #F3D58A;color:#4A3200}
+.jh-safe svg{flex:0 0 18px;width:18px;height:18px;margin-top:1px}.jh-safe b{display:block;font-size:13.5px}
+html:not(.gl-lt) .jh-safe{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);color:#fff}
+@media (prefers-reduced-motion:reduce){.jh-shine{display:none}.jh-bar i b{animation:none}}
+html:not(.gl-lt) .jh-none{background:linear-gradient(150deg,rgba(255,255,255,.1),rgba(255,255,255,.03))!important;border-color:rgba(255,255,255,.14)!important}

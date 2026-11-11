@@ -1101,11 +1101,11 @@ function renderMatches(){
   const tile=p=>{const rev=S.picks.revealed.includes(p.id);const c=compat(p).total;
     return rev?`<button class="tp${justRevealed===p.id?' flip':''}" data-a="open" data-id="${p.id}" aria-label="Open ${esc(shown(p))}'s profile">${avatar(p,'tile')}<span class="tpn">${esc(shown(p))}, ${p.age}<small>${c}% match · ${esc(p.cityName)}</small></span></button>`
       :`<button class="tp mystery" data-a="reveal" data-id="${p.id}" aria-label="Reveal today's pick"><span class="mq">${ic(!isGold()?'lock':'sparkle')}<b>${!isGold()?'Gold pick':'Tap to reveal'}</b><span>${c}% match</span></span></button>`};
-  return `<div class="topbar pad"><div class="grow"><div class="hello">${greet()}, <em>${esc(me.name.split(' ')[0])}</em></div><div class="sub">${list.length} ${list.length===1?'person':'people'} ${esc(t.root)}, ${esc(t.live)}</div></div><button class="iconbtn soft" data-a="filters" aria-label="Filters and preferences">${ic('filter')}${n?`<span class="count-dot">${n}</span>`:''}</button></div>
+  return `<div class="topbar pad"><div class="grow"><div class="hello">${greet()}, <em>${esc(me.name.split(' ')[0])}</em></div><div class="sub">${!list.length&&!isGold()&&JH()?'Your matches appear here as members join':`${list.length} ${list.length===1?'person':'people'} ${esc(t.root)}, ${esc(t.live)}`}</div></div><button class="iconbtn soft" data-a="filters" aria-label="Filters and preferences">${ic('filter')}${n?`<span class="count-dot">${n}</span>`:''}</button></div>
   <div class="scroll" id="main"><div class="main-inner pad">
     ${verifyBanner()}
     ${me.privacy.vis==='hidden'?`<div class="callout">${ic('eye')}<span>Your profile is paused, so nobody new can find you. <button class="link" data-a="unpause">Show my profile again</button></span></div>`:''}
-    ${!isGold()?`<div class="nearby"><div class="nb-n"><b>${list.length}</b><span>${who} fit what you are looking for, ${esc(t.live)}</span></div><div class="nb-s"><span>${ic('sparkle')}<b>${hi}</b> are 80%+ matches</span><span>${ic('heart')}<b>${recv.length}</b> already like you</span></div><button class="btn gold block" data-a="upgrade" data-r="nearby">${ic('crown')}See who they are</button><small>Free shows how many people fit you and your match % with each. Names, photos and everything else come with Gold.</small></div>`:''}
+    ${!isGold()&&JH()&&!list.length?jhNone():''}${!isGold()&&!(JH()&&!list.length)?`<div class="nearby"><div class="nb-n"><b>${list.length}</b><span>${who} fit what you are looking for, ${esc(t.live)}</span></div><div class="nb-s"><span>${ic('sparkle')}<b>${hi}</b> are 80%+ matches</span><span>${ic('heart')}<b>${recv.length}</b> already like you</span></div><button class="btn gold block" data-a="upgrade" data-r="nearby">${ic('crown')}See who they are</button><small>Free shows how many people fit you and your match % with each. Names, photos and everything else come with Gold.</small></div>`:''}
     ${recv.length?`<button class="likes" data-a="goLikes"><span class="stack">${recv.slice(0,3).map(p=>avatar(p,'sm')).join('')}</span><span class="tx"><b>${recv.length} ${recv.length===1?'person likes':'people like'} you</b><span>See who, and say yes to start chatting</span></span>${ic('heart')}</button>`:''}
     ${introBlock(list)}
     ${list.length>3&&!S.showAllM?`<button class="btn ghost block" data-a="showAllM">See all ${list.length} matches</button>`:''}
@@ -1300,7 +1300,7 @@ function renderChatView(id){
       `<div class="msg ${m.f}${m.pending?' pending':''}">${esc(m.x)}${m.f!=='sys'?`<time>${m.pending?'Sending…':timeStr(m.ts)}</time>`:''}</div>${m.flag&&m.f==='them'?`<div class="msg sys">${ic('shield')} This message mentions money or visas. Never send money or pay for visa help, and report anyone who asks.</div>`:''}`).join('')}
    </div></div>
    ${canChat(id)&&msgs.filter(m=>m.f!=='sys').length<6?starters(p):''}
-   ${canChat(id)?`<div class="composer pad"><label class="sr" for="chat-in">Message</label><input id="chat-in" type="text" maxlength="1000" placeholder="Message ${esc(p.first||'')}" autocomplete="off" enterkeyhint="send"><button class="btn primary" data-a="send" data-id="${id}" aria-label="Send">${ic('send')}</button></div>`:
+   ${typeof jhBlockNote==='function'?jhBlockNote():''}${canChat(id)?`<div class="composer pad"><label class="sr" for="chat-in">Message</label><input id="chat-in" type="text" maxlength="1000" placeholder="Message ${esc(p.first||'')}" autocomplete="off" enterkeyhint="send"><button class="btn primary" data-a="send" data-id="${id}" aria-label="Send">${ic('send')}</button></div>`:
    `<div class="lockbar pad"><span class="tx"><b>Read and reply to ${esc(p.first||'your match')}</b><small>Chat opens when either of you has Gold</small></span><button class="btn gold" data-a="upgrade" data-r="chat" data-id="${id}">${ic('crown')}Unlock</button></div>`}
   </div>`;
 }
@@ -3690,7 +3690,7 @@ function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^
       <span class="rl-sgw">${rlSig(p.id,'',4)}${st==='received'?`<span class="rl-likes">${ic('heart')}Likes you</span>`:famGood(p.id)?`<span class="rl-likes y">${ic('users')}Family likes</span>`:''}</span>
       <span class="rl-who"><b>${esc(shown(p))}, ${p.age}</b><small>${fl(p.oc)} ${esc(p.os||p.oc||'')} → ${fl(p.country)} ${esc(p.cityName||'')}</small>
        ${tz?`<small>${ic('clock')}${esc(hhmm(tz))} there</small>`:''}${why(p,2).map(w=>`<small class="rl-why">${ic('check')}${esc(w)}</small>`).join('')}<span class="rl-fit">${c.total}% shared</span></span></button>
-     <div class="rl-acts">${acts(p,lk)}</div></article>`}
+     ${lk&&JH()?jhPeek(p,c):`<div class="rl-acts">${acts(p,lk)}</div>`}</article>`}
   const _ib3=introBlock;introBlock=function(list){const prev=_ib3(list);if(!RL())return prev;const it=introsToday(list);RLX._it=it;RLX._all=list||[];
     const a=prev.indexOf('<div class="pxb">'),b=prev.lastIndexOf('<div class="pxb">');const top=a>=0&&a!==b?prev.slice(a,prev.indexOf('<div class="sec-h px-sh">')>0?prev.indexOf('<div class="sec-h px-sh">'):b):'';const bot=b>=0?prev.slice(b):'';
     const me=S.me||{};const globe=RLX.webgl()?`<div class="rl-tile rl-home"><div class="rl-slot" data-rl="home"></div><div class="rl-cap"><p class="eb">${esc(me.oc||'')} roots · worldwide</p><b>${it.length?`${it.length} introduction${it.length>1?'s':''} today`:'Your roots line'}</b></div></div>`:'';
@@ -4854,6 +4854,42 @@ function renderPeek(){const c=(typeof tzCountry==='function'&&tzCountry())||'';c
   addEventListener('appinstalled',()=>{const d=document.querySelector('.nm-inst');if(d)d.remove()});
   setTimeout(bar,1500);
 })();
+
+/* ---------- NeuMarry "Jhalak" Gold teaser v2 (his ok 11 Nov 00:50, his changes 12:18) ----------
+   Locked match cards get a premium "peek" panel built only from REAL data: how many photos (shown as frosted tiles,
+   never the photo), how the two of you fit (values / lifestyle / roots bars from compat()), whether they wrote in their
+   own words (soft placeholder lines, never their text), checks done, new this week. Tap = Gold sheet ("Not now" stays).
+   With no match yet: no "0" headline; we show the real number of members who joined (public_counts, only when >= 50)
+   and keep the Gold button, with an honest small line. Chat: phone numbers, emails, outside IDs are stopped
+   ("for your safety"), in the app and on the server (migration 20261111120000).
+   Mock stage: on only with localStorage nm.jhalak=1 until his ok. */
+const JH=()=>{try{return localStorage.getItem('nm.jhalak')==='1'}catch(e){return false}};
+let JHC=null;
+function jhCounts(){if(JHC!==null)return JHC;JHC=false;API.rpc('public_counts').then(r=>{JHC=r&&r.joined?r:false;render()}).catch(()=>{});return false}
+function jhPeek(p,c){
+  const v=checksDone(p),ph=p.photoCount||(p.photoPaths||[]).length,her=p.g==='F'?'Her':'His',she=p.g==='F'?'her':'his';
+  const bar=(l,x,i)=>`<span class="jh-bar" style="--w:${Math.round(Math.max(.08,Math.min(1,x))*100)}%;--d:${i*120}ms"><em>${l}</em><i><b></b></i><s>${Math.round(x*100)}%</s></span>`;
+  const tiles=ph?`<span class="jh-ph" aria-hidden="true">${Array.from({length:Math.min(ph,3)},(_,i)=>`<i style="--i:${i}"></i>`).join('')}<b>${ic('camera')}${ph}</b></span>`:'';
+  const tags=[];if(v>=4)tags.push(['shield',`${v}/5 verified`]);if(p.days!=null&&p.days<=7)tags.push(['sparkle','New this week']);if(p.ans&&p.ans.length)tags.push(['heart',`${p.ans.length} marriage answers`]);
+  return `<button class="jh-peek" data-a="open" data-id="${p.id}" aria-label="Unlock this ${c.total}% match with Gold">
+   <span class="jh-shine" aria-hidden="true"></span>
+   <span class="jh-top"><span class="jh-k">${ic('lock')}Inside ${she} profile</span>${tiles}</span>
+   <span class="jh-bars">${bar('Values',c.values,0)}${bar('Lifestyle',c.life,1)}${bar('Roots',c.roots,2)}</span>
+   ${p.about?`<span class="jh-words"><span class="jh-q">${her} own words</span><i></i><i></i><i class="s"></i></span>`:''}
+   ${tags.length?`<span class="jh-tags">${tags.map(t=>`<i>${ic(t[0])}${esc(t[1])}</i>`).join('')}</span>`:''}
+   <span class="jh-cta">${ic('crown')}Unlock full profile</span></button>`}
+function jhNone(){const k=jhCounts(),n=k&&k.joined;
+  return `<div class="nearby jh-none"><span class="jh-orb" aria-hidden="true">${ic('sparkle')}</span>
+   ${n?`<div class="nb-n"><b>${Number(n).toLocaleString('en')}</b><span>members have joined NeuMarry</span></div>`:`<div class="nb-n jh-nn"><span>Verified members are joining NeuMarry</span></div>`}
+   <small>Your matches appear here as people who fit you join.</small>
+   <button class="btn gold block" data-a="upgrade" data-r="nearby">${ic('crown')}Get Gold</button>
+   <small class="jh-hon">No one fits you yet. We say so honestly, so you decide.</small></div>`}
+/* chat: no phone numbers, emails or outside IDs (server checks too) */
+const JH_CONTACT=[/(\+?\d[\s\-.()/]*){8,}/,/[a-z0-9._%+-]+\s*(@|\(at\)|\[at\])\s*[a-z0-9-]+(\s*(\.|\(dot\)|\[dot\])\s*[a-z0-9-]+)+/i,/\b(gmail|yahoo|hotmail|outlook|icloud|protonmail)\b/i,/\b(whats\s*app|watsapp|whtsapp|wa\.me|telegram|t\.me|snapchat|snap\s*id|insta(gram)?\s*(id|handle|pe|par)|signal\s*(id|number)|wechat|viber|line\s*id|kik|skype\s*id)\b/i,/(^|\s)@[a-z0-9_.]{3,}/i];
+function jhHasContact(t){t=String(t||'');return JH_CONTACT.some(r=>r.test(t))}
+(function(){const _s=A.send;A.send=function(el){const ci=document.getElementById('chat-in');if(ci&&jhHasContact(ci.value)){
+  const keep=ci.value;S.jhBlock=1;render();const c2=document.getElementById('chat-in');if(c2){c2.value=keep;c2.focus()}return}S.jhBlock=0;return _s.apply(A,arguments)}})();
+function jhBlockNote(){return S.jhBlock?`<div class="jh-safe" role="alert">${ic('shield')}<span><b>Kept private for your safety</b>Phone numbers, emails and outside app IDs can't be shared in chat. Keep talking here until you both feel ready.</span></div>`:''}
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 
