@@ -2308,6 +2308,14 @@ const liveUpd={id:null,v:null,hid:0,
     const L=await fetch('https://neumarry.com/nm-update/latest.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json());
     if(!L||!L.version||!L.url||L.version===cur.v||L.version===this.v)return;
     const b=await U.download({url:L.url,version:L.version,checksum:L.checksum||''});await U.next({id:b.id});this.id=b.id;this.v=L.version}catch(e){}}};
+/* 12 Nov 2026 (his ask 01:45: every download must open the LATEST version): on the very first screen, while the opening
+   animation shows, look for a newer version (max 2.5 s); if there is one, fetch it (max 15 s) and switch to it at once. */
+liveUpd.first=async function(){const U=this.U();if(!U)return false;const T=(p,ms)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(0),ms))]);
+  try{const cur=await fetch('bundle.json',{cache:'no-store'}).then(r=>r.json()).catch(()=>({}));
+    const L=await T(fetch('https://neumarry.com/nm-update/latest.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()),2000);
+    if(!L||!L.version||!L.url||L.version===cur.v)return false;window.nmHold=true;
+    const sp=document.getElementById('nm-splash');if(sp&&!sp.querySelector('.upd')){const t=document.createElement('p');t.className='upd';t.textContent='Getting the newest version…';(sp.querySelector('.sw')||sp).appendChild(t)}
+    const b=await T(U.download({url:L.url,version:L.version,checksum:L.checksum||''}),15000);await U.set({id:b.id});return true}catch(e){return false}};
 if(liveUpd.U()){try{liveUpd.U().notifyAppReady()}catch(e){}setTimeout(()=>liveUpd.check(),5000);setInterval(()=>liveUpd.check(),6*3600e3);
   document.addEventListener('visibilitychange',()=>{if(document.hidden)liveUpd.hid=Date.now()});
   if(Plug().App)Plug().App.addListener('pause',()=>{liveUpd.hid=Date.now()})}
@@ -2949,7 +2957,8 @@ function c3map(){return PM.draw({vb:[0,30,1000,440],fsr:.03,label:'World map: wh
   {hl:{'566':'#FFC93C','124':'#0E9F6E'},arcs:[['lagos','toronto']],pins:[['lagos','🇳🇬 Lagos','#FFC93C',0,1.8],['toronto','🇨🇦 Toronto','#0E9F6E']]},
   {hl:{'410':'#FFC93C','036':'#0E9F6E'},arcs:[['busan','sydney']],pins:[['busan','🇰🇷 Busan','#FFC93C'],['sydney','🇦🇺 Sydney','#0E9F6E',0,1.8]]},
   {hl:{'484':'#FFC93C','724':'#0E9F6E'},arcs:[['guad','madrid']],pins:[['guad','🇲🇽 Guadalajara','#FFC93C',0,1.8],['madrid','🇪🇸 Madrid','#0E9F6E']]}]})}
-const c3cyc=(arr,cls)=>`<span class="c3cyc ${cls||''}"><span>${arr.concat(arr[0]).map(t=>`<b>${esc(t)}</b>`).join('')}</span></span>`;
+/* 12 Nov: each word fades/slides in on its own (no shared strip), so no word ever peeks at any font size */
+const c3cyc=(arr,cls)=>{const n=arr.length,L=arr.reduce((a,t)=>t.length>a.length?t:a,'');return `<span class="c3cyc ${cls||''}" style="--n:${n*3}s"><i aria-hidden="true">${esc(L)}</i>${arr.map((t,i)=>`<b style="animation-delay:${i?-(n-i)*3:0}s">${esc(t)}</b>`).join('')}</span>`};
 function renderWelcomeC3(){
   return `<div class="scroll c3w"><div class="c3topl"><p class="c3kick">NeuMarry · verified matrimony</p><button class="c3lang notr" data-a="lang" aria-label="Language">${ic('globe')}<span>${esc((LANGS_ALL.find(x=>x[0]===RM_I18N.lang)||LANGS_ALL[0])[1])}</span></button></div>
    <div class="c3map">${c3map()}<span class="c3dist">✈ ${c3cyc(C3SEQ.map(([a,b])=>c3km(a,b).toLocaleString('en-US')+' km from home'))}</span></div>
@@ -4853,9 +4862,10 @@ function renderPeek(){const c=(typeof tzCountry==='function'&&tzCountry())||'';c
   const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
   const want=()=>/[?&]install=1/.test(location.search);
   const ios=/iPhone|iPad|iPod/.test(navigator.userAgent);
-  function bar(){if(shown||standalone()||!want())return;if(!dp&&!ios)return;shown=true;
+  const andr=/Android/i.test(navigator.userAgent);
+  function bar(){if(shown||standalone()||!want())return;if(!dp&&!ios&&!andr)return;shown=true;
     const d=document.createElement('div');d.className='nm-inst';d.setAttribute('role','dialog');d.setAttribute('aria-label','Install NeuMarry');
-    d.innerHTML=`<img src="img/icon-192.png" alt=""><div><b>Install NeuMarry</b><small>${dp?'Opens like an app, from your home screen. Free.':'Tap the Share button, then “Add to Home Screen”.'}</small></div>${dp?'<button class="btn primary" id="nm-inst-go">Install</button>':''}<button class="iconbtn" id="nm-inst-x" aria-label="Close">✕</button>`;
+    d.innerHTML=`<img src="img/icon-192.png" alt=""><div><b>Install NeuMarry</b><small>${dp?'Opens like an app, from your home screen. Free.':andr?'Download the app file, then tap it to install.':'Tap the Share button, then “Add to Home Screen”.'}</small></div>${dp?'<button class="btn primary" id="nm-inst-go">Install</button>':''}${andr?'<a class="nm-inst-apk" href="/dl/NeuMarry.apk" download>Or download the Android app (latest)</a>':''}<button class="iconbtn" id="nm-inst-x" aria-label="Close">✕</button>`;
     document.body.appendChild(d);
     const go=document.getElementById('nm-inst-go');if(go)go.onclick=async()=>{try{dp.prompt();await dp.userChoice}catch(e){}d.remove()};
     document.getElementById('nm-inst-x').onclick=()=>d.remove()}
@@ -5185,7 +5195,8 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
   const _oa=A.openAdmin;A.openAdmin=function(){A3.who={};return _oa.apply(this,arguments)}})();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
-
+/* only on the first open after installing (fast open stays ~1 s every other time; later updates come quietly) */
+if(liveUpd.U()&&!(()=>{try{return localStorage.getItem('nm.upd1')}catch(e){return 1}})()){try{localStorage.setItem('nm.upd1','1')}catch(e){}liveUpd.first().then(ok=>{if(!ok)boot()})}else 
 /* NeuMarry matrimony-only build */
 P15on=function(){return false};brand15=function(h){return h};window.NM_APP=true;
 boot();

@@ -2317,3 +2317,16 @@ html:not(.gl-lt) .aw{background:rgba(255,255,255,.06);border-color:rgba(255,255,
 .a3evf{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:12.5px}.a3evf b{font-weight:800}
 .a3st{font-size:11px;font-weight:800;padding:3px 8px;border-radius:99px;background:rgba(35,27,58,.07);text-transform:capitalize}.a3st.confirmed{background:rgba(46,160,110,.15);color:#156B45}.a3st.open{background:rgba(124,92,214,.12);color:#5B3FB8}
 html:not(.gl-lt) .a3st{background:rgba(255,255,255,.1);color:#fff}
+
+/* 12 Nov 2026 (his report 01:43, phone screenshot): welcome below the status bar; cycling words never peek */
+html.edge-t .c3w{padding-top:var(--sat)}
+html.edge-b .c3w{padding-bottom:var(--sab)}
+.c3cyc{position:relative;display:block;height:auto;line-height:1.34;overflow:visible;-webkit-mask-image:none;mask-image:none}
+.c3cyc>i{display:block;visibility:hidden;font-style:normal;font-weight:800;white-space:nowrap;line-height:1.34}
+.c3cyc>b{position:absolute;left:0;top:0;height:auto;line-height:1.34;white-space:nowrap;opacity:0;animation:c3w var(--n,9s) ease-in-out infinite both}
+.c3dist .c3cyc{display:inline-block}
+@keyframes c3w{0%{opacity:0;transform:translateY(.35em)}4%,29%{opacity:1;transform:none}33.3%,100%{opacity:0;transform:translateY(-.35em)}}
+@media (prefers-reduced-motion:reduce){.c3cyc>b{animation:none!important;opacity:0}.c3cyc>b:first-of-type{opacity:1}}
+
+.nm-inst-apk{flex-basis:100%;order:9;font:700 13px var(--f-body);color:var(--rose-deep,#B23A62);text-decoration:underline;text-underline-offset:3px;padding:4px 0 0 52px}
+.nm-inst{flex-wrap:wrap}
