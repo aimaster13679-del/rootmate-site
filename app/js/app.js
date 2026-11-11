@@ -1513,7 +1513,7 @@ function renderAdmin(){
   const item=x=>{const img=a.urls&&a.urls[x.bucket+':'+x.path];const prof=a.urls&&x.profile_photo&&a.urls['photos:'+x.profile_photo];
     const isPdf=/\.pdf$/i.test(x.path||'');
     return `<div class="panel adm" id="adm-${x.row_id}"><div class="adm-h"><b>${esc(ADM_KIND[x.kind]||x.kind)}</b><small>${esc(x.full_name)} · ${x.gender==='F'?'Woman':'Man'}, ${x.age} · ${esc(x.city)}, ${esc(x.country)}</small>${['roots','status','address'].includes(x.kind)?`<small>${x.kind==='roots'?`Roots on profile: ${esc(x.origin_state||'')}, ${esc(x.origin_country||'')}`:`Residency on profile: ${esc(x.residency||'')}`}${x.id_type?` · Document: ${esc(x.id_type)}`:''}</small>`:''}</div>
-      <div class="adm-imgs">${img?(isPdf?`<a class="btn ghost sm" href="${esc(img)}" target="_blank" rel="noopener">Open PDF</a>`:`<img src="${esc(img)}" alt="${esc(x.kind)} of ${esc(x.full_name)}">`):`<span class="hint">Loading image…</span>`}${x.kind!=='photo'&&prof?`<img src="${esc(prof)}" alt="Profile photo of ${esc(x.full_name)}">`:''}</div>
+      ${typeof admWho==='function'?admWho(x.user_id):''}<div class="adm-imgs">${img?(isPdf?`<a class="btn ghost sm" href="${esc(img)}" target="_blank" rel="noopener">Open PDF</a>`:`<img src="${esc(img)}" alt="${esc(x.kind)} of ${esc(x.full_name)}">`):`<span class="hint">Loading image…</span>`}${x.kind!=='photo'&&prof?`<img src="${esc(prof)}" alt="Profile photo of ${esc(x.full_name)}">`:''}</div>
       <p class="hint">${ADM_HINT[x.kind]||''}</p>${x.kind==='id'?admAuto(a.auto&&a.auto[x.row_id]):''}${x.kind==='photo'&&x.ai_check?`<p class="hint">${x.ai_check==='doubtful'?`${ic('shield')} <b>Automatic check: may be revealing or violent.</b> Look carefully.`:'Automatic check: nothing inappropriate found.'}</p>`:''}
       <div class="adm-act"><select data-adm-reason="${x.row_id}" aria-label="Reason if rejected"><option value="">Reason if rejected…</option>${(x.kind==='photo'?['Face not clear','Not a real photo of you','Group photo','Inappropriate photo']:['roots','status','address'].includes(x.kind)?['Image not readable','Does not match the profile','Not an accepted document','Older than 3 months','Name does not match the ID']:['Image not readable','Does not match the profile','Not a valid ID','Not a live selfie']).map(r=>`<option>${r}</option>`).join('')}</select>
       <button class="btn ghost sm" data-a="admReject" data-id="${x.row_id}" data-k="${x.kind}">Reject</button><button class="btn primary sm" data-a="admApprove" data-id="${x.row_id}" data-k="${x.kind}">Approve</button></div></div>`};
@@ -3115,7 +3115,7 @@ function a3member(){const id=A3.mem;const m=A3.memd&&A3.memd.id===id?A3.memd:nul
 async function a3loadMem(id){A3.memd=null;try{A3.memd=await API.rpc('admin_member',{p_uid:id})||false}catch(e){A3.memd=false}render()}
 async function a3loadStats(){if(A3.stB)return;A3.stB=true;try{A3.st=await API.rpc('admin_stats')}catch(e){A3.st=false}finally{A3.stB=false;render()}}
 function a3need(){if(A3.st===undefined||A3.st===null){a3loadStats();return `<div class="a3c">${spinner('Loading')}</div>`}if(A3.st===false)return `<div class="a3c"><p class="a3m">Could not load. Pull to refresh or tap ⟳.</p></div>`;return ''}
-function a3kv2(k,n,max,col,act){return `<div class="a3f${act?' a3fb':''}" ${act?`role="button" tabindex="0" ${act}`:''}><span>${esc(k)}</span><div><i style="width:${Math.max(2,Math.round(n/Math.max(1,max)*100))}%;background:${col}"></i></div><b>${n}</b></div>`}
+function a3kv2(k,n,max,col,act){return `<div class="a3f${act?' a3fb':''}" ${act?`role="button" tabindex="0" ${act}`:''}><span>${esc(k)}</span><div><i style="width:${(n?Math.max(2,Math.round(n/Math.max(1,max)*100)):0)}%;background:${col}"></i></div><b>${n}</b></div>`}
 function a3members(){const L=A3.mlist;if(L===undefined){A3.mlist=null;a3search('')}
   return `<div class="a3c"><input id="a3q" type="search" class="a3in" placeholder="Search name, email, city or country" aria-label="Search members" value="${esc(A3.mq||'')}" data-a3q="1">
    ${(A3.st&&A3.st.members)?(()=>{const M=A3.st.members;return `<div class="a3g">${[['Members',M.total,''],['Women',M.women,'w'],['Men',M.men,'m'],['Live',M.live,'live'],['Gold',M.gold,'gold'],['Banned',M.banned,'ban']].map(([l,n,k])=>`<button class="a3k sm${(A3.mf||'')===k?' on':''}" data-a="a3mf" data-k="${k}" aria-pressed="${(A3.mf||'')===k}"><b>${n}</b><span>${l}</span></button>`).join('')}</div>`})():(a3loadStats(),'')}
@@ -3138,15 +3138,20 @@ function a3money(){const w=a3need();if(w)return w;const M=A3.st.money||{};const 
    ${(M.gold_by_product||[]).length?`<div class="a3c"><div class="a3h"><b>Gold plans</b><span>active</span></div>${M.gold_by_product.map(r=>a3kv2(r.k,r.n,M.gold_by_product[0].n,'#FFC93C')).join('')}<p class="a3m">Gold money arrives through Google Play / App Store; the exact amounts after store fees are in the store report.</p></div>`:''}
    ${(M.payouts||[]).length?`<div class="a3c"><div class="a3h"><b>Payouts to hosts and partners</b></div>${M.payouts.map(p=>`<div class="a3kv"><span>${esc(p.status)} · ${p.n}</span><b>${money(p.cents,p.cur)}</b></div>`).join('')}</div>`:''}
    <div class="a3c"><div class="a3h"><b>Latest payments</b><span>${(M.recent||[]).length}</span></div>${(M.recent||[]).length?M.recent.map(r=>`<button class="a3r" data-a="a3mem" data-k="${esc(r.uid)}"><span class="a3d ok"></span><span><b>${esc(r.kind)} · ${esc(r.who||'Member')}</b><small>${esc(r.what||'')}${r.cents!=null?' · '+money(r.cents,r.cur):''}</small><small>${esc(a3ago(r.at))}</small></span><em>›</em></button>`).join(''):'<p class="a3m">No payments yet.</p>'}</div>`}
+function a3evPeople(e){A3.evp=A3.evp||{};const P=A3.evp[e.id];if(P===undefined){A3.evp[e.id]=null;API.rpc('admin_event_people',{p_eid:e.id}).then(r=>{A3.evp[e.id]=r||[];render()}).catch(()=>{A3.evp[e.id]=[];render()})}
+  if(!P)return `<div class="a3c">${spinner('Loading people')}</div>`;
+  const dt=t=>t?new Date(t).toLocaleString([], {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'';
+  return `<div class="a3c"><div class="a3h"><b>People booked</b><span>${P.length}</span></div>${P.length?P.map(x=>`<button class="a3r" data-a="a3full" data-k="${esc(x.uid)}"><span class="a3d ${x.paid?'ok':'run'}"></span><span><b>${esc(x.name||'Member')} · ${esc(x.gender||'')}</b><small>${esc(x.email||'')}</small><small>${esc(x.status)}${x.waitlisted?' · waiting list':''} · booked ${esc(dt(x.booked))}${x.paid?` · paid ${money(x.paid,e.currency)} ${esc(dt(x.paid_at))}`:x.hold?` · hold ${money(x.hold,e.currency)}`:' · nothing paid'}${x.meal?` · meal ${esc(x.meal)}`:''}${x.parents?` · ${x.parents} parent${x.parents>1?'s':''}`:''}${x.checked_in?' · checked in':''}</small></span><i>›</i></button>`).join(''):'<p class="a3m">Nobody booked yet.</p>'}</div>`}
 function a3events(){const w=a3need();if(w)return w;const E=A3.st.events||[];if(!E.length)return `<div class="a3c"><p class="a3m">No events in the last 60 days or coming up.</p></div>`;
   if(A3.ev){const e=E.find(x=>x.id===A3.ev);if(e){const row=(k,v)=>`<div class="a3kv"><span>${k}</span><b>${esc(String(v))}</b></div>`;
     return `<button class="a3back" data-a="a3up">${ic('back')} All events</button><div class="a3c"><div class="a3h"><b>${esc(e.title)}</b><span>${esc(e.status)}</span></div>
      ${row('When',new Date(e.starts_at).toLocaleString([], {weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}))}${row('Where',[e.city,e.country].filter(Boolean).join(', '))}
      ${a3kv2('Women',e.women,e.seats_women,'#3BBF8A')}${a3kv2('Men',e.men,e.seats_men,'#9D7CFF')}
-     ${row('Seats',`${e.women}/${e.seats_women} women · ${e.men}/${e.seats_men} men`)}${row('Paid tickets',e.paid)}${row('Money (before tax)',money(e.cents,e.currency))}${row('Checked in at the door',e.checked_in)}</div>`}}
-  return E.map(e=>`<button class="a3c a3ev" data-a="a3ev" data-k="${esc(e.id)}"><span class="a3h"><b>${esc(e.title)}</b><span>${esc(e.status)}</span></span><small>${esc(new Date(e.starts_at).toLocaleDateString([], {day:'numeric',month:'short'}))} · ${esc(e.city||'')}</small>
-    <span class="a3seat"><i style="width:${Math.round(e.women/Math.max(1,e.seats_women)*100)}%;background:#3BBF8A"></i></span><span class="a3seat"><i style="width:${Math.round(e.men/Math.max(1,e.seats_men)*100)}%;background:#9D7CFF"></i></span>
-    <small>${e.women}/${e.seats_women} women · ${e.men}/${e.seats_men} men · ${money(e.cents,e.currency)}</small><em class="a3more">Details ›</em></button>`).join('')}
+     ${row('Seats',`${e.women}/${e.seats_women} women · ${e.men}/${e.seats_men} men`)}${row('Paid tickets',e.paid)}${row('Money (before tax)',money(e.cents,e.currency))}${row('Checked in at the door',e.checked_in)}</div>${a3evPeople(e)}`}}
+  const bar=(l,n,t,c)=>`<span class="a3sr"><span class="a3sl">${l}</span><span class="a3seat"><i style="width:${Math.round(n/Math.max(1,t)*100)}%;background:${c}"></i></span><b>${n} of ${t}</b></span>`;
+  return E.map(e=>`<button class="a3c a3ev" data-a="a3ev" data-k="${esc(e.id)}"><span class="a3h"><b>${esc(e.title)}</b><span class="a3st ${e.status}">${esc(e.status)}</span></span><small>${esc(new Date(e.starts_at).toLocaleString([], {weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}))} · ${esc([e.city,e.country].filter(Boolean).join(', '))}</small>
+    ${bar('Women',e.women,e.seats_women,'#3BBF8A')}${bar('Men',e.men,e.seats_men,'#9D7CFF')}
+    <span class="a3evf"><span><b>${e.paid||0}</b> paid</span><span><b>${money(e.cents,e.currency)}</b> taken</span><span><b>${e.checked_in||0}</b> at the door</span></span><em class="a3more">People and details ›</em></button>`).join('')}
 (function(){
   Object.assign(A,{
     a3go(el){const k=el.dataset.k||'';
@@ -5140,6 +5145,42 @@ function ivPage(){const st=view.step||'list',fee=pxs('booking_fee','US$4.99');
     async ivCreate(){const f=view.f;if(IV.busy)return;IV.busy=1;render();const [a1,a2]=f.ages.split('–').map(Number);
       try{await API.rpc('iev_create15',{roots:f.roots,amin:a1,amax:a2,t:new Date(f.day+'T'+f.time+':00').toISOString(),seats:+f.seats,dinner:+f.dinner});IV.host=undefined;view={type:'iev',step:'host'};toast('Your evening is published.','ok')}catch(e){fail(e)}finally{IV.busy=0;render()}},
     async ivCancel(el){try{await API.rpc('iev_cancel15',{eid:el.dataset.id});IV.host=undefined;toast('Evening cancelled. Every guest gets their seat fee back as a credit.','ok')}catch(e){fail(e)}render()}})})();
+
+/* ---------- Admin: full details everywhere (his ask 11 Nov 2026 21:27 + 21:30) ----------
+   Every check in Team review shows who the member is (email, joined, step, plan, all checks, payments, PayPal tries, last
+   active) with a button to the full member page; the member page adds checks, photos, payments, PayPal tries, credits,
+   meetups and a dated activity line. Data: admin_member (migration 20261111210000). */
+A3.who=A3.who||{};
+const a3dt=t=>t?new Date(t).toLocaleString([], {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+function a3whoLoad(id){if(!id||A3.who[id]!==undefined)return;A3.who[id]=null;API.rpc('admin_member',{p_uid:id}).then(r=>{A3.who[id]=r||false;render()}).catch(()=>{A3.who[id]=false;render()})}
+const a3tick=(ok,l)=>`<span class="aw-t ${ok?'ok':''}">${ok?'✓':'·'} ${esc(l)}</span>`;
+const a3mny=(c,cur)=>{try{return (c/100).toLocaleString('en',{style:'currency',currency:cur||'USD'})}catch(e){return (cur||'')+' '+(c/100)}};
+function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.who[id];
+  if(m===null||m===undefined)return `<div class="aw">${spinner('Loading member details')}</div>`;
+  if(!m)return `<div class="aw"><p class="hint">Could not load this member's details.</p></div>`;
+  const f=m.flags||{},paid=m.paid||[],tries=(m.orders||[]).filter(o=>o.status!=='paid');
+  return `<div class="aw"><div class="aw-g">
+    <div><span>Email</span><b>${esc(m.email||'—')}</b></div><div><span>Signed in with</span><b>${esc(m.provider||'')}</b></div>
+    <div><span>Joined</span><b>${esc(a3dt(m.joined))}</b></div><div><span>Last active</span><b>${esc(a3dt(m.last_seen)||'—')}</b></div>
+    <div><span>Lives in</span><b>${esc([m.city,m.country].filter(Boolean).join(', ')||'—')}</b></div><div><span>Roots</span><b>${esc(m.roots||'—')}</b></div>
+    <div><span>Step</span><b>${esc(m.banned?'Banned':m.step||'')}</b></div><div><span>Plan</span><b>${esc(String(m.plan||'free').toUpperCase())}</b></div></div>
+    <div class="aw-ts">${a3tick(f.phone,'Phone')}${a3tick(f.id,'ID')}${a3tick(f.selfie,'Selfie')}${a3tick(f.roots,'Roots')}${a3tick(f.lives,'Address')}<span class="aw-t">${m.photos} photo${m.photos===1?'':'s'}</span></div>
+    <div class="aw-pay">${paid.length?`${ic('ticket')} Paid ${paid.length}×: ${paid.slice(0,3).map(p=>`${esc(p.label)} ${a3mny(p.cents,p.cur)} (${esc(p.provider)}, ${esc(a3dt(p.at))})`).join(' · ')}`:`${ic('ticket')} No payment yet`}${tries.length?` · opened PayPal ${tries.length}× without paying (${esc(tries[0].label)})`:''}</div>
+    <button class="btn ghost sm" data-a="a3full" data-k="${esc(id)}">${ic('users')}Full details and activity</button></div>`}
+(function(){
+  const _m=a3member;a3member=function(){let h=_m();const m=A3.memd&&A3.memd.id===A3.mem?A3.memd:null;if(!m||!m.timeline)return h;
+    const row=(k,v)=>v===null||v===undefined||v===''?'':`<div class="a3kv"><span>${esc(k)}</span><b>${esc(String(v))}</b></div>`;const f=m.flags||{};
+    const extra=`<div class="a3c"><div class="a3h"><b>Checks done</b></div><div class="aw-ts">${a3tick(f.phone,'Phone')}${a3tick(f.id,'ID')}${a3tick(f.selfie,'Live selfie')}${a3tick(f.roots,'Roots')}${a3tick(f.lives,'Address')}</div>
+       ${row('Residency',m.residency)}${(m.photo_list||[]).map((p,i)=>row('Photo '+(i+1),`${p.status}${p.ai?' · auto check '+p.ai:''} · ${a3dt(p.at)}`)).join('')}${m.about?`<p class="a3m">“${esc(m.about)}”</p>`:''}</div>
+     <div class="a3c"><div class="a3h"><b>Payments on neumarry.com</b><span>${(m.paid||[]).length} paid</span></div>
+       ${(m.paid||[]).map(p=>row(a3dt(p.at),`${p.label} · ${a3mny(p.cents,p.cur)} · ${p.provider}`)).join('')||'<p class="a3m">Nothing paid yet.</p>'}
+       ${(m.orders||[]).length?`<div class="a3h" style="margin-top:8px"><b>PayPal opened</b><span>${m.orders.length}</span></div>${m.orders.map(o=>row(a3dt(o.at),`${o.label} · ${a3mny(o.cents,o.cur)} · ${o.status==='paid'?'paid':'not paid (left PayPal)'}`)).join('')}`:''}
+       ${(m.credits||[]).length?m.credits.map(c=>row('Credit',`${c.product} × ${c.n}`)).join(''):''}
+       ${row('First meetups',m.meetups)}${row('Family Mulaqat',m.family)}${row('Evening seats',m.evenings)}</div>
+     <div class="a3c"><div class="a3h"><b>Activity, newest first</b><span>${m.timeline.length}</span></div>${m.timeline.slice(0,80).map(t=>`<div class="aw-tl"><time>${esc(a3dt(t.at))}</time><span>${esc(t.what)}</span></div>`).join('')}</div>`;
+    const k=h.lastIndexOf('<div class="a3c"><div class="a3h"><b>Safety');return k>=0?h.slice(0,k)+extra+h.slice(k):h+extra};
+  A.a3full=function(el){const id=el.dataset.k;A3.tab='members';A3.mem=id;A3.memd=A3.who[id]||null;if(!A3.memd)a3loadMem(id);render();const sc=document.querySelector('.a3v .scroll');if(sc)sc.scrollTop=0};
+  const _oa=A.openAdmin;A.openAdmin=function(){A3.who={};return _oa.apply(this,arguments)}})();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 
