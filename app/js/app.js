@@ -5044,6 +5044,58 @@ function famSheetL(){const p=byId(sheet.id)||{},pk=sheet.pick,fee=pxs('family_fe
     famShareL(el){const f=((FS[el.dataset.id]||{}).fam)||{};const t=`NeuMarry Family Mulaqat: ${f.place||''}, ${f.city||''}, ${f.at?mtWhen(f.at):''}.`;
       if(navigator.share)navigator.share({text:t}).catch(()=>{});else{try{navigator.clipboard.writeText(t);toast('Plan copied. Send it to a friend.','ok')}catch(e){}}}})})();
 
+/* ---------- Introduction Evenings (his ok on the plan 11 Nov 19:10; MOCK stage 20:45) ----------
+   Small evenings (12-20 verified members, one roots group + age band) run by organizers (Event Partners / hosts, never our staff).
+   Member: subscription needed, seat fee (booking_fee, country price) on neumarry.com; dinner paid to the organizer at the venue.
+   After the evening each member privately picks up to 3 people; mutual picks open chat. Organizer: Host plan or Event Partner Pro.
+   MOCK: localStorage nm.ievtest = 1..6 opens that screen after sign-in; nothing is booked. */
+const IEV_ON=()=>{try{return +localStorage.getItem('nm.ievtest')||0}catch(e){return 0}};
+const IEV_EX=[{t:'Lagos roots · 28–35',c:'Toronto',d:'Fri 20 Nov · 7:00 pm',v:'Saffron & Sage',seats:20,left:7,din:'CA$38'},
+  {t:'Mexican roots · 30–38',c:'Toronto',d:'Sat 21 Nov · 6:30 pm',v:'Casa Lumbre',seats:16,left:10,din:'CA$45'},
+  {t:'Korean roots · 27–34',c:'Toronto',d:'Sun 29 Nov · 1:00 pm',v:'The Tea Atlas',seats:12,left:4,din:'CA$29'}];
+const IEV_PPL=[['A','🇳🇬','29','Toronto',92],['C','🇳🇬','31','Mississauga',88],['I','🇳🇬','30','Toronto',85],['N','🇳🇬','33','Brampton',81],['Z','🇳🇬','28','Toronto',79],['O','🇳🇬','32','Toronto',76]];
+function ievShell(title,sub,inner,foot){return `<div class="view ep-v iev" role="dialog" aria-label="${esc(title)}">${epTop(title,sub,false)}<div class="scroll" id="view-scroll"><div class="main-inner pad ep-in">${inner}</div></div>${foot?`<div class="iev-foot pad">${foot}</div>`:''}</div>`}
+function ievCard(e,i){const pct=Math.round((e.seats-e.left)/e.seats*100);
+  return `<button class="iev-c" data-a="ievGo" data-k="2"><span class="iev-top"><span class="iev-ic">${ic('users')}</span><span class="grow"><b>${e.t}</b><small>${e.c} · ${e.v}</small></span><span class="iev-d">${e.d.split(' · ')[0]}<small>${e.d.split(' · ')[1]}</small></span></span>
+   <span class="iev-seat"><i style="--w:${pct}%"><b></b></i><small>${e.left} of ${e.seats} seats left</small></span>
+   <span class="iev-tags"><i>${ic('shield')}Every guest verified</i><i>${ic('heart')}Private picks after</i></span></button>`}
+function ievPage(){const n=(view&&view.step)||IEV_ON()||1,fee=pxs('booking_fee','US$4.99'),e=IEV_EX[0];
+  if(n===1)return ievShell('Introduction Evenings','Small evenings with verified members of your roots',
+   `<div class="iev-hero"><b>Meet 12–20 verified people of your roots, in one relaxed evening</b><span>Table games, open talk, then you each choose privately who you would like to know more. If they chose you too, chat opens.</span></div>
+    <div class="mt-chips">${['Toronto','Mississauga','Brampton','Vancouver'].map((c,i)=>`<button class="${i?'':'on'}">${c}</button>`).join('')}</div>
+    <p class="mt-ex">Example evenings, for this preview</p>${IEV_EX.map(ievCard).join('')}`,'');
+  if(n===2)return ievShell(e.t,`${e.c} · ${e.d}`,
+   `<div class="iev-hero"><b>${e.v}, ${e.c}</b><span>${e.d} · run by a verified NeuMarry Event Partner</span></div>
+    <div class="iev-grid"><div><b>${e.seats}</b><small>seats</small></div><div><b>${e.left}</b><small>left</small></div><div><b>28–35</b><small>ages</small></div></div>
+    <p class="mt-ex">How the evening goes</p>
+    <div class="iev-tl">${[['7:00','Welcome and name cards'],['7:30','Table games in small groups'],['8:30','Open talk over dinner'],['9:30','Private picks in the app']].map(x=>`<div><b>${x[0]}</b><span>${x[1]}</span></div>`).join('')}</div>
+    <div class="fm-lang">${ic('shield')}<span><b>Safe by design</b>Every guest is verified with ID and a live selfie. No phone numbers are shared. Your picks stay private.</span></div>
+    <div class="mt-note">${ic('users')}<span><b class="mt-fee"><span>Seat fee:</span> ${fee}</b><span>Paid on neumarry.com. Dinner (${e.din}) is paid to the organizer at the venue. No money back once booked, except where the law says otherwise.</span></span></div>`,
+   `<button class="btn gold block" data-a="ievGo" data-k="3">${ic('users')}Reserve my seat · ${fee}</button>`);
+  if(n===3)return ievShell('Your seat','Introduction Evening',
+   `<div class="iev-tk"><span class="iev-ic big">${ic('check')}</span><b>Your seat is reserved</b><span>${e.t}</span><span>${e.v}, ${e.c} · ${e.d}</span><span class="iev-code">Show this at the door · NM-4K7Q</span></div>
+    <div class="fm-lang">${ic('globe')}<span><b>Before you go</b>Arrive by 7:00 pm. Dinner is paid at the venue. Tell a friend where you are going.</span></div>`,
+   `<button class="btn ghost block" data-a="ievGo" data-k="4">${ic('share')}Share plan with a friend</button>`);
+  if(n===4)return ievShell('Your private picks',e.t,
+   `<div class="iev-hero"><b>Who would you like to know more?</b><span>Pick up to 3. Nobody sees your picks. If someone picked you too, chat opens for both of you.</span></div>
+    <div class="iev-ppl">${IEV_PPL.map((p,i)=>`<button class="iev-p${i===0||i===3?' on':''}"><span class="iev-sig">${p[0]}</span><b>${p[0]}•••• · ${p[2]}</b><small>${p[1]} → 🇨🇦 ${p[3]}</small><em>${p[4]}% shared</em></button>`).join('')}</div>`,
+   `<button class="btn gold block" data-a="ievGo" data-k="5">${ic('heart')}Send my 2 picks</button>`);
+  if(n===5)return ievShell('Your evening',e.t,
+   `<div class="iev-tk"><span class="iev-ic big">${ic('heart')}</span><b>1 mutual pick</b><span>You and A•••• both chose each other. Chat is open.</span></div>
+    <div class="mt-card"><span class="mt-ic">${ic('chat')}</span><span class="mt-tx"><b>A•••• · 29</b><small>🇳🇬 → 🇨🇦 Toronto · 92% shared</small></span><button class="btn gold sm">${ic('chat')}Chat</button></div>
+    <p class="hint">The others did not pick you this time, or you did not pick them. Nobody is told who picked whom.</p>`,'');
+  return ievShell('Host an evening','For organizers and Event Partners',
+   `<div class="iev-hero"><b>Run Introduction Evenings at your place</b><span>You run the evening and keep the dinner money. NeuMarry brings verified members and takes no commission.</span></div>
+    <p class="mt-ex">Roots group</p><div class="mt-chips">${['Nigerian','Mexican','Korean','Filipino','Lebanese','Polish','Indian'].map((c,i)=>`<button class="${i?'':'on'}">${c}</button>`).join('')}</div>
+    <p class="mt-ex">Ages</p><div class="mt-chips">${['24–30','28–35','32–40','38–48'].map((c,i)=>`<button class="${i===1?'on':''}">${c}</button>`).join('')}</div>
+    <p class="mt-ex">Seats</p><div class="mt-chips">${['12','16','20'].map((c,i)=>`<button class="${i===2?'on':''}">${c}</button>`).join('')}</div>
+    <p class="mt-ex">Dinner price per person (paid to you)</p><div class="mt-chips">${['CA$29','CA$38','CA$45','CA$55'].map((c,i)=>`<button class="${i===1?'on':''}">${c}</button>`).join('')}</div>
+    <div class="mt-note">${ic('shield')}<span><b class="mt-fee"><span>Host plan:</span> ${pxs('host_m','CA$69')} a month</b><span>Included in Event Partner Pro. Paid on neumarry.com. Nothing renews by itself.</span></span></div>`,
+   `<button class="btn gold block">${ic('cal')}Publish evening</button>`)}
+(function(){const _pv=renderProfileView;renderProfileView=function(){if(view&&view.type==='iev')return ievPage();return _pv.apply(this,arguments)};
+  A.ievGo=function(el){view={type:'iev',step:+el.dataset.k};render()};
+  const _lm=loadMe;loadMe=async function(){const r=await _lm.apply(this,arguments);const n=IEV_ON();if(n&&S.me&&!(view&&view.type==='iev')){view={type:'iev',step:n};render()}return r}})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 
 /* NeuMarry matrimony-only build */
