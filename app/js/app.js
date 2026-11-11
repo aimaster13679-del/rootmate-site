@@ -130,9 +130,9 @@ const QS=[
  {q:'When you disagree, you…',k:'Disagreements',o:['Talk it through right away','Take some space, then talk','Let it pass quietly'],b:['Both talk things out','Both need space, then talk','Both let things pass']},
  {q:'How soon do you want to marry?',k:'Timeline',o:['Within a year','In 1–2 years','When it feels right'],b:['Both ready within a year','Same timeline: 1–2 years','Both in no rush']}
 ];
-/* Gold prices from 28 Oct (his ok): [symbol, 1 month, 3 months, 6 months]. Each plan stays under Google Play's ~US$400 limit. */
-Object.assign(PRICE,{CAD:['CA$','119.99','299.99','479.99'],USD:['US$','89.99','219.99','349.99'],GBP:['£','69.99','169.99','269.99'],AUD:['A$','129.99','329.99','529.99'],
- AED:['AED ','329','799','1,279'],EUR:['€','79.99','199.99','319.99'],NZD:['NZ$','149.99','359.99','579.99'],SGD:['S$','119.99','289.99','459.99'],CHF:['CHF ','79.99','199.99','319.99']});
+/* Gold prices from 10 Nov 2026 (his ok 'A'): [symbol, 1 month, 3 months, 6 months]. On the website Gold is paid in US$ with PayPal (price() uses USD there). */
+Object.assign(PRICE,{CAD:['CA$','54.99','134.99','199.99'],USD:['US$','39.99','99.99','149.99'],GBP:['£','31.99','79.99','119.99'],AUD:['A$','59.99','149.99','224.99'],
+ AED:['AED ','149','369','549'],EUR:['€','36.99','92.99','139.99'],NZD:['NZ$','64.99','164.99','244.99'],SGD:['S$','52.99','134.99','199.99'],CHF:['CHF ','35.99','89.99','134.99']});
 /* Icons added after the prototype (28 Oct): clock, QR ticket, scanner. */
 Object.assign(IC,{
  clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
@@ -246,7 +246,7 @@ function today(){const d=new Date();return `${d.getFullYear()}-${d.getMonth()+1}
 function timeStr(ts){const d=new Date(ts),n=new Date();const same=d.toDateString()===n.toDateString();return same?d.toLocaleTimeString(RM_I18N.lang==='fr'?'fr-CA':[],{hour:'numeric',minute:'2-digit'}):d.toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short'})}
 function shown(p){return p.name||'Member'}
 function isBlurred(p){return !(p.photos&&p.photos.length)&&p.photoCount>0}
-function price(){const c=CMAP[S.me.country];const cur=c?c[3]:'USD';const pr=PRICE[cur]||PRICE.USD;const n=v=>parseFloat(String(v).replace(/,/g,''));
+function price(){const c=CMAP[S.me.country];const cur=(typeof isNative!=='undefined'&&!isNative)?'USD':(c?c[3]:'USD');const pr=PRICE[cur]||PRICE.USD;const n=v=>parseFloat(String(v).replace(/,/g,''));
   const per=(v,m)=>{const x=n(v)/m;return cur==='AED'?String(Math.round(x)):x.toFixed(2)};
   return {sym:pr[0],gold:pr[1],m3:pr[2],m6:pr[3],pm3:per(pr[2],3),pm6:per(pr[3],6)}}
 /* Fork and knife, for partner restaurants. */
@@ -1625,18 +1625,19 @@ function renderSheet(){
     const head={interests:['Send interests with Gold','Free shows who fits you and how well. Gold lets you reach out to them.'],picks:['See today’s 5 picks','Hand-chosen for you every day. Gold reveals all of them.'],
       chat:[p&&p.first?`Start talking to ${p.first}`:'Start talking','Chat opens when either of you has Gold.'],private:['Browse privately','With Gold, people do not see that you viewed them.'],
       profile:[p?`See ${pr2} full profile`:'See full profiles','Name, photos, mindset side by side and every reason you match.'],likes:['See who likes you','Accept and chat with the people who already chose you.'],
-      nearby:['See who they are','Every name, photo and profile, plus interests, chat and daily picks.']}[sheet.reason]||['NeuMarry Gold','Everything you need to find your person faster.'];
+      nearby:['See who they are','Every name, photo and profile, plus interests, chat and daily picks.'],nearby0:['Be ready when they join','No one fits you yet. With Gold, every person who fits you opens fully the day they join: name, photos, chat.']}[sheet.reason]||['NeuMarry Gold','Everything you need to find your person faster.'];
     const prev=p&&(sheet.reason==='profile'||sheet.reason==='likes')?`<div class="pwprev">${avatar(p,'md')}<span class="tx"><b>${p.age} · ${esc(p.cityName)}</b><span>${esc(p.os)}, ${esc(p.oc)}</span></span><span class="mpct"><b>${compat(p).total}%</b><small>match</small></span></div>`:'';
     if(Bill()&&!store&&!storeLoading)loadStore().then(x=>{if(x&&sheet&&sheet.type==='upgrade')render()});
     const opts=planOpts(),canBuy=!!(Bill()&&store&&store[pick]);
     if(me.plan!=='free')return sheetShell('Your plan',`<div class="callout">${ic('crown')}<span>You have Gold. Everything is unlocked.</span></div>`,me.goldSource==='google'?MANAGE_SUB():'');
     const nLike=PROFILES.filter(x=>baseEligible(x)&&S.interests[x.id]==='received').length;
     return sheetShell('NeuMarry Gold',`<div class="nm-ghero"><span class="cr">${ic('crown')}</span><h3>${nLike?`${nLike} ${nLike===1?'person already likes':'people already like'} you`:esc(head[0])}</h3><p>${nLike?'Gold lets you see who they are and reply. Every one of them is fully verified.':esc(head[1])}</p></div>${prev}
-     <div class="plans" role="radiogroup" aria-label="Gold plans">${opts.map(([k,l,tot,pm,tag])=>`<button class="plan pick${pick===k?' on':''}" data-a="pickPlan" data-k="${k}" role="radio" aria-checked="${pick===k}"><span class="ph"><b>${l}</b>${tag?`<span class="pill ${k==='m3'?'gold':'good'}">${tag}</span>`:''}</span><span class="price">${pm}<small> /month</small></span>${k==='m1'?'':`<small class="hint">${tot} billed every ${l}</small>`}</button>`).join('')}</div>
+     <div class="plans" role="radiogroup" aria-label="Gold plans">${opts.map(([k,l,tot,pm,tag])=>`<button class="plan pick${pick===k?' on':''}" data-a="pickPlan" data-k="${k}" role="radio" aria-checked="${pick===k}"><span class="ph"><b>${l}</b>${tag?`<span class="pill ${k==='m3'?'gold':'good'}">${tag}</span>`:''}</span><span class="price">${pm}<small> /month</small></span>${k==='m1'?'':`<small class="hint">${!isNative&&!canBuy?`${tot} paid once for ${l}`:`${tot} billed every ${l}`}</small>`}</button>`).join('')}</div>
      <ul class="incl">${['Full profiles, names and photos','Send interests and chat','Daily introductions, and see who likes you','Browse privately'].map(x=>`<li>${ic('check')}<span>${x}</span></li>`).join('')}</ul>
      ${BETA?`<div class="callout gold">${ic('gift')}<span><b>Test version:</b> ${canBuy?'testers can switch on Gold for free to try everything, or buy it with Google Play.':'buying opens when NeuMarry launches. Until then, testers can switch on Gold for free to try everything.'}</span></div>`:''}
-     <p class="note">Cancel anytime in your Google Play account. Safety features, verification and reporting are always free.</p>`,
+     <p class="note">${!isNative&&!canBuy?'Paid once on neumarry.com with PayPal, in US dollars. Nothing renews by itself. No money back once Gold starts. Safety features, verification and reporting are always free.':'Cancel anytime in your Google Play account. Safety features, verification and reporting are always free.'}</p>`,
      canBuy?`${BETA?busyBtn('ghost','betaGold','Try Gold free'):`<button class="btn ghost" data-a="closeSheet">Not now</button>`}${busyBtn('gold','buyGold',ic('crown')+'Get Gold')}`:
+     !isNative?`${BETA?busyBtn('ghost','betaGold','Try Gold free'):`<button class="btn ghost" data-a="closeSheet">Not now</button>`}${busyBtn('gold','buyGoldWeb',ic('crown')+'Get Gold · PayPal')}`:
      `<button class="btn ghost" data-a="closeSheet">Not now</button>${BETA?busyBtn('gold','betaGold',ic('crown')+'Try Gold free'):`<button class="btn gold" data-a="buySoon">${ic('crown')}Get Gold</button>`}`);}
   if(t==='verifyGate'){const pendIS=(me.idCheck&&me.idCheck.status==='pending')||(me.selfieCheck&&me.selfieCheck.status==='pending');
     const all=[1,2,3].map(n=>vState(n,{},me)),wait=all.every(x=>x==='ok'||x==='wait'),first=[1,2,3].find(n=>!['ok','wait'].includes(all[n-1]))||1;
@@ -4421,7 +4422,7 @@ Object.assign(P15V,{adcheck:adCheck15,biz:biz15v,services:svc15v,svcplan:svcPlan
     let r=null;for(let i=0;i<4;i++){try{r=await API.fn('pay15',{action:'check',order:p.order})}catch(e){r=null}if(r&&r.status!=='waiting')break;await new Promise(f=>setTimeout(f,1500))}
     if(!r||r.status!=='paid'){toast(r&&r.status==='waiting'?'PayPal has not confirmed it yet. Please open this again in a minute.':'The payment did not go through. Nothing was charged.','info');if(!r||r.status!=='waiting'){try{localStorage.removeItem(KEY)}catch(e){}}return}
     try{localStorage.removeItem(KEY)}catch(e){}history.replaceState(null,'',location.pathname);
-    try{await _rpc(p.name,p.args);await load15();P15.v=['book15','team_join15'].includes(p.name)?'tickets':(p.v||null);Object.keys(P15).forEach(k=>{if(['rooms','bd','rf','sl','ld','ads','tk'].includes(k))P15[k]=undefined});P15.ex={};render();toast('Paid with PayPal. Done.','tick2')}
+    try{await _rpc(p.name,p.args);if(p.name==='gold_web15'){await _lm();sheet=null}await load15();P15.v=['book15','team_join15'].includes(p.name)?'tickets':(p.v||null);Object.keys(P15).forEach(k=>{if(['rooms','bd','rf','sl','ld','ads','tk'].includes(k))P15[k]=undefined});P15.ex={};render();toast('Paid with PayPal. Done.','tick2')}
     catch(e){await load15();render();toast('Paid. Please tap the button once more to finish.','info')}}
   const _lm=loadMe;loadMe=async function(){const r=await _lm.apply(this,arguments);if(P15on()||(typeof EP_ON==='function'&&EP_ON()))setTimeout(resume,300);return r};
   /* the note shown above is the only one: the screen's own error toast right after it stays quiet */
@@ -4886,7 +4887,7 @@ function jhNone(){const k=jhCounts(),n=k&&k.joined;
    ${n?`<span class="jh-big">${Number(n).toLocaleString('en')}</span><span class="jh-cap">members have joined, in many countries</span>`:`<span class="jh-big sm">Members are joining</span><span class="jh-cap">from many countries, every one checked</span>`}
    <span class="jh-facts"><i>${ic('shield')}ID + live selfie</i><i>${ic('lock')}Numbers private</i><i>${ic('users')}Family can join</i></span>
    <span class="jh-wait"><b>${ic('sparkle')}</b><span><strong>Your matches appear here</strong>as people who fit your roots and plans join</span></span>
-   <button class="jh-cta jh-gbtn" data-a="upgrade" data-r="nearby">${ic('crown')}Get Gold</button>
+   <button class="jh-cta jh-gbtn" data-a="upgrade" data-r="nearby0">${ic('crown')}Get Gold</button>
    <small class="jh-hon">No one fits you yet. We say so honestly, so you decide.</small></div>`}
 /* chat: no phone numbers, emails or outside IDs (server checks too) */
 const JH_CONTACT=[/(\+?\d[\s\-.()/]*){8,}/,/[a-z0-9._%+-]+\s*(@|\(at\)|\[at\])\s*[a-z0-9-]+(\s*(\.|\(dot\)|\[dot\])\s*[a-z0-9-]+)+/i,/\b(gmail|yahoo|hotmail|outlook|icloud|protonmail)\b/i,/\b(whats\s*app|watsapp|whtsapp|wa\.me|telegram|t\.me|snapchat|snap\s*id|insta(gram)?\s*(id|handle|pe|par)|signal\s*(id|number)|wechat|viber|line\s*id|kik|skype\s*id)\b/i,/(^|\s)@[a-z0-9_.]{3,}/i];
@@ -4944,6 +4945,11 @@ function jhMeetSheet(){const p=byId(sheet.id)||{},city=(S.me&&(S.me.city||S.me.c
     async meetCancel(el){try{await API.rpc('meet_cancel15',{mid:el.dataset.mid})}catch(e){fail(e)}re(el.dataset.id)},
     meetShare(el){const mt=(MT.st[el.dataset.id]||{}).meet;if(!mt)return;const t=`My NeuMarry first meetup: ${mt.place}, ${mt.city||''}, ${mtWhen(mt.at)}.`;
       if(navigator.share)navigator.share({text:t}).catch(()=>{});else{try{navigator.clipboard.writeText(t);toast('Plan copied. Send it to a friend.','ok')}catch(e){}}}})})();
+/* ---------- Gold on the website with PayPal (his ok 10 Nov: new prices; nothing sold inside the Android app) ----------
+   gold_web15 needs a paid PayPal credit; without one the pay15 flow (part12) opens PayPal and finishes on return. */
+A.buyGoldWeb=async function(){if(busy||isNative)return;const plan=(sheet&&sheet.pick)||'m3';busy='buyGoldWeb';render();
+  try{await API.rpc('gold_web15',{plan});await loadMe();sheet=null;toast('Gold is on. Enjoy full profiles and chat.','ok')}
+  catch(e){if(!/PayPal|not available/i.test(e&&e.message||''))fail(e)}finally{busy='';render()}};
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 
