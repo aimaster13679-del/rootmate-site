@@ -4678,7 +4678,7 @@ function brand15(html) {
 
 /* ---------- NeuMarry Event Partners (his ok 9 Nov 2026 18:32 on the Event Partners mock) ----------
    Families (any signed-in member) see verified venues and wedding services with their prices, free, and send a request
-   (date, guests, short note). Businesses get a page: Event Partner US$29 / Pro US$59 a month, 14 days free without a card,
+   (date, guests, short note). Businesses get a page: Event Partner US$29 / Pro US$59 a month, 7 days free without a card,
    paid on the website with PayPal (never inside the Android app). Pro = shown first in the city, marked "Sponsored".
    NeuMarry only (the NeuAmigo build has its own partner plans). Server: migration 20261109190000_event_partners. */
 const EP_ON=()=>!(typeof P15on==='function'&&P15on());
@@ -4704,7 +4704,7 @@ function renderEP(){if(EPS.list===undefined)setTimeout(epLoadList,0);const me=S.
     ${chips}
     ${L===null||L===undefined?spinner('Loading'):L===false?`<div class="ep-empty">${ic('alert')}<b>Could not load</b><button class="btn ghost" data-a="epReload">Try again</button></div>`
       :L.length?L.map(card).join(''):`<div class="ep-empty">${ic('store2')}<b>No partners${EPS.cat?' for '+esc(EPS.cat):''}${me.country?' in '+esc(me.country):''} yet</b><span>New businesses join every week. Check again soon.</span></div>`}
-    <button class="ep-own" data-a="epBiz"><span>${ic('store2')}</span><div><b>Own a venue or wedding service?</b><small>List your business · 14 days free</small></div><i>›</i></button>
+    <button class="ep-own" data-a="epBiz"><span>${ic('store2')}</span><div><b>Own a venue or wedding service?</b><small>List your business · 7 days free</small></div><i>›</i></button>
    </div></div></div>`}
 function epReqForm(b){const f=EPS.rf||{};const g=[['10','10'],['25','25'],['50','50'],['100','100'],['200','200'],['500','500+']];
   return `<div class="ep-rf"><label>Date (optional)</label><input id="ep-d" type="date" min="${new Date().toISOString().slice(0,10)}" value="${esc(f.d||'')}">
@@ -4726,7 +4726,7 @@ function renderEPB(full){if(EPS.mine===undefined)setTimeout(epLoadMine,0);const 
     <label>Business registration number <small>(checked by a person, never shown)</small></label><input id="ep-bl" maxlength="60" value="${esc((b&&b.licence)||'')}">
     <label>One line about you</label><input id="ep-ba" maxlength="200" value="${esc((b&&b.about)||'')}" placeholder="e.g. Hall for up to 300 guests, halal and vegetarian kitchens">
     <button class="btn primary block" data-a="epSave"${EPS.busy==='save'?' disabled':''}>${EPS.busy==='save'?'Saving…':b?'Save details':'Create my page'}</button></div>`;
-  if(!b)return shell(`<div class="ep-hero"><b>Show families your services and prices</b><span>14 days free, no card. Then US$29 or US$59 a month, paid on neumarry.com. Nothing renews by itself.</span></div>${form}`);
+  if(!b)return shell(`<div class="ep-hero"><b>Show families your services and prices</b><span>7 days free, no card. Then US$29 or US$59 a month, paid on neumarry.com. Nothing renews by itself.</span></div>${form}`);
   const until=b.planUntil?new Date(b.planUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'}):'';
   const status=`<div class="ep-st"><div class="ep-sti ${b.active?'ok':'off'}">${ic(b.active?'check':'clock')}<div><b>${b.active?(b.plan==='ep_pro'?'Event Partner Pro':'Event Partner'):'Page not showing'}</b><small>${b.active?'Active until '+until:'Pick a plan below to show your page'}</small></div></div>
     <div class="ep-sti ${b.verified?'ok':'wait'}">${ic(b.verified?'shield':'clock')}<div><b>${b.verified?'Verified business':b.licence?'Checking your registration':'Add your registration number'}</b><small>${b.verified?'Families see the badge':b.licence?'Usually within 24 hours':'Needed before families can see you'}</small></div></div>
@@ -4736,7 +4736,7 @@ function renderEPB(full){if(EPS.mine===undefined)setTimeout(epLoadMine,0);const 
     ${rows.length<lim?`<button class="btn ghost block" data-a="epRowAdd">${ic('plus')} Add a service</button>`:`<p class="ep-fine">Up to ${lim} services on this plan.</p>`}
     <button class="btn primary block" data-a="epSvcSave"${EPS.busy==='svc'?' disabled':''}>${EPS.busy==='svc'?'Saving…':'Save services'}</button></div>`;
   const plan=(k,t,items,pro)=>`<div class="ep-plan${pro?' pro':''}${b.plan===k&&b.active?' on':''}"><div class="ep-ph"><b>${t}</b><span>${P[k]?money(P[k],'USD'):''}<small> a month</small></span></div><ul>${items.map(x=>`<li>${ic('check')}${esc(x)}</li>`).join('')}</ul>
-    <button class="btn ${pro?'':'primary'} block" data-a="epPlan" data-k="${k}"${EPS.busy===k?' disabled':''}>${EPS.busy===k?'One moment…':!M.trialUsed&&!b.active?'Start 14 days free · no card':b.plan===k&&b.active?'Add 1 more month · '+money(P[k],'USD'):'Pay 1 month · '+money(P[k],'USD')}</button></div>`;
+    <button class="btn ${pro?'':'primary'} block" data-a="epPlan" data-k="${k}"${EPS.busy===k?' disabled':''}>${EPS.busy===k?'One moment…':!M.trialUsed&&!b.active?'Start 7 days free · no card':b.plan===k&&b.active?'Add 1 more month · '+money(P[k],'USD'):'Pay 1 month · '+money(P[k],'USD')}</button></div>`;
   const plans=`<h3 class="ep-h3">Plans</h3>${plan('ep_basic','Event Partner',['Your page with services and prices','Up to 10 services','Families send you requests'],false)}${plan('ep_pro','Event Partner Pro',['Everything in Event Partner','Unlimited services','Shown first in your city, marked "Sponsored"','Your venue can be picked for NeuMarry dinners','Page views and requests'],true)}
     <p class="ep-fine">${isNative?'Plans are paid on the NeuMarry website, not in this app.':'Paid once with PayPal. Nothing renews by itself.'} NeuMarry takes no share of what families pay you.</p>`;
   const reqs=`<h3 class="ep-h3">Requests from families <small>${(M.requests||[]).length}</small></h3>${(M.requests||[]).length?(M.requests||[]).map(r=>`<div class="ep-req"><b>${esc(r.name)}${r.guests?' · '+r.guests+' guests':''}</b><small>${r.date?esc(new Date(r.date+'T12:00:00').toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'})):'Date open'}${r.note?' · '+esc(r.note):''}</small>${r.email?`<a class="link" href="mailto:${esc(r.email)}">${esc(r.email)}</a>`:''}</div>`).join(''):`<p class="ep-fine">No requests yet. Families can send one once your page is showing.</p>`}`;
@@ -4746,14 +4746,14 @@ function renderEPB(full){if(EPS.mine===undefined)setTimeout(epLoadMine,0);const 
 (function(){
   try{if(/#ep-biz/.test(location.hash)){sessionStorage.setItem('nm.epbiz','1');history.replaceState(null,'',location.pathname+location.search)}}catch(e){}
   const bizMode=()=>{try{return sessionStorage.getItem('nm.epbiz')==='1'}catch(e){return false}};
-  const _me=renderMe;renderMe=function(){const h=_me();if(!EP_ON())return h;const t=`<button type="button" class="fu-t ep-t1" data-a="epOpen"><span>${ic('dish')}</span><b>Event Partners</b><em>Venues and wedding services</em></button><button type="button" class="fu-t ep-t2" data-a="epBiz"><span>${ic('store2')}</span><b>Your business</b><em>List a venue or service</em></button>`;
+  const _me=renderMe;renderMe=function(){const h=_me();if(!EP_ON())return h;const t=`<button type="button" class="fu-t ep-t1" data-a="epOpen"><span>${ic('home')}</span><b>Event Partners</b><em>Venues and wedding services</em></button><button type="button" class="fu-t ep-t2" data-a="epBiz"><span>${ic('store2')}</span><b>Your business</b><em>List a venue or service</em></button>`;
     const k=h.indexOf('<div class="fu-tiles">');if(k>=0){const e=h.indexOf('</div>',h.indexOf('data-r="me"',k));if(e>=0)return h.slice(0,e)+t+h.slice(e)}
     const box=`<div class="ep-me">${t.replace(/fu-t /g,'fu-t ep-mt ')}</div>`;const n=h.indexOf('class="likes nm-bio"');if(n>=0){const e=h.indexOf('</button>',n);if(e>=0)return h.slice(0,e+9)+box+h.slice(e+9)}
     const v=h.indexOf('<div class="panel"><h3');return v>=0?h.slice(0,v)+box+h.slice(v):h};
   const _pv=renderProfileView;renderProfileView=function(){if(view&&view.type==='ep')return renderEP();if(view&&view.type==='epbiz')return renderEPB(false);return _pv.apply(this,arguments)};
   const _w=renderWelcome;renderWelcome=function(){if(EPS.full)return renderEPB(true);
     if(EP_ON()&&bizMode()&&!(API.email&&API.email()))return `<div class="ep-full"><div class="scroll" id="main"><div class="main-inner pad ep-in ep-welc">
-      <img src="img/nm-mark.png" alt="" class="ep-mk"><h1>NeuMarry Event Partners</h1><p>Show families your venue or wedding service, with your prices. 14 days free, no card.</p>
+      <img src="img/nm-mark.png" alt="" class="ep-mk"><h1>NeuMarry Event Partners</h1><p>Show families your venue or wedding service, with your prices. 7 days free, no card.</p>
       <ul class="ep-svc"><li><span>Event Partner</span><b>US$29 a month</b></li><li><span>Event Partner Pro</span><b>US$59 a month</b></li></ul>
       <button class="btn primary block" data-a="start">Create my business account</button><button class="btn ghost block" data-a="login">I already have an account</button>
       <button class="link" data-a="epNotBiz">I am looking for a partner, not a business</button></div></div></div>`;
