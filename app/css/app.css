@@ -2272,3 +2272,4 @@ button.mt-v{width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer
 .mt-chips button.on{background:linear-gradient(135deg,#FFE29A,#F6C453);border-color:#E9A93A;color:#2B1A00}
 html:not(.gl-lt) .mt-chips button{color:#fff;background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.16)}html:not(.gl-lt) .mt-chips button.on{color:#2B1A00;background:linear-gradient(135deg,#FFE29A,#F6C453)}
 .mt-none{display:flex;gap:10px;padding:14px;border-radius:16px;background:rgba(35,27,58,.05);font-size:13px;line-height:1.4}.mt-none b{display:block}.mt-none svg{flex:0 0 18px;width:18px;height:18px}
+.mt-fee{display:block;margin-bottom:3px}.mt-note>span{display:grid;gap:2px}
