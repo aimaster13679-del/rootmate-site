@@ -2219,3 +2219,21 @@ html:not(.gl-lt) .jh-tags i{background:rgba(255,255,255,.08);border-color:rgba(2
 html:not(.gl-lt) .jh-safe{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);color:#fff}
 @media (prefers-reduced-motion:reduce){.jh-shine{display:none}.jh-bar i b{animation:none}}
 html:not(.gl-lt) .jh-none{background:linear-gradient(150deg,rgba(255,255,255,.1),rgba(255,255,255,.03))!important;border-color:rgba(255,255,255,.14)!important}
+/* Pehli Mulaqat in chat (part15) */
+.mt-line{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0 14px 8px;padding:9px 12px;border-radius:16px;background:rgba(255,255,255,.7);border:1px solid rgba(35,27,58,.08);font-size:12.5px;font-weight:700;color:#4A4166}
+.mt-line>b{flex:0 0 28px;height:2px;border-radius:2px;background:rgba(35,27,58,.15)}.mt-line small{flex-basis:100%;font-weight:600;color:#6B5E8C}
+.mt-s{display:inline-flex;align-items:center;gap:6px}.mt-s i{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;font-style:normal;font-size:11px;background:rgba(35,27,58,.08)}.mt-s.on i{background:#F6C453;color:#2B1A00}.mt-s svg{width:12px;height:12px}
+.mt-card{display:flex;align-items:center;gap:12px;margin:0 14px 8px;padding:12px 12px 12px 14px;border-radius:20px;background:linear-gradient(140deg,rgba(255,244,214,.96),rgba(255,231,240,.92));border:1px solid #fff;box-shadow:0 12px 26px -18px rgba(150,90,10,.6)}
+.mt-ic{flex:0 0 40px;height:40px;border-radius:14px;display:grid;place-items:center;background:#fff;color:#B7791F}.mt-ic svg{width:20px;height:20px}
+.mt-tx{flex:1;display:grid;gap:2px}.mt-tx b{font-size:14px;color:#2B1A00}.mt-tx small{font-size:12px;line-height:1.35;color:#5C4A2A}
+html:not(.gl-lt) .mt-line{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12);color:rgba(255,255,255,.8)}html:not(.gl-lt) .mt-line small{color:rgba(255,255,255,.6)}html:not(.gl-lt) .mt-line>b,html:not(.gl-lt) .mt-s i{background:rgba(255,255,255,.15)}
+html:not(.gl-lt) .mt-card{background:linear-gradient(140deg,rgba(255,255,255,.1),rgba(255,255,255,.04));border-color:rgba(255,255,255,.16)}html:not(.gl-lt) .mt-ic{background:rgba(255,255,255,.1);color:#F3D58A}html:not(.gl-lt) .mt-tx b{color:#fff}html:not(.gl-lt) .mt-tx small{color:rgba(255,255,255,.7)}
+.mt-sub{margin:0 0 12px}.mt-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}.mt-steps span{display:grid;justify-items:center;gap:5px;padding:10px 6px;border-radius:14px;font-size:12px;font-weight:700;text-align:center;background:rgba(35,27,58,.05)}
+.mt-steps b{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#F6C453;color:#2B1A00;font-size:12px}
+.mt-ex{font-size:11.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;opacity:.6;margin:4px 0 8px}
+.mt-v{display:flex;align-items:center;gap:12px;padding:12px;margin-bottom:8px;border-radius:18px;background:rgba(255,255,255,.75);border:1px solid rgba(35,27,58,.08)}
+.mt-v .grow{display:grid;gap:2px}.mt-v b{font-size:14.5px}.mt-v small{font-size:12px;opacity:.75}.mt-menu{opacity:1!important;font-weight:600}
+.mt-vi{flex:0 0 40px;height:40px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(140deg,#EDE6FF,#FFE3EC)}.mt-vi svg{width:19px;height:19px}
+.mt-pr{display:grid;justify-items:end;font-weight:800;font-size:15px}.mt-pr small{font-size:11px;font-weight:600;opacity:.65}
+.mt-note{display:flex;gap:9px;align-items:flex-start;margin-top:10px;padding:11px 12px;border-radius:14px;font-size:12.5px;line-height:1.4;background:rgba(255,246,222,.9);border:1px solid #F3D58A}.mt-note svg{flex:0 0 16px;width:16px;height:16px}
+html:not(.gl-lt) .mt-steps span,html:not(.gl-lt) .mt-v{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12)}html:not(.gl-lt) .mt-vi{background:rgba(255,255,255,.1)}html:not(.gl-lt) .mt-note{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.16)}
