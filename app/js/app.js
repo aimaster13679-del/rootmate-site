@@ -3854,7 +3854,7 @@ const p15launch=(keys,who)=>{if(!keys.some(k=>p15later(k)))return '';return `<di
 const p15tag=(k,unit)=>{const l=p15later(k);return `<span class="p15-lp">${l?'<i class="lt">LAUNCH PRICE</i>':''}<b>${p15price(k)}</b><small>${unit}</small>${l?`<span class="lat"><i>LATER</i>${l}</span>`:''}</span>`};
 const trial15=()=>!!(P15.d&&P15.d.on!==undefined&&!P15.d.trialUsed);
 const p15top=(t,back)=>`<div class="p15-top">${back?`<button class="p15-tb" data-a="p15back" aria-label="Back">${ic('back2')}</button>`:'<span class="p15-tb ghost"></span>'}<h1>${esc(t)}</h1><span class="p15-tb ghost"></span></div>`;
-const PH15={'Life Partner':'rings','Settle In':'house','Events & Friends':'hall','Membership':'keys','For Business':'store','Find a Room':'room','Travel Buddy for Parents':'plane','Job Referral':'office','Trusted Experts':'docs','Moving-Out Sale':'sofa','Friend Meetups':'table','Watch Parties':'stadium','Festivals':'lantern','Day Trips':'trip','Sports Leagues':'league'};
+const PH15={'Life Partner':'rings','Settle In':'house','Events & Friends':'hall','Membership':'keys','For Business':'store','Find a Room':'room','Travel Buddy for Parents':'plane','Job Referral':'office','Trusted Experts':'docs','Moving-Out Sale':'sofa','Friend Meetups':'table','Watch Parties':'stadium','Festivals':'catering','Day Trips':'trip','Sports Leagues':'league'};
 const ph15=t=>PH15[t]?`<span class="p15-ph"><img src="img/p15/${PH15[t]}.webp" alt="" loading="lazy" decoding="async"></span>`:'';
 const p15tile=(icn,tone,t,d,act,extra)=>`<button class="p15-g p15-t" data-a="${act}">${ph15(t)}<span class="p15-b ${tone}">${ic(icn)}</span><b>${esc(t)}</b><small>${esc(d)}</small>${extra||''}</button>`;
 function p15wrap(inner){return `<div class="scroll p15s" id="main"><div class="main-inner p15">${inner}</div></div>`}
@@ -5193,6 +5193,44 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
     const k=h.lastIndexOf('<div class="a3c"><div class="a3h"><b>Safety');return k>=0?h.slice(0,k)+extra+h.slice(k):h+extra};
   A.a3full=function(el){const id=el.dataset.k;A3.tab='members';A3.mem=id;A3.memd=A3.who[id]||null;if(!A3.memd)a3loadMem(id);render();const sc=document.querySelector('.a3v .scroll');if(sc)sc.scrollTop=0};
   const _oa=A.openAdmin;A.openAdmin=function(){A3.who={};return _oa.apply(this,arguments)}})();
+
+/* ---------- Sapphire look (his picks 12 Nov 2026 03:16 'D' + picture style 1, ok 03:26 'ok baki sab'; mock handoff/mocks/sapphire-d) ----------
+   1. html.sap: deep sapphire navy + champagne gold (dark) / ivory + navy + gold (light). Dark is the default until the member picks light.
+   2. No simple icons (his rule 12 Nov 01:59): every ic() becomes a colourful 3D picture (img/f3, Fluent Emoji 3D, MIT);
+      small controls (back, close, arrows) become plain gold text marks.
+   3. Matches (home): Zepto-like header: city + hello, a search bar whose words change by themselves, and a row of 3D shortcut tabs. */
+(function(){
+  try{if(!localStorage.getItem('nm.glassmode'))localStorage.setItem('nm.glassmode','dark')}catch(e){}
+  const F3=new Set(['check','users','heart','shield','lock','pin','crown','chat','cal','info','clock','globe','camera','eye','sparkle','ticket','mail','gift','send','phone','star','mic','video','user','trash','key','brief','id','flag','home','dish','party','bolt','chart','search','badge','alert','copy','camera2','store2','qr','mega2','tag2','ball2','bed2','ring','shield2','lock2','refresh','scan']);
+  const AL={star2:'star',home2:'home',rings:'ring',tick:'check'};
+  const TXT={back:'‹',back2:'‹',chev:'›',chev2:'›',x:'×',more:'⋯',plus:'+',tick2:'✓',filter:'⋯',share:'↗',down:'⌄',up:'⌃'};
+  const _ic=ic;
+  ic=function(n,cls){const k=AL[n]||n;
+    if(F3.has(k))return `<img class="ic f3${cls?' '+cls:''}" src="img/f3/${k}.webp" alt="" aria-hidden="true" draggable="false">`;
+    if(TXT[k])return `<span class="ic tx${cls?' '+cls:''}" aria-hidden="true">${TXT[k]}</span>`;
+    return _ic(n,cls)};
+  const _r=render;render=function(){document.documentElement.classList.add('sap');return _r.apply(this,arguments)};
+  const SAPTABS=[['ring','For you','sort-best'],['globe','Same roots','roots'],['ticket','Events','events'],['dish','First meet','meet'],['home','Family','family'],['crown','Gold','gold']];
+  function sapHead(){const me=S.me||{};const city=esc(me.cityName||me.city||'');const nm=esc(((me.name||'').split(' ')[0])||'');
+    const words=['your roots','your city','your values'];
+    return `<div class="sap-hd"><span class="sap-sp" style="right:74px;top:20px">✦</span><span class="sap-sp" style="right:150px;top:52px;animation-delay:.9s;font-size:9px">✦</span>
+      <div class="sap-top"><div><div class="sap-city">${city?`Your city · ${city}`:'NeuMarry'}</div><div class="sap-hi">${typeof greet==='function'?greet():'Hello'}${nm?`, ${nm}`:''}</div></div></div>
+      <button class="sap-srch" data-a="sapsearch" aria-label="Search and filters">Search by <span class="sap-cyc">${words.map(w=>`<span>${w}</span>`).join('')}</span></button>
+      <div class="sap-tabs" role="list">${SAPTABS.map(([i,t,k],j)=>`<button class="sap-tab${j===0?' on':''}" data-a="saptab" data-k="${k}" role="listitem"><img src="img/f3/${i}.webp" alt="" aria-hidden="true">${t}</button>`).join('')}</div></div>`}
+  const _rm=renderMatches;
+  renderMatches=function(){const h=_rm();if(!(typeof isLive==='function'&&isLive()))return h;
+    const at=h.indexOf('<div class="scroll" id="main">');if(at<0)return h;
+    return sapHead()+h.slice(at)};
+  Object.assign(A,{
+    sapsearch(){if(A.filters)return A.filters();if(A.openFilters)return A.openFilters();toast('Filters are below')},
+    saptab(el){const k=el.dataset.k;
+      if(k==='events'){S.tab='events';view=null;render();return}
+      if(k==='gold'){if(A.gold)return A.gold();if(A.openGold)return A.openGold()}
+      if(k==='roots'||k==='sort-best'){const m=document.getElementById('main');if(m)m.scrollTo({top:0,behavior:'smooth'});return}
+      if(k==='family'){S.tab='me';view=null;render();return}
+      if(k==='meet'){S.tab='connections';view=null;render();return}}
+  });
+})();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 /* only on the first open after installing (fast open stays ~1 s every other time; later updates come quietly) */
