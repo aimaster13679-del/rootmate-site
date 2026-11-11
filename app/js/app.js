@@ -1300,7 +1300,7 @@ function renderChatView(id){
       `<div class="msg ${m.f}${m.pending?' pending':''}">${esc(m.x)}${m.f!=='sys'?`<time>${m.pending?'Sending…':timeStr(m.ts)}</time>`:''}</div>${m.flag&&m.f==='them'?`<div class="msg sys">${ic('shield')} This message mentions money or visas. Never send money or pay for visa help, and report anyone who asks.</div>`:''}`).join('')}
    </div></div>
    ${canChat(id)&&msgs.filter(m=>m.f!=='sys').length<6?starters(p):''}
-   ${typeof famCard==='function'&&FAM_ON()?famCard(id):typeof jhMeet==='function'?jhMeet(id):''}${typeof jhBlockNote==='function'?jhBlockNote():''}${canChat(id)?`<div class="composer pad"><label class="sr" for="chat-in">Message</label><input id="chat-in" type="text" maxlength="1000" placeholder="Message ${esc(p.first||'')}" autocomplete="off" enterkeyhint="send"><button class="btn primary" data-a="send" data-id="${id}" aria-label="Send">${ic('send')}</button></div>`:
+   ${(typeof famCardAll==='function'&&famCardAll(id))||(typeof jhMeet==='function'?jhMeet(id):'')}${typeof jhBlockNote==='function'?jhBlockNote():''}${canChat(id)?`<div class="composer pad"><label class="sr" for="chat-in">Message</label><input id="chat-in" type="text" maxlength="1000" placeholder="Message ${esc(p.first||'')}" autocomplete="off" enterkeyhint="send"><button class="btn primary" data-a="send" data-id="${id}" aria-label="Send">${ic('send')}</button></div>`:
    `<div class="lockbar pad"><span class="tx"><b>Read and reply to ${esc(p.first||'your match')}</b><small>Chat opens when either of you has Gold</small></span><button class="btn gold" data-a="upgrade" data-r="chat" data-id="${id}">${ic('crown')}Unlock</button></div>`}
   </div>`;
 }
@@ -4967,12 +4967,13 @@ function pxPrice(){const P=S.px;if(!P||!P.gold_m1||!P.gold_m1.cents)return null;
    After a booked first meetup has happened, each member privately says "Continue" or "Not for me" (the other sees it only
    when both say Continue). Then "Family Mulaqat": each side picks who comes (taps), a verified restaurant with a family table,
    day and time; fee per side (family_fee, country price); details reach each family in their own app language.
-   MOCK: localStorage nm.famtest = 1..5 picks the step shown in chat; no booking is made. */
+   Live since his ok 11 Nov 20:25 (fam_state15 / meet_after15 / fam_ask15 / fam_answer15). Local preview of each step:
+   localStorage nm.famtest = 1..5 (no booking is made in preview). */
 const FAM_ON=()=>{try{return +localStorage.getItem('nm.famtest')||0}catch(e){return 0}};
 const FAM_WHO=[['Mother','heart'],['Father','users'],['Sister','heart'],['Brother','users'],['Grandparent','home'],['Guardian','shield']];
 function famCard(id){const st=FAM_ON();if(!st||!canChat(id))return '';const p=byId(id)||{},nm=esc(p.first||'them'),fee=pxs('family_fee','US$14.99');
-  if(st===1)return `<div class="mt-card fm-q"><span class="mt-ic" aria-hidden="true">${ic('heart')}</span><span class="mt-tx"><b>How was your first meetup?</b><small>Only you see your answer. ${nm} sees it only if you both choose Continue.</small></span><span class="mt-yn"><button class="btn ghost sm" data-a="famNo">Not for me</button><button class="btn gold sm" data-a="famYes">Continue</button></span></div>`;
-  if(st===2)return `<div class="mt-card"><span class="mt-ic" aria-hidden="true">${ic('check')}</span><span class="mt-tx"><b>You chose Continue</b><small>Waiting for their answer. Nothing is shown to ${nm} until they choose too.</small></span></div>`;
+  if(st===1)return `<div class="mt-card fm-q"><span class="mt-ic" aria-hidden="true">${ic('heart')}</span><span class="mt-tx"><b>How was your first meetup?</b><small>Only you see your answer. They see it only if you both choose Continue.</small></span><span class="mt-yn"><button class="btn ghost sm" data-a="famNo">Not for me</button><button class="btn gold sm" data-a="famYes">Continue</button></span></div>`;
+  if(st===2)return `<div class="mt-card"><span class="mt-ic" aria-hidden="true">${ic('check')}</span><span class="mt-tx"><b>You chose Continue</b><small>Waiting for their answer. Nothing is shown to them until they choose too.</small></span></div>`;
   if(st===3)return `<div class="mt-card fm-go"><span class="mt-ic" aria-hidden="true">${ic('users')}</span><span class="mt-tx"><b>You both chose Continue</b><small>Ready for your families to meet? A family table at a verified restaurant, set menu and price.</small></span><button class="btn gold sm" data-a="famOpen" data-id="${id}">${ic('users')}Family Mulaqat</button></div>`;
   if(st===4)return `<div class="mt-card"><span class="mt-ic" aria-hidden="true">${ic('users')}</span><span class="mt-tx"><b>${nm}'s family invited your family</b><small><b>Saffron &amp; Sage, Toronto</b> · Sat 21 Nov, 1:00 pm · Family table for 6</small><small>Booking fee for your side: <b>${fee}</b></small></span><span class="mt-yn"><button class="btn ghost sm" data-a="famNo">Not now</button><button class="btn gold sm" data-a="famYes">Yes, we will come</button></span></div>`;
   return `<div class="mt-card ok"><span class="mt-ic" aria-hidden="true">${ic('check')}</span><span class="mt-tx"><b>Family Mulaqat booked</b><small><b>Saffron &amp; Sage, Toronto</b> · Sat 21 Nov, 1:00 pm · 6 people</small><small>Each family gets the details in its own language.</small></span><button class="btn ghost sm" data-a="famShare">${ic('share')}Send to family</button></div>`}
@@ -4987,7 +4988,7 @@ function famSheet(){const p=byId(sheet.id)||{},pk=sheet.pick||{who:['Mother','Fa
    ${places.map((v,i)=>`<button class="mt-v${pk.place===i+1?' on':''}" data-a="famPlace" data-k="${i+1}"><span class="mt-vi">${ic('pin')}</span><span class="grow"><b>${v[0]}</b><small>Restaurant · Toronto</small><small class="mt-menu">${v[1]}</small></span><span class="mt-pr">${v[2].split(' ')[0]}<small>per person</small></span></button>`).join('')}
    <p class="mt-ex">Day</p><div class="mt-chips">${days.slice(0,7).map((d,i)=>`<button class="${pk.day===i?'on':''}" data-a="famDay" data-k="${i}">${d.toLocaleDateString(L,{weekday:'short',day:'numeric'})}</button>`).join('')}</div>
    <p class="mt-ex">Time</p><div class="mt-chips">${MT_TIMES.map((t,i)=>`<button class="${pk.time===i?'on':''}" data-a="famTime" data-k="${i}">${t[1]}</button>`).join('')}</div>
-   <div class="fm-lang">${ic('globe')}<span><b>Each family in its own language</b>Your family reads the plan in your app language; ${esc(p.first||'their')}'s family reads it in theirs. Both see the time in their own city.</span></div>
+   <div class="fm-lang">${ic('globe')}<span><b>Each family in its own language</b>Your family reads the plan in your app language; their family reads it in theirs. Both see the time in their own city.</span></div>
    <div class="mt-note">${ic('shield')}<span><b class="mt-fee"><span>Booking fee for each side:</span> ${fee}</b><span>Paid on neumarry.com. Food is paid at the restaurant. The restaurant sees only first names. No phone numbers are shared. No money back once booked.</span></span></div>`,
    `<button class="btn ghost" data-a="closeSheet">Not now</button><button class="btn gold" data-a="famSoon">${ic('users')}Invite their family · ${fee}</button>`)}
 (function(){const _rs=renderSheet;renderSheet=function(){if(sheet&&sheet.type==='fam')return famSheet();return _rs.apply(this,arguments)};
@@ -4996,6 +4997,52 @@ function famSheet(){const p=byId(sheet.id)||{},pk=sheet.pick||{who:['Mother','Fa
     famWho(el){const k=el.dataset.k,w=pk().who;sheet.pick.who=w.includes(k)?w.filter(x=>x!==k):[...w,k];render()},
     famPlace(el){pk().place=+el.dataset.k;render()},famDay(el){pk().day=+el.dataset.k;render()},famTime(el){pk().time=+el.dataset.k;render()},
     famYes(){toast('Preview only. Nothing was sent.','info')},famNo(){toast('Preview only. Nothing was sent.','info')},famShare(){toast('Preview only.','info')},famSoon(){toast('Preview only. Booking opens after your ok.','info')}})})();
+
+/* ---------- live Family Mulaqat ---------- */
+const FS={};
+function fsLoad(id){if(FS[id]!==undefined)return;FS[id]=null;API.rpc('fam_state15',{other:id}).then(r=>{FS[id]=r||false;render()}).catch(()=>{FS[id]=false})}
+function famLive(id){if(!canChat(id))return '';fsLoad(id);const st=FS[id];if(!st||st.phase==='none')return '';const p=byId(id)||{},nm=esc(p.first||'them'),fee=pxs('family_fee','US$14.99');
+  if(st.phase==='ask')return `<div class="mt-card fm-q"><span class="mt-ic" aria-hidden="true">${ic('heart')}</span><span class="mt-tx"><b>How was your first meetup?</b><small>Only you see your answer. They see it only if you both choose Continue.</small></span><span class="mt-yn"><button class="btn ghost sm" data-a="famAfter" data-v="0" data-mid="${st.meet}" data-id="${id}">Not for me</button><button class="btn gold sm" data-a="famAfter" data-v="1" data-mid="${st.meet}" data-id="${id}">Continue</button></span></div>`;
+  if(st.phase==='wait')return `<div class="mt-card"><span class="mt-ic" aria-hidden="true">${ic('check')}</span><span class="mt-tx"><b>You chose Continue</b><small>Waiting for their answer. Nothing is shown to them until they choose too.</small></span></div>`;
+  if(st.phase==='both')return `<div class="mt-card fm-go"><span class="mt-ic" aria-hidden="true">${ic('users')}</span><span class="mt-tx"><b>You both chose Continue</b><small>Ready for your families to meet? A family table at a verified restaurant, set menu and price.</small></span><button class="btn gold sm" data-a="famOpenL" data-id="${id}">${ic('users')}Family Mulaqat</button></div>`;
+  const f=st.fam;if(!f)return '';
+  if(f.status==='booked')return `<div class="mt-card ok"><span class="mt-ic" aria-hidden="true">${ic('check')}</span><span class="mt-tx"><b>Family Mulaqat booked</b><small><b>${esc(f.place)}, ${esc(f.city||'')}</b> · ${mtWhen(f.at)} · ${f.people} people</small><small>Each family gets the details in its own language.</small></span><button class="btn ghost sm" data-a="famShareL" data-id="${id}">${ic('share')}Send to family</button></div>`;
+  if(f.mine)return `<div class="mt-card"><span class="mt-ic" aria-hidden="true">${ic('users')}</span><span class="mt-tx"><b>Family invite sent</b><small><b>${esc(f.place)}</b> · ${mtWhen(f.at)}</small><small>Waiting for their answer</small></span><button class="btn ghost sm" data-a="famCancel" data-fid="${f.id}" data-id="${id}">Cancel</button></div>`;
+  return `<div class="mt-card"><span class="mt-ic" aria-hidden="true">${ic('users')}</span><span class="mt-tx"><b>${nm}'s family invited your family</b><small><b>${esc(f.place)}, ${esc(f.city||'')}</b> · ${mtWhen(f.at)}</small><small>Booking fee for your side: <b>${fee}</b></small></span><span class="mt-yn"><button class="btn ghost sm" data-a="famAns" data-v="0" data-fid="${f.id}" data-id="${id}">Not now</button><button class="btn gold sm" data-a="famAnsYes" data-fid="${f.id}" data-id="${id}">${st.gold?'Yes, we will come':'Gold to say yes'}</button></span></div>`}
+function famCardAll(id){return FAM_ON()?famCard(id):famLive(id)}
+function famSheetL(){const p=byId(sheet.id)||{},pk=sheet.pick,fee=pxs('family_fee','US$14.99'),L=MT.places,yes=sheet.yes;
+  if(L===undefined&&!yes){MT.places=null;API.rpc('meet_places15').then(r=>{MT.places=r||[];render()}).catch(()=>{MT.places=[];render()})}
+  const days=mtDays(),loc=(window.RM_I18N&&RM_I18N.locale)||'en',money=(c,cur)=>pxFmt(c,cur||'USD');
+  const who=`<p class="mt-ex">From your side</p><div class="mt-chips">${FAM_WHO.map(w=>`<button class="${pk.who.includes(w[0])?'on':''}" data-a="famWhoL" data-k="${w[0]}">${w[0]}</button>`).join('')}</div>
+   <p class="fm-n">${ic('users')}<span>You + ${pk.who.length} from your family</span></p>`;
+  const note=`<div class="fm-lang">${ic('globe')}<span><b>Each family in its own language</b>Your family reads the plan in your app language; their family reads it in theirs. Both see the time in their own city.</span></div>
+   <div class="mt-note">${ic('shield')}<span><b class="mt-fee"><span>Booking fee for each side:</span> ${fee}</b><span>Paid on neumarry.com. Food is paid at the restaurant. The restaurant sees only first names. No phone numbers are shared. No money back once booked.</span></span></div>`;
+  if(yes)return sheetShell('Family Mulaqat',`<p class="mt-sub">Choose who comes from your family, then confirm.</p>${who}${note}`,
+    `<button class="btn ghost" data-a="closeSheet">Not now</button><button class="btn gold" data-a="famAnsGo"${pk.who.length&&!MT.busy?'':' disabled'}>${ic('users')}${MT.busy?'One moment…':'Yes, we will come · '+fee}</button>`);
+  const list=!L?`<p class="hint">Loading places…</p>`:!L.length?`<div class="mt-none">${ic('pin')}<span><b>No verified cafe near you yet</b>Cafes and restaurants are joining as NeuMarry Event Partners. You will see them here as soon as one in your country is checked.</span></div>`:
+    L.map(v=>{const sv=(v.services||[])[0]||{};return `<button class="mt-v${pk.bid===v.id?' on':''}" data-a="famPlaceL" data-bid="${v.id}"><span class="mt-vi">${ic('pin')}</span><span class="grow"><b>${esc(v.name)}</b><small>${esc(v.city||'')}</small>${sv.t?`<small class="mt-menu">${esc(sv.t)}</small>`:''}</span>${sv.p?`<span class="mt-pr">${money(sv.p,sv.cur)}<small>set price</small></span>`:''}</button>`}).join('');
+  const ok=pk.bid&&pk.day&&pk.time&&pk.who.length;
+  return sheetShell('Family Mulaqat',`<p class="mt-sub">Both families meet at a verified restaurant. Nothing is booked until both sides say yes.</p>
+   <div class="mt-steps"><span><b>1</b>Who comes</span><span><b>2</b>Place and time</span><span><b>3</b>Both families say yes</span></div>${who}${list}
+   ${pk.bid?`<p class="mt-ex">Day</p><div class="mt-chips">${days.map(d=>{const k=d.toISOString().slice(0,10);return `<button class="${pk.day===k?'on':''}" data-a="famDayL" data-k="${k}">${d.toLocaleDateString(loc,{weekday:'short',day:'numeric'})}</button>`}).join('')}</div>
+   <p class="mt-ex">Time</p><div class="mt-chips">${MT_TIMES.map(t=>`<button class="${pk.time===t[0]?'on':''}" data-a="famTimeL" data-k="${t[0]}">${t[1]}</button>`).join('')}</div>`:''}${note}`,
+   `<button class="btn ghost" data-a="closeSheet">Not now</button><button class="btn gold" data-a="famAsk"${ok&&!MT.busy?'':' disabled'}>${ic('users')}${MT.busy?'One moment…':'Invite their family · '+fee}</button>`)}
+(function(){const _rs=renderSheet;renderSheet=function(){if(sheet&&sheet.type==='famL')return famSheetL();return _rs.apply(this,arguments)};
+  const re=id=>{delete FS[id];render()};
+  Object.assign(A,{
+    async famAfter(el){try{await API.rpc('meet_after15',{mid:el.dataset.mid,yes:el.dataset.v==='1'})}catch(e){fail(e)}re(el.dataset.id)},
+    famOpenL(el){MT.places=undefined;sheet={type:'famL',id:el.dataset.id,pick:{who:['Mother','Father']}};render()},
+    famWhoL(el){const k=el.dataset.k,w=sheet.pick.who;sheet.pick.who=w.includes(k)?w.filter(x=>x!==k):[...w,k];render()},
+    famPlaceL(el){sheet.pick.bid=el.dataset.bid;render()},famDayL(el){sheet.pick.day=el.dataset.k;render()},famTimeL(el){sheet.pick.time=el.dataset.k;render()},
+    async famAsk(){const s=sheet,k=s.pick;if(MT.busy)return;MT.busy=1;render();
+      try{await API.rpc('fam_ask15',{other:s.id,bid:k.bid,who:k.who,t:new Date(k.day+'T'+k.time+':00').toISOString()});sheet=null;toast('Family invite sent. We will tell you when they answer.','ok');re(s.id)}catch(e){fail(e)}finally{MT.busy=0;render()}},
+    famAnsYes(el){const st=FS[el.dataset.id];if(st&&!st.gold){A.upgrade&&A.upgrade({dataset:{r:'meet'}});return}sheet={type:'famL',id:el.dataset.id,yes:el.dataset.fid,pick:{who:['Mother','Father']}};render()},
+    async famAnsGo(){const s=sheet;if(MT.busy)return;MT.busy=1;render();
+      try{await API.rpc('fam_answer15',{fid:s.yes,yes:true,who:s.pick.who});sheet=null;toast('Booked. Your families will meet.','ok');re(s.id)}catch(e){fail(e)}finally{MT.busy=0;render()}},
+    async famAns(el){try{await API.rpc('fam_answer15',{fid:el.dataset.fid,yes:false,who:[]})}catch(e){fail(e)}re(el.dataset.id)},
+    async famCancel(el){try{await API.rpc('fam_cancel15',{fid:el.dataset.fid})}catch(e){fail(e)}re(el.dataset.id)},
+    famShareL(el){const f=((FS[el.dataset.id]||{}).fam)||{};const t=`NeuMarry Family Mulaqat: ${f.place||''}, ${f.city||''}, ${f.at?mtWhen(f.at):''}.`;
+      if(navigator.share)navigator.share({text:t}).catch(()=>{});else{try{navigator.clipboard.writeText(t);toast('Plan copied. Send it to a friend.','ok')}catch(e){}}}})})();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 
