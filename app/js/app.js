@@ -4683,7 +4683,7 @@ function brand15(html) {
    NeuMarry only (the NeuAmigo build has its own partner plans). Server: migration 20261109190000_event_partners. */
 const EP_ON=()=>!(typeof P15on==='function'&&P15on());
 const EPS={cat:'',list:undefined,req:null,mine:undefined,busy:'',rows:null,full:false};
-const EP_CATS=[['Venue','home'],['Catering','gift'],['Photo and video','camera'],['Decor and flowers','sparkle'],['Music and DJ','mic'],['Planner','cal'],['Makeup and henna','star'],['Sweets and cakes','heart']];
+const EP_CATS=[['Venue','home'],['Catering','gift'],['Photo and video','camera'],['Decor and flowers','sparkle'],['Music and DJ','mic'],['Planner','cal'],['Makeup and henna','star'],['Sweets and cakes','heart'],['Cafe and restaurant','pin']];
 const epCur=()=>{try{const c=((EPS.mine||{}).biz||{}).country||(S.me||{}).country;return (c&&typeof CMAP!=='undefined'&&CMAP[c]&&CMAP[c][3])||'USD'}catch(e){return 'USD'}};
 const epErr=e=>String((e&&(e.message||e.msg||e.error_description))||e||'');
 async function epLoadList(){EPS.list=null;render();try{EPS.list=await API.rpc('ep_list',{ctry:(S.me||{}).country||'',cat:EPS.cat||''})}catch(e){EPS.list=false}render()}
@@ -4879,10 +4879,14 @@ function jhPeek(p,c){
    ${tags.length?`<span class="jh-tags">${tags.map(t=>`<i>${ic(t[0])}${esc(t[1])}</i>`).join('')}</span>`:''}
    <span class="jh-cta">${ic('crown')}Unlock full profile</span></button>`}
 function jhNone(){const k=jhCounts(),n=k&&k.joined;
-  return `<div class="nearby jh-none"><span class="jh-orb" aria-hidden="true">${ic('sparkle')}</span>
-   ${n?`<div class="nb-n"><b>${Number(n).toLocaleString('en')}</b><span>members have joined NeuMarry</span></div>`:`<div class="nb-n jh-nn"><span>Verified members are joining NeuMarry</span></div>`}
-   <small>Your matches appear here as people who fit you join.</small>
-   <button class="btn gold block" data-a="upgrade" data-r="nearby">${ic('crown')}Get Gold</button>
+  const dots=[[12,30],[22,62],[34,22],[48,70],[58,38],[70,18],[82,56],[90,28],[40,48],[66,80]].map((d,i)=>`<i style="left:${d[0]}%;top:${d[1]}%;--d:${(i%5)*.6}s"></i>`).join('');
+  return `<div class="jh-hero" role="region" aria-label="Your matches">
+   <span class="jh-sky" aria-hidden="true">${dots}<b class="jh-arc"></b></span>
+   <span class="jh-eye"><span class="jh-pulse" aria-hidden="true"></span>NeuMarry worldwide</span>
+   ${n?`<span class="jh-big">${Number(n).toLocaleString('en')}</span><span class="jh-cap">members have joined, in many countries</span>`:`<span class="jh-big sm">Members are joining</span><span class="jh-cap">from many countries, every one checked</span>`}
+   <span class="jh-facts"><i>${ic('shield')}ID + live selfie</i><i>${ic('lock')}Numbers private</i><i>${ic('users')}Family can join</i></span>
+   <span class="jh-wait"><b>${ic('sparkle')}</b><span><strong>Your matches appear here</strong>as people who fit your roots and plans join</span></span>
+   <button class="jh-cta jh-gbtn" data-a="upgrade" data-r="nearby">${ic('crown')}Get Gold</button>
    <small class="jh-hon">No one fits you yet. We say so honestly, so you decide.</small></div>`}
 /* chat: no phone numbers, emails or outside IDs (server checks too) */
 const JH_CONTACT=[/(\+?\d[\s\-.()/]*){8,}/,/[a-z0-9._%+-]+\s*(@|\(at\)|\[at\])\s*[a-z0-9-]+(\s*(\.|\(dot\)|\[dot\])\s*[a-z0-9-]+)+/i,/\b(gmail|yahoo|hotmail|outlook|icloud|protonmail)\b/i,/\b(whats\s*app|watsapp|whtsapp|wa\.me|telegram|t\.me|snapchat|snap\s*id|insta(gram)?\s*(id|handle|pe|par)|signal\s*(id|number)|wechat|viber|line\s*id|kik|skype\s*id)\b/i,/(^|\s)@[a-z0-9_.]{3,}/i];
@@ -4890,26 +4894,56 @@ function jhHasContact(t){t=String(t||'');return JH_CONTACT.some(r=>r.test(t))}
 (function(){const _s=A.send;A.send=function(el){const ci=document.getElementById('chat-in');if(ci&&jhHasContact(ci.value)){
   const keep=ci.value;S.jhBlock=1;render();const c2=document.getElementById('chat-in');if(c2){c2.value=keep;c2.focus()}return}S.jhBlock=0;return _s.apply(A,arguments)}})();
 function jhBlockNote(){return S.jhBlock?`<div class="jh-safe" role="alert">${ic('shield')}<span><b>Kept private for your safety</b>Phone numbers, emails and outside app IDs can't be shared in chat. Keep talking here until you both feel ready.</span></div>`:''}
-/* ---------- Pehli Mulaqat inside chat (his ask 11 Nov 12:53: meetup option shows after 1-2 days of talking) ----------
-   Timeline: before both have written and a day has passed, a quiet line says when meeting opens; after that a card
-   "Ready to meet?" opens the meetup sheet. Mock stage: localStorage nm.meettest=1 until his ok. */
-const MEET_ON=()=>{try{return localStorage.getItem('nm.meettest')==='1'}catch(e){return false}};
+/* ---------- Pehli Mulaqat inside chat (his ok 11 Nov 19:07; live) ----------
+   Timeline line until both have written and a day has passed (server meet_ready15), then "Ready to meet?".
+   Sheet: real verified Cafe and restaurant partners in the member's country (meet_places15), set menu + price,
+   day and time by taps (zero typing). Ask = US$4.99 fee (PayPal on the website via the pay15 flow), the other
+   member says yes (also US$4.99) or no. Only members with a subscription. Venue gets the request with first names. */
+const MEET_ON=()=>{try{return localStorage.getItem('nm.meettest')!=='0'}catch(e){return true}};
+const MT={st:{},places:undefined,busy:0};
+function mtLoad(id){if(MT.st[id]!==undefined)return;MT.st[id]=null;API.rpc('meet_state15',{other:id}).then(r=>{MT.st[id]=r||false;render()}).catch(()=>{MT.st[id]=false})}
+const mtWhen=t=>{const d=new Date(t);return d.toLocaleDateString('en',{weekday:'short',day:'numeric',month:'short'})+', '+d.toLocaleTimeString('en',{hour:'numeric',minute:'2-digit'})};
 function jhMeet(id){if(!MEET_ON()||!canChat(id))return '';const p=byId(id)||{},m=(S.chats[id]||[]).filter(x=>x.f==='me'||x.f==='them');if(!m.length)return '';
-  const first=Math.min(...m.map(x=>x.ts||Date.now())),days=Math.floor((Date.now()-first)/864e5),both=m.some(x=>x.f==='me')&&m.some(x=>x.f==='them');
+  mtLoad(id);const st=MT.st[id];if(!st)return '';const nm=esc(p.first||'them');
   const step=(on,l,i)=>`<span class="mt-s${on?' on':''}"><i>${on?ic('check'):i}</i>${l}</span>`;
-  if(!both||days<1)return `<div class="mt-line">${step(true,'Talk','1')}<b></b>${step(false,'Meet','2')}<small>${both?'Meeting opens after you have talked for a day':'Meeting opens after you both talk for a day'}</small></div>`;
-  return `<div class="mt-card"><span class="mt-ic" aria-hidden="true">${ic('cal')}</span><span class="mt-tx"><b>${days>=2?`${days} days of talking`:'A day of talking'}. Ready to meet?</b><small>A first meetup with ${esc(p.first||'them')} at a verified cafe, a public place, fixed menu and price.</small></span><button class="btn gold sm" data-a="meetOpen" data-id="${id}">${ic('cal')}Plan</button></div>`}
-const MEET_EX=[['Café Lumière','Cafe','2 coffees + 1 dessert to share',14],['Saffron & Sage','Restaurant','Lunch for two, set menu',29],['The Tea Atlas','Tea room','Tea for two + small bites',18]];
-function jhMeetSheet(){const p=byId(sheet.id)||{},city=(S.me&&(S.me.city||S.me.cityName))||'your city';
-  return sheetShell('First meetup',`<p class="mt-sub">Pick a verified place in ${esc(city)}. Both of you say yes before anything is booked.</p>
+  const mt=st.meet;
+  if(mt&&mt.status==='booked')return `<div class="mt-card ok"><span class="mt-ic" aria-hidden="true">${ic('check')}</span><span class="mt-tx"><b>Meetup booked</b><small>${esc(mt.place)}, ${esc(mt.city||'')} · ${mtWhen(mt.at)}${mt.svc?` · ${esc(mt.svc)}`:''}</small></span><button class="btn ghost sm" data-a="meetShare" data-id="${id}">${ic('share')}Share plan</button></div>`;
+  if(mt&&mt.mine)return `<div class="mt-card"><span class="mt-ic" aria-hidden="true">${ic('cal')}</span><span class="mt-tx"><b>Invite sent</b><small>${esc(mt.place)} · ${mtWhen(mt.at)}. Waiting for ${nm} to say yes.</small></span><button class="btn ghost sm" data-a="meetCancel" data-mid="${mt.id}" data-id="${id}">Cancel</button></div>`;
+  if(mt)return `<div class="mt-card"><span class="mt-ic" aria-hidden="true">${ic('cal')}</span><span class="mt-tx"><b>${nm} invited you to meet</b><small>${esc(mt.place)}, ${esc(mt.city||'')} · ${mtWhen(mt.at)}${mt.svc?` · ${esc(mt.svc)}`:''}. US$4.99 booking fee.</small></span><span class="mt-yn"><button class="btn ghost sm" data-a="meetNo" data-mid="${mt.id}" data-id="${id}">No</button><button class="btn gold sm" data-a="meetYes" data-mid="${mt.id}" data-id="${id}">${st.gold?'Yes':'Gold to say yes'}</button></span></div>`;
+  if(!st.ready){const both=m.some(x=>x.f==='me')&&m.some(x=>x.f==='them');return `<div class="mt-line">${step(true,'Talk','1')}<b></b>${step(false,'Meet','2')}<small>${both?'Meeting opens after you have talked for a day':'Meeting opens after you both talk for a day'}</small></div>`}
+  const first=Math.min(...m.map(x=>x.ts||Date.now())),days=Math.max(1,Math.floor((Date.now()-first)/864e5));
+  return `<div class="mt-card"><span class="mt-ic" aria-hidden="true">${ic('cal')}</span><span class="mt-tx"><b>${days>=2?`${days} days of talking`:'A day of talking'}. Ready to meet?</b><small>A first meetup with ${nm} at a verified cafe, a public place, set menu and price.</small></span><button class="btn gold sm" data-a="meetOpen" data-id="${id}">${ic('cal')}Plan</button></div>`}
+const MT_TIMES=[['11:00','11 am'],['13:00','1 pm'],['16:00','4 pm'],['18:00','6 pm'],['19:30','7:30 pm']];
+function mtDays(){const out=[];for(let i=1;i<=7;i++){const d=new Date();d.setDate(d.getDate()+i);out.push(d)}return out}
+function jhMeetSheet(){const p=byId(sheet.id)||{},city=(S.me&&(S.me.city||S.me.cityName))||'your city',L=MT.places;
+  if(L===undefined){MT.places=null;API.rpc('meet_places15').then(r=>{MT.places=r||[];render()}).catch(()=>{MT.places=[];render()})}
+  const sel=sheet.pick||{},days=mtDays(),money=(c,cur)=>{try{return (c/100).toLocaleString('en',{style:'currency',currency:cur||'USD',maximumFractionDigits:c%100?2:0})}catch(e){return (cur||'')+' '+(c/100)}};
+  const list=!L?`<p class="hint">Loading places…</p>`:!L.length?`<div class="mt-none">${ic('pin')}<span><b>No verified cafe near you yet</b>Cafes and restaurants are joining as NeuMarry Event Partners. You will see them here as soon as one in your country is checked.</span></div>`:
+    L.map(v=>{const sv=(v.services||[])[0]||{};return `<button class="mt-v${sel.bid===v.id?' on':''}" data-a="meetPick" data-bid="${v.id}" data-sv="${esc(sv.t||'')}"><span class="mt-vi">${ic('pin')}</span><span class="grow"><b>${esc(v.name)}${v.sponsored?' <em class="mt-sp">Sponsored</em>':''}</b><small>${esc(v.city||'')}</small>${sv.t?`<small class="mt-menu">${esc(sv.t)}${sv.d?` · ${esc(sv.d)}`:''}</small>`:''}</span>${sv.p?`<span class="mt-pr">${money(sv.p,sv.cur)}<small>set price</small></span>`:''}</button>`}).join('');
+  const when=sel.bid?`<p class="mt-ex">Day</p><div class="mt-chips">${days.map(d=>{const k=d.toISOString().slice(0,10);return `<button class="${sel.day===k?' on':''}" data-a="meetDay" data-k="${k}">${d.toLocaleDateString('en',{weekday:'short',day:'numeric'})}</button>`}).join('')}</div>
+     <p class="mt-ex">Time</p><div class="mt-chips">${MT_TIMES.map(t=>`<button class="${sel.time===t[0]?' on':''}" data-a="meetTime" data-k="${t[0]}">${t[1]}</button>`).join('')}</div>`:'';
+  const ready=sel.bid&&sel.day&&sel.time;
+  return sheetShell('First meetup',`<p class="mt-sub">Pick a verified place in ${esc(city)}. ${esc(p.first||'They')} says yes before anything is booked.</p>
    <div class="mt-steps"><span><b>1</b>Choose a place</span><span><b>2</b>${esc(p.first||'They')} says yes</span><span><b>3</b>Table is ready</span></div>
-   <p class="mt-ex">Example places, for this preview</p>
-   ${MEET_EX.map(v=>`<div class="mt-v"><span class="mt-vi">${ic('pin')}</span><span class="grow"><b>${v[0]}</b><small>${v[1]} · ${esc(city)}</small><small class="mt-menu">${v[2]}</small></span><span class="mt-pr">CA$${v[3]}<small>for two</small></span></div>`).join('')}
-   <div class="mt-note">${ic('shield')}<span>Booking fee US$4.99 each, food paid at the place. Always a busy public place. Share your plan with a friend in one tap. The place sees only first names.</span></div>`,
-   `<button class="btn ghost" data-a="closeSheet">Not now</button><button class="btn gold" data-a="meetSoon">${ic('cal')}Choose a place</button>`)}
+   ${list}${when}
+   <div class="mt-note">${ic('shield')}<span>Booking fee US$4.99 each, paid on neumarry.com. Food is paid at the place. Always a busy public place. The place sees only first names. No money back once booked.</span></div>`,
+   `<button class="btn ghost" data-a="closeSheet">Not now</button><button class="btn gold" data-a="meetAsk"${ready&&!MT.busy?'':' disabled'}>${ic('cal')}${MT.busy?'One moment…':'Invite · US$4.99'}</button>`)}
 (function(){const _rs=renderSheet;renderSheet=function(){if(sheet&&sheet.type==='meet')return jhMeetSheet();return _rs.apply(this,arguments)};
-  A.meetOpen=function(el){sheet={type:'meet',id:el.dataset.id};render()};
-  A.meetSoon=function(){toast('Booking opens soon. We will tell you here.','info')}})();
+  const re=id=>{delete MT.st[id];render()};
+  Object.assign(A,{
+    meetOpen(el){MT.places=undefined;sheet={type:'meet',id:el.dataset.id,pick:{}};render()},
+    meetPick(el){sheet.pick={...sheet.pick,bid:el.dataset.bid,sv:el.dataset.sv};render()},
+    meetDay(el){sheet.pick={...sheet.pick,day:el.dataset.k};render()},
+    meetTime(el){sheet.pick={...sheet.pick,time:el.dataset.k};render()},
+    async meetAsk(){const s=sheet,k=s.pick;if(!k.bid||!k.day||!k.time||MT.busy)return;MT.busy=1;render();
+      try{await API.rpc('meet_ask15',{other:s.id,bid:k.bid,sv:k.sv||'',t:new Date(k.day+'T'+k.time+':00').toISOString()});sheet=null;toast('Invite sent. We will tell you when they answer.','ok');re(s.id)}
+      catch(e){fail(e)}finally{MT.busy=0;render()}},
+    async meetYes(el){const st=MT.st[el.dataset.id];if(st&&!st.gold){A.upgrade&&A.upgrade({dataset:{r:'meet'}});return}
+      try{await API.rpc('meet_answer15',{mid:el.dataset.mid,yes:true});toast('Booked. See you there.','ok')}catch(e){fail(e)}re(el.dataset.id)},
+    async meetNo(el){try{await API.rpc('meet_answer15',{mid:el.dataset.mid,yes:false})}catch(e){fail(e)}re(el.dataset.id)},
+    async meetCancel(el){try{await API.rpc('meet_cancel15',{mid:el.dataset.mid})}catch(e){fail(e)}re(el.dataset.id)},
+    meetShare(el){const mt=(MT.st[el.dataset.id]||{}).meet;if(!mt)return;const t=`My NeuMarry first meetup: ${mt.place}, ${mt.city||''}, ${mtWhen(mt.at)}.`;
+      if(navigator.share)navigator.share({text:t}).catch(()=>{});else{try{navigator.clipboard.writeText(t);toast('Plan copied. Send it to a friend.','ok')}catch(e){}}}})})();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 
