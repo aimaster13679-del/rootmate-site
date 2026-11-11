@@ -1635,7 +1635,7 @@ function renderSheet(){
      <div class="plans" role="radiogroup" aria-label="Gold plans">${opts.map(([k,l,tot,pm,tag])=>`<button class="plan pick${pick===k?' on':''}" data-a="pickPlan" data-k="${k}" role="radio" aria-checked="${pick===k}"><span class="ph"><b>${l}</b>${tag?`<span class="pill ${k==='m3'?'gold':'good'}">${tag}</span>`:''}</span><span class="price">${pm}<small> /month</small></span>${k==='m1'?'':`<small class="hint">${!isNative&&!canBuy?`${tot} paid once for ${l}`:`${tot} billed every ${l}`}</small>`}</button>`).join('')}</div>
      <ul class="incl">${['Full profiles, names and photos','Send interests and chat','Daily introductions, and see who likes you','Browse privately'].map(x=>`<li>${ic('check')}<span>${x}</span></li>`).join('')}</ul>
      ${BETA?`<div class="callout gold">${ic('gift')}<span><b>Test version:</b> ${canBuy?'testers can switch on Gold for free to try everything, or buy it with Google Play.':'buying opens when NeuMarry launches. Until then, testers can switch on Gold for free to try everything.'}</span></div>`:''}
-     <p class="note">${!isNative&&!canBuy?(pxSell()?'Paid once on neumarry.com with PayPal. The price is for the country you live in and includes any tax we must collect. Nothing renews by itself. No money back once Gold starts, except where the law says otherwise. Safety features, verification and reporting are always free.':'Gold cannot be bought from the country you live in yet. Safety features, verification and reporting are always free.'):'Cancel anytime in your Google Play account. Safety features, verification and reporting are always free.'}</p>`,
+     <p class="note">${!isNative&&!canBuy?(pxSell()?'Paid once on neumarry.com with PayPal. The price is for the country you live in and includes any tax we must collect. Nothing renews by itself. No money back once Gold starts, except where the law says otherwise. Safety features, verification and reporting are always free.':'Buying opens soon in your country. Safety features, verification and reporting are always free.'):'Cancel anytime in your Google Play account. Safety features, verification and reporting are always free.'}</p>`,
      canBuy?`${BETA?busyBtn('ghost','betaGold','Try Gold free'):`<button class="btn ghost" data-a="closeSheet">Not now</button>`}${busyBtn('gold','buyGold',ic('crown')+'Get Gold')}`:
      !isNative?`${BETA?busyBtn('ghost','betaGold','Try Gold free'):`<button class="btn ghost" data-a="closeSheet">Not now</button>`}${busyBtn('gold','buyGoldWeb',ic('crown')+'Get Gold · PayPal')}`:
      `<button class="btn ghost" data-a="closeSheet">Not now</button>${BETA?busyBtn('gold','betaGold',ic('crown')+'Try Gold free'):`<button class="btn gold" data-a="buySoon">${ic('crown')}Get Gold</button>`}`);}
@@ -4410,6 +4410,7 @@ Object.assign(P15V,{adcheck:adCheck15,biz:biz15v,services:svc15v,svcplan:svcPlan
       if(/p2p payments coming soon/.test(em15(e)))throw own('Paying here opens soon. Until then nothing is charged.','p2p coming soon');
       const prod=need(e);if(!prod)throw e;
       if(isNative)throw own('This is not available in the app yet.','not in app');
+      if(S.px&&S.px[prod]&&S.px[prod].sell===false)throw own('Buying opens soon in your country.','country soon');
       let r;try{r=await API.fn('pay15',{action:'start',product:prod,web:true,site:(typeof naOn==='function'&&naOn())?'neuamigo':'neumarry'})}catch(z){throw own('PayPal could not open. Please try again.','paypal')}
       if(!r||!r.url)throw own('PayPal could not open. Please try again.','paypal');
       try{localStorage.setItem(KEY,JSON.stringify({order:r.order,name,args,at:Date.now(),v:P15.v}))}catch(z){}
@@ -4947,7 +4948,7 @@ function jhMeetSheet(){const p=byId(sheet.id)||{},city=(S.me&&(S.me.city||S.me.c
       if(navigator.share)navigator.share({text:t}).catch(()=>{});else{try{navigator.clipboard.writeText(t);toast('Plan copied. Send it to a friend.','ok')}catch(e){}}}})})();
 /* ---------- Gold on the website with PayPal (his ok 10 Nov: new prices; nothing sold inside the Android app) ----------
    gold_web15 needs a paid PayPal credit; without one the pay15 flow (part12) opens PayPal and finishes on return. */
-A.buyGoldWeb=async function(){if(busy||isNative)return;if(!pxSell()){toast('Gold cannot be bought from the country you live in yet.','info');return}const plan=(sheet&&sheet.pick)||'m3';busy='buyGoldWeb';render();
+A.buyGoldWeb=async function(){if(busy||isNative)return;if(!pxSell()){toast('Buying opens soon in your country.','info');return}const plan=(sheet&&sheet.pick)||'m3';busy='buyGoldWeb';render();
   try{await API.rpc('gold_web15',{plan});await loadMe();sheet=null;toast('Gold is on. Enjoy full profiles and chat.','ok')}
   catch(e){if(!/PayPal|not available/i.test(e&&e.message||''))fail(e)}finally{busy='';render()}};
 
