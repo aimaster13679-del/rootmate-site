@@ -3056,3 +3056,15 @@ html.cine:not(.z1):not(.z2):not(.z3):not(.z4):not(.z5):not(.z6) .topbar p,html.c
 html.cine:not(.z1):not(.z2):not(.z3):not(.z4):not(.z5):not(.z6) .navwrap .nav button,html.cine:not(.z1):not(.z2):not(.z3):not(.z4):not(.z5):not(.z6) .navwrap .nav button.on{background:transparent!important;box-shadow:none!important}
 html.cine:not(.z1):not(.z2):not(.z3):not(.z4):not(.z5):not(.z6) .navwrap .nav button.on,html.cine:not(.z1):not(.z2):not(.z3):not(.z4):not(.z5):not(.z6) .navwrap .nav button.on *{color:var(--ink)!important}
 html.cine:not(.z1):not(.z2):not(.z3):not(.z4):not(.z5):not(.z6) .topbar .sub{color:var(--muted)!important}
+/* Cine welcome */
+.cn-wel .scroll{flex:1;overflow-y:auto}
+.cn-wi{padding:0 0 calc(env(safe-area-inset-bottom,0px) + 24px)}
+.cn-lang{border:1px solid var(--line);background:transparent;color:var(--ink);font:700 13px "Plus Jakarta Sans",system-ui,sans-serif;padding:8px 12px;border-radius:10px;cursor:pointer}
+.cn-globe{display:flex;justify-content:center;padding:6px 0 4px}.cn-globe img{width:min(76vw,300px);height:auto;display:block}
+.cn-wel .cn-k{padding:10px 22px 0}
+.cn-wh{margin:8px 22px 0;font:800 31px/1.18 "Plus Jakarta Sans",system-ui,sans-serif;color:var(--ink)}
+.cn-wc{display:flex;flex-wrap:wrap;gap:8px;padding:16px 22px 0}.cn-wc span{border:1px solid var(--line);border-radius:999px;padding:7px 12px;font:600 13px "Plus Jakarta Sans",system-ui,sans-serif;color:var(--ink)}
+.cn-cta{display:block;width:calc(100% - 44px);margin:22px 22px 0;border:0;border-radius:15px;padding:16px;background:#D61F4F;color:#fff;font:800 17px "Plus Jakarta Sans",system-ui,sans-serif;cursor:pointer}
+.cn-si{margin:14px 0 0;text-align:center;font:500 14px "Plus Jakarta Sans",system-ui,sans-serif;color:var(--muted)}
+.cn-si button,.cn-lgl button{border:0;background:none;padding:0;font:inherit;font-weight:800;color:var(--ink);cursor:pointer}
+.cn-lgl{margin:14px 22px 0;text-align:center;font:500 12px/1.5 "Plus Jakarta Sans",system-ui,sans-serif;color:var(--muted)}.cn-lgl button{font-weight:700;text-decoration:underline}

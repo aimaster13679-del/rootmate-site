@@ -4508,7 +4508,7 @@ function mat15bar(){const m=document.querySelector('#app .main-inner');if(!m||m.
 })();
 /* Public first screens for the new NeuMarry (before sign-in): switched on with P15_PUBLIC on launch day. */
 (function(){
-  if(!P15_PUBLIC)return;
+  return;/* 12 Nov 2026: NeuMarry is matrimony only (NeuAmigo has its own app), so these NeuAmigo first screens stay off */
   const fix=h=>h.replace('NeuMarry · verified matrimony','NeuMarry · for people living abroad')
     .replace(/Ready to marry\./,'Your people are here.')
     .replace('Verified matrimony for marrying someone of your roots, in the country you live in now.','Rooms, job referrals, a flight buddy for your parents, events and friends.')
@@ -5315,6 +5315,21 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
   const _r=render;render=function(){document.documentElement.classList.add('cine');const out=_r.apply(this,arguments);
     try{const m=document.querySelector('meta[name=theme-color]');const lt=document.documentElement.classList.contains('gl-lt');if(m)m.setAttribute('content',lt?'#FFFFFF':'#07060B')}catch(e){}
     return out};
+
+  /* Welcome (first screen a new person sees): same logo, colours and words as the inside (his THREE-EYES rule) */
+  function welcome(){return `<div class="cn-page cn-wel"><div class="scroll"><div class="cn-wi">
+    <div class="cn-top"><div class="cn-brand">${LOGO}<b>NeuMarry</b></div><button class="cn-lang" data-a="lang" aria-label="Language">${esc((typeof LANG!=='undefined'&&LANG&&LANG.toUpperCase&&LANG.toUpperCase())||'EN')}</button></div>
+    <div class="cn-globe"><img src="img/f3/globe-big.webp" alt=""></div>
+    <div class="cn-k">Marriage, not dating</div>
+    <h1 class="cn-wh">Find your life partner from your roots, where you live now.</h1>
+    <div class="cn-wc"><span>ID + live selfie for everyone</span><span>Family can join</span><span>Every country</span></div>
+    <button class="cn-cta" data-a="start">Create my free profile</button>
+    <p class="cn-si">Already a member? <button data-a="login">Sign in</button></p>
+    <p class="cn-lgl">By continuing you agree to our <button data-a="legal" data-k="terms">Terms</button> and <button data-a="legal" data-k="privacy">Privacy Policy</button>.</p>
+  </div></div></div>`}
+  const _w=renderWelcome;renderWelcome=function(){try{return welcome()}catch(e){return _w.apply(this,arguments)}};
+  if(typeof renderWelcomeC3==='function'){renderWelcomeC3=function(){return welcome()}}
+  if(typeof renderWelcomeV2==='function'){renderWelcomeV2=function(){return welcome()}}
   Object.assign(A,{
     cnme(){S.tab='me';view=null;render()},
     cnchip(el){const k=el.dataset.k;
