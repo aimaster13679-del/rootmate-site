@@ -695,14 +695,14 @@ function forMe(e){return audOk(e,S.me)}
 function ageOk(e){return S.me.age>=e.ageMin&&S.me.age<=e.ageMax}
 function evMine(e){const f=S.me&&S.me.g==='F',[wc,wl,mc,ml]=e.seats,w=e.wait||[0,0,0,0];return {seatsLeft:f?wl:ml,waitLeft:f?w[1]:w[3],waitCap:f?w[0]:w[2],who:f?'women':'men'}}
 function evStat(e){return {n:e.have,confirmed:e.status==='confirmed',left:Math.max(0,e.need-e.have),deadline:e.deadline}}
-function evArt(e,hero){const up=hero?'0':'-40';const g={family:['#FFF1B0','#9FE6C6','#0E7A55'],speed:['#E9F8D6','#5FD3A2','#0E5B43'],festive:['#FFF1B0','#F2C94C','#0E7A55'],brunch:['#FFF6CF','#BDF2DA','#0E9F6E'],online:['#E3F7EE','#8DEBC3','#0E5B43']}[e.kind]||['#FFF1B0','#9FE6C6','#0E7A55'];const id='ea'+String(e.id).slice(0,8);
-  let s=`<svg class="art" viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${g[0]}"/><stop offset=".55" stop-color="${g[1]}"/><stop offset="1" stop-color="${g[2]}"/></linearGradient><radialGradient id="${id}l"><stop offset="0" stop-color="#FFF6D8"/><stop offset="1" stop-color="#FFF6D8" stop-opacity="0"/></radialGradient></defs><rect width="400" height="250" fill="url(#${id})"/>`;
+function evArt(e,hero){const up=hero?'0':'-40';const g={family:['#F5ADBE','#9FE6C6','#0E7A55'],speed:['#E9F8D6','#5FD3A2','#0E5B43'],festive:['#F5ADBE','#E94C70','#0E7A55'],brunch:['#E4E6EA','#BDF2DA','#0E9F6E'],online:['#E3F7EE','#8DEBC3','#0E5B43']}[e.kind]||['#F5ADBE','#9FE6C6','#0E7A55'];const id='ea'+String(e.id).slice(0,8);
+  let s=`<svg class="art" viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${g[0]}"/><stop offset=".55" stop-color="${g[1]}"/><stop offset="1" stop-color="${g[2]}"/></linearGradient><radialGradient id="${id}l"><stop offset="0" stop-color="#E9EAEE"/><stop offset="1" stop-color="#E9EAEE" stop-opacity="0"/></radialGradient></defs><rect width="400" height="250" fill="url(#${id})"/>`;
   [[60,190,40],[330,70,55],[250,205,30],[140,40,24]].forEach(([x,y,r])=>{s+=`<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" opacity=".12"/>`});
   [[-10,24,410,34,92],[-10,62,410,52,128]].forEach(([x1,y1,x2,y2,cy])=>{s+=`<path d="M${x1} ${y1} Q200 ${cy} ${x2} ${y2}" stroke="#7A2040" stroke-opacity=".3" stroke-width="1.5" fill="none"/>`;
-    for(let i=1;i<12;i++){const t=i/12,x=(1-t)*(1-t)*x1+2*(1-t)*t*200+t*t*x2,y=(1-t)*(1-t)*y1+2*(1-t)*t*cy+t*t*y2+6;s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="12" fill="url(#${id}l)"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.2" fill="${i%3?'#FFF2C4':'#FFD1DC'}"/>`}});
+    for(let i=1;i<12;i++){const t=i/12,x=(1-t)*(1-t)*x1+2*(1-t)*t*200+t*t*x2,y=(1-t)*(1-t)*y1+2*(1-t)*t*cy+t*t*y2+6;s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="12" fill="url(#${id}l)"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.2" fill="${i%3?'#DEE0E5':'#FFD1DC'}"/>`}});
   if(hero){}else if(e.kind==='family'||e.kind==='brunch')s+=`<g transform="translate(0 ${up})"><g fill="#fff" opacity=".93"><path d="M300 188h44v10a22 22 0 01-44 0z"/><path d="M240 196h34v8a17 17 0 01-34 0z" opacity=".85"/></g><path d="M344 192a8 8 0 010 16" stroke="#fff" stroke-width="4" fill="none" opacity=".93"/><g stroke="#fff" stroke-width="2.4" fill="none" opacity=".7" stroke-linecap="round"><path d="M314 178q-4-8 2-14M328 178q-4-8 2-14"/></g></g>`;
   else if(e.kind==='speed'||e.kind==='online')s+=`<g transform="translate(0 ${up})"><g fill="none" stroke="#fff" stroke-width="3" opacity=".92" stroke-linecap="round"><circle cx="320" cy="192" r="26"/><path d="M320 176v16l10 8"/></g><path d="M250 205c0-10 8-16 16-12 8-4 16 2 16 12 0 10-16 18-16 18s-16-8-16-18z" fill="#fff" opacity=".88"/></g>`;
-  else [[262,214],[302,208],[342,214]].forEach(([x,y0])=>{const y=y0+(+up);s+=`<circle cx="${x}" cy="${y-12}" r="16" fill="url(#${id}l)"/><path d="M${x-16} ${y}q16 16 32 0z" fill="#FFE1A8"/><path d="M${x} ${y-4}c-5-6-1-14 0-18 1 4 5 12 0 18z" fill="#FFF6D8"/>`});
+  else [[262,214],[302,208],[342,214]].forEach(([x,y0])=>{const y=y0+(+up);s+=`<circle cx="${x}" cy="${y-12}" r="16" fill="url(#${id}l)"/><path d="M${x-16} ${y}q16 16 32 0z" fill="#F4A6B8"/><path d="M${x} ${y-4}c-5-6-1-14 0-18 1 4 5 12 0 18z" fill="#E9EAEE"/>`});
   return s+'</svg>'}
 /* ---------- Boot and welcome ---------- */
 function renderBoot(){return `<div class="boot"><div class="brand"><svg class="mark" viewBox="0 0 32 22" aria-hidden="true"><path class="c1" d="M11.60 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/><path class="c2" d="M20.40 18.59c-0.82 0 -8.2 -4.76 -8.2 -10.25 0 -2.71 2.13 -4.92 4.76 -4.92 1.48 0 2.71 0.74 3.44 1.89 0.74 -1.15 1.97 -1.89 3.44 -1.89 2.62 0 4.76 2.21 4.76 4.92 0 5.49 -7.38 10.25 -8.2 10.25z"/></svg>NeuMarry</div>${S.bootError?`<p class="hint">${esc(S.bootError)}</p><button class="btn primary" data-a="retryBoot">Try again</button>`:spinner('Opening NeuMarry')}</div>`}
@@ -939,7 +939,7 @@ const CELE={2:['Roots done!',d=>d.oc?`People from ${d.oc} will now show first in
   3:['Your life is in!',d=>d.city?`Matches will show the real distance to you in ${d.city}.`:'Matches will show the real distance to you.','What matters to you','about 90 sec',3,'about 4 min'],
   5:['Verification ready!',()=>'It goes to our team when you finish the last part. A person checks it, usually within a day.','Who you want to meet','about 30 sec',1,'about 30 sec']};
 function celeLayer(){const c=CELE[S.cele];if(!c)return '';const d=S.draft;const pct=Math.round(S.cele/6*100);
-  const cf=Array.from({length:36},(_,i)=>`<i style="left:${(i*37)%100}%;animation-delay:${(i%9)*0.06}s;background:${['#0E9F6E','#B8863A','#2D8A61','#8DEBC3','#E9C98D'][i%5]};--r:${(i*47)%360}deg"></i>`).join('');
+  const cf=Array.from({length:36},(_,i)=>`<i style="left:${(i*37)%100}%;animation-delay:${(i%9)*0.06}s;background:${['#0E9F6E','#B23855','#2D8A61','#8DEBC3','#E7849B'][i%5]};--r:${(i*47)%360}deg"></i>`).join('');
   return `<div class="cele" role="dialog" aria-live="polite"><div class="cf">${cf}</div><div class="cele-c"><div class="cele-e">🎉</div><h2>${c[0]}</h2><p>${esc(c[1](d))}</p>
   <div class="cele-n"><b>Next: ${c[2]} · ${c[3]}</b><span>${c[4]} short part${c[4]>1?'s':''} left · ${c[5]} in total</span></div>
   <div class="cele-bar"><i style="width:${pct}%"></i></div><button class="btn primary block" data-a="celeGo">Keep going</button><p class="hint" style="text-align:center;margin:8px 0 0">Take a break any time, we save everything.</p></div></div>`}
@@ -1194,7 +1194,7 @@ function renderConnections(){
     const end=p=>{const st=S.interests[p.id];if(S.seg==='sent')return `<span class="pill">Waiting</span>`;return st==='mutual'?`<span class="pill good">Matched</span>`:st==='sent'?`<span class="pill">Sent</span>`:`<span class="pill">${compat(p).total}%</span>`};
     body=S.seg==='received'&&list.length?list.map(card).join(''):list.length?`<div class="rows">${list.map(p=>rowItem(p,end(p))).join('')}</div>`:`<div class="empty"><span class="eic">${ic('heart')}</span><h3>${empty[0]}</h3><p>${empty[1]}</p><button class="btn sm primary" data-a="tab" data-k="matches">See matches</button></div>`;
   }
-  return topbar('Chats','Your matches, likes and saved profiles')+
+  return topbar('Messages','Your chats, likes and saved profiles')+
   `<div class="scroll" id="main"><div class="main-inner pad"><div class="seg" role="tablist">${segs.map(([k,l])=>`<button role="tab" data-a="seg" data-k="${k}" class="${S.seg===k?'on':''}" aria-selected="${S.seg===k}">${l}${cnt[k]?`<span class="n">${cnt[k]}</span>`:''}</button>`).join('')}</div>${body}</div></div>`;
 }
 function completeness(me){const checks=[me.photoPaths.length>0,!!me.about&&me.about.length>=80,me.v.id,me.v.selfie,!!me.edu,!!me.job,!!me.phone];return Math.round(checks.filter(Boolean).length/checks.length*100)}
@@ -1543,7 +1543,7 @@ function sheetShell(title,body,foot){return `<div class="sheet-wrap"><button cla
 function chipGroup(name,opts,cur){return `<div class="chips" role="radiogroup">${opts.map(o=>{const v=typeof o==='string'?o:o.v,l=typeof o==='string'?o:o.l;return `<label class="opt"><input type="radio" name="${name}" value="${esc(v)}" data-sheet="${name}"${cur===v?' checked':''}><span>${esc(l)}</span></label>`}).join('')}</div>`}
 const MANAGE_SUB=()=>`<a class="btn ghost" href="https://play.google.com/store/account/subscriptions?sku=${GOLD_PRODUCT}&amp;package=${esc(CFG.appId)}" target="_blank" rel="noopener">${ic('crown')}Manage in Google Play</a>`;
 /* Google's multicolour "G", as Google's sign-in branding rules ask for. */
-const GLOGO='<svg viewBox="0 0 48 48" width="20" height="20"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>';
+const GLOGO='<svg viewBox="0 0 48 48" width="20" height="20"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#DD1B49" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>';
 /* Work with NeuMarry: highlighted so members see that we hire hosts and look for restaurants and bureaus. */
 function workCard(){return `<div class="panel wwu"><div class="wwu-h"><h3>Work with NeuMarry</h3><span class="pill gold">We’re hiring</span></div>
     <p class="hint">Earn with us in your city. Apply in two minutes.</p>
@@ -1684,7 +1684,7 @@ function render(){
     const c=navCounts();if(NO_EVENTS){if(S.tab==='events')S.tab='matches';if(view&&(view.type==='event'||view.type==='host'))view=null}
     const tabs={matches:renderMatches,events:renderEvents,connections:renderConnections,me:renderMe};
     html=(tabs[S.tab]||renderMatches)()+
-    `<div class="navwrap"><nav class="nav n${NO_EVENTS?3:4}" aria-label="Main">${[['matches','Matches','rings'],['events','Events','cal',c.ev],['connections','Chats','chat',c.conn],['me','Me','user']].filter(x=>!(NO_EVENTS&&x[0]==='events')).map(([k,l,i,n])=>
+    `<div class="navwrap"><nav class="nav n${NO_EVENTS?3:4}" aria-label="Main">${[['matches','Home','home'],['mlist','Matches','rings'],['events','Events','cal',c.ev],['connections','Messages','chat',c.conn]].filter(x=>!(NO_EVENTS&&x[0]==='events')).map(([k,l,i,n])=>
       `<button data-a="tab" data-k="${k}" class="${S.tab===k?'on':''}" aria-current="${S.tab===k?'page':'false'}">${ic(i)}<span>${l}</span>${n?`<span class="count-dot" aria-label="${n} new">${n}</span>`:''}</button>`).join('')}</nav></div>`;
     if(view)html+=view.type==='chat'?renderChatView(view.id):view.type==='event'?renderEventView(view.id):view.type==='admin'?renderAdmin():view.type==='host'?renderHostView(view.id):renderProfileView(view.id,view.type==='me');
     if(sheet)html+=renderSheet();
@@ -1822,14 +1822,14 @@ async function afterLogin(){
   loadLocal();S.bootError='';
   /* Instant open: show the last data kept on this phone at once, then refresh it. */
   const warm=S.screen!=='app'&&cacheLoad();
-  if(warm){S.screen='app';if(!['matches','events','connections','me'].includes(S.tab))S.tab='matches';S.loaded=true;render();console.info('[boot] warm start')}
+  if(warm){S.screen='app';if(!['matches','mlist','events','connections','me'].includes(S.tab))S.tab='matches';S.loaded=true;render();console.info('[boot] warm start')}
   try{
     /* Faster start (29 Oct): blocks and events do not need my profile, so load them while it loads. */
     const pre=Promise.all([loadBlocks().catch(()=>{}),loadEvents().catch(()=>{})]);
     const me=await loadMe();
     if(!me){cacheClear();startSignup();return}
     if(me.banned){cacheClear();await API.signOut();S=fresh();S.screen='welcome';render();toast('This account has been suspended. Write to us if you think this is a mistake.','shield');return}
-    S.screen='app';if(!['matches','events','connections','me'].includes(S.tab))S.tab='matches';render();
+    S.screen='app';if(!['matches','mlist','events','connections','me'].includes(S.tab))S.tab='matches';render();
     await Promise.all([loadCards(),loadMessages(),pre]);ensureMatchChats();S.loaded=true;render();cacheSave();loadInvite();restorePurchases(false);
     API.rpc('touch_seen').catch(()=>{});
     try{const ap=(typeof naOn==='function'&&naOn())?'neuamigo':(window.NM_APP?'neumarry':'');if(ap)API.rpc('touch_app',{a:ap}).catch(()=>{})}catch(e){}  /* which app(s) a member uses (split 9 Nov 2026) */
@@ -2366,7 +2366,7 @@ function renderWelcomeV2(){
    <svg viewBox="0 0 312 300"><defs><radialGradient id="v2gl" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#8DEBC3" stop-opacity=".35"/><stop offset="1" stop-color="#8DEBC3" stop-opacity="0"/></radialGradient></defs>
    <circle cx="156" cy="170" r="130" fill="url(#v2gl)"/><circle cx="156" cy="170" r="104" fill="none" stroke="#fff" stroke-opacity=".14"/>
    <ellipse cx="156" cy="170" rx="104" ry="38" fill="none" stroke="#fff" stroke-opacity=".1"/><ellipse cx="156" cy="170" rx="44" ry="104" fill="none" stroke="#fff" stroke-opacity=".1"/>
-   ${arcs.map(([a,b,c,e])=>`<path class="v2arc" d="M${a} ${b}Q${(a+c)/2} ${Math.min(b,e)-70} ${c} ${e}" fill="none" stroke="#A8F0CF" stroke-width="1.6"/><circle cx="${a}" cy="${b}" r="3.5" fill="#FFD7A8"/>`).join('')}
+   ${arcs.map(([a,b,c,e])=>`<path class="v2arc" d="M${a} ${b}Q${(a+c)/2} ${Math.min(b,e)-70} ${c} ${e}" fill="none" stroke="#A8F0CF" stroke-width="1.6"/><circle cx="${a}" cy="${b}" r="3.5" fill="#F4A6B8"/>`).join('')}
    <circle cx="214" cy="104" r="6" fill="#8DEBC3"/></svg>
    ${[['🇳🇬',18,58],['🇵🇭',74,70],['🇲🇽',4,45],['🇮🇳',40,77],['🇱🇧',27,37],['🇰🇷',80,48]].map(([f,x,y])=>`<span class="v2flag" style="left:${x}%;top:${y}%">${f}</span>`).join('')}
    <span class="v2cityp">${ic('pin')} Your city</span></div>
@@ -2411,18 +2411,18 @@ function v2wheelAfter(){const w=document.querySelector('.v2wheel');if(!w)return;
 /* ---------- the house that shows the answers (screen 6) ---------- */
 function v2house(a){const kids=a[3]===0||a[3]===1,both=a[1]===0,move=a[0]===2,par=a[2]===0||a[2]===1;
   const n=[a[0],a[1],a[2],a[3]].filter(x=>x!==null&&x!==undefined).length;
-  return `<svg viewBox="0 0 300 168" class="v2house" aria-hidden="true"><circle cx="250" cy="34" r="16" fill="#FFD7A8"/><path d="M0 150C80 136 220 136 300 150V168H0z" fill="#CDE7D6"/>
+  return `<svg viewBox="0 0 300 168" class="v2house" aria-hidden="true"><circle cx="250" cy="34" r="16" fill="#F4A6B8"/><path d="M0 150C80 136 220 136 300 150V168H0z" fill="#CDE7D6"/>
   <path d="M80 82L150 30 220 82" fill="#C42E57"/><rect x="92" y="80" width="116" height="74" rx="4" fill="#fff"/><rect x="138" y="112" width="24" height="42" rx="12" fill="#142520"/>
   <rect x="104" y="92" width="26" height="22" rx="4" fill="#FFE6EC"/><rect x="170" y="92" width="26" height="22" rx="4" fill="#FFE6EC"/>
   ${kids?'<g fill="#0E9F6E"><circle cx="112" cy="100" r="3.5"/><rect x="108.5" y="104" width="7" height="8" rx="3"/><circle cx="122" cy="101" r="3"/><rect x="119" y="104.5" width="6" height="7.5" rx="3"/></g>':''}
-  ${both?'<g fill="#B8863A"><rect x="174" y="102" width="9" height="7" rx="1.5"/><rect x="185" y="102" width="9" height="7" rx="1.5"/></g>':''}
+  ${both?'<g fill="#B23855"><rect x="174" y="102" width="9" height="7" rx="1.5"/><rect x="185" y="102" width="9" height="7" rx="1.5"/></g>':''}
   ${par?'<g fill="#86697A"><circle cx="232" cy="122" r="4"/><rect x="228" y="127" width="8" height="14" rx="3"/><circle cx="246" cy="123" r="4"/><rect x="242" y="128" width="8" height="13" rx="3"/></g>':''}
   ${move?'<g transform="translate(40 34) rotate(-12)"><path d="M0 8l26-11-7 21-5-8z" fill="#142520"/></g>':''}
   <g transform="translate(40 112)"><path d="M0 40V10" stroke="#24845A" stroke-width="3"/><circle cx="0" cy="8" r="12" fill="#7CCB9E"/></g>
   <text x="150" y="20" text-anchor="middle" font-family="Nunito Sans,sans-serif" font-weight="900" font-size="10" fill="#C42E57" letter-spacing="1.5">${n} OF 4 ADDED</text></svg>`}
 const HOME_Q=[[3,'kid'],[1,'brief'],[2,'users'],[0,'plane']];
 /* screen 7: one illustrated card per question */
-const NAT_ART={5:['#FFE7D6','#F6B7A0','sun'],6:['#E6F4EC','#9FD3B5','coin'],7:['#EDE6FF','#C2B2F4','talk'],4:['#FCF1DE','#E9C98D','star'],8:['#FFE6EC','#FF9DB1','heart']};
+const NAT_ART={5:['#E8E9ED','#F6B7A0','sun'],6:['#E6F4EC','#9FD3B5','coin'],7:['#EDE6FF','#C2B2F4','talk'],4:['#EBECEF','#E7849B','star'],8:['#FFE6EC','#FF9DB1','heart']};
 const NAT_Q=[5,6,7,4,8];
 
 /* ---------- sign-up v2 ---------- */
@@ -2432,7 +2432,7 @@ function renderSignupV2(){if(!S.editMode)setTimeout(()=>noteStep(S.step),0);
     const pass=v2passport(d);h=h.replace('<div class="form pad">','<div class="form pad">'+pass).replace(/Step 5 of 6 · saved/,'Part 5 of 5 · last part');
     return `<div class="v2 v2col">${h}</div>${S.cele2?v2cele():''}`}
   if(st===1){const gn=v2gname();if(!d.name&&gn)d.name=gn;
-    const tile=(g,l,s,seed)=>`<button type="button" class="v2gt${d.g===g?' on':''}" data-a="v2g" data-v="${g}"><span class="v2gt-a">${`<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="ng${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${g==='F'?'#FFE9A0':'#BDF2DA'}"/><stop offset="1" stop-color="${g==='F'?'#F2C94C':'#3BBF8A'}"/></linearGradient></defs><rect width="64" height="64" rx="20" fill="url(#ng${g})"/>${g==='F'?'<circle cx="32" cy="26" r="11" fill="none" stroke="#fff" stroke-width="5"/><path d="M32 37v15M25 45h14" stroke="#fff" stroke-width="5" stroke-linecap="round"/>':'<circle cx="28" cy="36" r="11" fill="none" stroke="#fff" stroke-width="5"/><path d="M36 28l11-11M38 17h9v9" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>'}</svg>`}</span><b>${l}</b><small>${s}</small></button>`;
+    const tile=(g,l,s,seed)=>`<button type="button" class="v2gt${d.g===g?' on':''}" data-a="v2g" data-v="${g}"><span class="v2gt-a">${`<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="ng${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${g==='F'?'#F39FB3':'#BDF2DA'}"/><stop offset="1" stop-color="${g==='F'?'#E94C70':'#3BBF8A'}"/></linearGradient></defs><rect width="64" height="64" rx="20" fill="url(#ng${g})"/>${g==='F'?'<circle cx="32" cy="26" r="11" fill="none" stroke="#fff" stroke-width="5"/><path d="M32 37v15M25 45h14" stroke="#fff" stroke-width="5" stroke-linecap="round"/>':'<circle cx="28" cy="36" r="11" fill="none" stroke="#fff" stroke-width="5"/><path d="M36 28l11-11M38 17h9v9" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>'}</svg>`}</span><b>${l}</b><small>${s}</small></button>`;
     body=`<h1 class="v2h">${d.name?`Hi ${esc(d.name.split(' ')[0])}.`:'Hi there.'} <em>Who are you</em> looking for?</h1>
     ${S.v2name||!d.name?inF('name','Your full name','text',d.name,'autocomplete="name" maxlength="60"','Others see only your first name and last initial until you both say yes.')
       :`<div class="v2card v2row">${avatar(null,'sm',true)}<div class="grow"><b>${esc(d.name)}</b><small>${gn?'From your Google account':'Your name'}</small></div><button type="button" class="v2pill" data-a="v2name">Change</button></div>`}
@@ -2513,7 +2513,7 @@ function v2passport(d){const me=null;const s1=vState(1,d,me),s2=vState(2,d,me),s
 
 /* ---------- celebration between parts ---------- */
 function v2cele(){const c=V2CELE[S.cele2.at];if(!c)return '';const p=V2PART[(()=>{const [s,b]=V2SEQ[S.cele2.next];return s===3||s===4?s+(b||'a'):String(s)})()]||[5];
-  const cf=Array.from({length:30},(_,i)=>`<i style="left:${(i*37)%100}%;animation-delay:${(i%9)*0.06}s;background:${['#0E9F6E','#B8863A','#2D8A61','#8DEBC3','#E9C98D'][i%5]};--r:${(i*47)%360}deg"></i>`).join('');
+  const cf=Array.from({length:30},(_,i)=>`<i style="left:${(i*37)%100}%;animation-delay:${(i%9)*0.06}s;background:${['#0E9F6E','#B23855','#2D8A61','#8DEBC3','#E7849B'][i%5]};--r:${(i*47)%360}deg"></i>`).join('');
   return `<div class="cele v2" role="dialog" aria-live="polite"><div class="cf">${cf}</div><div class="cele-c"><div class="v2seal">${ic('check')}</div><h2>${c[0]}</h2><p>${esc(c[1])}</p>
   <div class="cele-n"><b>Next: ${c[2]} · ${c[3]}</b><span>Part ${p[0]} of 5</span></div>
   ${v2segs().replace('v2segs','v2segs v2segs-c')}<button class="btn primary block" data-a="v2celeGo">Keep going</button><p class="hint" style="text-align:center;margin:8px 0 0">Take a break any time, we save everything.</p></div></div>`}
@@ -2526,7 +2526,7 @@ function v2leaveSheet(){const i=Math.max(0,v2pos());const left=Math.max(1,Math.r
 
 /* ---------- screen 13: after the last part ---------- */
 function v2reveal(){const me=S.me;if(!me)return '';const sent=me.idCheck&&me.selfieCheck;
-  const cf=Array.from({length:22},(_,k)=>`<i style="left:${(k*47)%96+2}%;top:${(k*71)%22+4}%;background:${['#0E9F6E','#FFD7A8','#B8863A','#8FE0B5','#C2B2F4'][k%5]};transform:rotate(${k*37}deg)"></i>`).join('');
+  const cf=Array.from({length:22},(_,k)=>`<i style="left:${(k*47)%96+2}%;top:${(k*71)%22+4}%;background:${['#0E9F6E','#F4A6B8','#B23855','#8FE0B5','#C2B2F4'][k%5]};transform:rotate(${k*37}deg)"></i>`).join('');
   return `<div class="v2rev v2" role="dialog" aria-modal="true"><div class="v2rev-cf" aria-hidden="true">${cf}</div>
    <div class="v2rev-c pad"><div class="v2rev-seal">${ic('shield')}</div>
    <h1 class="v2h" style="text-align:center">${sent?'You’re <em>nearly live.</em>':'Your profile is <em>saved.</em>'}</h1>
@@ -2954,9 +2954,9 @@ function c3km(a,b){const R=6371,r=Math.PI/180,[l1,p1]=[C3CITY[a][0]*r,C3CITY[a][
   return Math.round(2*R*Math.asin(Math.sqrt(Math.sin((p2-p1)/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin((l2-l1)/2)**2))/10)*10}
 const C3SEQ=[['lagos','toronto'],['busan','sydney'],['guad','madrid']];
 function c3map(){return PM.draw({vb:[0,30,1000,440],fsr:.03,label:'World map: where members grew up and where they live now',seq:[
-  {hl:{'566':'#FFC93C','124':'#0E9F6E'},arcs:[['lagos','toronto']],pins:[['lagos','🇳🇬 Lagos','#FFC93C',0,1.8],['toronto','🇨🇦 Toronto','#0E9F6E']]},
-  {hl:{'410':'#FFC93C','036':'#0E9F6E'},arcs:[['busan','sydney']],pins:[['busan','🇰🇷 Busan','#FFC93C'],['sydney','🇦🇺 Sydney','#0E9F6E',0,1.8]]},
-  {hl:{'484':'#FFC93C','724':'#0E9F6E'},arcs:[['guad','madrid']],pins:[['guad','🇲🇽 Guadalajara','#FFC93C',0,1.8],['madrid','🇪🇸 Madrid','#0E9F6E']]}]})}
+  {hl:{'566':'#E9496E','124':'#0E9F6E'},arcs:[['lagos','toronto']],pins:[['lagos','🇳🇬 Lagos','#E9496E',0,1.8],['toronto','🇨🇦 Toronto','#0E9F6E']]},
+  {hl:{'410':'#E9496E','036':'#0E9F6E'},arcs:[['busan','sydney']],pins:[['busan','🇰🇷 Busan','#E9496E'],['sydney','🇦🇺 Sydney','#0E9F6E',0,1.8]]},
+  {hl:{'484':'#E9496E','724':'#0E9F6E'},arcs:[['guad','madrid']],pins:[['guad','🇲🇽 Guadalajara','#E9496E',0,1.8],['madrid','🇪🇸 Madrid','#0E9F6E']]}]})}
 /* 12 Nov: each word fades/slides in on its own (no shared strip), so no word ever peeks at any font size */
 const c3cyc=(arr,cls)=>{const n=arr.length,L=arr.reduce((a,t)=>t.length>a.length?t:a,'');return `<span class="c3cyc ${cls||''}" style="--n:${n*3}s"><i aria-hidden="true">${esc(L)}</i>${arr.map((t,i)=>`<b style="animation-delay:${i?-(n-i)*3:0}s">${esc(t)}</b>`).join('')}</span>`};
 function renderWelcomeC3(){
@@ -3037,14 +3037,14 @@ const A3MAIL={'Signed up, did not start the form':['Your NeuMarry profile is wai
  default:['Can we help you finish?','finish your profile. If anything is unclear, just reply to this email and our team will help.']};
 async function a3load(){if(A3.busy)return;A3.busy=true;try{const [ov,hl]=await Promise.all([API.rpc('admin_overview').catch(()=>null),API.rpc('admin_help_list').catch(()=>[])]);A3.ov=ov;A3.help=hl||[]}finally{A3.busy=false;render()}}
 function a3kpi(n,l,s,c,go){return n===null||n===undefined?'':`<button class="a3k" style="--c:${c}" data-a="a3go" data-k="${go||''}" aria-label="${esc(l)}: ${esc(String(n))}. Open details"><b>${esc(String(n))}</b><span>${esc(l)}</span>${s?`<small>${esc(s)}</small>`:''}<em class="a3more">Details ›</em></button>`}
-function a3bars(vals){const m=Math.max(1,...vals);return `<div class="a3bars" aria-label="Sign-ups per day, last 30 days">${vals.map((v,i)=>`<button class="a3bc" data-a="a3go" data-k="day:${vals.length-1-i}" aria-label="${v} sign-ups, ${vals.length-1-i} days ago"><i style="height:${Math.max(3,Math.round(v/m*100))}%;${i===vals.length-1?'background:#FFC93C':''}"></i></button>`).join('')}</div><p class="a3m a3hint">Tap a day to see who joined</p>`}
+function a3bars(vals){const m=Math.max(1,...vals);return `<div class="a3bars" aria-label="Sign-ups per day, last 30 days">${vals.map((v,i)=>`<button class="a3bc" data-a="a3go" data-k="day:${vals.length-1-i}" aria-label="${v} sign-ups, ${vals.length-1-i} days ago"><i style="height:${Math.max(3,Math.round(v/m*100))}%;${i===vals.length-1?'background:#E9496E':''}"></i></button>`).join('')}</div><p class="a3m a3hint">Tap a day to see who joined</p>`}
 function a3home(){if(A3.list)return a3list();const o=A3.ov;if(!o)return `<div class="a3c">${spinner('Loading')}</div>`;const f=o.funnel_7d||{};const bots=o.bots||[];const failed=bots.filter(b=>b.status==='failed'&&b.finished_at&&Date.now()-new Date(b.finished_at)<864e5);/* only fresh failures need him (9 Nov fix: old one-time na-db-create stayed forever) */
   const d=o.signups_today-o.signups_yesterday;const vals=o.signups_30d||[];const tot=vals.reduce((a,b)=>a+b,0);const src=Object.entries(o.sources_30d||{}).sort((a,b)=>b[1]-a[1]);
   const need=[o.checks_waiting>0?['shield',`${o.checks_waiting} waiting for checks`,o.oldest_wait_hours!=null?`Oldest ${o.oldest_wait_hours} h · promise 24 h`:'','checks']:null,
     o.reports_open>0?['flag',`${o.reports_open} open report${o.reports_open>1?'s':''}`,'Answer within 24 h','checks']:null,
     o.help_open>0?['chat',`${o.help_open} member${o.help_open>1?'s':''} asked for help`,'Help inbox','help']:null,
     ...failed.map(b=>['alert',`${b.bot} failed`,b.summary||'','robots'])].filter(Boolean);
-  return `<div class="a3g">${a3kpi(o.signups_today,'Sign-ups today',d?`${d>0?'▲':'▼'} ${Math.abs(d)} vs yesterday`:'same as yesterday','#3BBF8A','today')}${a3kpi(o.live,'Live members','fully verified','#12A36B','live')}${a3kpi(o.checks_waiting,'Waiting for checks',o.oldest_wait_hours!=null?`oldest ${o.oldest_wait_hours} h`:'','#FFC93C','tab:checks')}${a3kpi(o.reports_open,'Open reports','','#FF6B6B','tab:checks')}</div>
+  return `<div class="a3g">${a3kpi(o.signups_today,'Sign-ups today',d?`${d>0?'▲':'▼'} ${Math.abs(d)} vs yesterday`:'same as yesterday','#3BBF8A','today')}${a3kpi(o.live,'Live members','fully verified','#12A36B','live')}${a3kpi(o.checks_waiting,'Waiting for checks',o.oldest_wait_hours!=null?`oldest ${o.oldest_wait_hours} h`:'','#E9496E','tab:checks')}${a3kpi(o.reports_open,'Open reports','','#FF6B6B','tab:checks')}</div>
    ${need.length?`<div class="a3c"><div class="a3h"><b>Needs you now</b><span>${need.length}</span></div>${need.map(([i,t,s,go])=>`<button class="a3n" data-a="a3tab" data-k="${go}">${ic(i)}<span><b>${esc(t)}</b><small>${esc(s)}</small></span><em>Open</em></button>`).join('')}</div>`:`<div class="a3c a3ok">${ic('check')} Nothing needs you right now.</div>`}
    ${f.accounts?`<div class="a3c"><div class="a3h"><b>Sign-up journey</b><span>last 7 days · tap to see</span></div>${[['Made an account',f.accounts,'f0'],['Started the profile',f.profiles,'f1'],['Sent documents',f.documents,'f2'],['Live',f.live,'f3']].map(([t,n,k])=>`<div class="a3f a3fb" role="button" tabindex="0" data-a="a3go" data-k="${k}"><span>${t}</span><div><i style="width:${Math.max(2,Math.round(n/f.accounts*100))}%"></i></div><b>${n} ›</b></div>`).join('')}</div>`:''}
    ${tot?`<div class="a3c"><div class="a3h"><b>Sign-ups per day</b><span>${tot} in 30 days</span></div>${a3bars(vals)}</div>`:''}
@@ -3135,16 +3135,16 @@ function a3mfl(){const f=A3.mf||'',L=A3.mlist||[];return L.filter(x=>!f||(f==='w
 async function a3search(q){A3.mq=q;A3.mlist=null;render();try{A3.mlist=await API.rpc('admin_members',{p_q:q||null,p_limit:100})}catch(e){A3.mlist=[]}render()}
 function a3activity(){const w=a3need();if(w)return w;const a=A3.st.activity;const d=a.days_14||[];const mx=Math.max(1,...d.map(x=>x.active));const mm=Math.max(1,...d.map(x=>x.messages));
   const k=(n,l,s,c,go)=>`<button class="a3k" style="--c:${c}" ${go?`data-a="a3go" data-k="${go}"`:'data-a="a3tab" data-k="members"'}><b>${n}</b><span>${l}</span>${s?`<small>${s}</small>`:''}<em class="a3more">Details ›</em></button>`;
-  return `<div class="a3g">${k(a.active_today,'Active today','opened the app','#12A36B')}${k(a.active_7d,'Active, 7 days','',  '#9D7CFF')}${k(a.messages_today,'Messages today',`${a.messages_7d} in 7 days`,'#3BBF8A')}${k(a.chats_7d,'Chats, 7 days','pairs talking','#FFC93C')}${k(a.interests_7d,'Interests, 7 days',`${a.accepted_7d} accepted`,'#FF8A3D')}${k(a.matches_all,'Matches','all time','#12A36B')}</div>
+  return `<div class="a3g">${k(a.active_today,'Active today','opened the app','#12A36B')}${k(a.active_7d,'Active, 7 days','',  '#9D7CFF')}${k(a.messages_today,'Messages today',`${a.messages_7d} in 7 days`,'#3BBF8A')}${k(a.chats_7d,'Chats, 7 days','pairs talking','#E9496E')}${k(a.interests_7d,'Interests, 7 days',`${a.accepted_7d} accepted`,'#E94A6F')}${k(a.matches_all,'Matches','all time','#12A36B')}</div>
    <div class="a3c"><div class="a3h"><b>Active members per day</b><span>14 days</span></div><div class="a3bars">${d.map(x=>`<i style="height:${Math.max(3,Math.round(x.active/mx*100))}%" title="${x.active}"></i>`).join('')}</div></div>
    <div class="a3c"><div class="a3h"><b>Messages per day</b><span>14 days</span></div><div class="a3bars">${d.map(x=>`<i style="height:${Math.max(3,Math.round(x.messages/mm*100))}%;background:#3BBF8A" title="${x.messages}"></i>`).join('')}</div></div>
    <div class="a3c"><div class="a3h"><b>Day by day</b></div>${d.slice().reverse().map(x=>`<div class="a3kv"><span>${esc(new Date(x.d).toLocaleDateString([], {weekday:'short',day:'numeric',month:'short'}))}</span><b>${x.active} active · ${x.messages} messages · ${x.interests} interests</b></div>`).join('')}</div>
    ${a.flagged_7d?`<button class="a3c a3n" data-a="a3tab" data-k="checks">${ic('alert')}<span><b>${a.flagged_7d} warned message${a.flagged_7d>1?'s':''} in 7 days</b><small>Money or scam words; see Checks</small></span><em>Open</em></button>`:''}`}
 function a3money(){const w=a3need();if(w)return w;const M=A3.st.money||{};const T=M.tickets||[];
   return `<div class="a3g">${T.map(t=>`<div class="a3k" style="--c:#12A36B"><b>${money(t.paid_30d,t.cur)}</b><span>Tickets, 30 days</span><small>${money(t.paid_all,t.cur)} all time · ${t.count_all} paid</small></div>`).join('')}
-    <button class="a3k" style="--c:#FFC93C" data-a="a3tab" data-k="members"><b>${M.gold_active??0}</b><span>Gold active</span><small>${M.gold_new_30d??0} new in 30 days · ${M.gold_renewing??0} renewing</small><em class="a3more">Members ›</em></button></div>
+    <button class="a3k" style="--c:#E9496E" data-a="a3tab" data-k="members"><b>${M.gold_active??0}</b><span>Gold active</span><small>${M.gold_new_30d??0} new in 30 days · ${M.gold_renewing??0} renewing</small><em class="a3more">Members ›</em></button></div>
    ${T.length?`<div class="a3c"><div class="a3h"><b>Event tickets</b><span>per currency</span></div>${T.map(t=>`<div class="a3kv"><span>${esc(t.cur)} paid (before tax)</span><b>${money(t.paid_all,t.cur)}</b></div><div class="a3kv"><span>of it to restaurants (meals)</span><b>${money(t.meals_all,t.cur)}</b></div><div class="a3kv"><span>NeuMarry share</span><b>${money(t.paid_all-t.meals_all,t.cur)}</b></div>${t.refunded_all?`<div class="a3kv"><span>Refunded</span><b>${money(t.refunded_all,t.cur)}</b></div>`:''}`).join('')}</div>`:''}
-   ${(M.gold_by_product||[]).length?`<div class="a3c"><div class="a3h"><b>Gold plans</b><span>active</span></div>${M.gold_by_product.map(r=>a3kv2(r.k,r.n,M.gold_by_product[0].n,'#FFC93C')).join('')}<p class="a3m">Gold money arrives through Google Play / App Store; the exact amounts after store fees are in the store report.</p></div>`:''}
+   ${(M.gold_by_product||[]).length?`<div class="a3c"><div class="a3h"><b>Gold plans</b><span>active</span></div>${M.gold_by_product.map(r=>a3kv2(r.k,r.n,M.gold_by_product[0].n,'#E9496E')).join('')}<p class="a3m">Gold money arrives through Google Play / App Store; the exact amounts after store fees are in the store report.</p></div>`:''}
    ${(M.payouts||[]).length?`<div class="a3c"><div class="a3h"><b>Payouts to hosts and partners</b></div>${M.payouts.map(p=>`<div class="a3kv"><span>${esc(p.status)} · ${p.n}</span><b>${money(p.cents,p.cur)}</b></div>`).join('')}</div>`:''}
    <div class="a3c"><div class="a3h"><b>Latest payments</b><span>${(M.recent||[]).length}</span></div>${(M.recent||[]).length?M.recent.map(r=>`<button class="a3r" data-a="a3mem" data-k="${esc(r.uid)}"><span class="a3d ok"></span><span><b>${esc(r.kind)} · ${esc(r.who||'Member')}</b><small>${esc(r.what||'')}${r.cents!=null?' · '+money(r.cents,r.cur):''}</small><small>${esc(a3ago(r.at))}</small></span><em>›</em></button>`).join(''):'<p class="a3m">No payments yet.</p>'}</div>`}
 function a3evPeople(e){A3.evp=A3.evp||{};const P=A3.evp[e.id];if(P===undefined){A3.evp[e.id]=null;API.rpc('admin_event_people',{p_eid:e.id}).then(r=>{A3.evp[e.id]=r||[];render()}).catch(()=>{A3.evp[e.id]=[];render()})}
@@ -3377,7 +3377,7 @@ function FUN(){try{if(/127\.0\.0\.1/.test(CFG.url||'')){const t=localStorage.get
     PM.C[k1]=[o[1],o[0],p.os||p.oc,''];PM.C[k2]=[d[1],d[0],p.cityName,''];
     const vb=PM.fit([k1,k2],390/(h||170),125);/* more room: labels never cut, calmer map (9 Nov his 'gich gich') */const far=Math.round(dist(o[0],o[1],d[0],d[1]));
     const svg=PM.draw({vb,fsr:.035,grid:false,label:`Map: ${p.os||p.oc} to ${p.cityName}`,arcs:[[k1,k2,'#0E9F6E']],
-      pins:[[k1,`${flagOf(p.oc)} ${p.os||p.oc}`,'#FFC93C',0,1.9],[k2,`${flagOf(p.country)} ${p.cityName}`,'#0E9F6E']]});
+      pins:[[k1,`${flagOf(p.oc)} ${p.os||p.oc}`,'#E9496E',0,1.9],[k2,`${flagOf(p.country)} ${p.cityName}`,'#0E9F6E']]});
     return {svg,far}}
   const dist=(a,b,c,d)=>{const R=6371,t=x=>x*Math.PI/180,x=Math.sin(t(c-a)/2)**2+Math.cos(t(a))*Math.cos(t(c))*Math.sin(t(d-b)/2)**2;return 2*R*Math.asin(Math.sqrt(x))};
 
@@ -3529,10 +3529,10 @@ if(!IC.share)Object.assign(IC,{share:'<circle cx="18" cy="5.5" r="2.5"/><circle 
     const k=p.id.slice(0,6),K=['px1'+k,'px2'+k,'px3'+k,'px4'+k];const one=sameCity(p);const L=lt();const cityCol=L?'#14231C':'#FFFFFF';
     PM.C[K[0]]=[o1[1],o1[0],'',''];PM.C[K[1]]=[d1[1],d1[0],'',''];PM.C[K[2]]=[o2[1],o2[0],'',''];PM.C[K[3]]=[d2[1],d2[0],'',''];
     const sameRoots=km2(o1,o2)<30,myCity=(me.city||me.state||'').split(',')[0];
-    const pins=[[K[0],`${fl(p.oc)} ${p.os||p.oc}${sameRoots?' · both':''}`,'#0E9F6E',0,1.9]];if(!sameRoots)pins.push([K[2],`${fl(me.oc)} ${me.os||me.oc}`,'#FFC93C',0,1.9]);
-    pins.push([K[1],`${one?'':fl(p.country)+' '}${p.cityName}`,one?cityCol:'#0E9F6E']);if(!one)pins.push([K[3],`${fl(me.country)} ${myCity}`,'#FFC93C']);
+    const pins=[[K[0],`${fl(p.oc)} ${p.os||p.oc}${sameRoots?' · both':''}`,'#0E9F6E',0,1.9]];if(!sameRoots)pins.push([K[2],`${fl(me.oc)} ${me.os||me.oc}`,'#E9496E',0,1.9]);
+    pins.push([K[1],`${one?'':fl(p.country)+' '}${p.cityName}`,one?cityCol:'#0E9F6E']);if(!one)pins.push([K[3],`${fl(me.country)} ${myCity}`,'#E9496E']);
     const vb=PM.fit(K,326/210,80);
-    const svg=PM.draw({vb,theme:L?'light':'dark',fsr:.042,grid:false,label:`Map: ${p.os||p.oc} to ${p.cityName}, and ${me.os||me.oc} to ${myCity}`,arcs:[[K[0],K[1],'#0E9F6E'],[K[2],K[3],'#FFC93C']],pins});
+    const svg=PM.draw({vb,theme:L?'light':'dark',fsr:.042,grid:false,label:`Map: ${p.os||p.oc} to ${p.cityName}, and ${me.os||me.oc} to ${myCity}`,arcs:[[K[0],K[1],'#0E9F6E'],[K[2],K[3],'#E9496E']],pins});
     const a=km2(o1,d1),b=km2(o2,d2);
     const fact=(i,k,v)=>v?`<div class="px-fct">${ic(i)}<span><small>${k}</small><b>${esc(v)}</b></span></div>`:'';
     return `<section class="px-sec" id="px-roots"><div class="px-h"><h2>${one?'Two journeys, one city':'Two journeys'}</h2>${one?`<span class="px-chip r">${ic('pin')}${esc(p.cityName)}</span>`:`<span class="px-chip">${esc(distLabel(p))}</span>`}</div>
@@ -3615,7 +3615,7 @@ const RLX=(function(){
     layers:[{id:'bg',type:'background',paint:{'background-color':L?'#CFE9DE':'#0A1410'}},
       {id:'relief',type:'raster',source:'relief',paint:L?{'raster-saturation':.1,'raster-contrast':.08,'raster-hue-rotate':-22}:{'raster-saturation':-.3,'raster-brightness-max':.45,'raster-contrast':.15,'raster-hue-rotate':-18}},
       {id:'land',type:'fill',source:'cc',paint:{'fill-color':L?'#9FDCBE':'#3E6B55','fill-opacity':L?.32:.18}},
-      {id:'hl',type:'fill',source:'cc',filter:['in',['get','n'],['literal',[]]],paint:{'fill-color':['coalesce',['get','hc'],L?'#FFD23F':'#FFD95C'],'fill-opacity':L?.5:.4}},
+      {id:'hl',type:'fill',source:'cc',filter:['in',['get','n'],['literal',[]]],paint:{'fill-color':['coalesce',['get','hc'],L?'#E94C70':'#EC6584'],'fill-opacity':L?.5:.4}},
       {id:'hl2',type:'fill',source:'cc',filter:['in',['get','n'],['literal',[]]],paint:{'fill-color':L?'#2FBF86':'#5FD3A2','fill-opacity':L?.4:.32}},
       {id:'bd',type:'line',source:'bb',paint:{'line-color':L?'rgba(255,255,255,.85)':'rgba(200,255,230,.16)','line-width':['interpolate',['linear'],['zoom'],0,.4,4,1]}},
       {id:'arcG',type:'line',source:'arcs',layout:{'line-cap':'round'},paint:{'line-color':['get','c'],'line-width':7,'line-blur':6,'line-opacity':.45}},
@@ -3625,7 +3625,7 @@ const RLX=(function(){
   const live={};/* key -> {el,map,sig,theme,markers,anim,touched} */
   const reduce=()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}};
   function ang(a,b){const r=x=>x*Math.PI/180;return Math.acos(Math.min(1,Math.sin(r(a[1]))*Math.sin(r(b[1]))+Math.cos(r(a[1]))*Math.cos(r(b[1]))*Math.cos(r(a[0]-b[0]))))*180/Math.PI}
-  function apply(E,o){const m=E.map;const L=o.dark?false:lt();const g=L?'#0E9F6E':'#5FD3A2',y=L?'#D9A800':'#FFD95C';
+  function apply(E,o){const m=E.map;const L=o.dark?false:lt();const g=L?'#0E9F6E':'#5FD3A2',y=L?'#BB173D':'#EC6584';
     const fs=(o.arcs||[]).filter(a=>a[0]&&a[1]).map(([a,b,c],i)=>({type:'Feature',properties:{c:c==='y'?y:g},geometry:{type:'LineString',coordinates:gc(a,b)}}));
     m.getSource('arcs').setData({type:'FeatureCollection',features:fs});
     m.setFilter('hl',['in',['get','n'],['literal',(o.roots||[]).map(nm)]]);m.setFilter('hl2',['in',['get','n'],['literal',(o.lives||[]).map(nm)]]);
@@ -3659,7 +3659,7 @@ const RLX=(function(){
 function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}let a=h>>>0;
   const R=()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
   const d=!document.documentElement.classList.contains('gl-lt');const id='rs'+(h%1e7)+(layers||4);
-  const pal=d?[['#7EE7BC','#FFE27A'],['#B8F08A','#5FD3A2'],['#FFE27A','#9FE6C6'],['#5FD3A2','#D4F2B6']]:[['#0E9F6E','#E8B800'],['#5DBB2E','#0E9F6E'],['#E8B800','#3CC28C'],['#0E7A55','#9BD86A']];
+  const pal=d?[['#7EE7BC','#EF7F99'],['#B8F08A','#5FD3A2'],['#EF7F99','#9FE6C6'],['#5FD3A2','#D4F2B6']]:[['#0E9F6E','#C81942'],['#5DBB2E','#0E9F6E'],['#C81942','#3CC28C'],['#0E7A55','#9BD86A']];
   let defs='',lay='';const n=layers||4;
   for(let L=0;L<n;L++){const k=3+Math.floor(R()*6),ph=R()*6.28,A=26+L*7+R()*6,B=10+R()*14,C=R()*.35;const p=pal[L%4];let path='';
     for(let i=0;i<=200;i++){const t=i/200*Math.PI*2;const r=A+B*Math.cos(k*t+ph)+C*B*Math.cos((k*2+1)*t);path+=(i?'L':'M')+(100+r*Math.cos(t)).toFixed(1)+' '+(100+r*Math.sin(t)).toFixed(1)}
@@ -3739,7 +3739,7 @@ function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^
   const _pv=renderProfileView;renderProfileView=function(id,isMe){const html=_pv(id,isMe);if(!RL()||isMe)return html;const p=byId(id);if(!p)return html;
     let c;try{c=compat(p)}catch(e){return html}const tz=tzOf(p);const cl=v=>{v=+v||0;if(v<=1)v*=100;return Math.max(0,Math.min(100,Math.round(v)))};
     const ring=[['Values',c.values],['Life plans',c.life],['What you both want',c.pref]].filter(x=>typeof x[1]==='number').map(([l,v])=>({l,v:cl(v)}));if(!ring.length)ring.push({l:'Overall',v:cl(c.total)});
-    const col=['#0E9F6E','#E2B500','#7CCB3E'];
+    const col=['#0E9F6E','#C31840','#7CCB3E'];
     const blk=`<section class="rl-share"><div class="rl-rings"><svg viewBox="0 0 120 120" aria-hidden="true">${ring.map((r,i)=>{const R=50-i*13;return `<circle cx="60" cy="60" r="${R}" fill="none" stroke="${col[i]}" stroke-opacity=".15" stroke-width="9"/><circle class="rl-ring" cx="60" cy="60" r="${R}" fill="none" stroke="${col[i]}" stroke-width="9" stroke-linecap="round" pathLength="1" style="--o:${(1-r.v/100).toFixed(2)};animation-delay:${.15+i*.15}s" transform="rotate(-90 60 60)"/>`}).join('')}</svg>
       <div class="rl-rl"><p class="eb">What you share</p>${ring.map((r,i)=>`<div><i style="background:${col[i]}"></i>${esc(r.l)}<span>${r.v}%</span></div>`).join('')}</div></div>
       ${tz?`<p class="rl-tz">${ic('clock')}${esc(hhmm(tz))} in ${esc(p.cityName||p.country)} now</p>`:''}</section>`;
@@ -5216,7 +5216,7 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
       const lt=de.classList.contains('gl-lt');const st=(hd||!lt||S.screen==='welcome')?'DARK':'LIGHT';
       render._bar=S.screen==='welcome'?'DARK':'LIGHT';/* keeps the older bar code quiet; this block decides */
       if(st!==window.__sapBar){window.__sapBar=st;const B=Plug().SystemBars;if(B&&B.setStyle)B.setStyle({style:st}).catch(()=>{})}
-      const m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',hd?'#0F1B3D':(lt?'#F7F4EE':'#0B1226'))}catch(e){}
+      const m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',hd?'#0F1B3D':(lt?'#F1F2F4':'#0B1226'))}catch(e){}
     return out};
   const SAPTABS=[['ring','For you','sort-best'],['globe','Same roots','roots'],['ticket','Events','events'],['dish','First meet','meet'],['home','Family','family'],['crown','Gold','gold']];
   function sapHead(){const me=S.me||{};const city=esc(me.cityName||me.city||'');const nm=esc(((me.name||'').split(' ')[0])||'');
@@ -5233,7 +5233,7 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
     const ins=mm.index+mm[0].length;
     return sapHead()+rest.slice(0,ins)+sapHome()+rest.slice(ins)};
   /* Sapphire home blocks (like mock handoff/mocks/sapphire-d): live count banner, today's 3, explore tiles. Real data only. */
-  const JW=[['#A9BEF2','#3B4FA8','#1E2A66'],['#F3C6B8','#B8556E','#7A2A4E'],['#F6DFAE','#C08A3E','#6E4A1C'],['#D8B8F0','#7A4AB0','#3A1E66']];
+  const JW=[['#A9BEF2','#3B4FA8','#1E2A66'],['#F3C6B8','#B8556E','#7A2A4E'],['#F4A4B6','#BA3C5A','#6B1B2E'],['#D8B8F0','#7A4AB0','#3A1E66']];
   function jew(ini,i,sz){const c=JW[i%JW.length];return `<span class="sap-jw" style="width:${sz}px;height:${sz}px;font-size:${Math.round(sz*.42)}px;background:radial-gradient(circle at 30% 25%,${c[0]},transparent 60%),radial-gradient(circle at 75% 70%,${c[1]},transparent 62%),${c[2]}">${esc(ini)}</span>`}
   function sapRoots(list){const gold=typeof isGold==='function'&&isGold();const by={};list.forEach(p=>{const k=p.oc||'Other';(by[k]=by[k]||[]).push(p)});
     const cs=Object.keys(by).sort((a,b)=>by[b].length-by[a].length);if(!cs.length)return `<div class="sap-empty">People appear here as members of your roots join.</div>`;
@@ -5244,6 +5244,7 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
     return `<div class="sap-roots"><div class="sap-rail2">${rail}</div><div class="sap-rg"><div class="sap-h2" style="margin-top:2px"><span>${esc(sel)} roots</span><small class="sap-cnt">${by[sel].length}</small></div><div class="sap-g2">${cards}</div></div></div>`}
   function sapHome(){let list=[];try{list=matchList()}catch(e){}
     if(S.sapMode==='roots')return `<div class="sap-home sap-rm">${sapRoots(list)}</div>`;
+    if(document.documentElement.classList.contains('cine'))return '';
     const me=S.me||{},city=esc(me.cityName||'');const n=list.length,who=me.lookingFor==='F'?'women':'men';
     const ban=`<div class="sap-ban"><span class="sap-sp" style="left:46%;top:14px">✦</span><div class="sap-bt"><div class="sap-k">${city?`Live in ${city}`:'Live now'}</div>${n?`<div class="sap-n">${n}</div><div class="sap-bs">${who} fit what you are looking for</div>`:`<div class="sap-bh">Be one of the first</div><div class="sap-bs">People of your roots appear here as they join</div>`}<button class="sap-gbtn" ${(typeof isGold==="function"&&isGold())?`data-a="saptab" data-k="roots"`:`data-a="upgrade" data-r="nearby"`}>See them</button></div><img class="sap-globe" src="img/f3/globe-big.webp" alt="" aria-hidden="true"></div>`;
     let picks=[];try{picks=(list.length>=6&&typeof ensurePicks==='function'?ensurePicks():list).slice(0,3)}catch(e){picks=list.slice(0,3)}
@@ -5265,6 +5266,62 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
       if(k==='roots'||k==='sort-best'){S.sapMode=k==='roots'?'roots':'for';render();const m=document.getElementById('main');if(m)m.scrollTop=0;return}
       if(k==='family'){S.tab='me';view=null;render();return}
       if(k==='meet'){S.tab='connections';view=null;render();return}}
+  });
+})();
+
+/* ---------- Cine look (his ok 12 Nov 2026 13:16 + logo B 13:18; mock handoff/mocks/nm-logo-nm) ----------
+   Netflix / event-app structure: one brand colour (rose #D61F4F) + black / white, no gold.
+   Tabs: Home (key 'matches') · Matches (key 'mlist', the old list) · Events · Messages. Me opens from the avatar.
+   Home = logo bar, chips, one big event card, "Your introductions today", "Same roots near you", events rail, profile progress.
+   Real data only: every number comes from the member's own data; a block with no data is hidden. */
+(function(){
+  const PH={evening:'catering',dinner:'catering',family:'hall',mixer:'hall',coffee:'table',meet:'table'};
+  const evPic=e=>{const k=((e&&e.kind)||'')+' '+((e&&e.title)||'').toLowerCase();for(const w in PH)if(k.toLowerCase().includes(w))return PH[w];return 'catering'};
+  const JW=[['#A9BEF2','#3B4FA8','#1E2A66'],['#F3C6B8','#B8556E','#7A2A4E'],['#FFC2A8','#E2603F','#7A2614'],['#D8B8F0','#7A4AB0','#3A1E66'],['#9FE1D9','#2B7F8C','#123E4A']];
+  const cover=i=>{const c=JW[i%JW.length];return `background:radial-gradient(circle at 30% 22%,${c[0]},transparent 58%),radial-gradient(circle at 75% 75%,${c[1]},transparent 62%),${c[2]}`};
+  const LOGO=`<img class="cn-lg" src="img/icon-192.png" alt="">`;
+  function avatar(){const me=S.me||{};const ini=esc(((me.name||'?')[0]||'?').toUpperCase());
+    return `<button class="cn-av" data-a="cnme" aria-label="My profile">${ini}</button>`}
+  function top(title){return `<div class="cn-top">${title?`<h1 class="cn-h1">${esc(title)}</h1>`:`<div class="cn-brand">${LOGO}<b>NeuMarry</b></div>`}${avatar()}</div>`}
+  function upcoming(){let ev=[];try{ev=(events()||[]).filter(e=>e&&e.date&&e.date>Date.now()&&e.status!=='cancelled').sort((a,b)=>a.date-b.date)}catch(e){}return ev}
+  const dd=d=>{try{return {d:d.getDate(),m:d.toLocaleString('en',{month:'short'}).toUpperCase(),w:d.toLocaleString('en',{weekday:'long'})}}catch(e){return {d:'',m:'',w:''}}};
+  function pcard(p,i){const gold=isGold();const rev=gold||(S.picks&&S.picks.revealed&&S.picks.revealed.includes(p.id));let c=0;try{c=compat(p).total}catch(e){}
+    const route=esc((p.os||p.oc||'')+(p.cityName?' → '+p.cityName:''));
+    return `<button class="cn-post" data-a="${rev?'open':'reveal'}" data-id="${p.id}"><span class="cn-pa" style="${cover(i)}">${c?`<span class="cn-badge">${c}% match</span>`:''}<em>Photo after match</em><span class="cn-rl">${route}</span></span><b>${rev?esc(shown(p)):'Today\'s pick'}, ${p.age}</b><small>${esc(p.job||p.cityName||'')}</small></button>`}
+  function rail(t,s,items,more){return items?`<div class="cn-sec"><div class="cn-sh"><div><h2>${t}</h2>${s?`<p>${s}</p>`:''}</div>${more||''}</div><div class="cn-rail">${items}</div></div>`:''}
+  function evCard(e){const x=dd(e.date);return `<button class="cn-ev" data-a="openEvent" data-id="${e.id}"><span class="cn-pic"><img src="img/p15/${evPic(e)}.webp" alt=""><span class="cn-date"><b>${x.d}</b>${x.m}</span></span><span class="cn-et"><b>${esc(e.title)}</b><small>${esc(e.city||'')}${e.priceM?' · '+money(e.priceM,e.cur):''}</small></span></button>`}
+  function home(){const me=S.me||{};let list=[];try{list=matchList()}catch(e){}
+    const chips=[['for','For you'],['roots','Same roots'],['events','Events'],['family','Family']];
+    const ch=`<div class="cn-chips">${chips.map(([k,t])=>`<button class="cn-chip${k==='for'?' on':''}" data-a="cnchip" data-k="${k}">${t}</button>`).join('')}</div>`;
+    const ev=upcoming();const e0=ev[0];
+    let hero;
+    if(e0){const x=dd(e0.date);hero=`<div class="cn-hero"><span class="cn-pic"><img src="img/p15/${evPic(e0)}.webp" alt=""></span><div class="cn-hb"><div class="cn-k">${x.w} · ${esc(e0.city||'')}</div><h2>${esc(e0.title)}</h2>${e0.sub?`<p>${esc(e0.sub)}</p>`:''}<div class="cn-btns"><button class="cn-b cn-p" data-a="openEvent" data-id="${e0.id}">Get a seat</button><button class="cn-b" data-a="openEvent" data-id="${e0.id}">Details</button></div></div></div>`}
+    else hero=`<div class="cn-hero"><span class="cn-pic"><img src="img/p15/rings.webp" alt=""></span><div class="cn-hb"><div class="cn-k">Marriage, not dating</div><h2>Meet people of your roots, where you live now</h2><p>Every member checks their ID and a live selfie.</p><div class="cn-btns"><button class="cn-b cn-p" data-a="cnchip" data-k="mlist">See your matches</button><button class="cn-b" data-a="cnme">My profile</button></div></div></div>`;
+    let picks=[];try{picks=(list.length>=6?ensurePicks():list).slice(0,3)}catch(e){picks=list.slice(0,3)}
+    const today=picks.length?rail(`Your ${picks.length} introductions today`,'Picked for your roots, values and city.',picks.map(pcard).join(''),`<span class="cn-mut">New at 9 am</span>`):'';
+    const same=me.oc?list.filter(p=>p.oc===me.oc&&!picks.includes(p)).slice(0,8):[];
+    const roots=same.length?rail('Same roots near you',`${esc(me.oc)} roots`,same.map((p,i)=>pcard(p,i+1)).join(''),`<button class="cn-more" data-a="cnchip" data-k="mlist">See all</button>`):'';
+    const evs=ev.length>1?rail('Events this month','',ev.slice(1,6).map(evCard).join(''),`<button class="cn-more" data-a="cnchip" data-k="events">See all</button>`):'';
+    let pct=0;try{pct=completeness(me)}catch(e){}
+    const prof=pct&&pct<100?`<button class="cn-prog" data-a="cnme"><div class="cn-pr"><b>Your profile is ${pct}% done</b><span>${pct}%</span></div><div class="cn-bar"><i style="width:${pct}%"></i></div><p>Finish it so the right people can find you.</p></button>`:'';
+    const empty=!picks.length&&!same.length?`<div class="cn-note">New members of your roots appear here as they join. Your matches list shows everyone who fits you today.</div>`:'';
+    return `<div class="cn-page">${top()}<div class="scroll" id="main"><div class="cn-in">${ch}${hero}${today}${roots}${evs}${prof}${empty}</div></div></div>`}
+  /* Matches tab: the old list under one clean header */
+  const _rm=renderMatches;
+  renderMatches=function(){if(S.tab!=='mlist'&&live())return home();
+    const h=_rm();const at=h.indexOf('<div class="scroll" id="main">');
+    return at<0?h:`<div class="cn-page cn-list">${top('Matches')}${h.slice(at)}</div>`};
+  function live(){try{return typeof isLive==='function'?isLive():true}catch(e){return true}}
+  const _r=render;render=function(){document.documentElement.classList.add('cine');const out=_r.apply(this,arguments);
+    try{const m=document.querySelector('meta[name=theme-color]');const lt=document.documentElement.classList.contains('gl-lt');if(m)m.setAttribute('content',lt?'#FFFFFF':'#07060B')}catch(e){}
+    return out};
+  Object.assign(A,{
+    cnme(){S.tab='me';view=null;render()},
+    cnchip(el){const k=el.dataset.k;
+      if(k==='events'){S.tab='events';view=null;render();return}
+      if(k==='family'){S.tab='me';view=null;render();return}
+      if(k==='roots'){S.sapMode='roots';S.tab='mlist';view=null;render();return}
+      if(k==='mlist'){S.sapMode='for';S.tab='mlist';view=null;render();return}}
   });
 })();
 
