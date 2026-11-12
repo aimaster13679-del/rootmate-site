@@ -3439,7 +3439,7 @@ function GLASS(){try{if(/127\.0\.0\.1/.test(CFG.url||'')){const t=localStorage.g
 (function(){
   const mq=window.matchMedia?matchMedia('(prefers-color-scheme: light)'):null;
   const apply=()=>{const on=GLASS();const h=document.documentElement;h.classList.toggle('gl',on);
-    let lt=false;try{const t=localStorage.getItem('nm.glassmode');lt=t!=='dark'   /* default LIGHT (his rule 8 Nov 13:46); dark only when chosen with the theme button */}catch(e){}
+    let lt=false;try{const t=localStorage.getItem('nm.glassmode');lt=t?t!=='dark':!(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)   /* 12 Nov 2026 16:17 his ok: follow the phone's own setting; light when it has none; the theme button still wins */}catch(e){}
     h.classList.toggle('gl-lt',on&&lt);
     const m=document.querySelector('meta[name=theme-color]');if(m&&on)m.setAttribute('content',lt?'#F7F8F5':'#0A0C0B')};
   const _r=render;render=function(){apply();_r()};
@@ -5200,7 +5200,8 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
       small controls (back, close, arrows) become plain gold text marks.
    3. Matches (home): Zepto-like header: city + hello, a search bar whose words change by themselves, and a row of 3D shortcut tabs. */
 (function(){
-  try{if(!localStorage.getItem('nm.glassmode'))localStorage.setItem('nm.glassmode','dark')}catch(e){}
+  /* 12 Nov 2026 16:17 his ok: theme follows the phone's own setting (light when the phone has none). One-time reset of the dark that 12 Nov 03:xx forced on everyone. */
+  try{if(!localStorage.getItem('nm.theme2')){if(localStorage.getItem('nm.glassmode')==='dark')localStorage.removeItem('nm.glassmode');localStorage.setItem('nm.theme2','1')}}catch(e){}
   const F3=new Set(['check','users','heart','shield','lock','pin','crown','chat','cal','info','clock','globe','camera','eye','sparkle','ticket','mail','gift','send','phone','star','mic','video','user','trash','key','brief','id','flag','home','dish','party','bolt','chart','search','badge','alert','copy','camera2','store2','qr','mega2','tag2','ball2','bed2','ring','shield2','lock2','refresh','scan']);
   const AL={star2:'star',home2:'home',rings:'ring',tick:'check'};
   const TXT={back:'‹',back2:'‹',chev:'›',chev2:'›',x:'×',more:'⋯',plus:'+',tick2:'✓',filter:'⋯',share:'↗',down:'⌄',up:'⌃'};
@@ -5305,10 +5306,11 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
     let pct=0;try{pct=completeness(me)}catch(e){}
     const prof=pct&&pct<100?`<button class="cn-prog" data-a="cnme"><div class="cn-pr"><b>Your profile is ${pct}% done</b><span>${pct}%</span></div><div class="cn-bar"><i style="width:${pct}%"></i></div><p>Finish it so the right people can find you.</p></button>`:'';
     const empty=!picks.length&&!same.length?`<div class="cn-note">New members of your roots appear here as they join. Your matches list shows everyone who fits you today.</div>`:'';
-    return `<div class="cn-page">${top()}<div class="scroll" id="main"><div class="cn-in">${ch}${hero}${today}${roots}${evs}${prof}${empty}</div></div></div>`}
+    const vc=!live()?`<button class="cn-ver" data-a="cnchip" data-k="mlist"><span class="cn-k">Not live yet</span><b>Finish your checks to go live</b><p>Photo, ID and a live selfie, about 2 minutes. Members can see you after this.</p><span class="cn-b cn-p">Continue</span></button>`:'';
+    return `<div class="cn-page">${top()}<div class="scroll" id="main"><div class="cn-in">${ch}${vc}${hero}${today}${roots}${evs}${prof}${empty}</div></div></div>`}
   /* Matches tab: the old list under one clean header */
   const _rm=renderMatches;
-  renderMatches=function(){if(S.tab!=='mlist'&&live())return home();
+  renderMatches=function(){if(S.tab!=='mlist')return home();
     const h=_rm();const at=h.indexOf('<div class="scroll" id="main">');
     return at<0?h:`<div class="cn-page cn-list">${top('Matches')}${h.slice(at)}</div>`};
   function live(){try{return typeof isLive==='function'?isLive():true}catch(e){return true}}

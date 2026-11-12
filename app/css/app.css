@@ -3089,3 +3089,7 @@ html.cine:not(.z1):not(.z2):not(.z3):not(.z4):not(.z5):not(.z6):not(.z7):not(.z8
 html.cine:not(.z1):not(.z2):not(.z3):not(.z4):not(.z5):not(.z6):not(.z7):not(.z8) .nm-ghero{flex:none!important}
 html.cine:not(.z1):not(.z2):not(.z3):not(.z4):not(.z5):not(.z6):not(.z7):not(.z8) .navwrap{background:var(--bg)!important;background-image:none!important}
 html.cine:not(.z1):not(.z2):not(.z3):not(.z4):not(.z5):not(.z6):not(.z7):not(.z8) .sheet-b:has(.nm-ghero){display:block!important}html.cine:not(.z1):not(.z2):not(.z3):not(.z4):not(.z5):not(.z6):not(.z7):not(.z8) .sheet-b:has(.nm-ghero)>*{margin-bottom:12px}html.cine:not(.z1):not(.z2):not(.z3):not(.z4):not(.z5):not(.z6):not(.z7):not(.z8) .nm-ghero .sap-rings{max-width:none!important;width:100%!important}
+.cn-ver{display:block;width:calc(100% - 36px);margin:14px 18px 0;text-align:left;border:1px solid rgba(214,31,79,.45);background:var(--surface);border-radius:18px;padding:16px;color:var(--ink);cursor:pointer}
+.cn-ver b{display:block;margin-top:6px;font:800 19px/1.25 "Plus Jakarta Sans",system-ui,sans-serif}
+.cn-ver p{margin:6px 0 12px;font:500 13.5px/1.45 "Plus Jakarta Sans",system-ui,sans-serif;color:var(--muted)}
+.cn-ver .cn-b{display:block;text-align:center}
