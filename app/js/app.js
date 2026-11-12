@@ -2285,14 +2285,24 @@ window.addEventListener('unhandledrejection',e=>console.error('[js rejection]',e
    Also a history step, so even if the phone sends back to the page instead of the app, it still goes one step back. */
 let backAt=0;
 function backExitOk(){if(Date.now()-backAt<2200)return true;backAt=Date.now();toast('Press back again to close');return false}
-try{history.pushState({nmb:1},'');window.addEventListener('popstate',()=>{let handled=false;try{handled=goBack()}catch(e){handled=true}
-  if(handled||!backExitOk()){history.pushState({nmb:1},'');return}
-  if(isNative&&Plug().App)Plug().App.exitApp();else history.back()})}catch(e){}
+/* Phones (and the installed web app) only count back-steps that were added right after a tap, so after every tap
+   we keep a few back-steps ready; each phone Back then goes one step back inside the app (goBack), never out of it. */
+const BACK_STEPS=6;
+function backIdx(){const st=history.state;return st&&st.nmb?st.i||0:0}
+function backTopUp(){try{let i=backIdx();while(i<BACK_STEPS){i++;history.pushState({nmb:1,i},'')}}catch(e){}}
+document.addEventListener('click',()=>setTimeout(backTopUp,0),true);
+document.addEventListener('touchend',()=>setTimeout(backTopUp,0),{capture:true,passive:true});
+window.addEventListener('popstate',()=>{let handled=false;try{handled=goBack()}catch(e){handled=true}
+  if(handled)return;
+  if(!backExitOk()){try{history.pushState({nmb:1,i:backIdx()+1},'')}catch(e){}return}
+  if(isNative&&Plug().App)Plug().App.exitApp();else{try{history.go(-(backIdx()+1))}catch(e){history.back()}}});
 if(isNative&&Plug().App){
   Plug().App.addListener('appUrlOpen',ev=>{if(ev&&ev.url&&ev.url.startsWith(CFG.redirect))handleAuthUrl(ev.url)});
-  Plug().App.addListener('backButton',()=>{if(!goBack()&&backExitOk())Plug().App.exitApp()});
   Plug().App.addListener('resume',()=>{if(liveUpd.apply())return;if(S.screen==='app'){tick=9;poll();const p=payPending();if(p)payCheck(p,true)}});
 }
+/* Phone Back in the Android app: listen through the official plugin handle as well (the old shortcut may be empty on new Android builds) */
+(function(){if(!isNative)return;let CA=null;try{CA=(window.Capacitor&&typeof window.Capacitor.registerPlugin==='function')?window.Capacitor.registerPlugin('App'):Plug().App}catch(e){CA=Plug().App}
+  if(!CA||!CA.addListener)return;try{Promise.resolve(CA.addListener('backButton',()=>{if(!goBack()&&backExitOk())CA.exitApp()})).catch(()=>{})}catch(e){}})();
 /* A payment that was pending (for example cash at a store) and completes later. */
 if(Bill()){try{Bill().addListener('purchasesUpdated',()=>{if(S.screen==='app')restorePurchases(false)})}catch(e){}}
 /* ---------- Typing on phones ----------
@@ -3112,11 +3122,14 @@ function renderAdmin3(){const t=A3.tab;
 
 /* Every item in the admin panel opens its details (his ask 6 Nov ~19:xx). Lists come from admin_signups (last 30 days, real rows). */
 const A3F=[[x=>true,'Made an account'],[x=>!/^Signed up/.test(x.step||''),'Started the profile'],[x=>!/^(Signed up|Profile started|No )/.test(x.step||''),'Sent documents'],[x=>/live/i.test(x.step||''),'Live']];
+/* all members (not only the last 30 days), for the 'Live members' tile whose number counts everyone */
+async function a3loadAll(){if(!S.admin||S.admin.allB)return;S.admin.allB=true;try{const m=await API.rpc('admin_members',{p_q:null,p_limit:200});S.admin.allm=(Array.isArray(m)?m:[]).map(x=>({user_id:x.id,email:x.email,created_at:x.created_at,full_name:x.full_name,city:x.city,country:x.country,step:x.step,banned:x.banned}))}catch(e){S.admin.allm=[]}finally{if(S.admin)S.admin.allB=false;render()}}
 function a3rows(){return (S.admin&&S.admin.signups)||[]}
-function a3daysAgo(ts){const d=new Date(ts);const t=new Date();d.setHours(0,0,0,0);t.setHours(0,0,0,0);return Math.round((t-d)/864e5)}
-function a3list(){const L=A3.list;const rows=a3rows().filter(L.f);
+/* days are counted like the server counts them (UTC days), so 'Sign-ups today: 1' always lists that 1 person (fix 13 Nov 2026) */
+function a3daysAgo(ts){const d=new Date(ts);const t=new Date();return Math.round((Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate())-Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()))/864e5)}
+function a3list(){const L=A3.list;const all=L.src==='all';if(all&&S.admin&&S.admin.allm===undefined)a3loadAll();const rows=(all?((S.admin&&S.admin.allm)||[]):a3rows()).filter(L.f);
   return `<button class="a3back" data-a="a3up">${ic('back')} Back</button><div class="a3c"><div class="a3h"><b>${esc(L.title)}</b><span>${rows.length}</span></div>
-   ${S.admin&&(S.admin.loading||S.admin.signups===undefined)?spinner('Loading'):rows.length?rows.slice(0,200).map(x=>`<button class="a3r" data-a="a3mem" data-k="${esc(x.user_id)}"><span class="a3d ${/live/i.test(x.step||'')?'ok':'run'}"></span><span><b>${esc(x.full_name||x.google_name||x.email||'Member')}</b><small>${esc(x.step||'')}</small><small>${esc([x.city,x.country].filter(Boolean).join(', '))}${x.city||x.country?' · ':''}${esc(a3ago(x.created_at))}</small></span><em>›</em></button>`).join(''):`<p class="a3m">No members here in the last 30 days.</p>`}
+   ${S.admin&&(S.admin.loading||(all?!S.admin.allm:S.admin.signups===undefined))?spinner('Loading'):rows.length?rows.slice(0,200).map(x=>`<button class="a3r" data-a="a3mem" data-k="${esc(x.user_id)}"><span class="a3d ${/live/i.test(x.step||'')?'ok':'run'}"></span><span><b>${esc(x.full_name||x.google_name||x.email||'Member')}</b><small>${esc(x.step||'')}</small><small>${esc([x.city,x.country].filter(Boolean).join(', '))}${x.city||x.country?' · ':''}${esc(a3ago(x.created_at))}</small></span><em>›</em></button>`).join(''):`<p class="a3m">No members here in the last 30 days.</p>`}
    <p class="a3m">${esc(L.note||'Members who joined in the last 30 days.')}</p></div>`}
 function a3member(){const id=A3.mem;const m=A3.memd&&A3.memd.id===id?A3.memd:null;const x=a3rows().find(r=>r.user_id===id)||{};
   const back=`<button class="a3back" data-a="a3up">${ic('back')} Back</button>`;
@@ -3184,7 +3197,7 @@ function a3events(){const w=a3need();if(w)return w;const E=A3.st.events||[];if(!
     a3go(el){const k=el.dataset.k||'';
       if(k.startsWith('tab:')){A3.tab=k.slice(4);A3.list=null;A3.mem=null;render();return}
       if(k==='today')A3.list={title:'Sign-ups today',f:x=>a3daysAgo(x.created_at)===0};
-      else if(k==='live')A3.list={title:'Live members (joined in 30 days)',f:x=>/live/i.test(x.step||''),note:'Fully verified members who joined in the last 30 days.'};
+      else if(k==='live')A3.list={title:'Live members',src:'all',f:x=>/live/i.test(x.step||'')&&!x.banned,note:'Fully verified members (all time), newest first.'};
       else if(k.startsWith('day:')){const n=+k.slice(4);A3.list={title:n===0?'Sign-ups today':n===1?'Sign-ups yesterday':`Sign-ups ${n} days ago`,f:x=>a3daysAgo(x.created_at)===n}}
       else if(/^f\d$/.test(k)){const [fn,t]=A3F[+k[1]];A3.list={title:t+' (last 7 days)',f:x=>a3daysAgo(x.created_at)<7&&fn(x),note:'Members who joined in the last 7 days and reached this step.'}}
       A3.mem=null;render();const sc=document.querySelector('.a3v .scroll');if(sc)sc.scrollTop=0},
