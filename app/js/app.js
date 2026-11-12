@@ -5224,7 +5224,7 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
     return `<div class="sap-hd"><span class="sap-sp" style="right:74px;top:20px">✦</span><span class="sap-sp" style="right:150px;top:52px;animation-delay:.9s;font-size:9px">✦</span>
       <div class="sap-top"><div><div class="sap-city">${city?`Your city · ${city}`:'NeuMarry'}</div><div class="sap-hi">${typeof greet==='function'?greet():'Hello'}${nm?`, ${nm}`:''}</div></div></div>
       <button class="sap-srch" data-a="sapsearch" aria-label="Search and filters">Search by <span class="sap-cyc">${words.map(w=>`<span>${w}</span>`).join('')}</span></button>
-      <div class="sap-tabs" role="list">${SAPTABS.map(([i,t,k],j)=>`<button class="sap-tab${j===0?' on':''}" data-a="saptab" data-k="${k}" role="listitem"><img src="img/f3/${i}.webp" alt="" aria-hidden="true">${t}</button>`).join('')}</div></div>`}
+      <div class="sap-tabs" role="list">${SAPTABS.map(([i,t,k],j)=>`<button class="sap-tab${(S.sapMode==='roots'?k==='roots':j===0)?' on':''}" data-a="saptab" data-k="${k}" role="listitem"><img src="img/f3/${i}.webp" alt="" aria-hidden="true">${t}</button>`).join('')}</div></div>`}
   const _rm=renderMatches;
   renderMatches=function(){const h=_rm();if(!(typeof isLive==='function'&&isLive()))return h;
     const at=h.indexOf('<div class="scroll" id="main">');if(at<0)return h;
@@ -5235,7 +5235,15 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
   /* Sapphire home blocks (like mock handoff/mocks/sapphire-d): live count banner, today's 3, explore tiles. Real data only. */
   const JW=[['#A9BEF2','#3B4FA8','#1E2A66'],['#F3C6B8','#B8556E','#7A2A4E'],['#F6DFAE','#C08A3E','#6E4A1C'],['#D8B8F0','#7A4AB0','#3A1E66']];
   function jew(ini,i,sz){const c=JW[i%JW.length];return `<span class="sap-jw" style="width:${sz}px;height:${sz}px;font-size:${Math.round(sz*.42)}px;background:radial-gradient(circle at 30% 25%,${c[0]},transparent 60%),radial-gradient(circle at 75% 70%,${c[1]},transparent 62%),${c[2]}">${esc(ini)}</span>`}
+  function sapRoots(list){const gold=typeof isGold==='function'&&isGold();const by={};list.forEach(p=>{const k=p.oc||'Other';(by[k]=by[k]||[]).push(p)});
+    const cs=Object.keys(by).sort((a,b)=>by[b].length-by[a].length);if(!cs.length)return `<div class="sap-empty">People appear here as members of your roots join.</div>`;
+    const sel=S.sapOc&&by[S.sapOc]?S.sapOc:cs[0];
+    const rail=cs.map(c=>`<button class="sap-rr${c===sel?' on':''}" data-a="sapoc" data-c="${esc(c)}"><span class="sap-fl">${typeof flag==='function'?flag(c):''}</span><b>${esc(c)}</b><small>${by[c].length}</small></button>`).join('');
+    const cards=by[sel].map((p,i)=>{const rev=gold||(S.picks&&S.picks.revealed&&S.picks.revealed.includes(p.id));let c=0;try{c=compat(p).total}catch(e){}
+      return `<button class="sap-card sap-gc" data-a="${rev?'open':'reveal'}" data-id="${p.id}"><span class="sap-cw">${jew(rev?(shown(p)||'?')[0]:'?',i,120)}<span class="sap-pct">${c}%</span></span><b>${rev?esc(shown(p)):'●●●●'}, ${p.age}</b><small>${esc(p.cityName||'')}</small><span class="sap-int">${rev?'Send interest':'Gold pick'}</span></button>`}).join('');
+    return `<div class="sap-roots"><div class="sap-rail2">${rail}</div><div class="sap-rg"><div class="sap-h2" style="margin-top:2px"><span>${esc(sel)} roots</span><small class="sap-cnt">${by[sel].length}</small></div><div class="sap-g2">${cards}</div></div></div>`}
   function sapHome(){let list=[];try{list=matchList()}catch(e){}
+    if(S.sapMode==='roots')return `<div class="sap-home sap-rm">${sapRoots(list)}</div>`;
     const me=S.me||{},city=esc(me.cityName||'');const n=list.length,who=me.lookingFor==='F'?'women':'men';
     const ban=`<div class="sap-ban"><span class="sap-sp" style="left:46%;top:14px">✦</span><div class="sap-bt"><div class="sap-k">${city?`Live in ${city}`:'Live now'}</div>${n?`<div class="sap-n">${n}</div><div class="sap-bs">${who} fit what you are looking for</div>`:`<div class="sap-bh">Be one of the first</div><div class="sap-bs">People of your roots appear here as they join</div>`}<button class="sap-gbtn" ${(typeof isGold==="function"&&isGold())?`data-a="saptab" data-k="roots"`:`data-a="upgrade" data-r="nearby"`}>See them</button></div><img class="sap-globe" src="img/f3/globe-big.webp" alt="" aria-hidden="true"></div>`;
     let picks=[];try{picks=(list.length>=6&&typeof ensurePicks==='function'?ensurePicks():list).slice(0,3)}catch(e){picks=list.slice(0,3)}
@@ -5248,12 +5256,13 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
     const grid=`<div class="sap-h2"><span>Explore</span></div><div class="sap-grid">${ex.map(([i,t,k])=>`<button class="sap-gt" data-a="saptab2" data-k="${k}"><span class="sap-bx"><img src="img/f3/${i}.webp" alt="" aria-hidden="true"></span><b>${t}</b></button>`).join('')}</div>`;
     return `<div class="sap-home">${ban}${today}${grid}</div>`}
   Object.assign(A,{
+    sapoc(el){S.sapOc=el.dataset.c;render()},
     saptab2(el){S.tab=el.dataset.k;view=null;render()},
     sapsearch(){if(A.filters)return A.filters();if(A.openFilters)return A.openFilters();toast('Filters are below')},
     saptab(el){const k=el.dataset.k;
-      if(k==='events'){S.tab='events';view=null;render();return}
+      if(k==='events'){if(A.ivList)return A.ivList(el);toast('Introduction Evenings are coming to your city');return}
       if(k==='gold'){if(A.gold)return A.gold();if(A.openGold)return A.openGold()}
-      if(k==='roots'||k==='sort-best'){const m=document.getElementById('main');if(m)m.scrollTo({top:0,behavior:'smooth'});return}
+      if(k==='roots'||k==='sort-best'){S.sapMode=k==='roots'?'roots':'for';render();const m=document.getElementById('main');if(m)m.scrollTop=0;return}
       if(k==='family'){S.tab='me';view=null;render();return}
       if(k==='meet'){S.tab='connections';view=null;render();return}}
   });
