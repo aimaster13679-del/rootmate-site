@@ -5211,6 +5211,12 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
     return _ic(n,cls)};
   const _r=render;render=function(){document.documentElement.classList.add('sap');const out=_r.apply(this,arguments);
     try{document.querySelectorAll('.nm-ghero').forEach(g=>{if(!g.querySelector('.sap-rings')){const im=document.createElement('img');im.className='sap-rings';im.src='img/f3/rings-big.webp';im.alt='';im.setAttribute('aria-hidden','true');g.prepend(im)}})}catch(e){}
+    /* his rule 12 Nov 11:25: phone top bar takes the header colour, bottom bar the page colour, on every screen */
+    try{const de=document.documentElement,hd=!view&&!!document.querySelector('.sap-hd');if(hd)de.classList.add('edge-t');
+      const lt=de.classList.contains('gl-lt');const st=(hd||!lt||S.screen==='welcome')?'DARK':'LIGHT';
+      render._bar=S.screen==='welcome'?'DARK':'LIGHT';/* keeps the older bar code quiet; this block decides */
+      if(st!==window.__sapBar){window.__sapBar=st;const B=Plug().SystemBars;if(B&&B.setStyle)B.setStyle({style:st}).catch(()=>{})}
+      const m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',hd?'#0F1B3D':(lt?'#F7F4EE':'#0B1226'))}catch(e){}
     return out};
   const SAPTABS=[['ring','For you','sort-best'],['globe','Same roots','roots'],['ticket','Events','events'],['dish','First meet','meet'],['home','Family','family'],['crown','Gold','gold']];
   function sapHead(){const me=S.me||{};const city=esc(me.cityName||me.city||'');const nm=esc(((me.name||'').split(' ')[0])||'');
