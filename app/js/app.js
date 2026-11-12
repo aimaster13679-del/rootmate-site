@@ -2096,7 +2096,7 @@ const A={
 async function adminReview(el,ok,reason){const id=el.dataset.id,k=el.dataset.k;
   try{await API.rpc('admin_review',{row_kind:k==='photo'?'photo':'verification',rid:id,approve:ok,reason:reason||null});S.admin.queue=S.admin.queue.filter(x=>x.row_id!==id);if(S.admin.counts)S.admin.counts.pending--;render();toast(ok?'Approved.':'Rejected. The member sees the reason.',ok?'check':'x')}catch(e){fail(e)}}
 async function loadAdmin(){
-  try{const [q,r,c,ap,ru,su,ev]=await Promise.all([API.rpc('admin_queue'),API.rpc('admin_reports'),API.rpc('admin_counts'),API.rpc('admin_applications').catch(()=>[]),API.rpc('admin_rude').catch(()=>[]),API.rpc('admin_signups',{days:30}).catch(()=>[]),API.rpc('admin_events').catch(()=>[]),API.rpc('admin_cities').catch(()=>[]),API.rpc('admin_online').catch(()=>[])]).then(r=>{CITYADM=[r[7]||[],r[8]||[]];return r});
+  try{const [q,r,c,ap,ru,su,ev]=await Promise.all([API.rpc('admin_queue'),API.rpc('admin_reports'),API.rpc('admin_counts'),API.rpc('admin_applications').catch(()=>[]),API.rpc('admin_rude').catch(()=>[]),adminSignups(),API.rpc('admin_events').catch(()=>[]),API.rpc('admin_cities').catch(()=>[]),API.rpc('admin_online').catch(()=>[])]).then(r=>{CITYADM=[r[7]||[],r[8]||[]];return r});
     const queue=(q||[]).map(x=>Object.assign(x,{bucket:x.kind==='photo'?'photos':'verification'}));
     S.admin={loading:false,queue,reports:r||[],counts:c,apps:ap||[],rude:ru||[],signups:su||[],events:ev||[],cities:CITYADM[0],online:CITYADM[1],urls:{}};render();
     const idq=queue.filter(x=>x.kind==='id').map(x=>x.row_id);if(idq.length)API.select('verifications',{select:'id,auto_check',id:'in.('+idq.join(',')+')'}).then(rs=>{S.admin.auto={};(rs||[]).forEach(v=>{if(v.auto_check)S.admin.auto[v.id]=v.auto_check});render()}).catch(()=>{});
@@ -2104,7 +2104,15 @@ async function loadAdmin(){
     const vf=queue.filter(x=>x.bucket==='verification').map(x=>x.path);
     const [a,b]=await Promise.all([API.signMany('photos',ph,1800),API.signMany('verification',vf,600)]);
     Object.keys(a).forEach(k=>S.admin.urls['photos:'+k]=a[k]);Object.keys(b).forEach(k=>S.admin.urls['verification:'+k]=b[k]);render()}
-  catch(e){S.admin={loading:false,queue:[],reports:[],urls:{}};render();fail(e)}}
+  catch(e){S.admin={loading:false,queue:[],reports:[],urls:{}};render();fail(e);adminSignups().then(su=>{if(S.admin)S.admin.signups=su;render()})}}
+/* Admin lists (sign-ups today, live members, sign-ups per day...) need the members of the last 30 days.
+   If the main list fails or comes back empty, use the member search list instead, so a number on a tile is never an empty list inside (fix 13 Nov 2026). */
+async function adminSignups(){let su=null;try{su=await API.rpc('admin_signups',{days:30})}catch(e){su=null}
+  if(Array.isArray(su)&&su.length)return su;
+  try{const m=await API.rpc('admin_members',{p_q:null,p_limit:200});const since=Date.now()-30*864e5;
+    const rows=(Array.isArray(m)?m:[]).filter(x=>Date.parse(x.created_at)>since).map(x=>({user_id:x.id,email:x.email,created_at:x.created_at,full_name:x.full_name,gender:x.gender,city:x.city,country:x.country,step:x.step,last_active:x.last_seen}));
+    if(rows.length||!Array.isArray(su))return rows}catch(e){}
+  return Array.isArray(su)?su:[]}
 async function loadInvite(){if(!S.me||!isGold()||!S.me.v.id||S.invite)return;try{S.invite=await API.rpc('my_invite_code');render()}catch(e){}}
 function rateHint(){/* Store review prompt comes with the native review plugin after launch. */}
 /* ---------- Sign in with Google ----------
@@ -2272,9 +2280,17 @@ async function boot(){
 }
 window.addEventListener('error',e=>console.error('[js error]',e.message,e.filename,e.lineno));
 window.addEventListener('unhandledrejection',e=>console.error('[js rejection]',e.reason&&(e.reason.stack||e.reason.message||e.reason)));
+/* Phone back button like every big app (fix 13 Nov 2026, his video: back closed the whole app):
+   one step back each press; on Home the first press only says "Press back again to close".
+   Also a history step, so even if the phone sends back to the page instead of the app, it still goes one step back. */
+let backAt=0;
+function backExitOk(){if(Date.now()-backAt<2200)return true;backAt=Date.now();toast('Press back again to close');return false}
+try{history.pushState({nmb:1},'');window.addEventListener('popstate',()=>{let handled=false;try{handled=goBack()}catch(e){handled=true}
+  if(handled||!backExitOk()){history.pushState({nmb:1},'');return}
+  if(isNative&&Plug().App)Plug().App.exitApp();else history.back()})}catch(e){}
 if(isNative&&Plug().App){
   Plug().App.addListener('appUrlOpen',ev=>{if(ev&&ev.url&&ev.url.startsWith(CFG.redirect))handleAuthUrl(ev.url)});
-  Plug().App.addListener('backButton',()=>{if(!goBack())Plug().App.exitApp()});
+  Plug().App.addListener('backButton',()=>{if(!goBack()&&backExitOk())Plug().App.exitApp()});
   Plug().App.addListener('resume',()=>{if(liveUpd.apply())return;if(S.screen==='app'){tick=9;poll();const p=payPending();if(p)payCheck(p,true)}});
 }
 /* A payment that was pending (for example cash at a store) and completes later. */
@@ -3100,7 +3116,7 @@ function a3rows(){return (S.admin&&S.admin.signups)||[]}
 function a3daysAgo(ts){const d=new Date(ts);const t=new Date();d.setHours(0,0,0,0);t.setHours(0,0,0,0);return Math.round((t-d)/864e5)}
 function a3list(){const L=A3.list;const rows=a3rows().filter(L.f);
   return `<button class="a3back" data-a="a3up">${ic('back')} Back</button><div class="a3c"><div class="a3h"><b>${esc(L.title)}</b><span>${rows.length}</span></div>
-   ${S.admin&&S.admin.loading?spinner('Loading'):rows.length?rows.slice(0,200).map(x=>`<button class="a3r" data-a="a3mem" data-k="${esc(x.user_id)}"><span class="a3d ${/live/i.test(x.step||'')?'ok':'run'}"></span><span><b>${esc(x.full_name||x.google_name||x.email||'Member')}</b><small>${esc(x.step||'')}</small><small>${esc([x.city,x.country].filter(Boolean).join(', '))}${x.city||x.country?' · ':''}${esc(a3ago(x.created_at))}</small></span><em>›</em></button>`).join(''):`<p class="a3m">No members here in the last 30 days.</p>`}
+   ${S.admin&&(S.admin.loading||S.admin.signups===undefined)?spinner('Loading'):rows.length?rows.slice(0,200).map(x=>`<button class="a3r" data-a="a3mem" data-k="${esc(x.user_id)}"><span class="a3d ${/live/i.test(x.step||'')?'ok':'run'}"></span><span><b>${esc(x.full_name||x.google_name||x.email||'Member')}</b><small>${esc(x.step||'')}</small><small>${esc([x.city,x.country].filter(Boolean).join(', '))}${x.city||x.country?' · ':''}${esc(a3ago(x.created_at))}</small></span><em>›</em></button>`).join(''):`<p class="a3m">No members here in the last 30 days.</p>`}
    <p class="a3m">${esc(L.note||'Members who joined in the last 30 days.')}</p></div>`}
 function a3member(){const id=A3.mem;const m=A3.memd&&A3.memd.id===id?A3.memd:null;const x=a3rows().find(r=>r.user_id===id)||{};
   const back=`<button class="a3back" data-a="a3up">${ic('back')} Back</button>`;
@@ -4658,17 +4674,20 @@ function cityRows15(q) {
   const MORE = ['new', 'activity', 'robots', 'help', 'checks'];
   a3tabsHtml = function () {
     const o = A3.ov, t = A3.tab, chk = o ? (o.checks_waiting || 0) + (o.reports_open || 0) : 0;
-    const moreN = chk + (o && o.help_open ? o.help_open : 0) + (o && (o.bots || []).some(b => b.status === 'failed') ? 1 : 0);
+    const moreN = chk + a3helpN15() + (a3failed15().length ? 1 : 0);
     const tabs = [['home', 'Today'], ['members', 'People'], ['money', 'Money'], ['events', 'Events'], ['more', 'More']];
     return `<div class="a3tabs a3t5 pad" role="tablist">${tabs.map(([k, l]) => { const on = t === k || (k === 'more' && MORE.includes(t));
       return `<button role="tab" aria-selected="${on}" class="${on ? 'on' : ''}" data-a="a3tab" data-k="${k}">${l}${k === 'more' && moreN ? ` <em>${moreN}</em>` : ''}</button>` }).join('')}</div>`;
   };
+  /* the number on More = exactly what you find inside (fix 13 Nov 2026): robot failures only from the last 24 h (same as Today), help = open requests in the inbox list */
+  function a3failed15() { const o = A3.ov || {}; return (o.bots || []).filter(b => b.status === 'failed' && b.finished_at && Date.now() - new Date(b.finished_at) < 864e5) }
+  function a3helpN15() { const o = A3.ov || {}; if (Array.isArray(A3.help)) return A3.help.filter(x => x.status === 'open').length; return o.help_open || 0 }
   function a3more() {
-    const o = A3.ov || {}, chk = (o.checks_waiting || 0) + (o.reports_open || 0), failed = (o.bots || []).filter(b => b.status === 'failed').length;
-    const row = (k, i, t, s, n) => `<button class="a3c a3mrow" data-a="a3tab" data-k="${k}">${ic(i)}<span><b>${t}</b><small>${s}</small></span>${n ? `<em>${n}</em>` : ''}${ic('chev')}</button>`;
+    const o = A3.ov || {}, chk = (o.checks_waiting || 0) + (o.reports_open || 0), failed = a3failed15().length;
+    const row = (k, i, t, s, n) => `<button class="a3c a3mrow" data-a="a3tab" data-k="${k}">${ic(i)}<span><b>${t}</b><small>${s}</small></span>${n ? `<em>${n}</em>` : ''}<i class="a3arr" aria-hidden="true">›</i></button>`;
     return row('new', 'sparkle', 'New app', 'Plus members, businesses, rooms, events, ads to check', '') +
       row('checks', 'shield', 'Checks', 'Photos, ID and selfie checks, reports', chk) +
-      row('help', 'chat', 'Help inbox', 'Members who asked for help', o.help_open || 0) +
+      row('help', 'chat', 'Help inbox', 'Members who asked for help', a3helpN15()) +
       row('activity', 'bolt', 'Activity', 'Who is active, messages, matches', '') +
       row('robots', 'refresh', 'Robots', 'Daily jobs and reports', failed ? '!' : '');
   }
@@ -5342,6 +5361,9 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
       if(k==='mlist'){S.sapMode='for';S.tab='mlist';view=null;render();return}}
   });
 })();
+
+/* Back from the new service pages (events, tickets, rooms, business...): one step back like their own back arrow, instead of closing the app (fix 13 Nov 2026) */
+(function(){const _gb=goBack;goBack=function(){if(!view&&!sheet&&!picker&&!celebrate&&typeof P15==='object'&&P15&&P15.v&&typeof A.p15back==='function'){A.p15back();return true}return _gb()}})();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 /* only on the first open after installing (fast open stays ~1 s every other time; later updates come quietly) */

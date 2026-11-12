@@ -3093,3 +3093,13 @@ html.cine:not(.z1):not(.z2):not(.z3):not(.z4):not(.z5):not(.z6):not(.z7):not(.z8
 .cn-ver b{display:block;margin-top:6px;font:800 19px/1.25 "Plus Jakarta Sans",system-ui,sans-serif}
 .cn-ver p{margin:6px 0 12px;font:500 13.5px/1.45 "Plus Jakarta Sans",system-ui,sans-serif;color:var(--muted)}
 .cn-ver .cn-b{display:block;text-align:center}
+/* Admin panel: one clean theme per phone setting (13 Nov 2026 fix: light phones got a navy page with dark text, header buttons not at the edges) */
+.a3v .a3top .grow{flex:1;min-width:0}
+.a3v .a3top h2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html.sap.sap.gl-lt .a3v{--a-bg:#F3F3F6;--a-card:#FFFFFF;--a-line:rgba(22,21,42,.09);--a-tx:#16152A;--a-sub:#5E5C72;--a-acc:#D61F4F;--a-acc-tx:#FFFFFF;--a-bar:rgba(214,31,79,.12)}
+html.sap.sap.gl-lt .a3v,html.sap.sap.gl-lt .a3v.view,html.sap.sap.gl-lt .a3chkbar{background:var(--a-bg)!important;color:var(--a-tx)!important}
+html.sap.sap.gl-lt .a3v .a3top h2,html.sap.sap.gl-lt .a3v .a3back,html.sap.sap.gl-lt .a3v .a3c,html.sap.sap.gl-lt .a3v .a3n,html.sap.sap.gl-lt .a3v .a3r,html.sap.sap.gl-lt .a3v .a3kv b,html.sap.sap.gl-lt .a3v .a3ev,html.sap.sap.gl-lt .a3v button.a3k,html.sap.sap.gl-lt .a3v .a3ok{color:var(--a-tx)!important}
+html.sap.sap.gl-lt .a3v .a3kick{color:var(--a-sub)!important}
+html.sap.sap.gl-lt .a3v .a3c,html.sap.sap.gl-lt .a3v .a3k,html.sap.sap.gl-lt .a3v .a3q,html.sap.sap.gl-lt .a3v .iconbtn{background:var(--a-card)!important;border:1px solid var(--a-line)!important}
+html.sap.sap.gl-lt .a3v textarea,html.sap.sap.gl-lt .a3v .a3in{background:var(--a-card)!important;color:var(--a-tx)!important}
+.a3v .a3mrow .a3arr{font-style:normal;font-size:22px;line-height:1;color:var(--a-sub);margin-left:4px}
