@@ -1636,9 +1636,9 @@ function renderSheet(){
      <ul class="incl">${['Full profiles, names and photos','Send interests and chat','Daily introductions, and see who likes you','Browse privately'].map(x=>`<li>${ic('check')}<span>${x}</span></li>`).join('')}</ul>
      ${BETA?`<div class="callout gold">${ic('gift')}<span><b>Test version:</b> ${canBuy?'testers can switch on Gold for free to try everything, or buy it with Google Play.':'buying opens when NeuMarry launches. Until then, testers can switch on Gold for free to try everything.'}</span></div>`:''}
      <p class="note">${!isNative&&!canBuy?(pxSell()?'Paid once on neumarry.com with PayPal. The price is for the country you live in and includes any tax we must collect. Nothing renews by itself. No money back once Gold starts, except where the law says otherwise. Safety features, verification and reporting are always free.':'Buying opens soon in your country. Safety features, verification and reporting are always free.'):'Cancel anytime in your Google Play account. Safety features, verification and reporting are always free.'}</p>`,
-     canBuy?`${BETA?busyBtn('ghost','betaGold','Try Gold free'):`<button class="btn ghost" data-a="closeSheet">Not now</button>`}${busyBtn('gold','buyGold',ic('crown')+'Get Gold')}`:
-     !isNative?`${BETA?busyBtn('ghost','betaGold','Try Gold free'):`<button class="btn ghost" data-a="closeSheet">Not now</button>`}${busyBtn('gold','buyGoldWeb',ic('crown')+'Get Gold · PayPal')}`:
-     `<button class="btn ghost" data-a="closeSheet">Not now</button>${BETA?busyBtn('gold','betaGold',ic('crown')+'Try Gold free'):`<button class="btn gold" data-a="buySoon">${ic('crown')}Get Gold</button>`}`);}
+     canBuy?`<button class="btn ghost" data-a="closeSheet">Not now</button>${busyBtn('gold','buyGold',ic('crown')+'Get Gold')}`:
+     !isNative?`<button class="btn ghost" data-a="closeSheet">Not now</button>${busyBtn('gold','buyGoldWeb',ic('crown')+'Get Gold · PayPal')}`:
+     `<button class="btn ghost" data-a="closeSheet">Not now</button><button class="btn gold" data-a="buySoon">${ic('crown')}Get Gold</button>`);}
   if(t==='verifyGate'){const pendIS=(me.idCheck&&me.idCheck.status==='pending')||(me.selfieCheck&&me.selfieCheck.status==='pending');
     const all=[1,2,3].map(n=>vState(n,{},me)),wait=all.every(x=>x==='ok'||x==='wait'),first=[1,2,3].find(n=>!['ok','wait'].includes(all[n-1]))||1;
     return sheetShell(sheet.ev?'Finish verification to book events':'Finish verification to send interests',`<div class="callout">${ic('shield')}<span>${sheet.ev?'Every guest at a NeuMarry event has proven their ID, their roots and their city. They expect the same from you.':'Everyone you write to has proven their roots and their city. They expect the same from you.'}</span></div>
@@ -5209,7 +5209,9 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
     if(F3.has(k))return `<img class="ic f3${cls?' '+cls:''}" src="img/f3/${k}.webp" alt="" aria-hidden="true" draggable="false">`;
     if(TXT[k])return `<span class="ic tx${cls?' '+cls:''}" aria-hidden="true">${TXT[k]}</span>`;
     return _ic(n,cls)};
-  const _r=render;render=function(){document.documentElement.classList.add('sap');return _r.apply(this,arguments)};
+  const _r=render;render=function(){document.documentElement.classList.add('sap');const out=_r.apply(this,arguments);
+    try{document.querySelectorAll('.nm-ghero').forEach(g=>{if(!g.querySelector('.sap-rings')){const im=document.createElement('img');im.className='sap-rings';im.src='img/f3/rings-big.webp';im.alt='';im.setAttribute('aria-hidden','true');g.prepend(im)}})}catch(e){}
+    return out};
   const SAPTABS=[['ring','For you','sort-best'],['globe','Same roots','roots'],['ticket','Events','events'],['dish','First meet','meet'],['home','Family','family'],['crown','Gold','gold']];
   function sapHead(){const me=S.me||{};const city=esc(me.cityName||me.city||'');const nm=esc(((me.name||'').split(' ')[0])||'');
     const words=['your roots','your city','your values'];
