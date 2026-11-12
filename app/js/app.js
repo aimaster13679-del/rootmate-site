@@ -695,7 +695,7 @@ function forMe(e){return audOk(e,S.me)}
 function ageOk(e){return S.me.age>=e.ageMin&&S.me.age<=e.ageMax}
 function evMine(e){const f=S.me&&S.me.g==='F',[wc,wl,mc,ml]=e.seats,w=e.wait||[0,0,0,0];return {seatsLeft:f?wl:ml,waitLeft:f?w[1]:w[3],waitCap:f?w[0]:w[2],who:f?'women':'men'}}
 function evStat(e){return {n:e.have,confirmed:e.status==='confirmed',left:Math.max(0,e.need-e.have),deadline:e.deadline}}
-function evArt(e,hero){const up=hero?'0':'-40';const g={family:['#F5ADBE','#9FE6C6','#0E7A55'],speed:['#E9F8D6','#5FD3A2','#0E5B43'],festive:['#F5ADBE','#E94C70','#0E7A55'],brunch:['#E4E6EA','#BDF2DA','#0E9F6E'],online:['#E3F7EE','#8DEBC3','#0E5B43']}[e.kind]||['#F5ADBE','#9FE6C6','#0E7A55'];const id='ea'+String(e.id).slice(0,8);
+function evArt(e,hero){const up=hero?'0':'-40';const g={family:['#F5ADBE','#E69FB0','#790F28'],speed:['#E9F8D6','#D35F7A','#5B0E20'],festive:['#F5ADBE','#E94C70','#790F28'],brunch:['#E4E6EA','#F2BDC9','#9A1333'],online:['#E3F7EE','#EB8DA3','#5B0E20']}[e.kind]||['#F5ADBE','#E69FB0','#790F28'];const id='ea'+String(e.id).slice(0,8);
   let s=`<svg class="art" viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${g[0]}"/><stop offset=".55" stop-color="${g[1]}"/><stop offset="1" stop-color="${g[2]}"/></linearGradient><radialGradient id="${id}l"><stop offset="0" stop-color="#E9EAEE"/><stop offset="1" stop-color="#E9EAEE" stop-opacity="0"/></radialGradient></defs><rect width="400" height="250" fill="url(#${id})"/>`;
   [[60,190,40],[330,70,55],[250,205,30],[140,40,24]].forEach(([x,y,r])=>{s+=`<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" opacity=".12"/>`});
   [[-10,24,410,34,92],[-10,62,410,52,128]].forEach(([x1,y1,x2,y2,cy])=>{s+=`<path d="M${x1} ${y1} Q200 ${cy} ${x2} ${y2}" stroke="#7A2040" stroke-opacity=".3" stroke-width="1.5" fill="none"/>`;
@@ -939,7 +939,7 @@ const CELE={2:['Roots done!',d=>d.oc?`People from ${d.oc} will now show first in
   3:['Your life is in!',d=>d.city?`Matches will show the real distance to you in ${d.city}.`:'Matches will show the real distance to you.','What matters to you','about 90 sec',3,'about 4 min'],
   5:['Verification ready!',()=>'It goes to our team when you finish the last part. A person checks it, usually within a day.','Who you want to meet','about 30 sec',1,'about 30 sec']};
 function celeLayer(){const c=CELE[S.cele];if(!c)return '';const d=S.draft;const pct=Math.round(S.cele/6*100);
-  const cf=Array.from({length:36},(_,i)=>`<i style="left:${(i*37)%100}%;animation-delay:${(i%9)*0.06}s;background:${['#0E9F6E','#B23855','#2D8A61','#8DEBC3','#E7849B'][i%5]};--r:${(i*47)%360}deg"></i>`).join('');
+  const cf=Array.from({length:36},(_,i)=>`<i style="left:${(i*37)%100}%;animation-delay:${(i%9)*0.06}s;background:${['#9A1333','#B23855','#8A2D43','#EB8DA3','#E7849B'][i%5]};--r:${(i*47)%360}deg"></i>`).join('');
   return `<div class="cele" role="dialog" aria-live="polite"><div class="cf">${cf}</div><div class="cele-c"><div class="cele-e">🎉</div><h2>${c[0]}</h2><p>${esc(c[1](d))}</p>
   <div class="cele-n"><b>Next: ${c[2]} · ${c[3]}</b><span>${c[4]} short part${c[4]>1?'s':''} left · ${c[5]} in total</span></div>
   <div class="cele-bar"><i style="width:${pct}%"></i></div><button class="btn primary block" data-a="celeGo">Keep going</button><p class="hint" style="text-align:center;margin:8px 0 0">Take a break any time, we save everything.</p></div></div>`}
@@ -1543,7 +1543,7 @@ function sheetShell(title,body,foot){return `<div class="sheet-wrap"><button cla
 function chipGroup(name,opts,cur){return `<div class="chips" role="radiogroup">${opts.map(o=>{const v=typeof o==='string'?o:o.v,l=typeof o==='string'?o:o.l;return `<label class="opt"><input type="radio" name="${name}" value="${esc(v)}" data-sheet="${name}"${cur===v?' checked':''}><span>${esc(l)}</span></label>`}).join('')}</div>`}
 const MANAGE_SUB=()=>`<a class="btn ghost" href="https://play.google.com/store/account/subscriptions?sku=${GOLD_PRODUCT}&amp;package=${esc(CFG.appId)}" target="_blank" rel="noopener">${ic('crown')}Manage in Google Play</a>`;
 /* Google's multicolour "G", as Google's sign-in branding rules ask for. */
-const GLOGO='<svg viewBox="0 0 48 48" width="20" height="20"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#DD1B49" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>';
+const GLOGO='<svg viewBox="0 0 48 48" width="20" height="20"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#DD1B49" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#A8344F" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>';
 /* Work with NeuMarry: highlighted so members see that we hire hosts and look for restaurants and bureaus. */
 function workCard(){return `<div class="panel wwu"><div class="wwu-h"><h3>Work with NeuMarry</h3><span class="pill gold">We’re hiring</span></div>
     <p class="hint">Earn with us in your city. Apply in two minutes.</p>
@@ -2363,11 +2363,11 @@ function v2gain(icn,t){return `<div class="v2gain">${ic(icn)}<span>${t}</span></
 function renderWelcomeV2(){
   const arcs=[[78,200,214,104],[96,128,226,118],[238,214,210,104],[150,236,226,118],[60,150,214,104]];
   return `<div class="scroll v2 v2w"><div class="v2w-sky" aria-hidden="true">
-   <svg viewBox="0 0 312 300"><defs><radialGradient id="v2gl" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#8DEBC3" stop-opacity=".35"/><stop offset="1" stop-color="#8DEBC3" stop-opacity="0"/></radialGradient></defs>
+   <svg viewBox="0 0 312 300"><defs><radialGradient id="v2gl" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#EB8DA3" stop-opacity=".35"/><stop offset="1" stop-color="#EB8DA3" stop-opacity="0"/></radialGradient></defs>
    <circle cx="156" cy="170" r="130" fill="url(#v2gl)"/><circle cx="156" cy="170" r="104" fill="none" stroke="#fff" stroke-opacity=".14"/>
    <ellipse cx="156" cy="170" rx="104" ry="38" fill="none" stroke="#fff" stroke-opacity=".1"/><ellipse cx="156" cy="170" rx="44" ry="104" fill="none" stroke="#fff" stroke-opacity=".1"/>
-   ${arcs.map(([a,b,c,e])=>`<path class="v2arc" d="M${a} ${b}Q${(a+c)/2} ${Math.min(b,e)-70} ${c} ${e}" fill="none" stroke="#A8F0CF" stroke-width="1.6"/><circle cx="${a}" cy="${b}" r="3.5" fill="#F4A6B8"/>`).join('')}
-   <circle cx="214" cy="104" r="6" fill="#8DEBC3"/></svg>
+   ${arcs.map(([a,b,c,e])=>`<path class="v2arc" d="M${a} ${b}Q${(a+c)/2} ${Math.min(b,e)-70} ${c} ${e}" fill="none" stroke="#F0A8B9" stroke-width="1.6"/><circle cx="${a}" cy="${b}" r="3.5" fill="#F4A6B8"/>`).join('')}
+   <circle cx="214" cy="104" r="6" fill="#EB8DA3"/></svg>
    ${[['🇳🇬',18,58],['🇵🇭',74,70],['🇲🇽',4,45],['🇮🇳',40,77],['🇱🇧',27,37],['🇰🇷',80,48]].map(([f,x,y])=>`<span class="v2flag" style="left:${x}%;top:${y}%">${f}</span>`).join('')}
    <span class="v2cityp">${ic('pin')} Your city</span></div>
   <div class="v2w-body pad">
@@ -2411,18 +2411,18 @@ function v2wheelAfter(){const w=document.querySelector('.v2wheel');if(!w)return;
 /* ---------- the house that shows the answers (screen 6) ---------- */
 function v2house(a){const kids=a[3]===0||a[3]===1,both=a[1]===0,move=a[0]===2,par=a[2]===0||a[2]===1;
   const n=[a[0],a[1],a[2],a[3]].filter(x=>x!==null&&x!==undefined).length;
-  return `<svg viewBox="0 0 300 168" class="v2house" aria-hidden="true"><circle cx="250" cy="34" r="16" fill="#F4A6B8"/><path d="M0 150C80 136 220 136 300 150V168H0z" fill="#CDE7D6"/>
+  return `<svg viewBox="0 0 300 168" class="v2house" aria-hidden="true"><circle cx="250" cy="34" r="16" fill="#F4A6B8"/><path d="M0 150C80 136 220 136 300 150V168H0z" fill="#E7CDD3"/>
   <path d="M80 82L150 30 220 82" fill="#C42E57"/><rect x="92" y="80" width="116" height="74" rx="4" fill="#fff"/><rect x="138" y="112" width="24" height="42" rx="12" fill="#142520"/>
   <rect x="104" y="92" width="26" height="22" rx="4" fill="#FFE6EC"/><rect x="170" y="92" width="26" height="22" rx="4" fill="#FFE6EC"/>
-  ${kids?'<g fill="#0E9F6E"><circle cx="112" cy="100" r="3.5"/><rect x="108.5" y="104" width="7" height="8" rx="3"/><circle cx="122" cy="101" r="3"/><rect x="119" y="104.5" width="6" height="7.5" rx="3"/></g>':''}
+  ${kids?'<g fill="#9A1333"><circle cx="112" cy="100" r="3.5"/><rect x="108.5" y="104" width="7" height="8" rx="3"/><circle cx="122" cy="101" r="3"/><rect x="119" y="104.5" width="6" height="7.5" rx="3"/></g>':''}
   ${both?'<g fill="#B23855"><rect x="174" y="102" width="9" height="7" rx="1.5"/><rect x="185" y="102" width="9" height="7" rx="1.5"/></g>':''}
   ${par?'<g fill="#86697A"><circle cx="232" cy="122" r="4"/><rect x="228" y="127" width="8" height="14" rx="3"/><circle cx="246" cy="123" r="4"/><rect x="242" y="128" width="8" height="13" rx="3"/></g>':''}
   ${move?'<g transform="translate(40 34) rotate(-12)"><path d="M0 8l26-11-7 21-5-8z" fill="#142520"/></g>':''}
-  <g transform="translate(40 112)"><path d="M0 40V10" stroke="#24845A" stroke-width="3"/><circle cx="0" cy="8" r="12" fill="#7CCB9E"/></g>
+  <g transform="translate(40 112)"><path d="M0 40V10" stroke="#84243A" stroke-width="3"/><circle cx="0" cy="8" r="12" fill="#CB7C8E"/></g>
   <text x="150" y="20" text-anchor="middle" font-family="Nunito Sans,sans-serif" font-weight="900" font-size="10" fill="#C42E57" letter-spacing="1.5">${n} OF 4 ADDED</text></svg>`}
 const HOME_Q=[[3,'kid'],[1,'brief'],[2,'users'],[0,'plane']];
 /* screen 7: one illustrated card per question */
-const NAT_ART={5:['#E8E9ED','#F6B7A0','sun'],6:['#E6F4EC','#9FD3B5','coin'],7:['#EDE6FF','#C2B2F4','talk'],4:['#EBECEF','#E7849B','star'],8:['#FFE6EC','#FF9DB1','heart']};
+const NAT_ART={5:['#E8E9ED','#F6B7A0','sun'],6:['#E6F4EC','#D39FAB','coin'],7:['#EDE6FF','#C2B2F4','talk'],4:['#EBECEF','#E7849B','star'],8:['#FFE6EC','#FF9DB1','heart']};
 const NAT_Q=[5,6,7,4,8];
 
 /* ---------- sign-up v2 ---------- */
@@ -2432,7 +2432,7 @@ function renderSignupV2(){if(!S.editMode)setTimeout(()=>noteStep(S.step),0);
     const pass=v2passport(d);h=h.replace('<div class="form pad">','<div class="form pad">'+pass).replace(/Step 5 of 6 · saved/,'Part 5 of 5 · last part');
     return `<div class="v2 v2col">${h}</div>${S.cele2?v2cele():''}`}
   if(st===1){const gn=v2gname();if(!d.name&&gn)d.name=gn;
-    const tile=(g,l,s,seed)=>`<button type="button" class="v2gt${d.g===g?' on':''}" data-a="v2g" data-v="${g}"><span class="v2gt-a">${`<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="ng${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${g==='F'?'#F39FB3':'#BDF2DA'}"/><stop offset="1" stop-color="${g==='F'?'#E94C70':'#3BBF8A'}"/></linearGradient></defs><rect width="64" height="64" rx="20" fill="url(#ng${g})"/>${g==='F'?'<circle cx="32" cy="26" r="11" fill="none" stroke="#fff" stroke-width="5"/><path d="M32 37v15M25 45h14" stroke="#fff" stroke-width="5" stroke-linecap="round"/>':'<circle cx="28" cy="36" r="11" fill="none" stroke="#fff" stroke-width="5"/><path d="M36 28l11-11M38 17h9v9" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>'}</svg>`}</span><b>${l}</b><small>${s}</small></button>`;
+    const tile=(g,l,s,seed)=>`<button type="button" class="v2gt${d.g===g?' on':''}" data-a="v2g" data-v="${g}"><span class="v2gt-a">${`<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="ng${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${g==='F'?'#F39FB3':'#F2BDC9'}"/><stop offset="1" stop-color="${g==='F'?'#E94C70':'#BF3B5A'}"/></linearGradient></defs><rect width="64" height="64" rx="20" fill="url(#ng${g})"/>${g==='F'?'<circle cx="32" cy="26" r="11" fill="none" stroke="#fff" stroke-width="5"/><path d="M32 37v15M25 45h14" stroke="#fff" stroke-width="5" stroke-linecap="round"/>':'<circle cx="28" cy="36" r="11" fill="none" stroke="#fff" stroke-width="5"/><path d="M36 28l11-11M38 17h9v9" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>'}</svg>`}</span><b>${l}</b><small>${s}</small></button>`;
     body=`<h1 class="v2h">${d.name?`Hi ${esc(d.name.split(' ')[0])}.`:'Hi there.'} <em>Who are you</em> looking for?</h1>
     ${S.v2name||!d.name?inF('name','Your full name','text',d.name,'autocomplete="name" maxlength="60"','Others see only your first name and last initial until you both say yes.')
       :`<div class="v2card v2row">${avatar(null,'sm',true)}<div class="grow"><b>${esc(d.name)}</b><small>${gn?'From your Google account':'Your name'}</small></div><button type="button" class="v2pill" data-a="v2name">Change</button></div>`}
@@ -2513,7 +2513,7 @@ function v2passport(d){const me=null;const s1=vState(1,d,me),s2=vState(2,d,me),s
 
 /* ---------- celebration between parts ---------- */
 function v2cele(){const c=V2CELE[S.cele2.at];if(!c)return '';const p=V2PART[(()=>{const [s,b]=V2SEQ[S.cele2.next];return s===3||s===4?s+(b||'a'):String(s)})()]||[5];
-  const cf=Array.from({length:30},(_,i)=>`<i style="left:${(i*37)%100}%;animation-delay:${(i%9)*0.06}s;background:${['#0E9F6E','#B23855','#2D8A61','#8DEBC3','#E7849B'][i%5]};--r:${(i*47)%360}deg"></i>`).join('');
+  const cf=Array.from({length:30},(_,i)=>`<i style="left:${(i*37)%100}%;animation-delay:${(i%9)*0.06}s;background:${['#9A1333','#B23855','#8A2D43','#EB8DA3','#E7849B'][i%5]};--r:${(i*47)%360}deg"></i>`).join('');
   return `<div class="cele v2" role="dialog" aria-live="polite"><div class="cf">${cf}</div><div class="cele-c"><div class="v2seal">${ic('check')}</div><h2>${c[0]}</h2><p>${esc(c[1])}</p>
   <div class="cele-n"><b>Next: ${c[2]} · ${c[3]}</b><span>Part ${p[0]} of 5</span></div>
   ${v2segs().replace('v2segs','v2segs v2segs-c')}<button class="btn primary block" data-a="v2celeGo">Keep going</button><p class="hint" style="text-align:center;margin:8px 0 0">Take a break any time, we save everything.</p></div></div>`}
@@ -2526,7 +2526,7 @@ function v2leaveSheet(){const i=Math.max(0,v2pos());const left=Math.max(1,Math.r
 
 /* ---------- screen 13: after the last part ---------- */
 function v2reveal(){const me=S.me;if(!me)return '';const sent=me.idCheck&&me.selfieCheck;
-  const cf=Array.from({length:22},(_,k)=>`<i style="left:${(k*47)%96+2}%;top:${(k*71)%22+4}%;background:${['#0E9F6E','#F4A6B8','#B23855','#8FE0B5','#C2B2F4'][k%5]};transform:rotate(${k*37}deg)"></i>`).join('');
+  const cf=Array.from({length:22},(_,k)=>`<i style="left:${(k*47)%96+2}%;top:${(k*71)%22+4}%;background:${['#9A1333','#F4A6B8','#B23855','#E08FA2','#C2B2F4'][k%5]};transform:rotate(${k*37}deg)"></i>`).join('');
   return `<div class="v2rev v2" role="dialog" aria-modal="true"><div class="v2rev-cf" aria-hidden="true">${cf}</div>
    <div class="v2rev-c pad"><div class="v2rev-seal">${ic('shield')}</div>
    <h1 class="v2h" style="text-align:center">${sent?'You’re <em>nearly live.</em>':'Your profile is <em>saved.</em>'}</h1>
@@ -2714,10 +2714,10 @@ function camLayer(){if(!CAM.on)return '';const sf=CAM.mode==='selfie';const pct=
   return `<div class="v2cam v2" role="dialog" aria-label="${sf?'Live selfie':'Scan your ID'}">
    <div class="v2cam-top"><span class="v2pill" style="background:rgba(255,255,255,.12);color:#fff">${ic(sf?'camera':'id')} ${sf?'Stamp 1 · Live selfie':'Stamp 1 · ID'}</span><button class="iconbtn" data-a="camClose" aria-label="Close" style="color:#fff">${ic('x')}</button></div>
    ${CAM.err?`<div class="v2cam-err"><p>${esc(CAM.err)}</p><span class="btn primary file">${ic(sf?'camera':'plus')}${sf?'Take a selfie instead':'Choose a photo instead'}<input type="file" accept="image/*" ${sf?'capture="user" data-file="selfie"':'data-file="id"'} aria-label="Choose photo"></span></div>`:
-   sf?`<div class="v2ring-wrap"><svg viewBox="0 0 240 240" class="v2ring-svg"><circle cx="120" cy="120" r="112" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="8"/><circle cx="120" cy="120" r="112" fill="none" stroke="#8FE0B5" stroke-width="8" stroke-linecap="round" stroke-dasharray="704" stroke-dashoffset="${704-704*pct/100}" transform="rotate(-90 120 120)"/></svg><video id="cam-v" playsinline muted autoplay class="v2cam-v sf"></video></div>
+   sf?`<div class="v2ring-wrap"><svg viewBox="0 0 240 240" class="v2ring-svg"><circle cx="120" cy="120" r="112" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="8"/><circle cx="120" cy="120" r="112" fill="none" stroke="#E08FA2" stroke-width="8" stroke-linecap="round" stroke-dasharray="704" stroke-dashoffset="${704-704*pct/100}" transform="rotate(-90 120 120)"/></svg><video id="cam-v" playsinline muted autoplay class="v2cam-v sf"></video></div>
      <h2 class="v2h" style="color:#fff;text-align:center;margin-top:22px">${esc(SELFIE_STEPS[Math.min(CAM.step,3)])}</h2><p class="v2cam-s">${pct}% · keep your face inside the circle</p>`
    :`<div class="v2id-wrap"><video id="cam-v" playsinline muted autoplay class="v2cam-v"></video><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i></div>
-     <h2 class="v2h" style="color:#fff;text-align:center;margin-top:18px">Hold your ID <em style="color:#A8F0CF">inside the frame</em></h2>
+     <h2 class="v2h" style="color:#fff;text-align:center;margin-top:18px">Hold your ID <em style="color:#F0A8B9">inside the frame</em></h2>
      ${CAM.checks.length?`<div class="v2cam-ck">${CAM.checks.map(([ok,t])=>`<span class="${ok?'ok':'no'}">${ic(ok?'check':'x')}${esc(t)}</span>`).join('')}</div>`:'<p class="v2cam-s">Flat, all 4 corners visible, no glare</p>'}
      <button class="v2shut" data-a="camShot" aria-label="Take photo"><i></i></button>`}
    <p class="v2cam-f">${ic('lock')} ${sf?'Used only to match your ID. Never shown on your profile.':'Only our safety team sees it. Deleted 7 days after the check.'}</p></div>`}
@@ -2954,9 +2954,9 @@ function c3km(a,b){const R=6371,r=Math.PI/180,[l1,p1]=[C3CITY[a][0]*r,C3CITY[a][
   return Math.round(2*R*Math.asin(Math.sqrt(Math.sin((p2-p1)/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin((l2-l1)/2)**2))/10)*10}
 const C3SEQ=[['lagos','toronto'],['busan','sydney'],['guad','madrid']];
 function c3map(){return PM.draw({vb:[0,30,1000,440],fsr:.03,label:'World map: where members grew up and where they live now',seq:[
-  {hl:{'566':'#E9496E','124':'#0E9F6E'},arcs:[['lagos','toronto']],pins:[['lagos','🇳🇬 Lagos','#E9496E',0,1.8],['toronto','🇨🇦 Toronto','#0E9F6E']]},
-  {hl:{'410':'#E9496E','036':'#0E9F6E'},arcs:[['busan','sydney']],pins:[['busan','🇰🇷 Busan','#E9496E'],['sydney','🇦🇺 Sydney','#0E9F6E',0,1.8]]},
-  {hl:{'484':'#E9496E','724':'#0E9F6E'},arcs:[['guad','madrid']],pins:[['guad','🇲🇽 Guadalajara','#E9496E',0,1.8],['madrid','🇪🇸 Madrid','#0E9F6E']]}]})}
+  {hl:{'566':'#E9496E','124':'#9A1333'},arcs:[['lagos','toronto']],pins:[['lagos','🇳🇬 Lagos','#E9496E',0,1.8],['toronto','🇨🇦 Toronto','#9A1333']]},
+  {hl:{'410':'#E9496E','036':'#9A1333'},arcs:[['busan','sydney']],pins:[['busan','🇰🇷 Busan','#E9496E'],['sydney','🇦🇺 Sydney','#9A1333',0,1.8]]},
+  {hl:{'484':'#E9496E','724':'#9A1333'},arcs:[['guad','madrid']],pins:[['guad','🇲🇽 Guadalajara','#E9496E',0,1.8],['madrid','🇪🇸 Madrid','#9A1333']]}]})}
 /* 12 Nov: each word fades/slides in on its own (no shared strip), so no word ever peeks at any font size */
 const c3cyc=(arr,cls)=>{const n=arr.length,L=arr.reduce((a,t)=>t.length>a.length?t:a,'');return `<span class="c3cyc ${cls||''}" style="--n:${n*3}s"><i aria-hidden="true">${esc(L)}</i>${arr.map((t,i)=>`<b style="animation-delay:${i?-(n-i)*3:0}s">${esc(t)}</b>`).join('')}</span>`};
 function renderWelcomeC3(){
@@ -3044,7 +3044,7 @@ function a3home(){if(A3.list)return a3list();const o=A3.ov;if(!o)return `<div cl
     o.reports_open>0?['flag',`${o.reports_open} open report${o.reports_open>1?'s':''}`,'Answer within 24 h','checks']:null,
     o.help_open>0?['chat',`${o.help_open} member${o.help_open>1?'s':''} asked for help`,'Help inbox','help']:null,
     ...failed.map(b=>['alert',`${b.bot} failed`,b.summary||'','robots'])].filter(Boolean);
-  return `<div class="a3g">${a3kpi(o.signups_today,'Sign-ups today',d?`${d>0?'▲':'▼'} ${Math.abs(d)} vs yesterday`:'same as yesterday','#3BBF8A','today')}${a3kpi(o.live,'Live members','fully verified','#12A36B','live')}${a3kpi(o.checks_waiting,'Waiting for checks',o.oldest_wait_hours!=null?`oldest ${o.oldest_wait_hours} h`:'','#E9496E','tab:checks')}${a3kpi(o.reports_open,'Open reports','','#FF6B6B','tab:checks')}</div>
+  return `<div class="a3g">${a3kpi(o.signups_today,'Sign-ups today',d?`${d>0?'▲':'▼'} ${Math.abs(d)} vs yesterday`:'same as yesterday','#BF3B5A','today')}${a3kpi(o.live,'Live members','fully verified','#A11435','live')}${a3kpi(o.checks_waiting,'Waiting for checks',o.oldest_wait_hours!=null?`oldest ${o.oldest_wait_hours} h`:'','#E9496E','tab:checks')}${a3kpi(o.reports_open,'Open reports','','#FF6B6B','tab:checks')}</div>
    ${need.length?`<div class="a3c"><div class="a3h"><b>Needs you now</b><span>${need.length}</span></div>${need.map(([i,t,s,go])=>`<button class="a3n" data-a="a3tab" data-k="${go}">${ic(i)}<span><b>${esc(t)}</b><small>${esc(s)}</small></span><em>Open</em></button>`).join('')}</div>`:`<div class="a3c a3ok">${ic('check')} Nothing needs you right now.</div>`}
    ${f.accounts?`<div class="a3c"><div class="a3h"><b>Sign-up journey</b><span>last 7 days · tap to see</span></div>${[['Made an account',f.accounts,'f0'],['Started the profile',f.profiles,'f1'],['Sent documents',f.documents,'f2'],['Live',f.live,'f3']].map(([t,n,k])=>`<div class="a3f a3fb" role="button" tabindex="0" data-a="a3go" data-k="${k}"><span>${t}</span><div><i style="width:${Math.max(2,Math.round(n/f.accounts*100))}%"></i></div><b>${n} ›</b></div>`).join('')}</div>`:''}
    ${tot?`<div class="a3c"><div class="a3h"><b>Sign-ups per day</b><span>${tot} in 30 days</span></div>${a3bars(vals)}</div>`:''}
@@ -3135,13 +3135,13 @@ function a3mfl(){const f=A3.mf||'',L=A3.mlist||[];return L.filter(x=>!f||(f==='w
 async function a3search(q){A3.mq=q;A3.mlist=null;render();try{A3.mlist=await API.rpc('admin_members',{p_q:q||null,p_limit:100})}catch(e){A3.mlist=[]}render()}
 function a3activity(){const w=a3need();if(w)return w;const a=A3.st.activity;const d=a.days_14||[];const mx=Math.max(1,...d.map(x=>x.active));const mm=Math.max(1,...d.map(x=>x.messages));
   const k=(n,l,s,c,go)=>`<button class="a3k" style="--c:${c}" ${go?`data-a="a3go" data-k="${go}"`:'data-a="a3tab" data-k="members"'}><b>${n}</b><span>${l}</span>${s?`<small>${s}</small>`:''}<em class="a3more">Details ›</em></button>`;
-  return `<div class="a3g">${k(a.active_today,'Active today','opened the app','#12A36B')}${k(a.active_7d,'Active, 7 days','',  '#9D7CFF')}${k(a.messages_today,'Messages today',`${a.messages_7d} in 7 days`,'#3BBF8A')}${k(a.chats_7d,'Chats, 7 days','pairs talking','#E9496E')}${k(a.interests_7d,'Interests, 7 days',`${a.accepted_7d} accepted`,'#E94A6F')}${k(a.matches_all,'Matches','all time','#12A36B')}</div>
+  return `<div class="a3g">${k(a.active_today,'Active today','opened the app','#A11435')}${k(a.active_7d,'Active, 7 days','',  '#9D7CFF')}${k(a.messages_today,'Messages today',`${a.messages_7d} in 7 days`,'#BF3B5A')}${k(a.chats_7d,'Chats, 7 days','pairs talking','#E9496E')}${k(a.interests_7d,'Interests, 7 days',`${a.accepted_7d} accepted`,'#E94A6F')}${k(a.matches_all,'Matches','all time','#A11435')}</div>
    <div class="a3c"><div class="a3h"><b>Active members per day</b><span>14 days</span></div><div class="a3bars">${d.map(x=>`<i style="height:${Math.max(3,Math.round(x.active/mx*100))}%" title="${x.active}"></i>`).join('')}</div></div>
-   <div class="a3c"><div class="a3h"><b>Messages per day</b><span>14 days</span></div><div class="a3bars">${d.map(x=>`<i style="height:${Math.max(3,Math.round(x.messages/mm*100))}%;background:#3BBF8A" title="${x.messages}"></i>`).join('')}</div></div>
+   <div class="a3c"><div class="a3h"><b>Messages per day</b><span>14 days</span></div><div class="a3bars">${d.map(x=>`<i style="height:${Math.max(3,Math.round(x.messages/mm*100))}%;background:#BF3B5A" title="${x.messages}"></i>`).join('')}</div></div>
    <div class="a3c"><div class="a3h"><b>Day by day</b></div>${d.slice().reverse().map(x=>`<div class="a3kv"><span>${esc(new Date(x.d).toLocaleDateString([], {weekday:'short',day:'numeric',month:'short'}))}</span><b>${x.active} active · ${x.messages} messages · ${x.interests} interests</b></div>`).join('')}</div>
    ${a.flagged_7d?`<button class="a3c a3n" data-a="a3tab" data-k="checks">${ic('alert')}<span><b>${a.flagged_7d} warned message${a.flagged_7d>1?'s':''} in 7 days</b><small>Money or scam words; see Checks</small></span><em>Open</em></button>`:''}`}
 function a3money(){const w=a3need();if(w)return w;const M=A3.st.money||{};const T=M.tickets||[];
-  return `<div class="a3g">${T.map(t=>`<div class="a3k" style="--c:#12A36B"><b>${money(t.paid_30d,t.cur)}</b><span>Tickets, 30 days</span><small>${money(t.paid_all,t.cur)} all time · ${t.count_all} paid</small></div>`).join('')}
+  return `<div class="a3g">${T.map(t=>`<div class="a3k" style="--c:#A11435"><b>${money(t.paid_30d,t.cur)}</b><span>Tickets, 30 days</span><small>${money(t.paid_all,t.cur)} all time · ${t.count_all} paid</small></div>`).join('')}
     <button class="a3k" style="--c:#E9496E" data-a="a3tab" data-k="members"><b>${M.gold_active??0}</b><span>Gold active</span><small>${M.gold_new_30d??0} new in 30 days · ${M.gold_renewing??0} renewing</small><em class="a3more">Members ›</em></button></div>
    ${T.length?`<div class="a3c"><div class="a3h"><b>Event tickets</b><span>per currency</span></div>${T.map(t=>`<div class="a3kv"><span>${esc(t.cur)} paid (before tax)</span><b>${money(t.paid_all,t.cur)}</b></div><div class="a3kv"><span>of it to restaurants (meals)</span><b>${money(t.meals_all,t.cur)}</b></div><div class="a3kv"><span>NeuMarry share</span><b>${money(t.paid_all-t.meals_all,t.cur)}</b></div>${t.refunded_all?`<div class="a3kv"><span>Refunded</span><b>${money(t.refunded_all,t.cur)}</b></div>`:''}`).join('')}</div>`:''}
    ${(M.gold_by_product||[]).length?`<div class="a3c"><div class="a3h"><b>Gold plans</b><span>active</span></div>${M.gold_by_product.map(r=>a3kv2(r.k,r.n,M.gold_by_product[0].n,'#E9496E')).join('')}<p class="a3m">Gold money arrives through Google Play / App Store; the exact amounts after store fees are in the store report.</p></div>`:''}
@@ -3155,11 +3155,11 @@ function a3events(){const w=a3need();if(w)return w;const E=A3.st.events||[];if(!
   if(A3.ev){const e=E.find(x=>x.id===A3.ev);if(e){const row=(k,v)=>`<div class="a3kv"><span>${k}</span><b>${esc(String(v))}</b></div>`;
     return `<button class="a3back" data-a="a3up">${ic('back')} All events</button><div class="a3c"><div class="a3h"><b>${esc(e.title)}</b><span>${esc(e.status)}</span></div>
      ${row('When',new Date(e.starts_at).toLocaleString([], {weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}))}${row('Where',[e.city,e.country].filter(Boolean).join(', '))}
-     ${a3kv2('Women',e.women,e.seats_women,'#3BBF8A')}${a3kv2('Men',e.men,e.seats_men,'#9D7CFF')}
+     ${a3kv2('Women',e.women,e.seats_women,'#BF3B5A')}${a3kv2('Men',e.men,e.seats_men,'#9D7CFF')}
      ${row('Seats',`${e.women}/${e.seats_women} women · ${e.men}/${e.seats_men} men`)}${row('Paid tickets',e.paid)}${row('Money (before tax)',money(e.cents,e.currency))}${row('Checked in at the door',e.checked_in)}</div>${a3evPeople(e)}`}}
   const bar=(l,n,t,c)=>`<span class="a3sr"><span class="a3sl">${l}</span><span class="a3seat"><i style="width:${Math.round(n/Math.max(1,t)*100)}%;background:${c}"></i></span><b>${n} of ${t}</b></span>`;
   const card=e=>`<button class="a3c a3ev" data-a="a3ev" data-k="${esc(e.id)}"><span class="a3h"><b>${esc(e.title)}</b><span class="a3st ${e.status}">${esc(e.status)}</span></span><small>${esc(new Date(e.starts_at).toLocaleString([], {weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}))} · ${esc([e.city,e.country].filter(Boolean).join(', '))}</small>
-    ${bar('Women',e.women,e.seats_women,'#3BBF8A')}${bar('Men',e.men,e.seats_men,'#9D7CFF')}
+    ${bar('Women',e.women,e.seats_women,'#BF3B5A')}${bar('Men',e.men,e.seats_men,'#9D7CFF')}
     <span class="a3evf"><span><b>${e.paid||0}</b> paid</span><span><b>${money(e.cents,e.currency)}</b> taken</span><span><b>${e.checked_in||0}</b> at the door</span></span><em class="a3more">People and details ›</em></button>`;
   const on=E.filter(e=>e.status==='open'||e.status==='confirmed'||e.status==='draft'),off=E.filter(e=>!on.includes(e));
   return (on.length?on.map(card).join(''):`<div class="a3c"><p class="a3m">No open events right now.</p></div>`)+(off.length?`<button class="a3back" data-a="a3evoff">${A3.evOff?'Hide':'Show'} closed events (${off.length}) ${A3.evOff?'▴':'▾'}</button>${A3.evOff?off.map(card).join(''):''}`:'')}
@@ -3376,8 +3376,8 @@ function FUN(){try{if(/127\.0\.0\.1/.test(CFG.url||'')){const t=localStorage.get
     if(!o||!d)return '';const k1='fo'+p.id.slice(0,6),k2='fd'+p.id.slice(0,6);
     PM.C[k1]=[o[1],o[0],p.os||p.oc,''];PM.C[k2]=[d[1],d[0],p.cityName,''];
     const vb=PM.fit([k1,k2],390/(h||170),125);/* more room: labels never cut, calmer map (9 Nov his 'gich gich') */const far=Math.round(dist(o[0],o[1],d[0],d[1]));
-    const svg=PM.draw({vb,fsr:.035,grid:false,label:`Map: ${p.os||p.oc} to ${p.cityName}`,arcs:[[k1,k2,'#0E9F6E']],
-      pins:[[k1,`${flagOf(p.oc)} ${p.os||p.oc}`,'#E9496E',0,1.9],[k2,`${flagOf(p.country)} ${p.cityName}`,'#0E9F6E']]});
+    const svg=PM.draw({vb,fsr:.035,grid:false,label:`Map: ${p.os||p.oc} to ${p.cityName}`,arcs:[[k1,k2,'#9A1333']],
+      pins:[[k1,`${flagOf(p.oc)} ${p.os||p.oc}`,'#E9496E',0,1.9],[k2,`${flagOf(p.country)} ${p.cityName}`,'#9A1333']]});
     return {svg,far}}
   const dist=(a,b,c,d)=>{const R=6371,t=x=>x*Math.PI/180,x=Math.sin(t(c-a)/2)**2+Math.cos(t(a))*Math.cos(t(c))*Math.sin(t(d-b)/2)**2;return 2*R*Math.asin(Math.sqrt(x))};
 
@@ -3529,10 +3529,10 @@ if(!IC.share)Object.assign(IC,{share:'<circle cx="18" cy="5.5" r="2.5"/><circle 
     const k=p.id.slice(0,6),K=['px1'+k,'px2'+k,'px3'+k,'px4'+k];const one=sameCity(p);const L=lt();const cityCol=L?'#14231C':'#FFFFFF';
     PM.C[K[0]]=[o1[1],o1[0],'',''];PM.C[K[1]]=[d1[1],d1[0],'',''];PM.C[K[2]]=[o2[1],o2[0],'',''];PM.C[K[3]]=[d2[1],d2[0],'',''];
     const sameRoots=km2(o1,o2)<30,myCity=(me.city||me.state||'').split(',')[0];
-    const pins=[[K[0],`${fl(p.oc)} ${p.os||p.oc}${sameRoots?' · both':''}`,'#0E9F6E',0,1.9]];if(!sameRoots)pins.push([K[2],`${fl(me.oc)} ${me.os||me.oc}`,'#E9496E',0,1.9]);
-    pins.push([K[1],`${one?'':fl(p.country)+' '}${p.cityName}`,one?cityCol:'#0E9F6E']);if(!one)pins.push([K[3],`${fl(me.country)} ${myCity}`,'#E9496E']);
+    const pins=[[K[0],`${fl(p.oc)} ${p.os||p.oc}${sameRoots?' · both':''}`,'#9A1333',0,1.9]];if(!sameRoots)pins.push([K[2],`${fl(me.oc)} ${me.os||me.oc}`,'#E9496E',0,1.9]);
+    pins.push([K[1],`${one?'':fl(p.country)+' '}${p.cityName}`,one?cityCol:'#9A1333']);if(!one)pins.push([K[3],`${fl(me.country)} ${myCity}`,'#E9496E']);
     const vb=PM.fit(K,326/210,80);
-    const svg=PM.draw({vb,theme:L?'light':'dark',fsr:.042,grid:false,label:`Map: ${p.os||p.oc} to ${p.cityName}, and ${me.os||me.oc} to ${myCity}`,arcs:[[K[0],K[1],'#0E9F6E'],[K[2],K[3],'#E9496E']],pins});
+    const svg=PM.draw({vb,theme:L?'light':'dark',fsr:.042,grid:false,label:`Map: ${p.os||p.oc} to ${p.cityName}, and ${me.os||me.oc} to ${myCity}`,arcs:[[K[0],K[1],'#9A1333'],[K[2],K[3],'#E9496E']],pins});
     const a=km2(o1,d1),b=km2(o2,d2);
     const fact=(i,k,v)=>v?`<div class="px-fct">${ic(i)}<span><small>${k}</small><b>${esc(v)}</b></span></div>`:'';
     return `<section class="px-sec" id="px-roots"><div class="px-h"><h2>${one?'Two journeys, one city':'Two journeys'}</h2>${one?`<span class="px-chip r">${ic('pin')}${esc(p.cityName)}</span>`:`<span class="px-chip">${esc(distLabel(p))}</span>`}</div>
@@ -3612,12 +3612,12 @@ const RLX=(function(){
   function style(dk){const L=dk?false:lt();return {version:8,projection:{type:'globe'},sky:{'atmosphere-blend':['interpolate',['linear'],['zoom'],0,1,5,.6,7,0]},
     sources:{relief:{type:'raster',tiles:['https://tiles.openfreemap.org/natural_earth/ne2sr/{z}/{x}/{y}.png'],tileSize:512,maxzoom:6,attribution:'© Natural Earth · OpenFreeMap'},
       cc:{type:'geojson',data:CJ.c},bb:{type:'geojson',data:CJ.b},arcs:{type:'geojson',data:{type:'FeatureCollection',features:[]}},com:{type:'geojson',data:{type:'FeatureCollection',features:[]}}},
-    layers:[{id:'bg',type:'background',paint:{'background-color':L?'#CFE9DE':'#0A1410'}},
+    layers:[{id:'bg',type:'background',paint:{'background-color':L?'#E9CFD5':'#0A1410'}},
       {id:'relief',type:'raster',source:'relief',paint:L?{'raster-saturation':.1,'raster-contrast':.08,'raster-hue-rotate':-22}:{'raster-saturation':-.3,'raster-brightness-max':.45,'raster-contrast':.15,'raster-hue-rotate':-18}},
-      {id:'land',type:'fill',source:'cc',paint:{'fill-color':L?'#9FDCBE':'#3E6B55','fill-opacity':L?.32:.18}},
+      {id:'land',type:'fill',source:'cc',paint:{'fill-color':L?'#DC9FAD':'#3E6B55','fill-opacity':L?.32:.18}},
       {id:'hl',type:'fill',source:'cc',filter:['in',['get','n'],['literal',[]]],paint:{'fill-color':['coalesce',['get','hc'],L?'#E94C70':'#EC6584'],'fill-opacity':L?.5:.4}},
-      {id:'hl2',type:'fill',source:'cc',filter:['in',['get','n'],['literal',[]]],paint:{'fill-color':L?'#2FBF86':'#5FD3A2','fill-opacity':L?.4:.32}},
-      {id:'bd',type:'line',source:'bb',paint:{'line-color':L?'rgba(255,255,255,.85)':'rgba(200,255,230,.16)','line-width':['interpolate',['linear'],['zoom'],0,.4,4,1]}},
+      {id:'hl2',type:'fill',source:'cc',filter:['in',['get','n'],['literal',[]]],paint:{'fill-color':L?'#BF2F51':'#D35F7A','fill-opacity':L?.4:.32}},
+      {id:'bd',type:'line',source:'bb',paint:{'line-color':L?'rgba(255,255,255,.85)':'rgba(249,206,216,.16)','line-width':['interpolate',['linear'],['zoom'],0,.4,4,1]}},
       {id:'arcG',type:'line',source:'arcs',layout:{'line-cap':'round'},paint:{'line-color':['get','c'],'line-width':7,'line-blur':6,'line-opacity':.45}},
       {id:'arc',type:'line',source:'arcs',layout:{'line-cap':'round'},paint:{'line-color':['get','c'],'line-width':2,'line-opacity':.95}},
       {id:'comG',type:'circle',source:'com',paint:{'circle-radius':10,'circle-color':['get','c'],'circle-blur':1,'circle-opacity':.7}},
@@ -3625,7 +3625,7 @@ const RLX=(function(){
   const live={};/* key -> {el,map,sig,theme,markers,anim,touched} */
   const reduce=()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}};
   function ang(a,b){const r=x=>x*Math.PI/180;return Math.acos(Math.min(1,Math.sin(r(a[1]))*Math.sin(r(b[1]))+Math.cos(r(a[1]))*Math.cos(r(b[1]))*Math.cos(r(a[0]-b[0]))))*180/Math.PI}
-  function apply(E,o){const m=E.map;const L=o.dark?false:lt();const g=L?'#0E9F6E':'#5FD3A2',y=L?'#BB173D':'#EC6584';
+  function apply(E,o){const m=E.map;const L=o.dark?false:lt();const g=L?'#9A1333':'#D35F7A',y=L?'#BB173D':'#EC6584';
     const fs=(o.arcs||[]).filter(a=>a[0]&&a[1]).map(([a,b,c],i)=>({type:'Feature',properties:{c:c==='y'?y:g},geometry:{type:'LineString',coordinates:gc(a,b)}}));
     m.getSource('arcs').setData({type:'FeatureCollection',features:fs});
     m.setFilter('hl',['in',['get','n'],['literal',(o.roots||[]).map(nm)]]);m.setFilter('hl2',['in',['get','n'],['literal',(o.lives||[]).map(nm)]]);
@@ -3659,14 +3659,14 @@ const RLX=(function(){
 function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}let a=h>>>0;
   const R=()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
   const d=!document.documentElement.classList.contains('gl-lt');const id='rs'+(h%1e7)+(layers||4);
-  const pal=d?[['#7EE7BC','#EF7F99'],['#B8F08A','#5FD3A2'],['#EF7F99','#9FE6C6'],['#5FD3A2','#D4F2B6']]:[['#0E9F6E','#C81942'],['#5DBB2E','#0E9F6E'],['#C81942','#3CC28C'],['#0E7A55','#9BD86A']];
+  const pal=d?[['#E77E96','#EF7F99'],['#F08AA2','#D35F7A'],['#EF7F99','#E69FB0'],['#D35F7A','#D4F2B6']]:[['#9A1333','#C81942'],['#BB2E4F','#9A1333'],['#C81942','#C23C5B'],['#790F28','#D86A84']];
   let defs='',lay='';const n=layers||4;
   for(let L=0;L<n;L++){const k=3+Math.floor(R()*6),ph=R()*6.28,A=26+L*7+R()*6,B=10+R()*14,C=R()*.35;const p=pal[L%4];let path='';
     for(let i=0;i<=200;i++){const t=i/200*Math.PI*2;const r=A+B*Math.cos(k*t+ph)+C*B*Math.cos((k*2+1)*t);path+=(i?'L':'M')+(100+r*Math.cos(t)).toFixed(1)+' '+(100+r*Math.sin(t)).toFixed(1)}
     defs+=`<linearGradient id="${id}g${L}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${p[0]}"/><stop offset="1" stop-color="${p[1]}"/></linearGradient>`;
     lay+=`<g class="rl-r" style="animation-duration:${40+L*18}s;animation-direction:${L%2?'reverse':'normal'}"><path d="${path}Z" fill="url(#${id}g${L})" fill-opacity="${d?.10:.13}" stroke="url(#${id}g${L})" stroke-width="${L===n-1?1.6:1.1}"/></g>`}
   const dots=Array.from({length:16},(_,i)=>{const t=i/16*6.28,r=84+R()*8;return `<circle cx="${(100+r*Math.cos(t)).toFixed(1)}" cy="${(100+r*Math.sin(t)).toFixed(1)}" r="${(1+R()*1.6).toFixed(1)}" fill="${pal[i%4][0]}" opacity=".7"/>`}).join('');
-  return `<svg class="rl-sig" viewBox="0 0 200 200" aria-hidden="true"><defs>${defs}</defs><g class="rl-br">${lay}<g class="rl-r" style="animation-duration:120s">${dots}</g></g>${ini?`<circle cx="100" cy="100" r="19" fill="${d?'#13201A':'#FFFFFF'}" stroke="${d?'rgba(255,255,255,.18)':'#E6F3EC'}" stroke-width="2"/><text x="100" y="105.5" text-anchor="middle" font-weight="800" font-size="14" fill="${d?'#E2FFF2':'#0B4D36'}">${esc(ini)}</text>`:''}</svg>`}
+  return `<svg class="rl-sig" viewBox="0 0 200 200" aria-hidden="true"><defs>${defs}</defs><g class="rl-br">${lay}<g class="rl-r" style="animation-duration:120s">${dots}</g></g>${ini?`<circle cx="100" cy="100" r="19" fill="${d?'#13201A':'#FFFFFF'}" stroke="${d?'rgba(255,255,255,.18)':'#E6F3EC'}" stroke-width="2"/><text x="100" y="105.5" text-anchor="middle" font-weight="800" font-size="14" fill="${d?'#E2FFF2':'#4D0B1A'}">${esc(ini)}</text>`:''}</svg>`}
 (function(){
   const fl=n=>{try{return flag(n)||''}catch(e){return ''}};
   const ll=o=>{try{const c=coordsOf(o);return c?[c[1],c[0]]:null}catch(e){return null}};
@@ -3739,7 +3739,7 @@ function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^
   const _pv=renderProfileView;renderProfileView=function(id,isMe){const html=_pv(id,isMe);if(!RL()||isMe)return html;const p=byId(id);if(!p)return html;
     let c;try{c=compat(p)}catch(e){return html}const tz=tzOf(p);const cl=v=>{v=+v||0;if(v<=1)v*=100;return Math.max(0,Math.min(100,Math.round(v)))};
     const ring=[['Values',c.values],['Life plans',c.life],['What you both want',c.pref]].filter(x=>typeof x[1]==='number').map(([l,v])=>({l,v:cl(v)}));if(!ring.length)ring.push({l:'Overall',v:cl(c.total)});
-    const col=['#0E9F6E','#C31840','#7CCB3E'];
+    const col=['#9A1333','#C31840','#CB3E5F'];
     const blk=`<section class="rl-share"><div class="rl-rings"><svg viewBox="0 0 120 120" aria-hidden="true">${ring.map((r,i)=>{const R=50-i*13;return `<circle cx="60" cy="60" r="${R}" fill="none" stroke="${col[i]}" stroke-opacity=".15" stroke-width="9"/><circle class="rl-ring" cx="60" cy="60" r="${R}" fill="none" stroke="${col[i]}" stroke-width="9" stroke-linecap="round" pathLength="1" style="--o:${(1-r.v/100).toFixed(2)};animation-delay:${.15+i*.15}s" transform="rotate(-90 60 60)"/>`}).join('')}</svg>
       <div class="rl-rl"><p class="eb">What you share</p>${ring.map((r,i)=>`<div><i style="background:${col[i]}"></i>${esc(r.l)}<span>${r.v}%</span></div>`).join('')}</div></div>
       ${tz?`<p class="rl-tz">${ic('clock')}${esc(hhmm(tz))} in ${esc(p.cityName||p.country)} now</p>`:''}</section>`;
@@ -4341,7 +4341,7 @@ Object.assign(P15V,{adcheck:adCheck15,biz:biz15v,services:svc15v,svcplan:svcPlan
   const BKN={host:'Hosts',league:'League organisers',expert:'Experts',agent:'Rental agents',services:'Event services',advertiser:'Advertisers'};
   const mny=(c,cur)=>money(c,cur||'USD');const LB={league_fee:'League team fees',sale_item:'Moving-out sale items',ticket:'Event tickets'};
   async function load(){try{A3.p15=await API.rpc('admin15',{})}catch(e){A3.p15=false}try{A3.p15ads=await API.rpc('ads_check15',{})||[]}catch(e){A3.p15ads=[]}render()}
-  const kpi=(n,l,s,k)=>`<button class="a3k${String(n).length>9?' a3k-l':''}" style="--c:#3BBF8A" data-a="a3p15" data-k="${k}" aria-label="${esc(l)}: ${esc(String(n))}. Open details"><b>${esc(String(n))}</b><span>${esc(l)}</span>${s?`<small>${esc(s)}</small>`:''}<em class="a3more">Details ›</em></button>`;
+  const kpi=(n,l,s,k)=>`<button class="a3k${String(n).length>9?' a3k-l':''}" style="--c:#BF3B5A" data-a="a3p15" data-k="${k}" aria-label="${esc(l)}: ${esc(String(n))}. Open details"><b>${esc(String(n))}</b><span>${esc(l)}</span>${s?`<small>${esc(s)}</small>`:''}<em class="a3more">Details ›</em></button>`;
   function a3new(){const o=A3.p15;if(o===undefined){A3.p15=null;load()}
     if(!o)return `<div class="a3c">${o===false?'<p class="a3m">Could not load. Tap refresh.</p>':spinner('Loading')}</div>`;
     const k=A3.p15k,paid=o.paid30||[],tot={};paid.forEach(p=>{tot[p.currency]=(tot[p.currency]||0)+Number(p.cents)});const test=paid.length&&paid.every(p=>p.test);
@@ -5277,7 +5277,7 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
 (function(){
   const PH={evening:'catering',dinner:'catering',family:'hall',mixer:'hall',coffee:'table',meet:'table'};
   const evPic=e=>{const k=((e&&e.kind)||'')+' '+((e&&e.title)||'').toLowerCase();for(const w in PH)if(k.toLowerCase().includes(w))return PH[w];return 'catering'};
-  const JW=[['#A9BEF2','#3B4FA8','#1E2A66'],['#F3C6B8','#B8556E','#7A2A4E'],['#FFC2A8','#E2603F','#7A2614'],['#D8B8F0','#7A4AB0','#3A1E66'],['#9FE1D9','#2B7F8C','#123E4A']];
+  const JW=[['#A9BEF2','#3B4FA8','#1E2A66'],['#F3C6B8','#B8556E','#7A2A4E'],['#FFC2A8','#E2603F','#7A2614'],['#D8B8F0','#7A4AB0','#3A1E66'],['#E19FAE','#2B7F8C','#123E4A']];
   const cover=i=>{const c=JW[i%JW.length];return `background:radial-gradient(circle at 30% 22%,${c[0]},transparent 58%),radial-gradient(circle at 75% 75%,${c[1]},transparent 62%),${c[2]}`};
   const LOGO=`<img class="cn-lg" src="img/icon-192.png" alt="">`;
   function avatar(){const me=S.me||{};const ini=esc(((me.name||'?')[0]||'?').toUpperCase());
@@ -5292,7 +5292,7 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
   function evCard(e){const x=dd(e.date);return `<button class="cn-ev" data-a="openEvent" data-id="${e.id}"><span class="cn-pic"><img src="img/p15/${evPic(e)}.webp" alt=""><span class="cn-date"><b>${x.d}</b>${x.m}</span></span><span class="cn-et"><b>${esc(e.title)}</b><small>${esc(e.city||'')}${e.priceM?' · '+money(e.priceM,e.cur):''}</small></span></button>`}
   function home(){const me=S.me||{};let list=[];try{list=matchList()}catch(e){}
     const chips=[['for','For you'],['roots','Same roots'],['events','Events'],['family','Family']];
-    const ch=`<div class="cn-chips">${chips.map(([k,t])=>`<button class="cn-chip${k==='for'?' on':''}" data-a="cnchip" data-k="${k}">${t}</button>`).join('')}</div>`;
+    const ch=`<div class="cn-chips">${chips.filter(([k])=>!(k==='events'&&typeof NO_EVENTS!=='undefined'&&NO_EVENTS)).map(([k,t])=>`<button class="cn-chip${k==='for'?' on':''}" data-a="cnchip" data-k="${k}">${t}</button>`).join('')}</div>`;
     const ev=upcoming();const e0=ev[0];
     let hero;
     if(e0){const x=dd(e0.date);hero=`<div class="cn-hero"><span class="cn-pic"><img src="img/p15/${evPic(e0)}.webp" alt=""></span><div class="cn-hb"><div class="cn-k">${x.w} · ${esc(e0.city||'')}</div><h2>${esc(e0.title)}</h2>${e0.sub?`<p>${esc(e0.sub)}</p>`:''}<div class="cn-btns"><button class="cn-b cn-p" data-a="openEvent" data-id="${e0.id}">Get a seat</button><button class="cn-b" data-a="openEvent" data-id="${e0.id}">Details</button></div></div></div>`}
@@ -5313,6 +5313,7 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
     return at<0?h:`<div class="cn-page cn-list">${top('Matches')}${h.slice(at)}</div>`};
   function live(){try{return typeof isLive==='function'?isLive():true}catch(e){return true}}
   const _r=render;render=function(){document.documentElement.classList.add('cine');const out=_r.apply(this,arguments);
+    try{document.querySelectorAll('.sap-rings').forEach(i=>{if(!/p15\/rings/.test(i.src))i.src='img/p15/rings.webp'})}catch(e){}
     try{const m=document.querySelector('meta[name=theme-color]');const lt=document.documentElement.classList.contains('gl-lt');if(m)m.setAttribute('content',lt?'#FFFFFF':'#07060B')}catch(e){}
     return out};
 
