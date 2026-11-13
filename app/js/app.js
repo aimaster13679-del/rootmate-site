@@ -3786,9 +3786,12 @@ function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^
     const k=h2.indexOf('<section');if(!(S.v2note||{})[id])h2=h2.replace(/(data-a="interest"[^>]*>[\s\S]{0,400}?)Send interest</g,'$1Ask a question<');return k>0?h2.slice(0,k)+vb+wblk+fblk+blk+book+h2.slice(k):h2};
 
   /* ===== Bridge: both local times on top of the chat ===== */
+  /* time difference between the two clocks in plain words (replaces the globe picture, 13 Nov 2026) */
+  const rlOff=tz=>{try{const d=new Date();return Math.round((new Date(d.toLocaleString('en-US',{timeZone:tz||undefined}))-new Date(d.toLocaleString('en-US',{timeZone:'UTC'})))/6e4)}catch(e){return 0}};
+  const rlDiff=(a,b)=>{const m=rlOff(b)-rlOff(a);if(!m)return 'Same time';const h=Math.floor(Math.abs(m)/60),mm=Math.abs(m)%60;return (h?h+' h':'')+(mm?(h?' ':'')+mm+' min':'')+(m>0?' ahead':' behind')};
   const _cv=renderChatView;renderChatView=function(id){const html=_cv(id);if(!RL())return html;const p=byId(id),me=S.me||{};if(!p)return html;
     const tz1=(typeof TZCITY!=='undefined'&&TZCITY[me.city])||(typeof TZC!=='undefined'&&TZC[me.country])||undefined,tz2=tzOf(p)||undefined;
-    const bar=`<div class="rl-bridge"><div><b>${esc(hhmm(tz1))}</b><small>You · ${esc(me.city||me.country||'')}</small></div><span aria-hidden="true">${ic('globe')}</span><div class="r"><b>${esc(hhmm(tz2))}</b><small>${esc(p.first||shown(p))} · ${esc(p.cityName||p.country||'')}</small></div></div>`;
+    const bar=`<div class="rl-bridge"><div><b>${esc(hhmm(tz1))}</b><small>You · ${esc(me.city||me.country||'')}</small></div><span class="rl-diff">${esc(rlDiff(tz1,tz2))}</span><div class="r"><b>${esc(hhmm(tz2))}</b><small>${esc(p.first||shown(p))} · ${esc(p.cityName||p.country||'')}</small></div></div>`;
     let fam='';try{famLoad();const on=famHas(id);const tz3=(typeof TZC!=='undefined'&&TZC[me.oc])||null;
       fam=`<div class="rl-fam"><span class="rl-fi">${ic('users')}</span><div class="rl-ft"><b>Family Room</b><small>${on?'Shared with your family. They see safe facts and react, never photos or contacts.':'Let your family read along: safe facts only, never photos or contacts.'}</small>${tz3?`<small class="rl-ftz">${esc(me.os||me.oc)} · ${esc(hhmm(tz3))}</small>`:''}</div>
        <button class="rl-fb2${on?' on':''}" data-a="v2fam" data-id="${id}">${on?ic('check')+'Shared':'Invite family'}</button></div>`}catch(e){}
@@ -5377,6 +5380,13 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
 
 /* Back from the new service pages (events, tickets, rooms, business...): one step back like their own back arrow, instead of closing the app (fix 13 Nov 2026) */
 (function(){const _gb=goBack;goBack=function(){if(!view&&!sheet&&!picker&&!celebrate&&typeof P15==='object'&&P15&&P15.v&&typeof A.p15back==='function'){A.p15back();return true}return _gb()}})();
+
+/* Chat screen in the new NeuMarry look (his ok 12 Nov 13:42): no emoji pictures, no round shapes, clear 'Send' word, near-black in dark (13 Nov 2026) */
+(function(){const _cv=renderChatView;renderChatView=function(id){let h=_cv(id);if(!h)return h;
+  h=h.replace(/(<div class="v2safe[^"]*">[\s\S]*?<\/div>)/,m=>m.replace(/<img class="ic f3"[^>]*>\s*/g,'').replace('Your numbers stay private','Numbers private'));
+  h=h.replace(/<span class="rl-fi">[\s\S]*?<\/span>/,'');
+  h=h.replace(/(<button class="btn primary" data-a="send"[^>]*>)\s*<img class="ic f3"[^>]*>\s*(<\/button>)/,'$1Send$2');
+  return h.replace('<div class="view" role="dialog" aria-label="Chat with','<div class="view nmchat" role="dialog" aria-label="Chat with')}})();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 /* only on the first open after installing (fast open stays ~1 s every other time; later updates come quietly) */
