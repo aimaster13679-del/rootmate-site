@@ -4898,6 +4898,15 @@ function renderPeek(){const c=(typeof tzCountry==='function'&&tzCountry())||'';c
   const want=()=>/[?&]install=1/.test(location.search);
   const ios=/iPhone|iPad|iPod/.test(navigator.userAgent);
   const andr=/Android/i.test(navigator.userAgent);
+  /* Google Play (his ask 14 Nov 2026): once NeuMarry is public on Play, Android browser visitors get one small
+     'Get it on Google Play' bar (once per device, closable) instead of the install-file steps. Flip NM_PLAY_LIVE the day Google approves. */
+  const NM_PLAY_LIVE=false, PLAY_URL='https://play.google.com/store/apps/details?id=com.neuconet.neumarry';
+  function playBar(){if(shown||standalone()||!andr)return;try{if(localStorage.getItem('nm.playbar')==='x'&&!want())return}catch(e){}shown=true;
+    const d=document.createElement('div');d.className='nm-inst';d.setAttribute('role','dialog');d.setAttribute('aria-label','Get NeuMarry on Google Play');
+    d.innerHTML=`<img src="img/icon-192.png" alt=""><div><b>NeuMarry is on Google Play</b><small>Faster, with notifications. Free.</small></div><a class="btn primary" id="nm-inst-go" href="${PLAY_URL}" target="_blank" rel="noopener">Get it</a><button class="iconbtn" id="nm-inst-x" aria-label="Close">×</button>`;
+    document.body.appendChild(d);
+    document.getElementById('nm-inst-x').onclick=()=>{try{localStorage.setItem('nm.playbar','x')}catch(e){}d.remove()}}
+  if(NM_PLAY_LIVE&&andr){setTimeout(playBar,1500);return}
   function bar(){if(shown||standalone()||!want())return;if(!dp&&!ios&&!andr)return;shown=true;
     const d=document.createElement('div');d.className='nm-inst';d.setAttribute('role','dialog');d.setAttribute('aria-label','Install NeuMarry');
     d.innerHTML=`<img src="img/icon-192.png" alt=""><div><b>Install NeuMarry</b><small>${dp?'Opens like an app, from your home screen. Free.':andr?'Download the app file, then tap it to install.':'Tap the Share button, then “Add to Home Screen”.'}</small></div>${dp?'<button class="btn primary" id="nm-inst-go">Install</button>':''}${andr?'<a class="nm-inst-apk" href="/dl/NeuMarry.apk" download>Or download the Android app (latest)</a>':''}<button class="iconbtn" id="nm-inst-x" aria-label="Close">✕</button>`;

@@ -6,6 +6,22 @@ SUPA_URL = 'https://ndxlguuywifovqdzdvtq.supabase.co'
 SUPA_KEY = 'sb_publishable_oBR1e77Tx1mNysmxcZ2cgw_qDOpS4gt'
 SITE = 'https://neumarry.com/'
 EMAIL = 'support@neumarry.com'
+# Google Play (his ask 14 Nov 2026: every 'get the app' place opens NeuMarry on Google Play directly).
+# PLAY_LIVE stays False while the first production release is in Google's review (store page shows 'not found' to the
+# public until then); set it to True the day Google approves (or build with NM_PLAY_LIVE=1 for the mock).
+PLAY_URL = 'https://play.google.com/store/apps/details?id=com.neuconet.neumarry'
+PLAY_LIVE = os.environ.get('NM_PLAY_LIVE', '0') == '1'
+PLAY_CSS = ('<style>.gplay{display:inline-flex;align-items:center;gap:10px;background:#0E0D12;color:#fff!important;text-decoration:none;'
+            'border-radius:12px;padding:8px 16px 8px 12px;font:700 15px/1.1 inherit;border:1px solid rgba(255,255,255,.18);white-space:nowrap}'
+            '.gplay svg{width:22px;height:22px;flex:none}.gplay small{display:block;font-size:10.5px;font-weight:600;opacity:.8;letter-spacing:.02em}'
+            '.gplay b{display:block;font-size:16px;font-weight:800}.gpwrap{margin:14px 0 4px}</style>')
+PLAY_SVG = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 2.6v18.8c0 .5.5.8.9.6l10.6-10.1L4.9 2c-.4-.2-.9.1-.9.6z" fill="#34A853"/>'
+            '<path d="M15.5 11.9 4.9 22c.2.1.5.1.7 0l12.6-7.2-2.7-2.9z" fill="#EA4335"/><path d="M18.2 9.1 5.6 1.9c-.2-.1-.5-.1-.7 0l10.6 10z" fill="#4285F4"/>'
+            '<path d="m18.2 9.1-2.7 2.8 2.7 2.9 2.9-1.7c.8-.5.8-1.7 0-2.2z" fill="#FBBC04"/></svg>')
+def play_btn(lang='en'):
+    top, name = ('Disponible sur', 'Google Play') if lang == 'fr' else ('GET IT ON', 'Google Play')
+    return (f'<a class="gplay" href="{PLAY_URL}" target="_blank" rel="noopener" aria-label="{"Télécharger NeuMarry sur Google Play" if lang == "fr" else "Get NeuMarry on Google Play"}">'
+            f'{PLAY_SVG}<span><small>{top}</small><b>{name}</b></span></a>')
 
 def rd(n): return open(os.path.join(H, n), encoding='utf-8').read()
 # ---------- Home page (new design, his ok on the inside-premium mock, 6 Nov 2026) ----------
@@ -119,10 +135,10 @@ def shell(name, title_tag, desc, main, extra_head='', kind='website'):
     html = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title_tag}</title><meta name="description" content="{esc(desc)}">{social(title_tag, desc, url, kind)}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Nunito+Sans:wght@400;600;700;800&display=swap">
-<link rel="stylesheet" href="legal.css">{extra_head}</head><body>
+<link rel="stylesheet" href="legal.css">{PLAY_CSS if PLAY_LIVE else ''}{extra_head}</head><body>
 <header><div class="wrap"><a class="brand" href="./"><img class="bmk" src="img/nm-mark.png" alt="" width="34" height="22" style="width:34px;height:22px;object-fit:contain;flex:none">NeuMarry</a><nav><a class="hl" href="work-with-us.html">Work with us</a><a href="app/">Open the app</a></nav></div></header>
 <main><div class="wrap">{lang_link("fr/" + name + ".html", "fr", "Lire cette page en français", "Français") if name in FR_SLUGS else ""}{main}</div></main>
-<footer><div class="wrap"><div class="fg">{FOOT_GUIDES}</div><span>NeuMarry · © 2026</span><span>Members must be 18 or older</span>{legal_links}<a class="link" href="mailto:{EMAIL}">{EMAIL}</a>{SOCIAL_LINKS}</div></footer>
+<footer><div class="wrap">{('<div class="gpwrap">' + play_btn() + '</div>') if PLAY_LIVE else ''}<div class="fg">{FOOT_GUIDES}</div><span>NeuMarry · © 2026</span><span>Members must be 18 or older</span>{legal_links}<a class="link" href="mailto:{EMAIL}">{EMAIL}</a>{SOCIAL_LINKS}</div></footer>
 </body></html>'''
     open(os.path.join(OUT, name + '.html'), 'w', encoding='utf-8').write(html)
 def page(name, title, desc):
@@ -279,10 +295,10 @@ if FR_SLUGS:
         html = f"""<!doctype html><html lang="fr-CA"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{f['title']}</title><meta name="description" content="{esc(f['desc'])}">{head}{alternates(f['slug'])}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Nunito+Sans:wght@400;600;700;800&display=swap">
-<link rel="stylesheet" href="../legal.css">{LANG_CSS}{ld({'@context': 'https://schema.org', '@graph': graph})}</head><body>
+<link rel="stylesheet" href="../legal.css">{LANG_CSS}{PLAY_CSS if PLAY_LIVE else ''}{ld({'@context': 'https://schema.org', '@graph': graph})}</head><body>
 <header><div class="wrap"><a class="brand" href="../"><img class="bmk" src="../img/nm-mark.png" alt="" width="34" height="22" style="width:34px;height:22px;object-fit:contain;flex:none">NeuMarry</a><nav><a class="hl" href="work-with-us.html"><span class="lg">Travailler avec nous</span><span class="sh">Collaborer</span></a><a href="../app/" onclick="try{{localStorage.setItem('rm.lang','fr')}}catch(e){{}}">Ouvrir l’app</a></nav></div></header>
 <main><div class="wrap">{lang_link('../' + f['slug'] + '.html', 'en', 'Read this page in English', 'English')}{main}</div></main>
-<footer><div class="wrap"><div class="fg">{fr_foot}</div><span>NeuMarry · © 2026</span><span>Les membres doivent avoir 18 ans ou plus</span>{fr_legal}<a class="link" href="mailto:{EMAIL}">{EMAIL}</a>{SOCIAL_LINKS}</div></footer>
+<footer><div class="wrap">{('<div class="gpwrap">' + play_btn('fr') + '</div>') if PLAY_LIVE else ''}<div class="fg">{fr_foot}</div><span>NeuMarry · © 2026</span><span>Les membres doivent avoir 18 ans ou plus</span>{fr_legal}<a class="link" href="mailto:{EMAIL}">{EMAIL}</a>{SOCIAL_LINKS}</div></footer>
 </body></html>"""
         open(os.path.join(OUT, 'fr', f['slug'] + '.html'), 'w', encoding='utf-8').write(html)
     for f in FR:
@@ -484,6 +500,10 @@ if LAUNCH15:
         up = '../' if lang == 'fr' else ''
         h = h.replace('src="img/icon-192.png"', 'src="/app/img/icon-192.png"').replace('src="img/', 'src="/app/img/p15/')
         h = h.replace('<a class="logo" href="#">', '<a class="logo" href="/' + ('fr/' if lang == 'fr' else '') + '">')
+        if PLAY_LIVE:
+            h = h.replace('</head>', PLAY_CSS + '<style>.cta .gplay{padding:10px 18px 10px 14px;border-radius:999px}</style></head>', 1)
+            for lab in ('Install the app', 'Installer l’appli'):
+                h = h.replace('<a class="btn s" href="#">' + lab + '</a>', play_btn(lang))
         h = h.replace('class="btn p sm" href="#"', 'class="btn p sm" href="/app/"').replace('class="btn p" href="#"', 'class="btn p" href="/app/"').replace('class="btn s" href="#"', 'class="btn s" href="' + PLAY + '"')
         h = h.replace('class="t g w2" href="#"', 'class="t g w2" href="/app/"').replace('class="t g" href="#"', 'class="t g" href="/app/"').replace('class="bz g" href="#"', 'class="bz g" href="/app/"')
         fl = ['privacy.html', 'terms.html', 'delete-account.html', 'child-safety.html']
