@@ -3116,3 +3116,13 @@ html:not(.gl-lt) .view.nmchat,html:not(.gl-lt) .view.nmchat .vhead,html:not(.gl-
 html:not(.gl-lt) .view.nmchat .rl-bridge,html:not(.gl-lt) .view.nmchat .rl-fam{background:#141218!important;border:1px solid rgba(255,255,255,.08)!important}
 html:not(.gl-lt) .view.nmchat .v2safe{color:rgba(255,255,255,.7)!important}html:not(.gl-lt) .view.nmchat .rl-diff{color:#FF5C82;background:rgba(255,92,130,.12)}
 .view.nmchat #chat-scroll{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 18px);mask-image:linear-gradient(to bottom,transparent 0,#000 18px)}.view.nmchat .v2safe{flex-wrap:nowrap;white-space:nowrap}
+/* Welcome: live spinning 3D earth (his 14 Nov 2026: 'gola live nahi he or hd bhi nahi'), whole sphere, sharp on every phone */
+.cn-globe .cn-gl{width:min(92vw,420px);height:min(92vw,420px);min-height:0;margin:0 auto;position:relative}
+.cn-globe .cn-gl .rl-fb{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.cn-globe .cn-gl .rl-fb img{width:76%;height:auto}
+.cn-globe .cn-gl .maplibregl-canvas{outline:none}
+.cn-globe .cn-gl .maplibregl-ctrl-attrib{font-size:9px;opacity:.55}
+/* Bottom bar edge to edge (his 14 Nov 2026: 'niche square jesa he'): no box, no side gaps, one thin line on top, phone's bottom area in the same colour */
+html.cine .navwrap{left:0!important;right:0!important;bottom:0!important;padding:0!important;margin:0!important;background:var(--bg)!important;box-shadow:none!important;border:0!important}
+html.cine .navwrap .nav{width:100%!important;max-width:none!important;margin:0!important;border:0!important;border-top:1px solid var(--line)!important;border-radius:0!important;padding:4px 0 calc(6px + env(safe-area-inset-bottom,0px))!important}
+html.cine .navwrap .nav button{min-height:52px}

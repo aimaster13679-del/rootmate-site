@@ -3099,7 +3099,7 @@ function a3help(){const L=A3.help;const su=(S.admin&&S.admin.signups)||[];
 function a3tabsHtml(){const o=A3.ov;const t=A3.tab;const chk=o?o.checks_waiting+o.reports_open:0;
   return `<div class="a3tabs pad" role="tablist">${[['home','Home'],['members','Members'],['activity','Activity'],['money','Money'],['events','Events'],['robots','Robots'],['help','Help'],['checks','Checks']].map(([k,l])=>`<button role="tab" aria-selected="${t===k}" class="${t===k?'on':''}" data-a="a3tab" data-k="${k}">${l}${k==='checks'&&chk?` <em>${chk}</em>`:''}${k==='help'&&o&&o.help_open?` <em>${o.help_open}</em>`:''}${k==='robots'&&o&&(o.bots||[]).some(b=>b.status==='failed')?' <em class="r">!</em>':''}</button>`).join('')}</div>`}
 function renderAdmin3(){const t=A3.tab;
-  return `<div class="view a3v" role="dialog" aria-label="Admin panel"><div class="a3top pad"><button class="iconbtn" data-a="a3up" aria-label="Back">${ic('back')}</button><div class="grow"><p class="a3kick">NeuMarry admin · <span>● live</span></p><h2>${{home:'Command center',members:'Members',activity:'Activity',money:'Money',events:'Events',robots:'Robots',help:'Help members'}[t]||'Command center'}</h2></div><button class="iconbtn" data-a="a3reload" aria-label="Refresh">${ic('refresh')}</button></div>
+  return `<div class="view a3v" role="dialog" aria-label="Admin panel"><div class="a3top pad"><button class="iconbtn" data-a="a3up" aria-label="Back">${ic('back')}</button><div class="grow"><p class="a3kick">NeuMarry admin · <span>● live</span></p><h2>${{home:'Command center',members:'Members',activity:'Activity',money:'Money',events:'Events',robots:'Robots',help:'Help members'}[t]||'Command center'}</h2></div><button class="iconbtn a3rl" data-a="a3reload" aria-label="Refresh"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg></button></div>
    ${a3tabsHtml()}
    <div class="scroll"><div class="a3body pad">${A3.mem?a3member():t==='members'?a3members():t==='activity'?a3activity():t==='money'?a3money():t==='events'?a3events():t==='robots'?a3robots():t==='help'?a3help():a3home()}</div></div></div>`}
 (function(){
@@ -3133,7 +3133,13 @@ function a3list(){const L=A3.list;const all=L.src==='all';if(all&&S.admin&&S.adm
    <p class="a3m">${esc(L.note||'Members who joined in the last 30 days.')}</p></div>`}
 function a3member(){const id=A3.mem;const m=A3.memd&&A3.memd.id===id?A3.memd:null;const x=a3rows().find(r=>r.user_id===id)||{};
   const back=`<button class="a3back" data-a="a3up">${ic('back')} Back</button>`;
-  if(!m)return back+`<div class="a3c">${A3.memd===false?`<p class="a3m">Could not load this member.</p>`:spinner('Loading')}</div>`;
+  /* if the full details cannot load, still show everything the list already knows (fix 14 Nov 2026: a tap must never show an empty screen) */
+  if(!m&&A3.memd===false){const dt0=t=>t?new Date(t).toLocaleString([], {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+    const r0=(k,v)=>v===null||v===undefined||v===''?'':`<div class="a3kv"><span>${esc(k)}</span><b>${esc(String(v))}</b></div>`;
+    return back+`<div class="a3c"><div class="a3h"><b>${esc(x.full_name||'Member')}</b><span>${esc(x.gender||'')}</span></div><div class="a3step">${esc(x.step||'')}</div>
+     ${r0('Email',x.email)}${r0('Lives in',[x.city,x.country].filter(Boolean).join(', '))}${r0('Joined',dt0(x.created_at))}${r0('Last active',dt0(x.last_active))}${r0('Sign-ins',x.logins)}${r0('Minutes on the form',x.form_minutes)}
+     <p class="a3m">More details could not load right now. Tap ⟳ at the top to try again.</p>${x.email?`<a class="btn primary block" href="mailto:${esc(x.email)}">${ic('mail')} Email this member</a>`:''}</div>`}
+  if(!m)return back+`<div class="a3c">${spinner('Loading')}</div>`;
   const dt=t=>t?new Date(t).toLocaleString([], {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';
   const row=(k,v)=>v===null||v===undefined||v===''?'':`<div class="a3kv"><span>${esc(k)}</span><b>${esc(String(v))}</b></div>`;
   const age=m.dob?Math.floor((Date.now()-new Date(m.dob))/3156e7):null;
@@ -3708,7 +3714,7 @@ function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^
   /* ===== Welcome: live globe instead of the flat map ===== */
   const W=[[[3.38,6.52],[-79.38,43.65],'Nigeria','Canada'],[[129.07,35.18],[151.21,-33.87],'South Korea','Australia'],[[-103.35,20.66],[-3.7,40.42],'Mexico','Spain'],
     [[72.57,23.02],[-0.12,51.5],'India','United Kingdom'],[[120.98,14.6],[55.27,25.2],'Philippines','United Arab Emirates'],[[35.5,33.89],[-46.63,-23.55],'Lebanon','Brazil']];
-  RLX.OPTS.welcome=()=>({dark:!!document.querySelector('.c3w')&&!document.documentElement.classList.contains('gl-lt'),center:[60,20],zoom:innerWidth<500?1.25:1.6,spin:.035,arcs:W.map((w,i)=>[w[0],w[1],i%2?'y':'g']),roots:W.filter((_,i)=>i%2).map(w=>w[2]),lives:W.filter((_,i)=>!(i%2)).map(w=>w[3]),pins:[]});
+  RLX.OPTS.welcome=()=>({dark:!!document.querySelector('.c3w,.cn-wel')&&!document.documentElement.classList.contains('gl-lt'),center:[10,22],zoom:innerWidth<500?1.25:1.6,spin:.035,arcs:W.map((w,i)=>[w[0],w[1],i%2?'y':'g']),roots:W.filter((_,i)=>i%2).map(w=>w[2]),lives:W.filter((_,i)=>!(i%2)).map(w=>w[3]),pins:[]});
   const _c3m=c3map;c3map=function(){return RL()&&RLX.webgl()?`<div class="rl-slot rl-wel" data-rl="welcome"><div class="rl-fb">${_c3m()}</div></div>`:_c3m()};
 
   /* ===== Matches: globe tile + introductions as signature cards ===== */
@@ -5366,7 +5372,7 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
   /* Welcome (first screen a new person sees): same logo, colours and words as the inside (his THREE-EYES rule) */
   function welcome(){return `<div class="cn-page cn-wel"><div class="scroll"><div class="cn-wi">
     <div class="cn-top"><div class="cn-brand">${LOGO}<b>NeuMarry</b></div><button class="cn-lang" data-a="lang" aria-label="Language">${esc((typeof LANG!=='undefined'&&LANG&&LANG.toUpperCase&&LANG.toUpperCase())||'EN')}</button></div>
-    <div class="cn-globe"><img src="img/f3/globe-big.webp" alt=""></div>
+    <div class="cn-globe">${(typeof RL==='function'&&RL()&&typeof RLX!=='undefined'&&RLX.webgl())?`<div class="rl-slot rl-wel cn-gl" data-rl="welcome"><div class="rl-fb"><img src="img/f3/globe-big.webp" alt=""></div></div>`:`<img src="img/f3/globe-big.webp" alt="">`}</div>
     <div class="cn-k">Marriage, not dating</div>
     <h1 class="cn-wh">Find your life partner from your roots, where you live now.</h1>
     <div class="cn-wc"><span>ID + live selfie for everyone</span><span>Family can join</span><span>Every country</span></div>
