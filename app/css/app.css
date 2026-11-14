@@ -3126,3 +3126,23 @@ html:not(.gl-lt) .view.nmchat .v2safe{color:rgba(255,255,255,.7)!important}html:
 html.cine .navwrap{left:0!important;right:0!important;bottom:0!important;padding:0!important;margin:0!important;background:var(--bg)!important;box-shadow:none!important;border:0!important}
 html.cine .navwrap .nav{width:100%!important;max-width:none!important;margin:0!important;border:0!important;border-top:1px solid var(--line)!important;border-radius:0!important;padding:4px 0 calc(6px + env(safe-area-inset-bottom,0px))!important}
 html.cine .navwrap .nav button{min-height:52px}
+/* Home v2 (14 Nov 2026): explains the app + Gold at first sight */
+.h2-how{margin:14px 18px 0;padding:18px 16px 16px;border-radius:22px;background:var(--surface);border:1px solid var(--line)}
+.h2-hh h2{margin:0;font:800 22px/1.2 "Plus Jakarta Sans",system-ui,sans-serif;color:var(--ink)}
+.h2-hh p{margin:6px 0 0;font:500 14px/1.45 "Plus Jakarta Sans",system-ui,sans-serif;color:var(--muted)}
+.h2-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.h2-st b{display:block;margin-top:8px;font:800 13.5px/1.2 "Plus Jakarta Sans",system-ui,sans-serif;color:var(--ink)}
+.h2-st small{display:block;margin-top:3px;font:500 11.5px/1.35 "Plus Jakarta Sans",system-ui,sans-serif;color:var(--muted)}
+.h2-pic{position:relative;display:block;aspect-ratio:3/2;border-radius:12px;overflow:hidden;background:var(--line)}
+.h2-pic img{width:100%;height:100%;object-fit:cover;display:block}
+.h2-pic i{position:absolute;left:6px;top:6px;font:800 11px/1 "Plus Jakarta Sans",system-ui,sans-serif;font-style:normal;color:#fff;background:#D61F4F;border-radius:6px;padding:4px 6px}
+.h2-gold{margin:14px 18px 0;border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid rgba(214,31,79,.45)}
+.h2-gp{display:block;width:100%;aspect-ratio:3/2;overflow:hidden}.h2-gp img{width:100%;height:100%;object-fit:cover;display:block}
+.h2-gb{padding:16px}
+.h2-gb h3{margin:6px 0 0;font:800 21px/1.2 "Plus Jakarta Sans",system-ui,sans-serif;color:var(--ink)}
+.h2-pr{margin:6px 0 0;font:600 15px "Plus Jakarta Sans",system-ui,sans-serif;color:var(--muted)}.h2-pr b{color:var(--ink);font-weight:800;font-size:19px}
+.h2-gb ul{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px}
+.h2-gb li{position:relative;padding-left:16px;font:600 14px/1.35 "Plus Jakarta Sans",system-ui,sans-serif;color:var(--ink)}
+.h2-gb li::before{content:"";position:absolute;left:0;top:6px;width:7px;height:7px;border-radius:2px;background:#D61F4F}
+.h2-gc{display:block;width:100%;margin-top:14px;text-align:center}
+.h2-free{margin:10px 0 0;font:500 12.5px/1.4 "Plus Jakarta Sans",system-ui,sans-serif;color:var(--muted);text-align:center}

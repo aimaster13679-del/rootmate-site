@@ -5320,6 +5320,8 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
   });
 })();
 
+/* Home v2 switch: false = current home; true = new home (mock first, live after his ok) */
+var HOME2=true;
 /* ---------- Cine look (his ok 12 Nov 2026 13:16 + logo B 13:18; mock handoff/mocks/nm-logo-nm) ----------
    Netflix / event-app structure: one brand colour (rose #D61F4F) + black / white, no gold.
    Tabs: Home (key 'matches') · Matches (key 'mlist', the old list) · Events · Messages. Me opens from the avatar.
@@ -5357,6 +5359,19 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
     const prof=pct&&pct<100?`<button class="cn-prog" data-a="cnme"><div class="cn-pr"><b>Your profile is ${pct}% done</b><span>${pct}%</span></div><div class="cn-bar"><i style="width:${pct}%"></i></div><p>Finish it so the right people can find you.</p></button>`:'';
     const empty=!picks.length&&!same.length?`<div class="cn-note">New members of your roots appear here as they join. Your matches list shows everyone who fits you today.</div>`:'';
     const vc=!live()?`<button class="cn-ver" data-a="cnchip" data-k="mlist"><span class="cn-k">Not live yet</span><b>Finish your checks to go live</b><p>Photo, ID and a live selfie, about 2 minutes. Members can see you after this.</p><span class="cn-b cn-p">Continue</span></button>`:'';
+    if(typeof HOME2!=='undefined'&&HOME2){
+      /* Home v2 (his 14 Nov 2026 19:34: 'home par kuch samaj nahi aa raha ... log subscription le aesa starting me hi dikhao'):
+         1) what NeuMarry is + how it works in 3 picture steps, 2) checks card (if not live), 3) Gold card with the real local price
+         and what Gold gives, 4) introductions / same roots / events / profile. Honest: real prices, no fake counts or timers. */
+      const how=`<div class="h2-how"><div class="h2-hh"><h2>Marriage for people living abroad</h2><p>Meet someone from your roots, in the city you live in now. Every member is checked.</p></div>
+        <div class="h2-steps">${[['docs','1','Get checked','ID and a live selfie. About 2 minutes.'],['city','2','Get introductions','People of your roots in your city, every day.'],['table','3','Meet, with family','Chat first, then bring your families in.']].map(([im,n,t,d])=>`<div class="h2-st"><span class="h2-pic"><img src="img/p15/${im}.webp" alt=""><i>${n}</i></span><b>${t}</b><small>${d}</small></div>`).join('')}</div></div>`;
+      let gold='';if(!isGold()){let L=null;try{L=price()}catch(e){}
+        const from=L?`${L.sym}${L.pm6}`:'';
+        gold=`<div class="h2-gold"><span class="h2-gp"><img src="img/p15/rings.webp" alt=""></span><div class="h2-gb"><div class="cn-k">NeuMarry Gold</div>
+          <h3>Reach the people who fit you</h3>${from?`<p class="h2-pr">From <b>${esc(from)}</b> a month</p>`:''}
+          <ul>${['See full profiles and photos','Send interests and chat','Daily introductions picked for you','See who likes you'].map(x=>`<li>${x}</li>`).join('')}</ul>
+          <button class="cn-b cn-p h2-gc" data-a="h2gold">See Gold plans</button><p class="h2-free">Free forever: your profile, checks and every safety tool.</p></div></div>`}
+      return `<div class="cn-page">${top()}<div class="scroll" id="main"><div class="cn-in">${how}${vc}${gold}${today}${roots}${evs}${prof}${empty}</div></div></div>`}
     return `<div class="cn-page">${top()}<div class="scroll" id="main"><div class="cn-in">${ch}${vc}${hero}${today}${roots}${evs}${prof}${empty}</div></div></div>`}
   /* Matches tab: the old list under one clean header */
   const _rm=renderMatches;
@@ -5384,6 +5399,7 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
   if(typeof renderWelcomeC3==='function'){renderWelcomeC3=function(){return welcome()}}
   if(typeof renderWelcomeV2==='function'){renderWelcomeV2=function(){return welcome()}}
   Object.assign(A,{
+    h2gold(){sheet={type:'upgrade',reason:'home',pick:'m6'};render()},
     cnme(){S.tab='me';view=null;render()},
     cnchip(el){const k=el.dataset.k;
       if(k==='events'){S.tab='events';view=null;render();return}
