@@ -5436,6 +5436,198 @@ var HOME2=true;
   h=h.replace(/(<button class="btn primary" data-a="send"[^>]*>)\s*<img class="ic f3"[^>]*>\s*(<\/button>)/,'$1Send$2');
   return h.replace('<div class="view" role="dialog" aria-label="Chat with','<div class="view nmchat" role="dialog" aria-label="Chat with')}})();
 
+/* ---------- NeuMarry "fun v2" look + self-explaining structure (his ok 15 Nov 2026 18:58 on mock handoff/mocks/nm-fun-v2;
+   his ask 19:00: the app must explain itself on first open like the big apps). NeuMarry app only (window.NM_APP).
+   - 5 tabs: Home · Matches · Chats · Gold · Me, filled custom icons, the chosen tab in a rose pill.
+   - Home order: today's introductions first (or what you get once live), then 'Get checked', a banner, then Gold.
+   - Every tab says in one line what it is for; a one-time 3-step guide over the tabs (Skip).
+   - Real data only: prices from price(), checks from the member's own data; a block without data is hidden. ---------- */
+(function(){
+  const NMF=()=>!!window.NM_APP;
+  const SV={
+    matches:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="currentColor"/>',
+    mlist:'<path d="M12 21s-7.5-4.6-9.5-9.3C1.2 8.4 3.3 4.8 6.9 4.8c2 0 3.6 1.1 5.1 3 1.5-1.9 3.1-3 5.1-3 3.6 0 5.7 3.6 4.4 6.9C19.5 16.4 12 21 12 21z" fill="currentColor"/>',
+    connections:'<path d="M4 4h16a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H9l-5 4v-4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z" fill="currentColor"/><rect x="7" y="8.5" width="10" height="2" rx="1" class="nmf-cut"/><rect x="7" y="12" width="6" height="2" rx="1" class="nmf-cut"/>',
+    gold:'<path d="M3 8l4.5 3.5L12 5l4.5 6.5L21 8l-2 11H5z" fill="currentColor"/><rect x="5" y="19.5" width="14" height="2" rx="1" fill="currentColor"/>',
+    me:'<rect x="7.5" y="3" width="9" height="9" rx="3.5" fill="currentColor"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z" fill="currentColor"/>'};
+  const TABS=[['matches','Home'],['mlist','Matches'],['connections','Chats'],['gold','Gold'],['me','Me']];
+  const SUB={mlist:'People picked for your roots, values and city.',connections:'Chats open when you both say yes.',me:'Your profile, checks and settings.'};
+  const P=n=>`img/p15/${n}.webp`, F=n=>`img/f3/${n}.webp`;
+  const css=`
+html.nmf{--nr:#E11D48;--nrd:#BE123C;--ni:#14101A;--nm:#6E6675;--nl:#EEE9F0;--nb:#FFFFFF;--np:#F8F5F8;--t1:#FFE4EA;--t2:#FFEBD9;--t3:#EEE6FF;--t4:#DDF6EC;--t5:#DFF0FF;--nv:#9A93A0}
+html.nmf:not(.gl-lt){--ni:#FAF6F9;--nm:#B3AAB6;--nl:#2C2532;--nb:#0F0C12;--np:#1A1520;--t1:#3B1622;--t2:#3A2416;--t3:#2A2142;--t4:#14302A;--t5:#15283C;--nv:#857C8B}
+html.nmf .navwrap .nav.nmf-nav{display:flex;gap:4px;padding:8px 8px calc(10px + env(safe-area-inset-bottom));background:var(--nb);border-top:1px solid var(--nl);box-shadow:none;border-radius:0;margin:0;left:0;right:0;width:auto}
+html.nmf .nmf-nav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:54px;border-radius:14px;color:var(--nv);font:800 11px/1.1 'Plus Jakarta Sans',system-ui,sans-serif;background:none;border:0;position:relative;transition:background .2s,color .2s}
+html.nmf .nmf-nav button svg{width:26px;height:26px}
+html.nmf .nmf-nav button .nmf-cut{fill:var(--nb)}
+html.nmf #app .navwrap .nav.nmf-nav button.on{background:var(--nr)!important;color:#fff!important}
+html.nmf #app .navwrap .nav.nmf-nav button.on *{color:#fff!important}
+html.nmf #app .navwrap .nav.nmf-nav button::before{display:none!important}
+html.nmf #app .navwrap .nav.nmf-nav button:not(.on),html.nmf #app .navwrap .nav.nmf-nav button:not(.on) *{color:var(--nv)!important}
+html.nmf #app .navwrap{padding:0;background:var(--nb)}
+html.nmf .nmf-nav button.on .nmf-cut{fill:var(--nr)}
+html.nmf .nmf-nav button:active{transform:scale(.96)}
+html.nmf #app .navwrap .nmf-nav .nmf-n{color:#fff!important;position:absolute;top:4px;right:calc(50% - 22px);min-width:18px;height:18px;padding:0 5px;border-radius:6px;background:var(--nr);color:#fff;font-size:10.5px;display:grid;place-items:center;border:2px solid var(--nb)}
+html.nmf .nmf-nav button.on .nmf-n{background:#fff;color:var(--nr);border-color:var(--nr)}
+.nmf-pg{background:var(--nb);color:var(--ni)}
+.nmf-top{background:var(--nr);color:#fff;padding:calc(10px + env(safe-area-inset-top)) 16px 16px;position:relative;overflow:hidden}
+.nmf-top:before{content:'';position:absolute;right:-70px;top:-50px;width:250px;height:250px;background:url(img/f3/globe-big.webp) center/contain no-repeat;opacity:.2;pointer-events:none}
+.nmf-hd{display:flex;justify-content:space-between;align-items:center;position:relative;gap:12px}
+.nmf-hd small{display:block;font-size:11.5px;font-weight:800;letter-spacing:.05em;opacity:.88;text-transform:uppercase}
+.nmf-hd b{display:block;font-size:19px;font-weight:800;line-height:1.25;margin-top:2px}
+.nmf-av{width:42px;height:42px;border-radius:12px;background:#fff;color:var(--nr);display:grid;place-items:center;font-weight:800;font-size:15px;border:0;flex:none}
+.nmf-sr{position:relative;margin-top:13px;background:#fff;border-radius:14px;height:46px;display:flex;align-items:center;gap:10px;padding:0 14px;color:#6E6675;font:600 14px 'Plus Jakarta Sans',system-ui,sans-serif;border:0;width:100%;text-align:left}
+.nmf-sr img{width:22px;height:22px}
+.nmf-rot{position:relative;height:22px;overflow:hidden;flex:1;-webkit-mask:linear-gradient(transparent,#000 22%,#000 78%,transparent);mask:linear-gradient(transparent,#000 22%,#000 78%,transparent)}
+.nmf-rot span{display:block;height:22px;line-height:22px;color:#14101A;font-weight:800;animation:nmfRot 10s infinite}
+@keyframes nmfRot{0%,20%{transform:translateY(0)}25%,45%{transform:translateY(-22px)}50%,70%{transform:translateY(-44px)}75%,95%{transform:translateY(-66px)}100%{transform:translateY(0)}}
+.nmf-in{padding:14px 16px 28px}
+.nmf-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:18px 0 2px}
+.nmf-h h2{font-size:18px;font-weight:800;margin:0;color:var(--ni)}
+.nmf-h button,.nmf-h em{font-style:normal;font-size:13px;font-weight:800;color:var(--nr);background:none;border:0;padding:0;white-space:nowrap}
+.nmf-p{font-size:13px;color:var(--nm);font-weight:600;margin:2px 0 10px;line-height:1.4}
+.nmf-in>.nmf-h:first-child{margin-top:4px}
+.nmf-rail{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px 4px;scroll-snap-type:x mandatory}
+.nmf-rail::-webkit-scrollbar{display:none}
+.nmf-ic{min-width:228px;max-width:228px;border-radius:20px;overflow:hidden;background:var(--np);border:0;padding:0;text-align:left;color:var(--ni);scroll-snap-align:start}
+.nmf-sig{height:132px;position:relative;display:grid;place-items:center;background:var(--t1)}
+.nmf-ic:nth-child(3n+2) .nmf-sig{background:var(--t3)}.nmf-ic:nth-child(3n+3) .nmf-sig{background:var(--t2)}
+.nmf-sig svg{width:104px;height:104px}
+.nmf-fit{position:absolute;left:10px;top:10px;background:var(--nb);border-radius:10px;padding:5px 8px;font-size:12px;font-weight:800;color:var(--ni)}
+.nmf-fit b{color:var(--nr);font-size:14px}
+.nmf-ic .tx{padding:10px 12px 12px}.nmf-ic .tx b{display:block;font-size:15.5px;font-weight:800}.nmf-ic .tx small{display:block;font-size:12px;color:var(--nm);font-weight:700;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nmf-ic .tx i{display:inline-block;font-style:normal;margin-top:8px;background:var(--nr);color:#fff;font-size:12.5px;font-weight:800;padding:7px 12px;border-radius:10px}
+.nmf-lock{border-radius:20px;background:var(--np);padding:14px;display:flex;gap:12px;align-items:center}
+.nmf-lock img{width:96px;aspect-ratio:3/2;object-fit:cover;border-radius:12px;flex:none}
+.nmf-lock b{font-size:15px;font-weight:800;display:block;line-height:1.3}.nmf-lock small{display:block;font-size:12.5px;color:var(--nm);font-weight:700;margin-top:3px;line-height:1.35}
+.nmf-card{background:var(--np);border-radius:20px;padding:14px}
+.nmf-pr{display:flex;justify-content:space-between;align-items:center}.nmf-pr b{font-size:15.5px;font-weight:800}.nmf-big{font-size:30px;font-weight:800;color:var(--nr);line-height:1}
+.nmf-bar{height:10px;background:var(--nl);border-radius:6px;overflow:hidden;margin:9px 0 12px}.nmf-bar i{display:block;height:100%;background:var(--nr);border-radius:6px;position:relative;overflow:hidden;transition:width .8s}
+.nmf-bar i:after{content:'';position:absolute;top:0;bottom:0;width:40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);animation:nmfShine 2.6s infinite}
+@keyframes nmfShine{0%{left:-40%}100%{left:110%}}
+.nmf-g{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.nmf-t{border-radius:16px;padding:10px 4px 9px;text-align:center;font:800 11.5px/1.2 'Plus Jakarta Sans',system-ui,sans-serif;position:relative;border:0;color:var(--ni);min-height:88px}
+.nmf-t img{width:44px;height:44px;display:block;margin:0 auto 6px}
+.nmf-t.ok:after{content:'✓';position:absolute;top:6px;right:6px;width:17px;height:17px;border-radius:6px;background:var(--nr);color:#fff;font-size:10px;display:grid;place-items:center}
+.nmf-t:active,.nmf-ic:active,.nmf-ban:active{transform:scale(.97)}
+.nmf-cta{display:block;width:100%;background:var(--nr);color:#fff;border:0;border-radius:14px;padding:14px;font:800 15px 'Plus Jakarta Sans',system-ui,sans-serif;text-align:center;margin-top:12px}
+.nmf-cta.dk{background:var(--ni);color:var(--nb)}
+.nmf-ban{display:flex;gap:12px;align-items:center;border-radius:20px;padding:14px;background:var(--t2);border:0;width:100%;text-align:left;color:var(--ni)}
+.nmf-ban img{width:112px;aspect-ratio:3/2;object-fit:cover;border-radius:12px;flex:none}
+.nmf-ban b{display:block;font-size:16.5px;font-weight:800;line-height:1.25}.nmf-ban small{display:block;font-size:12.5px;font-weight:700;color:var(--nm);margin:3px 0 8px;line-height:1.35}
+.nmf-ban i{display:inline-block;font-style:normal;background:var(--ni);color:var(--nb);font-size:12.5px;font-weight:800;padding:7px 12px;border-radius:10px}
+.nmf-gold{border-radius:22px;padding:14px;background:var(--t1)}
+.nmf-gold .r{display:flex;gap:12px;align-items:center}
+.nmf-gold img.p{width:118px;aspect-ratio:3/2;object-fit:cover;border-radius:13px;flex:none}
+.nmf-pill{display:inline-block;background:var(--nr);color:#fff;font-size:10.5px;font-weight:800;letter-spacing:.05em;padding:4px 8px;border-radius:7px}
+.nmf-price{font-size:27px;font-weight:800;margin-top:5px;line-height:1.1;color:var(--ni)}.nmf-price small{font-size:12.5px;font-weight:700;color:var(--nm)}
+.nmf-bens{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:11px}
+.nmf-bens div{background:var(--nb);border-radius:11px;padding:8px;display:flex;gap:7px;align-items:center;font-size:12px;font-weight:800;line-height:1.25;color:var(--ni)}
+.nmf-bens img{width:24px;height:24px;flex:none}
+.nmf-plan{border:2px solid var(--nl);border-radius:18px;padding:14px;margin-top:10px;display:flex;justify-content:space-between;align-items:center;background:var(--nb);width:100%;text-align:left;color:var(--ni);font-family:inherit}
+.nmf-plan.on{border-color:var(--nr);background:var(--t1)}
+.nmf-plan b{font-size:16px;font-weight:800}.nmf-plan small{display:block;color:var(--nm);font-size:12px;font-weight:700;margin-top:2px}
+.nmf-plan .pr{text-align:right;font-size:19px;font-weight:800}
+.nmf-tag{display:inline-block;font-size:10.5px;font-weight:800;padding:3px 7px;border-radius:6px;background:var(--nr);color:#fff;margin-left:6px;vertical-align:2px}
+.nmf-fine{font-size:11.5px;color:var(--nm);font-weight:600;text-align:center;margin-top:10px;line-height:1.45}
+.nmf-tw{display:flex;flex-direction:column;min-width:0}.nmf-tw .cn-h1{margin:0}
+.nmf-sub{font-size:13px;color:var(--nm);font-weight:600;margin:2px 0 0;line-height:1.4}
+html.nmf .empty .eic{width:84px;height:84px;border-radius:20px;background:var(--t1);display:grid;place-items:center;margin:0 auto 10px}
+html.nmf .empty .eic img,html.nmf .empty .eic svg{width:52px;height:52px}
+.nmf-coach{position:fixed;inset:0;z-index:90;background:rgba(10,6,12,.62);display:flex;flex-direction:column;justify-content:flex-end;padding:0 14px calc(94px + env(safe-area-inset-bottom))}
+.nmf-cb{background:var(--nb);color:var(--ni);border-radius:20px;padding:16px;position:relative;box-shadow:0 18px 50px rgba(0,0,0,.35)}
+.nmf-cb:after{content:'';position:absolute;bottom:-9px;left:var(--ax,10%);width:18px;height:18px;background:var(--nb);transform:rotate(45deg);border-radius:3px}
+.nmf-cb b{display:block;font-size:17px;font-weight:800}.nmf-cb p{font-size:13.5px;color:var(--nm);font-weight:600;margin:4px 0 12px;line-height:1.45}
+.nmf-cb .r{display:flex;justify-content:space-between;align-items:center}
+.nmf-cb .r span{font-size:12px;font-weight:800;color:var(--nm)}
+.nmf-cb .r div{display:flex;gap:8px}
+.nmf-cb button{border:0;border-radius:11px;padding:10px 14px;font:800 13.5px 'Plus Jakarta Sans',system-ui,sans-serif}
+.nmf-cb .sk{background:var(--np);color:var(--ni)}.nmf-cb .nx{background:var(--nr);color:#fff}
+@media (prefers-reduced-motion:reduce){.nmf-rot span,.nmf-bar i:after{animation:none}}
+`;
+  /* his rule: no round shapes anywhere (photos, rings, dots, badges) -> every circle becomes a soft rounded square */
+  function unround(){try{const els=document.querySelectorAll('#app *');for(const e of els){if(e.dataset.nmfr||e instanceof SVGElement)continue;const cs=getComputedStyle(e);const r=cs.borderTopLeftRadius;
+      if(r&&(r.endsWith('%')?parseFloat(r)>=40:parseFloat(r)>=e.offsetWidth/2-1&&e.offsetWidth>14&&Math.abs(e.offsetWidth-e.offsetHeight)<4)&&!e.classList.contains('spin')){e.style.borderRadius=Math.max(6,Math.round(e.offsetWidth*.28))+'px';e.dataset.nmfr='1'}}}catch(x){}}
+  function addCss(){if(document.getElementById('nmf-css'))return;const s=document.createElement('style');s.id='nmf-css';s.textContent=css;document.head.appendChild(s)}
+  const first=()=>esc(String((S.me&&S.me.name)||'').split(' ')[0]||'');
+  function greet(){const h=new Date().getHours();return h<12?'Good morning':h<17?'Good afternoon':'Good evening'}
+  function place(){const me=S.me||{};return [me.cityName||me.city,me.country].filter(Boolean).join(', ')}
+  function topBar(small,big,extra){const me=S.me||{};const ini=esc(((me.name||'?')[0]||'?').toUpperCase());
+    return `<div class="nmf-top"><div class="nmf-hd"><div><small>${esc(small)}</small><b>${big}</b></div><button class="nmf-av" data-a="cnme" aria-label="My profile">${ini}</button></div>${extra||''}</div>`}
+  function search(){return `<button class="nmf-sr" data-a="nmfGo" data-k="mlist" aria-label="See all matches"><img src="${F('search')}" alt="">Find by <span class="nmf-rot"><span>your roots</span><span>your city</span><span>your values</span><span>your language</span></span></button>`}
+  function checks(){const me=S.me||{};const v=me.v||{};
+    return [[photoOk(),'camera','Photo','goPhoto','',1],[!!(v.id&&v.selfie),'id','ID + selfie','goVerify','1',5],[!!v.roots,'globe','Roots','goVerify','2',4],[!!v.lives,'pin','City','goVerify','3',3]]}
+  function sigCard(p,i){let c=0;try{c=compat(p).total}catch(e){}const gold=isGold();const rev=gold||(S.picks&&S.picks.revealed&&S.picks.revealed.includes(p.id));
+    const route=[p.os||p.oc,p.cityName].filter(Boolean).join(' → ');let sg='';try{sg=rlSig(p.id,initials(rev?shown(p):'')||'',4)}catch(e){}
+    return `<button class="nmf-ic" data-a="${rev?'open':'reveal'}" data-id="${p.id}"><span class="nmf-sig">${sg}${c?`<span class="nmf-fit"><b>${c}%</b> fit</span>`:''}</span><span class="tx"><b>${rev?esc(shown(p)):'Today\'s introduction'}, ${esc(String(p.age||''))}</b><small>${esc(route||p.job||'')}</small><i>${rev?'See story':'See who it is'}</i></span></button>`}
+  function upcoming(){try{return (events()||[]).filter(e=>e&&e.date&&e.date>Date.now()&&e.status!=='cancelled').sort((a,b)=>a.date-b.date)}catch(e){return []}}
+  function home(){const me=S.me||{};let list=[];try{list=matchList()}catch(e){}
+    const isL=(()=>{try{return isLive()}catch(e){return true}})();
+    let picks=[];try{picks=(list.length>=6?ensurePicks():list).slice(0,3)}catch(e){picks=list.slice(0,3)}
+    const ck=checks();const done=ck.filter(x=>x[0]).length;let pct=0;try{pct=completeness(me)}catch(e){}
+    const nx=ck.find(x=>!x[0]);
+    /* 1. today's introductions (what people come for) */
+    let intro='';
+    if(isL&&picks.length)intro=`<div class="nmf-h"><h2>Your ${picks.length} introductions today</h2><button data-a="nmfGo" data-k="mlist">See all</button></div><p class="nmf-p">Picked for your roots, values and city. New ones every morning.</p><div class="nmf-rail">${picks.map(sigCard).join('')}</div>`;
+    else if(isL)intro=`<div class="nmf-h"><h2>Your introductions</h2><button data-a="nmfGo" data-k="mlist">See all</button></div><div class="nmf-lock"><img src="${P('city')}" alt=""><div><b>New members of your roots appear here as they join</b><small>Your Matches tab shows everyone who fits you today.</small></div></div>`;
+    else intro=`<div class="nmf-h"><h2>Your introductions</h2><em>After you go live</em></div><div class="nmf-lock"><img src="${P('city')}" alt=""><div><b>Go live and get introduced every day</b><small>People of your roots, in the city you live in now, picked for your values.</small></div></div>`;
+    /* 2. get checked */
+    const chk=done<ck.length?`<div class="nmf-h"><h2>Get checked</h2><em>${done} of ${ck.length} done</em></div><p class="nmf-p">${isL?'More checks put you first in introductions.':'Members see you once your photo, ID and selfie are checked.'}</p>
+      <div class="nmf-card"><div class="nmf-pr"><b>Your profile is ready by</b><span class="nmf-big">${pct||Math.round(done/ck.length*100)}%</span></div><div class="nmf-bar"><i style="width:${pct||Math.round(done/ck.length*100)}%"></i></div>
+      <div class="nmf-g">${ck.map(([ok,im,l,a,n],i)=>`<button class="nmf-t${ok?' ok':''}" data-a="${a}"${n?` data-n="${n}"`:''} style="background:var(--t${[1,5,3,4][i]})"><img src="${F(im)}" alt="">${l}</button>`).join('')}</div>
+      ${nx?`<button class="nmf-cta" data-a="${nx[3]}"${nx[4]?` data-n="${nx[4]}"`:''}>Next: ${nx[2]==='Photo'?'add your photo':nx[2]==='ID + selfie'?'ID and a 30-second selfie':'prove your '+nx[2].toLowerCase()}</button>`:''}</div>`:'';
+    /* 3. banner: the next real evening, else the family circle */
+    const ev=(typeof NO_EVENTS!=='undefined'&&NO_EVENTS)?[]:upcoming();const e0=ev[0];
+    const ban=e0?`<div class="nmf-h"><h2>Meet in person</h2></div><button class="nmf-ban" data-a="openEvent" data-id="${e0.id}"><img src="${P('table')}" alt=""><span><b>${esc(e0.title)}</b><small>${esc(e0.city||'')}${e0.date?' · '+esc(new Date(e0.date).toLocaleDateString('en',{day:'numeric',month:'short'})):''}</small><i>See details</i></span></button>`
+      :`<div class="nmf-h"><h2>Bring your family in</h2></div><button class="nmf-ban" data-a="cnme" style="background:var(--t3)"><img src="${P('table')}" alt=""><span><b>Family circle</b><small>Share a match with your family on a private link. They can say 👍 or 'let's talk'.</small><i>Open</i></span></button>`;
+    /* 4. Gold with the real local price */
+    let gold='';if(!isGold()){let L=null;try{L=price()}catch(e){}
+      gold=`<div class="nmf-h"><h2>NeuMarry Gold</h2><button data-a="nmfGo" data-k="gold">See plans</button></div><p class="nmf-p">Chat, full profiles and more introductions.</p>
+      <div class="nmf-gold"><div class="r"><img class="p" src="${P('rings')}" alt=""><div>${L?`<span class="nmf-pill">6-MONTH PLAN</span><div class="nmf-price">${esc(L.sym+L.pm6)}<small> a month</small></div>`:`<div class="nmf-price">Gold</div>`}</div></div>
+      <div class="nmf-bens">${[['eye','See who likes you'],['chat','Chat with matches'],['star','Daily introductions'],['heart','Full profiles']].map(([i,t])=>`<div><img src="${F(i)}" alt="">${t}</div>`).join('')}</div>
+      <button class="nmf-cta" data-a="nmfGo" data-k="gold">See Gold plans</button></div>`}
+    const big=`${greet()}${first()?', '+first():''}`;
+    return `<div class="cn-page nmf-pg">${topBar(place()||'NeuMarry',big,search())}<div class="scroll" id="main"><div class="nmf-in">${intro}${chk}${ban}${gold}</div></div></div>`}
+  function goldPage(){let L=null;try{L=price()}catch(e){}const pick=S.nmfPick||'m6';
+    const tiles=[['eye','Who likes you','t1'],['chat','Open chat','t5'],['star','Daily picks','t2'],['heart','Full profiles','t3']];
+    const has=isGold();
+    const plans=L?[['m1','1 month',L.sym+L.gold,L.sym+L.gold+' a month'],['m3','3 months',L.sym+L.m3,L.sym+L.pm3+' a month'],['m6','6 months',L.sym+L.m6,L.sym+L.pm6+' a month']]:[];
+    return `<div class="cn-page nmf-pg">${topBar('NeuMarry Gold',has?'Gold is on. Enjoy it.':'Meet the right person faster')}<div class="scroll" id="main"><div class="nmf-in">
+      <div class="nmf-g">${tiles.map(([i,t,c])=>`<div class="nmf-t" style="background:var(--${c})"><img src="${F(i)}" alt="">${t}</div>`).join('')}</div>
+      ${has?`<div class="nmf-card" style="margin-top:14px"><b style="font-size:16px">You have Gold</b><p class="nmf-p" style="margin-bottom:0">Manage or cancel it any time in Google Play, Subscriptions.</p></div>`:
+      `${plans.map(([k,l,tot,per])=>`<button class="nmf-plan${pick===k?' on':''}" data-a="nmfPick" data-k="${k}"><span><b>${l}${k==='m6'?'<span class="nmf-tag">BEST VALUE</span>':''}</b><small>${esc(per)}</small></span><span class="pr">${esc(tot)}</span></button>`).join('')}
+      <button class="nmf-cta" data-a="nmfBuy">Continue · ${pick==='m1'?'1 month':pick==='m3'?'3 months':'6 months'}</button>
+      <p class="nmf-fine">Price in your own currency. Cancel any time. Free forever: your profile, checks and every safety tool.</p>`}
+    </div></div></div>`}
+  /* the main router: Home and Gold are ours; other tabs keep their screens with a one-line meaning */
+  const _rm=renderMatches;renderMatches=function(){if(!NMF())return _rm.apply(this,arguments);
+    if(S.tab==='gold')return goldPage();if(S.tab==='matches')return home();return _rm.apply(this,arguments)};
+  function navHtml(){let c={};try{c=navCounts()}catch(e){}
+    return TABS.map(([k,l])=>{const n=k==='connections'?c.conn:0;return `<button data-a="tab" data-k="${k}" class="${S.tab===k?'on':''}" aria-current="${S.tab===k?'page':'false'}"><svg viewBox="0 0 24 24" aria-hidden="true">${SV[k]}</svg><span>${l}</span>${n?`<span class="nmf-n" aria-label="${n} new">${n}</span>`:''}</button>`}).join('')}
+  const COACH=[['matches','Home','Your day starts here: today\'s introductions, your next step and the newest evenings.'],['mlist','Matches','Everyone who fits your roots, values and city. Tap a card to see their story.'],['connections','Chats','When you both say yes, the chat opens here. Your number stays private.'],['gold','Gold','See what Gold gives and the price in your own currency.']];
+  function coach(){if(document.querySelector('.nmf-coach'))return;let i=+(S.nmfCoach||0);const c=COACH[i];if(!c)return;
+    const idx=TABS.findIndex(t=>t[0]===c[0]);const d=document.createElement('div');d.className='nmf-coach';d.setAttribute('role','dialog');
+    d.innerHTML=`<div class="nmf-cb" style="--ax:${8+idx*19.2}%"><b>${c[1]}</b><p>${c[2]}</p><div class="r"><span>${i+1} of ${COACH.length}</span><div><button class="sk" data-a="nmfCoachEnd">Skip</button><button class="nx" data-a="${i+1<COACH.length?'nmfCoachNext':'nmfCoachEnd'}">${i+1<COACH.length?'Next':'Got it'}</button></div></div></div>`;
+    document.getElementById('app').appendChild(d)}
+  const _ar=afterRenderEvents;afterRenderEvents=function(vk){_ar.apply(this,arguments);if(!NMF())return;
+    document.documentElement.classList.toggle('nmf',S.screen==='app');if(S.screen!=='app')return;addCss();
+    const nav=document.querySelector('.navwrap .nav');if(nav){nav.className='nav nmf-nav';nav.innerHTML=navHtml()}
+    const sub=SUB[S.tab];if(sub&&!view){const h=document.querySelector('#app .cn-h1, #app h1');
+      if(h){if(S.tab==='connections'&&/^\s*Messages\s*$/.test(h.textContent))h.textContent='Chats';
+        const par=h.parentNode;const old=par.querySelector(':scope > p, :scope > .sub, :scope > small');
+        if(!par.querySelector('.nmf-sub')){if(old&&S.tab!=='mlist'){old.textContent=sub;old.classList.add('nmf-sub')}else{const w=document.createElement('div');w.className='nmf-tw';h.replaceWith(w);w.appendChild(h);const p=document.createElement('p');p.className='nmf-sub';p.textContent=sub;w.appendChild(p)}}}}
+    unround();
+    let seen=1;try{seen=localStorage.getItem('nmf.coach')}catch(e){}
+    if(!seen&&!view&&!sheet&&S.tab==='matches')coach()};
+  Object.assign(A,{
+    nmfGo(el){S.tab=el.dataset.k;view=null;if(el.dataset.k==='mlist')S.sapMode='for';render();const m=document.getElementById('main');if(m)m.scrollTop=0},
+    nmfPick(el){S.nmfPick=el.dataset.k;render()},
+    nmfBuy(){sheet={type:'upgrade',reason:'goldtab',pick:S.nmfPick||'m6'};render()},
+    nmfCoachNext(){S.nmfCoach=(+(S.nmfCoach||0))+1;const o=document.querySelector('.nmf-coach');if(o)o.remove();coach()},
+    nmfCoachEnd(){try{localStorage.setItem('nmf.coach','1')}catch(e){}const o=document.querySelector('.nmf-coach');if(o)o.remove()}
+  });
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 /* only on the first open after installing (fast open stays ~1 s every other time; later updates come quietly) */
 if(liveUpd.U()&&!(()=>{try{return localStorage.getItem('nm.upd1')}catch(e){return 1}})()){try{localStorage.setItem('nm.upd1','1')}catch(e){}liveUpd.first().then(ok=>{if(!ok)boot()})}else 
