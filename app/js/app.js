@@ -5550,6 +5550,77 @@ html.nmf #app .tpp small,html.nmf #app .tpp p{color:var(--nm)!important}
 html.nmf #app .tp-s i{border:0!important;background:var(--nb)!important;width:50px!important;height:50px!important}
 html.nmf #app .tp-s i img{width:34px;height:34px}
 html.nmf #app .tpp .btn.primary,html.nmf #app .tpp .btn.primary *{color:#fff!important}
+.n7-pg{background:#fff;color:#1A1A1A}
+html.nmf:not(.gl-lt) .n7-pg{background:#0F0D10;color:#F3F1F4}
+.n7-hero{position:relative;height:calc(316px + env(safe-area-inset-top));overflow:hidden}
+.n7-hi{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:n7kb 14s ease-out forwards}
+@keyframes n7kb{from{transform:scale(1.08)}to{transform:scale(1)}}
+.n7-hero:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.5) 0%,rgba(0,0,0,.05) 38%,rgba(0,0,0,.28) 62%,rgba(0,0,0,.8) 100%);pointer-events:none}
+.n7-hd{position:absolute;top:calc(12px + env(safe-area-inset-top));left:16px;right:16px;display:flex;justify-content:space-between;align-items:center;z-index:2;color:#fff}
+.n7-lg{display:flex;align-items:center;gap:8px}.n7-lg img{width:32px;height:32px;border-radius:9px}.n7-lg b{font-size:19px;font-weight:800}
+.n7-ib{width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.22);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;font:800 15px 'Plus Jakarta Sans',system-ui,sans-serif;border:0}
+.n7-ht{position:absolute;left:18px;right:18px;bottom:80px;z-index:2;color:#fff}
+.n7-ht small{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.09em;background:rgba(255,255,255,.18);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);padding:5px 9px;border-radius:7px}
+.n7-ht h1{font-size:25px;font-weight:800;line-height:1.18;margin:8px 0 0}
+.n7-sr{position:absolute;left:14px;right:14px;bottom:16px;z-index:3;height:52px;border-radius:16px;background:#fff;box-shadow:0 10px 26px rgba(0,0,0,.22);display:flex;align-items:center;gap:10px;padding:0 16px;border:0;color:#6B6B6B;font:600 14.5px 'Plus Jakarta Sans',system-ui,sans-serif;text-align:left}
+.n7-sr svg{width:19px;height:19px;stroke:#1A1A1A;fill:none;stroke-width:2.4;stroke-linecap:round;flex:none}
+.n7-st{display:flex;gap:5px;align-items:center;height:22px;overflow:hidden;flex:1}
+.n7-rot{display:block;height:22px;overflow:hidden;-webkit-mask:linear-gradient(transparent,#000 25%,#000 75%,transparent);mask:linear-gradient(transparent,#000 25%,#000 75%,transparent)}
+.n7-rot span{display:block;height:22px;line-height:22px;color:#1A1A1A;font-weight:800;white-space:nowrap;animation:n7rot 7.5s infinite}
+@keyframes n7rot{0%,22%{transform:translateY(0)}27%,47%{transform:translateY(-22px)}52%,72%{transform:translateY(-44px)}77%,97%{transform:translateY(-66px)}100%{transform:translateY(-88px)}}
+.n7-cats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 10px;padding:18px 14px 4px}
+.n7-ct{border:0;background:none;padding:0;text-align:center;color:inherit;animation:n7pop .5s both}
+.n7-cp{display:block;aspect-ratio:1;border-radius:16px;overflow:hidden;box-shadow:0 3px 10px rgba(0,0,0,.08)}
+.n7-cp img{width:100%;height:100%;object-fit:cover}
+.n7-ct b{display:block;font-size:11.5px;font-weight:700;margin-top:6px;line-height:1.2}
+@keyframes n7pop{from{opacity:0;transform:translateY(10px)}}
+.n7-ct:nth-child(2){animation-delay:.05s}.n7-ct:nth-child(3){animation-delay:.1s}.n7-ct:nth-child(4){animation-delay:.15s}.n7-ct:nth-child(5){animation-delay:.2s}.n7-ct:nth-child(6){animation-delay:.25s}.n7-ct:nth-child(7){animation-delay:.3s}.n7-ct:nth-child(8){animation-delay:.35s}
+.n7-step{margin:18px 14px 0;border:1px solid #EBEBEB;border-radius:18px;padding:14px}
+html.nmf:not(.gl-lt) .n7-step{border-color:#2A2630}
+.n7-sp{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.n7-sp b{font-size:15.5px;font-weight:800}.n7-sp span{font-size:12.5px;color:#6B6B6B;font-weight:600;text-align:right}
+.n7-bar{height:8px;border-radius:5px;background:#EFEFEF;margin:10px 0 0;overflow:hidden}.n7-bar i{display:block;height:100%;background:#E31C5F;border-radius:5px}
+html.nmf:not(.gl-lt) .n7-bar{background:#2A2630}
+.n7-cta{display:block;width:100%;margin-top:12px;height:46px;border-radius:13px;border:0;background:#E31C5F;color:#fff;font:800 14.5px 'Plus Jakarta Sans',system-ui,sans-serif}
+.n7-sec{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:24px 16px 12px}
+.n7-sec h2{font-size:20px;font-weight:800;margin:0}.n7-sec p{font-size:13px;color:#6B6B6B;margin:2px 0 0;font-weight:500}
+.n7-ar{width:32px;height:32px;border-radius:10px;background:#F4F4F4;display:grid;place-items:center;border:0;flex:none}
+html.nmf:not(.gl-lt) .n7-ar{background:#211D24}
+.n7-ar svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.n7-rail{display:flex;gap:12px;padding:0 16px 4px;overflow-x:auto;scrollbar-width:none;scroll-snap-type:x mandatory}.n7-rail::-webkit-scrollbar{display:none}
+#app .n7-rail{padding-left:0!important;padding-right:0!important}#app .n7-rail{scroll-padding-inline:16px}#app .n7-rail:before,#app .n7-rail:after{content:'';flex:0 0 4px}
+.n7-rc{min-width:176px;width:176px;border:0;background:none;padding:0;text-align:left;color:inherit;scroll-snap-align:start}
+.n7-rp{display:block;height:176px;border-radius:16px;overflow:hidden;position:relative}.n7-rp img{width:100%;height:100%;object-fit:cover}
+.n7-bd{position:absolute;top:10px;left:10px;background:#fff;color:#1A1A1A;font-size:11.5px;font-weight:800;padding:5px 8px;border-radius:8px}
+.n7-rc b{display:block;font-size:14.5px;font-weight:700;margin-top:9px}.n7-rc small{display:block;font-size:13px;color:#6B6B6B;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.n7-pc{min-width:250px;width:250px;border-radius:20px;overflow:hidden;background:#fff;border:1px solid #EBEBEB;box-shadow:0 6px 20px rgba(0,0,0,.08);padding:0;text-align:left;color:#1A1A1A;scroll-snap-align:start}
+html.nmf:not(.gl-lt) .n7-pc{background:#1A171C;border-color:#2A2630;color:#F3F1F4}
+.n7-pp{display:block;height:150px;position:relative}.n7-pp img{width:100%;height:100%;object-fit:cover}
+.n7-pp:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.65))}
+.n7-ft{position:absolute;top:10px;left:10px;z-index:2;background:#E31C5F;color:#fff;font-size:12.5px;font-weight:800;padding:6px 9px;border-radius:9px}
+.n7-rt{position:absolute;left:12px;right:12px;bottom:10px;z-index:2;color:#fff;font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.n7-rt b{display:block;font-size:10.5px;letter-spacing:.07em;opacity:.85}
+.n7-in{display:block;padding:12px 14px 14px}.n7-in b{display:block;font-size:16.5px;font-weight:800}.n7-in small{display:block;font-size:13px;color:#6B6B6B;margin-top:2px}
+.n7-lk{display:block;margin-top:10px;padding-top:10px;border-top:1px solid #EBEBEB;font-size:12px;color:#6B6B6B;font-weight:600}
+html.nmf:not(.gl-lt) .n7-lk{border-color:#2A2630}
+.n7-gold{margin:26px 14px 0;border-radius:24px;overflow:hidden;background:#141014;color:#fff}
+.n7-gph{height:140px;position:relative}.n7-gph img{width:100%;height:100%;object-fit:cover}.n7-gph:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,#141014)}
+.n7-gin{padding:0 18px 18px;margin-top:-30px;position:relative}
+.n7-gin small{font-size:11.5px;font-weight:800;letter-spacing:.09em;color:#FF8FB0}
+.n7-gin h3{font-size:21px;font-weight:800;line-height:1.25;margin:6px 0 12px;color:#fff}
+.n7-gb{display:grid;grid-template-columns:1fr 1fr;gap:8px}.n7-gb span{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:9px 10px;font-size:12.5px;font-weight:700;color:#EEE}
+.n7-gpr{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:10px}.n7-gpr b{font-size:23px;font-weight:800;color:#fff}.n7-gpr b small{font-size:12px;color:#AAA;font-weight:600;letter-spacing:0}
+.n7-gpr button{border:0;background:#FF385C;color:#fff;font:800 14px 'Plus Jakarta Sans',system-ui,sans-serif;padding:12px 18px;border-radius:12px;white-space:nowrap}
+.n7-ev{min-width:268px;width:268px;height:186px;border-radius:18px;overflow:hidden;position:relative;border:0;padding:0;text-align:left;scroll-snap-align:start}
+.n7-ev img{width:100%;height:100%;object-fit:cover}.n7-ev:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.75))}
+.n7-dt{position:absolute;top:10px;left:10px;z-index:2;background:#fff;color:#E31C5F;border-radius:10px;padding:5px 9px;text-align:center;font-size:10px;font-weight:800;line-height:1.1}.n7-dt b{display:block;font-size:17px;color:#1A1A1A}
+.n7-et{position:absolute;left:12px;right:12px;bottom:12px;z-index:2;color:#fff}.n7-et b{display:block;font-size:16px;font-weight:800}.n7-et small{font-size:12.5px;font-weight:600;opacity:.9}
+.n7-empty{margin:0 14px;border:1px solid #EBEBEB;border-radius:18px;padding:12px;display:flex;gap:12px;align-items:center}
+html.nmf:not(.gl-lt) .n7-empty{border-color:#2A2630}
+.n7-empty img{width:104px;aspect-ratio:3/2;object-fit:cover;border-radius:12px;flex:none}
+.n7-empty b{display:block;font-size:14.5px;font-weight:800;line-height:1.3}.n7-empty small{display:block;font-size:12.5px;color:#6B6B6B;margin-top:3px;line-height:1.35}
+.n7-foot{padding:34px 22px 40px}.n7-foot h4{font-size:42px;line-height:1.04;font-weight:800;color:#E2E2E2;margin:0}
+html.nmf:not(.gl-lt) .n7-foot h4{color:#2E2A31}
+.n7-foot p{font-size:12px;font-weight:700;color:#B3B3B3;margin-top:12px}
+@media (prefers-reduced-motion:reduce){.n7-hi,.n7-rot span,.n7-ct{animation:none}}
 @media (prefers-reduced-motion:reduce){.nmf-rot span,.nmf-bar i:after{animation:none}}
 `;
   /* his rule: no round shapes anywhere (photos, rings, dots, badges) -> every circle becomes a soft rounded square */
@@ -5568,35 +5639,45 @@ html.nmf #app .tpp .btn.primary,html.nmf #app .tpp .btn.primary *{color:#fff!imp
     const route=[p.os||p.oc,p.cityName].filter(Boolean).join(' → ');let sg='';try{sg=rlSig(p.id,initials(rev?shown(p):'')||'',4)}catch(e){}
     return `<button class="nmf-ic" data-a="${rev?'open':'reveal'}" data-id="${p.id}"><span class="nmf-sig">${sg}${c?`<span class="nmf-fit"><b>${c}%</b> fit</span>`:''}</span><span class="tx"><b>${rev?esc(shown(p)):'Today\'s introduction'}, ${esc(String(p.age||''))}</b><small>${esc(route||p.job||'')}</small><i>${rev?'See story':'See who it is'}</i></span></button>`}
   function upcoming(){try{return (events()||[]).filter(e=>e&&e.date&&e.date>Date.now()&&e.status!=='cancelled').sort((a,b)=>a.date-b.date)}catch(e){return []}}
+  /* ---------- Home v7 (his '7 marks, sahi lag raha he' 15 Nov 2026 20:54; build ok 21:0x): Airbnb + BuyHatke structure,
+     real place and decor photos only (img/pl, Pexels free licence), never a person's photo. ---------- */
+  const PLC={mexico:'mx','south korea':'kr',korea:'kr',india:'in',canada:'ca'};
+  const plImg=c=>`img/pl/${PLC[String(c||'').toLowerCase()]||'table'}.webp`;
+  const H7=(t,sub,go)=>`<div class="n7-sec"><div><h2>${t}</h2>${sub?`<p>${sub}</p>`:''}</div>${go?`<button class="n7-ar" data-a="nmfGo" data-k="${go}" aria-label="See all"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>`:''}</div>`;
   function home(){const me=S.me||{};let list=[];try{list=matchList()}catch(e){}
     const isL=(()=>{try{return isLive()}catch(e){return true}})();
     let picks=[];try{picks=(list.length>=6?ensurePicks():list).slice(0,3)}catch(e){picks=list.slice(0,3)}
-    const ck=checks();const done=ck.filter(x=>x[0]).length;const v0=me.v||{};
-    /* one number everywhere (his video: '20% verified' vs 'profile 57%' confused him): the same 5 stamps as the Trust Passport */
+    const city=me.cityName||me.city||'';const v0=me.v||{};
     const pct=[photoOk(),v0.id,v0.selfie,v0.roots,v0.lives].filter(Boolean).length*20;
-    const nx=ck.find(x=>!x[0]);
-    /* 1. today's introductions (what people come for) */
-    let intro='';
-    if(isL&&picks.length)intro=`<div class="nmf-h"><h2>Your ${picks.length} introductions today</h2><button data-a="nmfGo" data-k="mlist">See all</button></div><p class="nmf-p">Picked for your roots, values and city. New ones every morning.</p><div class="nmf-rail">${picks.map(sigCard).join('')}</div>`;
-    else if(isL)intro=`<div class="nmf-h"><h2>Your introductions</h2><button data-a="nmfGo" data-k="mlist">See all</button></div><div class="nmf-lock"><img src="${P('city')}" alt=""><div><b>New members of your roots appear here as they join</b><small>Your Matches tab shows everyone who fits you today.</small></div></div>`;
-    else intro=`<div class="nmf-h"><h2>Your introductions</h2><em>After you go live</em></div><div class="nmf-lock"><img src="${P('city')}" alt=""><div><b>Go live and get introduced every day</b><small>People of your roots, in the city you live in now, picked for your values.</small></div></div>`;
-    /* 2. get checked */
-    const chk=done<ck.length?`<div class="nmf-h"><h2>Get checked</h2><em>${done} of ${ck.length} done</em></div><p class="nmf-p">${isL?'More checks put you first in introductions.':'Members see you once your photo, ID and selfie are checked.'}</p>
-      <div class="nmf-card"><div class="nmf-pr"><b>You are verified by</b><span class="nmf-big">${pct}%</span></div><div class="nmf-bar"><i style="width:${Math.max(pct,3)}%"></i></div>
-      <div class="nmf-g">${ck.map(([ok,im,l,a,n],i)=>`<button class="nmf-t${ok?' ok':''}" data-a="${a}"${n?` data-n="${n}"`:''} style="background:var(--t${[1,5,3,4][i]})"><img src="${F(im)}" alt="">${l}</button>`).join('')}</div>
-      ${nx?`<button class="nmf-cta" data-a="${nx[3]}"${nx[4]?` data-n="${nx[4]}"`:''}>Next: ${nx[2]==='Photo'?'add your photo':nx[2]==='ID + selfie'?'ID and a 30-second selfie':'prove your '+nx[2].toLowerCase()}</button>`:''}</div>`:'';
-    /* 3. banner: the next real evening, else the family circle */
-    const ev=(typeof NO_EVENTS!=='undefined'&&NO_EVENTS)?[]:upcoming();const e0=ev[0];
-    const ban=e0?`<div class="nmf-h"><h2>Meet in person</h2></div><button class="nmf-ban" data-a="openEvent" data-id="${e0.id}"><img src="${P('table')}" alt=""><span><b>${esc(e0.title)}</b><small>${esc(e0.city||'')}${e0.date?' · '+esc(new Date(e0.date).toLocaleDateString('en',{day:'numeric',month:'short'})):''}</small><i>See details</i></span></button>`
-      :`<div class="nmf-h"><h2>Bring your family in</h2></div><button class="nmf-ban" data-a="cnme" style="background:var(--t3)"><img src="${P('table')}" alt=""><span><b>Family circle</b><small>Share a match with your family on a private link. They can say 👍 or 'let's talk'.</small><i>Open</i></span></button>`;
-    /* 4. Gold with the real local price */
+    /* hero: real decor photo, place + one clear promise, search that opens Matches */
+    const hero=`<div class="n7-hero"><img class="n7-hi" src="img/pl/hero.webp" alt=""><div class="n7-hd"><div class="n7-lg"><img src="img/icon-192.png" alt=""><b>NeuMarry</b></div><button class="n7-ib" data-a="cnme" aria-label="My profile">${esc(((me.name||'?')[0]||'?').toUpperCase())}</button></div>
+      <div class="n7-ht"><small>${esc(city?('WEDDING SEASON · '+city).toUpperCase():'WEDDING SEASON')}</small><h1>Marriage from your roots, where you live now.</h1></div>
+      <button class="n7-sr" data-a="nmfGo" data-k="mlist" aria-label="Search matches"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span class="n7-st">Search <span class="n7-rot"><span>${esc(me.oc?me.oc+' roots':'your roots')}</span><span>your city</span><span>ready within a year</span><span>your values</span><span>${esc(me.oc?me.oc+' roots':'your roots')}</span></span></span></button></div>`;
+    /* photo tiles = the doors (each one opens a real screen) */
+    const T=[['mx','Same roots','mlist'],['ca','Near me','mlist'],['dinner','Ready to marry','mlist'],['table','Family view','me'],['ev1','Fully verified','me'],['lights','New this week','mlist'],[null,'Gold','gold']];
+    const tiles=`<div class="n7-cats">${T.map(([im,l,k])=>`<button class="n7-ct" data-a="${k==='me'?'cnme':'nmfGo'}" data-k="${k}"><span class="n7-cp"><img src="${im?`img/pl/${im}.webp`:'img/p15/rings.webp'}" alt=""></span><b>${l}</b></button>`).join('')}<button class="n7-ct" data-a="nmfGo" data-k="connections"><span class="n7-cp"><img src="img/pl/seoul2.webp" alt=""></span><b>Chats</b></button></div>`;
+    /* next step for members who are not live yet (one clear action) */
+    const ck=checks();const nx=ck.find(x=>!x[0]);
+    const step=!isL||nx?`<div class="n7-step"><div class="n7-sp"><b>You are ${pct}% verified</b><span>${nx?('Next: '+(nx[2]==='Photo'?'add your photo':nx[2]==='ID + selfie'?'ID and a 30-second selfie':'prove your '+nx[2].toLowerCase())):'All checks done'}</span></div><div class="n7-bar"><i style="width:${Math.max(pct,4)}%"></i></div>${nx?`<button class="n7-cta" data-a="${nx[3]}"${nx[4]?` data-n="${nx[4]}"`:''}>Continue</button>`:''}</div>`:'';
+    /* roots communities: real members grouped by the country they grew up in */
+    const pool=(()=>{try{return PROFILES.filter(p=>baseEligible(p))}catch(e){return list}})();
+    const near=pool.filter(p=>city&&p.cityName===city);const base=near.length>=2?near:pool;const where=near.length>=2?city:(me.country||'');
+    const g={};base.forEach(p=>{const k=p.oc||'';if(k){(g[k]=g[k]||[]).push(p)}});
+    const groups=Object.entries(g).sort((a,b)=>b[1].length-a[1].length).slice(0,6);
+    const comm=groups.length?H7(`Roots communities${where?' in '+esc(where):''}`,'Members grouped by where they grew up','mlist')+`<div class="n7-rail">${groups.map(([c,ps])=>`<button class="n7-rc" data-a="nmfGo" data-k="mlist"><span class="n7-rp"><img src="${plImg(c)}" alt=""><span class="n7-bd">${ps.length} member${ps.length===1?'':'s'}</span></span><b>${esc(c)} roots</b><small>${esc([...new Set(ps.map(p=>p.os).filter(Boolean))].slice(0,2).join(' · ')||c)}</small></button>`).join('')}</div>`:'';
+    /* today's introductions: the photo is their roots place, never their face */
+    const pc=p=>{let c=0;try{c=compat(p).total}catch(e){}const rev=isGold()||(S.picks&&S.picks.revealed&&S.picks.revealed.includes(p.id));
+      return `<button class="n7-pc" data-a="${rev?'open':'reveal'}" data-id="${p.id}"><span class="n7-pp"><img src="${plImg(p.oc)}" alt="">${c?`<span class="n7-ft">${c}% fit</span>`:''}<span class="n7-rt"><b>ROOTS</b>${esc([p.os||p.oc,p.cityName].filter(Boolean).join(' → '))}</span></span><span class="n7-in"><b>${rev?esc(shown(p)):'Today\'s introduction'}, ${esc(String(p.age||''))}</b><small>${esc([p.job,p.cityName&&('lives in '+p.cityName)].filter(Boolean).join(' · '))}</small><span class="n7-lk">Photos open when you both say yes</span></span></button>`};
+    const intro=isL&&picks.length?H7(`Today's introductions`,'Picked for your roots, values and city','mlist')+`<div class="n7-rail">${picks.map(pc).join('')}</div>`
+      :H7('Your introductions','','mlist')+`<div class="n7-empty"><img src="img/pl/ca.webp" alt=""><div><b>${isL?'New members of your roots appear here as they join':'Go live and get introduced every morning'}</b><small>${isL?'Your Matches tab shows everyone who fits you today.':'People of your roots, in the city you live in now, picked for your values.'}</small></div></div>`;
+    /* Gold, with the real local price */
     let gold='';if(!isGold()){let L=null;try{L=price()}catch(e){}
-      gold=`<div class="nmf-h"><h2>NeuMarry Gold</h2><button data-a="nmfGo" data-k="gold">See plans</button></div><p class="nmf-p">Chat, full profiles and more introductions.</p>
-      <div class="nmf-gold"><div class="r"><img class="p" src="${P('rings')}" alt=""><div>${L?`<span class="nmf-pill">6-MONTH PLAN</span><div class="nmf-price">${esc(L.sym+L.pm6)}<small> a month</small></div>`:`<div class="nmf-price">Gold</div>`}</div></div>
-      <div class="nmf-bens">${[['eye','See who likes you'],['chat','Chat with matches'],['star','Daily introductions'],['heart','Full profiles']].map(([i,t])=>`<div><img src="${F(i)}" alt="">${t}</div>`).join('')}</div>
-      <button class="nmf-cta" data-a="nmfGo" data-k="gold">See Gold plans</button></div>`}
-    const big=`${greet()}${first()?', '+first():''}`;
-    return `<div class="cn-page nmf-pg">${topBar(place()||'NeuMarry',big,search())}<div class="scroll" id="main"><div class="nmf-in">${intro}${chk}${ban}${gold}</div></div></div>`}
+      gold=`<div class="n7-gold"><div class="n7-gph"><img src="img/p15/rings.webp" alt=""></div><div class="n7-gin"><small>NEUMARRY GOLD</small><h3>See who likes you and chat with every match.</h3><div class="n7-gb"><span>See who likes you</span><span>Open chat after a yes</span><span>More introductions</span><span>Family can view</span></div><div class="n7-gpr">${L?`<b>${esc(L.sym+L.pm6)}<small> a month</small></b>`:'<b>Gold</b>'}<button data-a="nmfGo" data-k="gold">Get Gold</button></div></div></div>`}
+    /* real upcoming evenings only */
+    const ev=(typeof NO_EVENTS!=='undefined'&&NO_EVENTS)?[]:upcoming();
+    const evs=ev.length?H7('Introduction Evenings','Small dinners for people of your roots')+`<div class="n7-rail">${ev.slice(0,6).map((e,i)=>{const d=new Date(e.date);return `<button class="n7-ev" data-a="openEvent" data-id="${e.id}"><img src="img/pl/${['ev1','ev2','dinner'][i%3]}.webp" alt=""><span class="n7-dt"><b>${d.getDate()}</b>${esc(d.toLocaleString('en',{month:'short'}).toUpperCase())}</span><span class="n7-et"><b>${esc(e.title)}</b><small>${esc(e.city||'')}</small></span></button>`}).join('')}</div>`:'';
+    const foot=`<div class="n7-foot"><h4>Marry smart.<br>Stay rooted.</h4><p>NeuCoNet Private Limited</p></div>`;
+    return `<div class="cn-page nmf-pg n7-pg"><div class="scroll" id="main">${hero}${tiles}${step}${intro}${comm}${gold}${evs}${foot}</div></div>`}
   function goldPage(){let L=null;try{L=price()}catch(e){}const pick=S.nmfPick||'m6';
     const tiles=[['eye','Who likes you','t1'],['chat','Open chat','t5'],['star','Daily picks','t2'],['heart','Full profiles','t3']];
     const has=isGold();
