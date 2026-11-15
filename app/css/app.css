@@ -3146,3 +3146,4 @@ html.cine .navwrap .nav button{min-height:52px}
 .h2-gb li::before{content:"";position:absolute;left:0;top:6px;width:7px;height:7px;border-radius:2px;background:#D61F4F}
 .h2-gc{display:block;width:100%;margin-top:14px;text-align:center}
 .h2-free{margin:10px 0 0;font:500 12.5px/1.4 "Plus Jakarta Sans",system-ui,sans-serif;color:var(--muted);text-align:center}
+.rl-home .rl-slot{top:86px}.rl-home .rl-cap{z-index:3}
