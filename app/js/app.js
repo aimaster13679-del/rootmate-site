@@ -1812,6 +1812,7 @@ async function restorePurchases(loud){const B=Bill();if(!B||!S.me||restoring)ret
     if(!list.length){if(loud)toast('No Gold purchase found on this Google account.','info');return}
     const todo=loud?list:list.filter(p=>!p.acknowledged||S.me.plan==='free');let got=false,err=null;
     for(const p of todo){try{const v=await verifyPurchase(p);if(v&&v.entitled)got=true}catch(e){err=e;console.warn('[billing] verify',e&&e.code)}}
+    if(err&&!got&&typeof goldRetry==='function')goldRetry();
     if(!todo.length)return;
     const was=S.me.plan;await loadMe();
     if(S.me.plan!==was){await loadCards();render();if(S.me.plan!=='free')toast('Your Gold is active.','crown')}
@@ -2070,7 +2071,7 @@ const A={
     const back=sheet&&sheet.reason;
     try{const v=await verifyPurchase(p);await loadMe();await loadCards();busy='';sheet=null;render();
       if(v&&v.entitled)toast(back==='chat'?'Welcome to Gold. Your chat is open.':'Welcome to Gold.','crown');else toast('Google Play has not confirmed this payment yet. Gold switches on as soon as it does.','info')}
-    catch(e){busy='';sheet=null;render();if(e&&e.code==='purchase_other_account')fail(e);else toast('Payment received. Gold will switch on the next time you open NeuMarry. If it does not, contact us.','info')}},
+    catch(e){busy='';sheet=null;render();if(e&&e.code==='purchase_other_account')fail(e);else{toast('Payment received. Gold switches on in a few minutes. You do not need to pay again.','info');goldRetry()}}},
   async admPayTest(el){if(el)el.disabled=true;try{const eid=await API.rpc('admin_pay_test');await loadEvents();PAYQ=null;view={type:'event',id:typeof eid==='string'?eid:(eid&&(eid.admin_pay_test||Object.values(eid)[0]))};render();const v=document.getElementById('view-scroll');if(v)v.scrollTop=0}catch(e){if(el)el.disabled=false;toast('Could not open the test seat. Try again.','info')}},
   starter(el){const i=document.getElementById('chat-in');if(i){i.value=el.dataset.t;i.focus()}},
   safeMeet(el){const p=byId(el.dataset.id);sheet=null;render();const t=`I am meeting ${p.first||'someone'} from NeuMarry (verified: ID, selfie, roots and city checked). Place: ____ . Time: ____ . I will message you when I am back home.`;
@@ -2305,6 +2306,15 @@ if(isNative&&Plug().App){
   if(!CA||!CA.addListener)return;try{Promise.resolve(CA.addListener('backButton',()=>{if(!goBack()&&backExitOk())CA.exitApp()})).catch(()=>{})}catch(e){}})();
 /* A payment that was pending (for example cash at a store) and completes later. */
 if(Bill()){try{Bill().addListener('purchasesUpdated',()=>{if(S.screen==='app')restorePurchases(false)})}catch(e){}}
+/* Gold always switches on by itself after a real Google Play payment (his ask 15 Nov 2026): if the check with Google
+   fails for a moment (network, Google busy), the app tries again after 1, 3, 10 and 30 minutes while it is open, and
+   every time it comes back to the front. The server check itself runs on our server 24x7 (not on Claude). If it can
+   never be confirmed, Google refunds the payment by itself after 3 days, so nobody loses money. */
+let goldTries=0,goldTimer=null;
+function goldRetry(){if(goldTimer||!Bill())return;const waits=[60e3,180e3,600e3,1800e3];
+  const next=()=>{if(goldTries>=waits.length||!S.me||S.me.plan!=='free'){goldTimer=null;return}
+    goldTimer=setTimeout(async()=>{goldTimer=null;goldTries++;await restorePurchases(false);if(S.me&&S.me.plan==='free')next()},waits[goldTries])};next()}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&S.screen==='app'&&Bill()&&S.me&&S.me.plan==='free')restorePurchases(false)});
 /* ---------- Typing on phones ----------
    When the keyboard opens, the app shrinks to the space above it and the field being
    typed in is scrolled to the middle, so nobody has to close the keyboard to see their text. */
