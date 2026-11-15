@@ -3149,6 +3149,11 @@ function a3member(){const id=A3.mem;const m=A3.memd&&A3.memd.id===id?A3.memd:nul
     return back+`<div class="a3c"><div class="a3h"><b>${esc(x.full_name||'Member')}</b><span>${esc(x.gender||'')}</span></div><div class="a3step">${esc(x.step||'')}</div>
      ${r0('Email',x.email)}${r0('Lives in',[x.city,x.country].filter(Boolean).join(', '))}${r0('Joined',dt0(x.created_at))}${r0('Last active',dt0(x.last_active))}${r0('Sign-ins',x.logins)}${r0('Minutes on the form',x.form_minutes)}
      <p class="a3m">More details could not load right now. Tap ⟳ at the top to try again.</p>${x.email?`<a class="btn primary block" href="mailto:${esc(x.email)}">${ic('mail')} Email this member</a>`:''}</div>`}
+  if(m&&m.noProfile){const dt0=t=>t?new Date(t).toLocaleString([], {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+    const r0=(k,v)=>v===null||v===undefined||v===''?'':`<div class="a3kv"><span>${esc(k)}</span><b>${esc(String(v))}</b></div>`;
+    return back+`<div class="a3c"><div class="a3h"><b>${esc(x.full_name||x.google_name||(x.email||'').split('@')[0]||'New member')}</b><span>New account</span></div><div class="a3step">Account made · profile not started yet</div>
+     ${r0('Email',x.email)}${r0('Joined',dt0(x.created_at))}${r0('Last active',dt0(x.last_active))}${r0('Sign-ins',x.logins)}${r0('Minutes on the form',x.form_minutes)}${r0('Phone time zone',x.phone_tz)}${r0('Phone language',x.phone_lang)}
+     <p class="a3m">This person signed in once but has not filled in a profile, so there are no photos, checks or payments yet. A short friendly email often helps them finish.</p>${x.email?`<a class="btn primary block" href="mailto:${esc(x.email)}?subject=${encodeURIComponent('Finish your NeuMarry profile')}">${ic('mail')} Email this member</a>`:''}</div>`}
   if(!m)return back+`<div class="a3c">${spinner('Loading')}</div>`;
   const dt=t=>t?new Date(t).toLocaleString([], {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';
   const row=(k,v)=>v===null||v===undefined||v===''?'':`<div class="a3kv"><span>${esc(k)}</span><b>${esc(String(v))}</b></div>`;
@@ -3166,7 +3171,8 @@ function a3member(){const id=A3.mem;const m=A3.memd&&A3.memd.id===id?A3.memd:nul
    ${!(m.gold||[]).length&&!(m.tickets||[]).length?'<p class="a3m">No payments yet.</p>':''}</div>
   <div class="a3c"><div class="a3h"><b>Safety</b></div>${row('Reports against',m.reports_against)}${row('Warned messages',m.flagged)}<p class="a3m">Chat text stays private; only the numbers show here.</p>
    ${m.email?`<a class="btn primary block" href="mailto:${esc(m.email)}">${ic('mail')} Email this member</a>`:''}</div>`}
-async function a3loadMem(id){A3.memd=null;try{A3.memd=await API.rpc('admin_member',{p_uid:id})||false}catch(e){A3.memd=false}render()}
+/* admin_member returns nothing when the person made an account but never started the profile (fix 15 Nov 2026: his video showed 'could not load') */
+async function a3loadMem(id){A3.memd=null;try{const r=await API.rpc('admin_member',{p_uid:id});A3.memd=r||{id,noProfile:true}}catch(e){A3.memd=false}render()}
 async function a3loadStats(){if(A3.stB)return;A3.stB=true;try{A3.st=await API.rpc('admin_stats')}catch(e){A3.st=false}finally{A3.stB=false;render()}}
 function a3need(){if(A3.st===undefined||A3.st===null){a3loadStats();return `<div class="a3c">${spinner('Loading')}</div>`}if(A3.st===false)return `<div class="a3c"><p class="a3m">Could not load. Pull to refresh or tap ⟳.</p></div>`;return ''}
 function a3kv2(k,n,max,col,act){return `<div class="a3f${act?' a3fb':''}" ${act?`role="button" tabindex="0" ${act}`:''}><span>${esc(k)}</span><div><i style="width:${(n?Math.max(2,Math.round(n/Math.max(1,max)*100)):0)}%;background:${col}"></i></div><b>${n}</b></div>`}
@@ -5224,12 +5230,13 @@ function ivPage(){const st=view.step||'list',fee=pxs('booking_fee','US$4.99');
    meetups and a dated activity line. Data: admin_member (migration 20261111210000). */
 A3.who=A3.who||{};
 const a3dt=t=>t?new Date(t).toLocaleString([], {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';
-function a3whoLoad(id){if(!id||A3.who[id]!==undefined)return;A3.who[id]=null;API.rpc('admin_member',{p_uid:id}).then(r=>{A3.who[id]=r||false;render()}).catch(()=>{A3.who[id]=false;render()})}
+function a3whoLoad(id){if(!id||A3.who[id]!==undefined)return;A3.who[id]=null;API.rpc('admin_member',{p_uid:id}).then(r=>{A3.who[id]=r||{noProfile:true};render()}).catch(()=>{A3.who[id]=false;render()})}
 const a3tick=(ok,l)=>`<span class="aw-t ${ok?'ok':''}">${ok?'✓':'·'} ${esc(l)}</span>`;
 const a3mny=(c,cur)=>{try{return (c/100).toLocaleString('en',{style:'currency',currency:cur||'USD'})}catch(e){return (cur||'')+' '+(c/100)}};
 function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.who[id];
   if(m===null||m===undefined)return `<div class="aw">${spinner('Loading member details')}</div>`;
-  if(!m)return `<div class="aw"><p class="hint">Could not load this member's details.</p></div>`;
+  if(m.noProfile)return `<div class="aw"><p class="hint">This person has not started a profile yet, so there are no more details.</p></div>`;
+  if(!m)return `<div class="aw"><p class="hint">Member details could not load. Tap ⟳ at the top to try again.</p></div>`;
   const f=m.flags||{},paid=m.paid||[],tries=(m.orders||[]).filter(o=>o.status!=='paid');
   return `<div class="aw"><div class="aw-g">
     <div><span>Email</span><b>${esc(m.email||'—')}</b></div><div><span>Signed in with</span><b>${esc(m.provider||'')}</b></div>
