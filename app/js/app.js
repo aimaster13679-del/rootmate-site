@@ -5543,6 +5543,13 @@ html.nmf .empty .eic img,html.nmf .empty .eic svg{width:52px;height:52px}
 .nmf-cb .r div{display:flex;gap:8px}
 .nmf-cb button{border:0;border-radius:11px;padding:10px 14px;font:800 13.5px 'Plus Jakarta Sans',system-ui,sans-serif}
 .nmf-cb .sk{background:var(--np);color:var(--ni)}.nmf-cb .nx{background:var(--nr);color:#fff}
+html.nmf #app .tpp{background:var(--t1)!important;background-image:none!important;color:var(--ni)!important;box-shadow:none!important;border:0!important}
+html.nmf #app .tpp *{color:var(--ni)!important;text-shadow:none!important}
+html.nmf #app .tpp .eb,html.nmf #app .tpp .tp-top .eb{color:var(--nr)!important}
+html.nmf #app .tpp small,html.nmf #app .tpp p{color:var(--nm)!important}
+html.nmf #app .tp-s i{border:0!important;background:var(--nb)!important;width:50px!important;height:50px!important}
+html.nmf #app .tp-s i img{width:34px;height:34px}
+html.nmf #app .tpp .btn.primary,html.nmf #app .tpp .btn.primary *{color:#fff!important}
 @media (prefers-reduced-motion:reduce){.nmf-rot span,.nmf-bar i:after{animation:none}}
 `;
   /* his rule: no round shapes anywhere (photos, rings, dots, badges) -> every circle becomes a soft rounded square */
@@ -5564,7 +5571,9 @@ html.nmf .empty .eic img,html.nmf .empty .eic svg{width:52px;height:52px}
   function home(){const me=S.me||{};let list=[];try{list=matchList()}catch(e){}
     const isL=(()=>{try{return isLive()}catch(e){return true}})();
     let picks=[];try{picks=(list.length>=6?ensurePicks():list).slice(0,3)}catch(e){picks=list.slice(0,3)}
-    const ck=checks();const done=ck.filter(x=>x[0]).length;let pct=0;try{pct=completeness(me)}catch(e){}
+    const ck=checks();const done=ck.filter(x=>x[0]).length;const v0=me.v||{};
+    /* one number everywhere (his video: '20% verified' vs 'profile 57%' confused him): the same 5 stamps as the Trust Passport */
+    const pct=[photoOk(),v0.id,v0.selfie,v0.roots,v0.lives].filter(Boolean).length*20;
     const nx=ck.find(x=>!x[0]);
     /* 1. today's introductions (what people come for) */
     let intro='';
@@ -5573,7 +5582,7 @@ html.nmf .empty .eic img,html.nmf .empty .eic svg{width:52px;height:52px}
     else intro=`<div class="nmf-h"><h2>Your introductions</h2><em>After you go live</em></div><div class="nmf-lock"><img src="${P('city')}" alt=""><div><b>Go live and get introduced every day</b><small>People of your roots, in the city you live in now, picked for your values.</small></div></div>`;
     /* 2. get checked */
     const chk=done<ck.length?`<div class="nmf-h"><h2>Get checked</h2><em>${done} of ${ck.length} done</em></div><p class="nmf-p">${isL?'More checks put you first in introductions.':'Members see you once your photo, ID and selfie are checked.'}</p>
-      <div class="nmf-card"><div class="nmf-pr"><b>Your profile is ready by</b><span class="nmf-big">${pct||Math.round(done/ck.length*100)}%</span></div><div class="nmf-bar"><i style="width:${pct||Math.round(done/ck.length*100)}%"></i></div>
+      <div class="nmf-card"><div class="nmf-pr"><b>You are verified by</b><span class="nmf-big">${pct}%</span></div><div class="nmf-bar"><i style="width:${Math.max(pct,3)}%"></i></div>
       <div class="nmf-g">${ck.map(([ok,im,l,a,n],i)=>`<button class="nmf-t${ok?' ok':''}" data-a="${a}"${n?` data-n="${n}"`:''} style="background:var(--t${[1,5,3,4][i]})"><img src="${F(im)}" alt="">${l}</button>`).join('')}</div>
       ${nx?`<button class="nmf-cta" data-a="${nx[3]}"${nx[4]?` data-n="${nx[4]}"`:''}>Next: ${nx[2]==='Photo'?'add your photo':nx[2]==='ID + selfie'?'ID and a 30-second selfie':'prove your '+nx[2].toLowerCase()}</button>`:''}</div>`:'';
     /* 3. banner: the next real evening, else the family circle */
