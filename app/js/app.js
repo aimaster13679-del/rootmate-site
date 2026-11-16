@@ -5793,8 +5793,8 @@ html.nmf:not(.gl-lt) .n7-foot h4{color:#2E2A31}
     if(r.length)out+=sec('They said yes to you','Real members, waiting for your answer')+`<button class="n22-yy" data-a="goLikes"><span class="n22-yt">${r.slice(0,4).map(p=>`<i><img src="${rootImg(p.oc)}" alt=""></i>`).join('')}</span><span class="n22-yc"><b>${r.length} ${r.length===1?'person':'people'} said yes</b><small>${(()=>{const n=r.filter(p=>window.NM_SUPER_IN&&window.NM_SUPER_IN.has(p.id)).length;return n?`${n} Super Intro${n>1?'s':''}: you can answer without Gold.`:`See who and answer${isGold()?'':' with Gold'}.`})()}</small><em>See who</em></span></button>`;
     out+=seenCard();
     if(!isGold()){let L=null;try{L=price()}catch(e){}
-      if(L&&L.sym)out+=sec('Plans','Find your person faster','gold')+`<div class="n22-pl"><button class="n22-pc" data-a="nmfGo" data-k="gold">${(()=>{const o=S.px&&S.px.gold_m3&&S.px.gold_m3.was?S.px.gold_m3:null;return o?`<em class="n22-off">${o.pct}% OFF · NEW YEAR</em>`:''})()}<small>GOLD · 3 MONTHS</small><b>${esc(L.sym+L.pm3)}<i>/month</i></b><s>${esc(L.sym+L.m3)} in total${(()=>{const o=S.px&&S.px.gold_m3&&S.px.gold_m3.was;return o?` <del>${esc(L.sym+(o/100).toFixed(2))}</del>`:''})()}</s><ul><li>See who said yes</li><li>Chat after a yes</li><li>Family can view</li></ul><span>Choose</span></button>
-        <button class="n22-pc on" data-a="nmfGo" data-k="gold"><em>BEST VALUE</em><small>GOLD · 6 MONTHS</small><b>${esc(L.sym+L.pm6)}<i>/month</i></b><s>${esc(L.sym+L.m6)} in total</s><ul><li>Everything in Gold</li><li>Lowest price a month</li><li>Cancel any time</li></ul><span>Choose</span></button></div>`}
+      if(L&&L.sym)out+=sec('Plans','Find your person faster','gold')+`<div class="n22-pl"><button class="n22-pc" data-a="nmfGo" data-k="gold">${(()=>{const o=S.px&&S.px.gold_m3&&S.px.gold_m3.was?S.px.gold_m3:null;return o?`<em class="n22-off">${o.pct}% OFF · NEW YEAR</em>`:'<em style="visibility:hidden" aria-hidden="true">BEST VALUE</em>'})()}<small>GOLD · 3 MONTHS</small><b>${esc(L.sym+L.pm3)}<i>/month</i></b><s>${esc(L.sym+L.m3)} in total${(()=>{const o=S.px&&S.px.gold_m3&&S.px.gold_m3.was;return o?` <del>${esc(L.sym+(o/100).toFixed(2))}</del>`:''})()}</s><ul><li>See who said yes</li><li>Chat after a yes</li><li>Family can view</li></ul><span>Choose</span></button>
+        <button class="n22-pc on" data-a="nmfGo" data-k="gold"><em>BEST VALUE</em><small>GOLD · 6 MONTHS</small><b>${esc(L.sym+L.pm6)}<i>/month</i></b><s>${esc(L.sym+L.m6)} in total</s><ul><li>Everything in Gold</li><li>Lowest price a month</li><li>Nothing renews by itself</li></ul><span>Choose</span></button></div>`}
     out+=evenings(3);
     return out}
   function evenings(n){const ev=upcoming();if(!ev.length)return '';
@@ -5932,13 +5932,13 @@ html.nmf:not(.gl-lt) .n22-vc span.ok{background:#12301F;color:#8FE0B5;border-col
 .n22-yt i{display:block;aspect-ratio:1;border-radius:10px;overflow:hidden}.n22-yt img{width:100%;height:100%;object-fit:cover;filter:blur(5px);transform:scale(1.2)}
 .n22-yc b{display:block;font-family:NMPF,serif;font-size:20px}.n22-yc small{display:block;font-size:14px;opacity:.85;margin:3px 0 8px}
 .n22-yc em{font-style:normal;font-weight:800;font-size:14px;background:#fff;color:var(--rose);padding:7px 12px;border-radius:10px;display:inline-block}
-.n22-pl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;padding-top:10px}
+.n22-pl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
 .n22-pg .nmf-sub{display:none!important}
 .n22-pc{position:relative;display:flex!important;flex-direction:column;background:var(--card)!important;border:1px solid var(--line)!important;border-radius:20px;padding:16px 14px!important}
 .n22-pc.on{border:2px solid var(--rose)!important}
-.n22-pc em{position:absolute;top:-10px;left:12px;font-style:normal;font-size:11px;font-weight:800;letter-spacing:.08em;background:var(--rose);color:#fff;padding:4px 8px;border-radius:8px}
-.n22-pc b{font-family:NMPJ,system-ui,sans-serif;font-weight:800;font-size:21px;white-space:nowrap;font-variant-numeric:lining-nums;margin-top:6px}.n22-pc b i{font-family:NMPJ,sans-serif;font-style:normal;font-size:13px;color:var(--mut)}
-.n22-pc em.n22-off{left:12px;background:#14714A}.n22-pc s del{opacity:.8}
+.n22-pc em{align-self:flex-start;margin-bottom:8px;font-style:normal;font-size:11px;font-weight:800;letter-spacing:.08em;background:var(--rose);color:#fff;padding:4px 8px;border-radius:8px}
+.n22-pc b{font-family:NMPJ,system-ui,sans-serif;font-weight:800;font-size:22px;white-space:nowrap;font-variant-numeric:lining-nums;margin-top:6px}.n22-pc b i{display:block;font-family:NMPJ,sans-serif;font-style:normal;font-weight:600;font-size:13px;color:var(--mut)}
+.n22-pc em.n22-off{background:#14714A}.n22-pc s del{opacity:.8}
 .n22-pc s{text-decoration:none;font-size:13px;color:var(--mut)}
 .n22-pc ul{list-style:none;padding:0;margin:10px 0 12px;font-size:13px;display:grid;gap:5px}
 .n22-pc li::before{content:"✓ ";color:var(--rose);font-weight:800}
