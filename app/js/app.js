@@ -5732,7 +5732,7 @@ html.nmf:not(.gl-lt) .n7-foot h4{color:#2E2A31}
   const CT={toronto:'to',mississauga:'to',brampton:'to',seoul:'seoul2'};
   const rootImg=c=>`img/pl/${PL[String(c||'').toLowerCase()]||'table'}.webp`;
   const cityImg=c=>`img/pl/${CT[String(c||'').toLowerCase()]||'lights'}.webp`;
-  const TH={all:['#5C0A25','#3B0618','elegant'],wed:['#0A3B33','#062720','arch2'],eve:['#2C0E39','#1A0723','ev1'],fam:['#132C4E','#0C1C35','dinner']};
+  const TH={seen:['#3B0618','#1F030C','lights'],all:['#5C0A25','#3B0618','elegant'],wed:['#0A3B33','#062720','arch2'],eve:['#2C0E39','#1A0723','ev1'],fam:['#132C4E','#0C1C35','dinner']};
   const SECS=[['all','For you','p15/rings'],['wed','Wedding','pl/arch2'],['eve','Evenings','pl/ev1'],['gold','Gold','pl/ringbox'],['fam','Family','pl/dinner']];
   const epOn=()=>{try{return typeof EP_ON==='function'?EP_ON():false}catch(e){return false}};
   const BST=p=>(window.NM_BOOSTED&&window.NM_BOOSTED.has(p.id))?1:0;
@@ -5753,8 +5753,8 @@ html.nmf:not(.gl-lt) .n7-foot h4{color:#2E2A31}
   /* ---------- header ---------- */
   function head(k){const me=S.me||{};const t=TH[k]||TH.all;const name=(me.name||'').split(' ')[0];
     const words=k==='wed'?['venues','photographers','jewellers','honeymoon']:k==='eve'?['this week','your city','roots dinners']:k==='fam'?['family view','shortlist']:[me.oc?me.oc+' roots':'your roots','your city','ready to marry','your values'];
-    const big=k==='wed'?'Plan the big day':k==='eve'?'Meet in person':k==='fam'?'Decide together':'Your roots, your wedding';
-    const small=k==='wed'?'WEDDING PARTNERS':k==='eve'?'INTRODUCTION EVENINGS':k==='fam'?'FAMILY ROOM':(name?'HELLO, '+name.toUpperCase():'WELCOME');
+    const big=k==='seen'?'More eyes on you':k==='wed'?'Plan the big day':k==='eve'?'Meet in person':k==='fam'?'Decide together':'Your roots, your wedding';
+    const small=k==='seen'?'BE SEEN FIRST':k==='wed'?'WEDDING PARTNERS':k==='eve'?'INTRODUCTION EVENINGS':k==='fam'?'FAMILY ROOM':(name?'HELLO, '+name.toUpperCase():'WELCOME');
     const tabs=SECS.filter(s=>s[0]!=='wed'||epOn()).map(([id,l,im])=>`<button class="n22-tb${id===k?' on':''}" data-a="n22Sec" data-k="${id}" aria-pressed="${id===k}"><span><img src="img/${im}.webp" alt=""></span><b>${l}</b></button>`).join('');
     return `<div class="n22-hd" style="--t1:${t[0]};--t2:${t[1]}"><img class="n22-hb" src="img/pl/${t[2]}.webp" alt=""><i class="n22-ov"></i>
       <div class="n22-top"><img class="n22-lg" src="img/icon-192.png" alt="NeuMarry"><div><small>${esc(small)}</small><h1>${big}</h1></div></div>
@@ -5774,6 +5774,9 @@ html.nmf:not(.gl-lt) .n7-foot h4{color:#2E2A31}
         ${vchips(p).length?`<div class="n22-vc">${vchips(p).map(c=>`<span class="${c[0]}">${c[1]}</span>`).join('')}</div>`:''}
         ${acts(p)}${window.NM_SUPER_BTN?window.NM_SUPER_BTN(p):''}</div></div>`}
   function mini(p){const f=fit(p);return `<button class="n22-nx" data-a="${rev(p)?'open':'reveal'}" data-id="${p.id}"><img src="${rootImg(p.oc)}" alt=""><span><b>${title(p)}</b><small>${routeTxt(p)}</small></span>${f?`<em>${f}%</em>`:''}</button>`}
+  function seenCard(){const m=typeof window.NM_SEEN_SUM==='function'?window.NM_SEEN_SUM():null;if(!m)return '';
+    const sub=m.live?`Boost is on · ends in ${esc(m.live)}`:m.free?`${m.free} free Boost hour${m.free>1?'s':''} ready to use`:`Boost${m.from?' from '+esc(m.from):''} · Super Intro · Travel Pass · Spotlight`;
+    return `<button class="n22-seen" data-a="n22Sec" data-k="seen"><img src="img/pl/lights.webp" alt=""><span><small>BE SEEN FIRST</small><b>More eyes on your profile</b><em>${sub}</em>${m.cp&&!m.live?`<i>${esc(m.cp)} · ${m.pct===50?'half price':m.pct+'% off'}</i>`:''}</span><strong>→</strong></button>`}
   function forYou(){let list=[];try{list=matchList()}catch(e){}
     const live=(()=>{try{return isLive()}catch(e){return true}})();
     let picks=[];try{picks=(list.length>=6?ensurePicks():list).slice(0,3)}catch(e){picks=list.slice(0,3)}
@@ -5788,8 +5791,7 @@ html.nmf:not(.gl-lt) .n7-foot h4{color:#2E2A31}
       <div class="n22-empty"><img src="img/pl/to.webp" alt=""><div><b>${live?'New members of your roots appear here as they join':'You are '+pct+'% verified'}</b><small>${live?'Your Matches tab shows everyone who fits you today.':'Finish your checks to go live. People of your roots in your city, picked for your values.'}</small>${live?'':`<button data-a="cnme">Continue</button>`}</div></div>`;
     const r=recv();
     if(r.length)out+=sec('They said yes to you','Real members, waiting for your answer')+`<button class="n22-yy" data-a="goLikes"><span class="n22-yt">${r.slice(0,4).map(p=>`<i><img src="${rootImg(p.oc)}" alt=""></i>`).join('')}</span><span class="n22-yc"><b>${r.length} ${r.length===1?'person':'people'} said yes</b><small>${(()=>{const n=r.filter(p=>window.NM_SUPER_IN&&window.NM_SUPER_IN.has(p.id)).length;return n?`${n} Super Intro${n>1?'s':''}: you can answer without Gold.`:`See who and answer${isGold()?'':' with Gold'}.`})()}</small><em>See who</em></span></button>`;
-    if(typeof window.NM_BOOST_CARD==='function')out+=window.NM_BOOST_CARD();
-    if(typeof window.NM_EXTRAS_CARD==='function')out+=window.NM_EXTRAS_CARD();
+    out+=seenCard();
     if(!isGold()){let L=null;try{L=price()}catch(e){}
       if(L&&L.sym)out+=sec('Plans','Find your person faster','gold')+`<div class="n22-pl"><button class="n22-pc" data-a="nmfGo" data-k="gold">${(()=>{const o=S.px&&S.px.gold_m3&&S.px.gold_m3.was?S.px.gold_m3:null;return o?`<em class="n22-off">${o.pct}% OFF · NEW YEAR</em>`:''})()}<small>GOLD · 3 MONTHS</small><b>${esc(L.sym+L.pm3)}<i>/month</i></b><s>${esc(L.sym+L.m3)} in total${(()=>{const o=S.px&&S.px.gold_m3&&S.px.gold_m3.was;return o?` <del>${esc(L.sym+(o/100).toFixed(2))}</del>`:''})()}</s><ul><li>See who said yes</li><li>Chat after a yes</li><li>Family can view</li></ul><span>Choose</span></button>
         <button class="n22-pc on" data-a="nmfGo" data-k="gold"><em>BEST VALUE</em><small>GOLD · 6 MONTHS</small><b>${esc(L.sym+L.pm6)}<i>/month</i></b><s>${esc(L.sym+L.m6)} in total</s><ul><li>Everything in Gold</li><li>Lowest price a month</li><li>Cancel any time</li></ul><span>Choose</span></button></div>`}
@@ -5798,6 +5800,7 @@ html.nmf:not(.gl-lt) .n7-foot h4{color:#2E2A31}
   function evenings(n){const ev=upcoming();if(!ev.length)return '';
     return sec('Introduction Evenings','Small dinners for people of your roots')+`<div class="n22-rail">${ev.slice(0,n).map((e,i)=>{const d=new Date(e.date);return `<button class="n22-ev" data-a="openEvent" data-id="${e.id}"><span class="n22-ei"><img src="img/pl/${['ev1','ev2','dinner'][i%3]}.webp" alt=""><span class="n22-dt"><b>${d.getDate()}</b>${esc(d.toLocaleString('en',{month:'short'}).toUpperCase())}</span></span><span class="n22-et"><b>${esc(e.title||'')}</b><small>${esc(e.city||'')}</small></span></button>`}).join('')}</div>`}
   function body(k){
+    if(k==='seen'){const b=(typeof window.NM_BOOST_CARD==='function'?window.NM_BOOST_CARD():'')+(typeof window.NM_EXTRAS_CARD==='function'?window.NM_EXTRAS_CARD():'');return b?b.replace('<div class="n22-sec">','<div class="n22-sec" style="margin-top:4px">'):`<div class="n22-empty"><img src="img/pl/lights.webp" alt=""><div><b>Loading your options…</b></div></div>`}
     if(k==='wed')return sec('Wedding partners','Venues, photographers, jewellers and more. You contact and pay them directly.')+`<button class="n22-big1" data-a="epOpen"><img src="img/pl/arch2.webp" alt=""><span><b>See wedding partners</b><small>Compare prices and choose freely</small></span></button>`;
     if(k==='eve'){const e=evenings(12);return e||`<div class="n22-empty" style="margin-top:18px"><img src="img/pl/ev1.webp" alt=""><div><b>No evenings in your city yet</b><small>When an evening is planned near you, it shows here with its real date and price.</small></div></div>`}
     if(k==='fam')return sec('Family Room','Your family sees only what you share')+`<button class="n22-big1" data-a="tab" data-k="connections"><img src="img/pl/dinner.webp" alt=""><span><b>Bring your family in</b><small>After you both say yes, invite your parents from the chat to meet the family.</small></span></button>`;
@@ -5914,6 +5917,11 @@ html.nmf:not(.gl-lt) .n22-vc span.ok{background:#12301F;color:#8FE0B5;border-col
 .n22-nx em{position:absolute;top:8px;right:8px;font-style:normal;font-weight:800;font-size:13px;background:#fff;color:var(--rose);padding:3px 8px;border-radius:8px}
 .n22-all{display:flex!important;align-items:center;gap:12px;width:100%;margin-top:12px;background:var(--card)!important;border:1.5px solid var(--rose)!important;border-radius:18px;padding:14px 16px!important}
 .n22-all span{flex:1}.n22-all b{display:block;font-size:17px;font-weight:800;color:var(--rose)}.n22-all small{font-size:13px;color:var(--mut)}.n22-all i{font-style:normal;font-size:22px;font-weight:800;color:var(--rose)}
+.n22-seen{position:relative;display:flex!important;gap:12px;align-items:center;width:100%;margin-top:24px;background:linear-gradient(120deg,#5C0A25,#2A0613)!important;color:#fff!important;border-radius:22px;padding:12px!important;overflow:hidden}
+.n22-seen img{width:96px;aspect-ratio:3/2;object-fit:cover;border-radius:14px;flex:none}.n22-seen span{flex:1;min-width:0}
+.n22-seen small{display:block;font-size:12px;font-weight:800;letter-spacing:.12em;opacity:.8}.n22-seen b{display:block;font-family:NMPF,serif;font-size:20px;line-height:1.15}
+.n22-seen em{display:block;font-style:normal;font-size:13px;opacity:.9;margin-top:3px}.n22-seen i{display:inline-block;font-style:normal;font-size:12px;font-weight:800;background:#fff;color:#5C0A25;border-radius:8px;padding:3px 8px;margin-top:6px}
+.n22-seen strong{font-size:22px;padding-right:4px}
 .n22-sec{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin:28px 0 12px}
 .n22-sec h2{font-family:NMPF,serif;font-size:23px;font-weight:700;margin:0}
 .n22-sec p{margin:3px 0 0;font-size:14px;color:var(--mut)}
@@ -5986,6 +5994,10 @@ html.nmf:not(.gl-lt) .n22-vc span.ok{background:#12301F;color:#8FE0B5;border-col
       window.NM_BOOSTED=new Set((ids||[]).map(x=>typeof x==='string'?x:(x&&(x.boosted_ids15||x.id))).filter(Boolean));
       if(S.tab==='matches'||S.tab==='mlist')render()}catch(e){}}
   const left=u=>{const ms=Date.parse(u)-Date.now();if(!(ms>0))return '';const h=Math.floor(ms/36e5),m=Math.floor(ms%36e5/6e4);return h?`${h} h ${m} min`:`${m} min`};
+  /* one short line for the Home card that opens the 'Be seen first' page */
+  window.NM_SEEN_SUM=function(){const d=B.d;if(!d||!d.prices)return null;const p=d.prices.boost_1h;
+    const live=d.until&&Date.parse(d.until)>Date.now();const cp=isNative?null:(d.coupons||[])[0];
+    return {from:p&&p.cents?money(p.cents,p.currency):'',live:live?left(d.until):'',cp:cp?cp.code:'',pct:cp?cp.pct:0,free:(d.credits&&d.credits.boost_1h)||0}};
   window.NM_BOOST_CARD=function(){const d=B.d;if(!d||!d.prices)return '';
     const live=d.until&&Date.parse(d.until)>Date.now();
     if(live)return `<div class="n23-on"><img src="img/pl/lights.webp" alt=""><div><small>BOOST IS ON</small><b>You are shown first</b><span>Ends in ${esc(left(d.until))}. People who fit you see you at the top of Matches.</span></div></div>`;
