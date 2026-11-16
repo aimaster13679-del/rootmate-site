@@ -5787,7 +5787,7 @@ html.nmf:not(.gl-lt) .n7-foot h4{color:#2E2A31}
     if(r.length)out+=sec('They said yes to you','Real members, waiting for your answer')+`<button class="n22-yy" data-a="goLikes"><span class="n22-yt">${r.slice(0,4).map(p=>`<i><img src="${rootImg(p.oc)}" alt=""></i>`).join('')}</span><span class="n22-yc"><b>${r.length} ${r.length===1?'person':'people'} said yes</b><small>See who and answer${isGold()?'':' with Gold'}.</small><em>See who</em></span></button>`;
     if(typeof window.NM_BOOST_CARD==='function')out+=window.NM_BOOST_CARD();
     if(!isGold()){let L=null;try{L=price()}catch(e){}
-      if(L&&L.sym)out+=sec('Plans','Find your person faster','gold')+`<div class="n22-pl"><button class="n22-pc" data-a="nmfGo" data-k="gold"><small>GOLD · 3 MONTHS</small><b>${esc(L.sym+L.pm3)}<i>/month</i></b><s>${esc(L.sym+L.m3)} in total</s><ul><li>See who said yes</li><li>Chat after a yes</li><li>Family can view</li></ul><span>Choose</span></button>
+      if(L&&L.sym)out+=sec('Plans','Find your person faster','gold')+`<div class="n22-pl"><button class="n22-pc" data-a="nmfGo" data-k="gold">${(()=>{const o=S.px&&S.px.gold_m3&&S.px.gold_m3.was?S.px.gold_m3:null;return o?`<em class="n22-off">${o.pct}% OFF · NEW YEAR</em>`:''})()}<small>GOLD · 3 MONTHS</small><b>${esc(L.sym+L.pm3)}<i>/month</i></b><s>${esc(L.sym+L.m3)} in total${(()=>{const o=S.px&&S.px.gold_m3&&S.px.gold_m3.was;return o?` <del>${esc(L.sym+(o/100).toFixed(2))}</del>`:''})()}</s><ul><li>See who said yes</li><li>Chat after a yes</li><li>Family can view</li></ul><span>Choose</span></button>
         <button class="n22-pc on" data-a="nmfGo" data-k="gold"><em>BEST VALUE</em><small>GOLD · 6 MONTHS</small><b>${esc(L.sym+L.pm6)}<i>/month</i></b><s>${esc(L.sym+L.m6)} in total</s><ul><li>Everything in Gold</li><li>Lowest price a month</li><li>Cancel any time</li></ul><span>Choose</span></button></div>`}
     out+=evenings(3);
     return out}
@@ -5925,6 +5925,7 @@ html.nmf:not(.gl-lt) .n22-vc span.ok{background:#12301F;color:#8FE0B5;border-col
 .n22-pc.on{border:2px solid var(--rose)!important}
 .n22-pc em{position:absolute;top:-10px;left:12px;font-style:normal;font-size:11px;font-weight:800;letter-spacing:.08em;background:var(--rose);color:#fff;padding:4px 8px;border-radius:8px}
 .n22-pc b{font-family:NMPF,serif;font-size:22px;white-space:nowrap;margin-top:6px}.n22-pc b i{font-family:NMPJ,sans-serif;font-style:normal;font-size:13px;color:var(--mut)}
+.n22-pc em.n22-off{left:12px;background:#14714A}.n22-pc s del{opacity:.8}
 .n22-pc s{text-decoration:none;font-size:13px;color:var(--mut)}
 .n22-pc ul{list-style:none;padding:0;margin:10px 0 12px;font-size:13px;display:grid;gap:5px}
 .n22-pc li::before{content:"✓ ";color:var(--rose);font-weight:800}
@@ -5983,20 +5984,31 @@ html.nmf:not(.gl-lt) .n22-vc span.ok{background:#12301F;color:#8FE0B5;border-col
   window.NM_BOOST_CARD=function(){const d=B.d;if(!d||!d.prices)return '';
     const live=d.until&&Date.parse(d.until)>Date.now();
     if(live)return `<div class="n23-on"><img src="img/pl/lights.webp" alt=""><div><small>BOOST IS ON</small><b>You are shown first</b><span>Ends in ${esc(left(d.until))}. People who fit you see you at the top of Matches.</span></div></div>`;
-    if(isNative)return '';
+    const free=(d.credits&&d.credits.boost_1h)||0;
+    const freeCard=free?`<div class="n22-sec"><div><h2>Boost</h2><p>Be seen first by people who fit you</p></div></div><button class="n23-free" data-a="b23Buy" data-k="boost_1h"><img src="img/pl/lights.webp" alt=""><span><small>READY TO USE</small><b>${free} free Boost hour${free>1?'s':''}</b><em>Use 1 hour now</em></span></button>`:'';
+    if(isNative)return freeCard?freeCard+friendCard():'';
     const cp=(d.coupons||[])[0];
     const sold=KINDS.every(k=>d.prices[k[0]]&&d.prices[k[0]].sell!==false);if(!sold)return '';
     const ends=cp&&cp.ends?new Date(cp.ends).toLocaleDateString('en',{day:'numeric',month:'short',timeZone:'UTC'}):'';
     return `<div class="n22-sec"><div><h2>Boost</h2><p>Be seen first by people who fit you</p></div></div>
-      ${cp?`<div class="n23-cp"><div class="n23-cl"><b>${cp.pct===50?'Half price':cp.pct+'% off'}</b><small>on your first Boost</small></div><div class="n23-cr"><span>${esc(cp.code)}</span><small>Once per account${ends?' · till '+esc(ends):''}</small></div></div>`:''}
+      ${cp?`<div class="n23-cp"><div class="n23-cl"><b>${cp.pct===50?'Half price':cp.pct+'% off'}</b><small>${cp.code==='WELCOMEBACK'?'Welcome back · on any Boost':'on your first Boost'}</small></div><div class="n23-cr"><span>${esc(cp.code)}</span><small>Once per account${ends?' · till '+esc(ends):''}</small></div></div>`:''}
       <div class="n23-ks">${KINDS.map(([k,l,t],i)=>{const p=d.prices[k];const now=cp?Math.round(p.cents*(100-cp.pct)/100):p.cents;
         return `<button class="n23-k${i===1?' on':''}" data-a="b23Buy" data-k="${k}"${cp?` data-c="${esc(cp.code)}"`:''}><em>${t}</em><b>${l}</b><strong>${esc(money(now,p.currency))}</strong>${cp?`<s>${esc(money(p.cents,p.currency))}</s>`:''}<span>Boost</span></button>`}).join('')}</div>
-      <p class="n23-fine">Paid once with PayPal on neumarry.com. No subscription. You stay shown first only among people who already fit you.</p>`};
-  Object.assign(A,{async b23Buy(el){if(B.busy)return;B.busy=true;el.classList.add('busy');
+      <p class="n23-fine">Paid once with PayPal on neumarry.com. No subscription. You stay shown first only among people who already fit you.</p>`.replace('<div class="n22-sec"><div><h2>Boost</h2><p>Be seen first by people who fit you</p></div></div>',freeCard||'<div class="n22-sec"><div><h2>Boost</h2><p>Be seen first by people who fit you</p></div></div>')+friendCard()};
+  function friendCard(){const f=B.d&&B.d.friend;
+    return `<div class="n23-fr"><img src="img/pl/dinner.webp" alt=""><div><small>INVITE A FRIEND</small><b>You both get 1 free Boost hour</b><span>When your friend joins with your link and their ID and selfie are checked.${f&&f.rewarded?` ${f.rewarded} reward${f.rewarded>1?'s':''} so far.`:''}</span><button data-a="b23Share">${f&&f.code?'Share my link':'Get my link'}</button></div></div>`}
+  Object.assign(A,{async b23Share(){let c=B.d&&B.d.friend&&B.d.friend.code;
+      if(!c){try{c=await API.rpc('my_friend_code15');B.at=0;load(true)}catch(e){toast('Could not make your link. Please try again.','info');return}}
+      const url='https://neumarry.com/app/?f='+encodeURIComponent(c),txt='Join me on NeuMarry, the verified matrimony app for people living away from home: '+url;
+      try{if(navigator.share){await navigator.share({title:'NeuMarry',text:txt,url});return}}catch(e){return}
+      try{await navigator.clipboard.writeText(url);toast('Link copied: '+url,'tick2')}catch(e){toast(url,'info')}},
+    async b23Buy(el){if(B.busy)return;B.busy=true;el.classList.add('busy');
     try{const r=await API.rpc('boost_start15',{kind:el.dataset.k,coupon:el.dataset.c||null});B.at=0;await load(true);toast('Boost is on. Ends in '+left(r&&r.until),'tick2')}
     catch(e){const m=typeof em15==='function'?em15(e):String(e&&e.message||e);if(/coupon_not_valid/.test(m)){toast('That code does not apply any more. Price shown without it.','info');B.at=0;await load(true)}}
     finally{B.busy=false;el.classList.remove('busy')}}});
-  const _lm=loadMe;loadMe=async function(){const r=await _lm.apply(this,arguments);if(ON())setTimeout(()=>load(true),400);return r};
+  try{const f=new URLSearchParams(location.search).get('f');if(f&&/^[A-Za-z0-9]{4,12}$/.test(f))localStorage.setItem('nm.f',f.toUpperCase())}catch(e){}
+  async function claim(){let f='';try{f=localStorage.getItem('nm.f')||''}catch(e){}if(!f)return;try{await API.rpc('friend_claim15',{c:f})}catch(e){return}try{localStorage.removeItem('nm.f')}catch(e){}}
+  const _lm=loadMe;loadMe=async function(){const r=await _lm.apply(this,arguments);if(ON()&&S.me){setTimeout(()=>load(true),400);setTimeout(claim,900)}return r};
   const _r=render;render=function(){const o=_r.apply(this,arguments);if(ON()&&(S.tab==='matches'||S.tab==='mlist'))load(false);return o};
   const css=`
 .n23-cp{display:flex;align-items:stretch;border-radius:18px;overflow:hidden;background:linear-gradient(120deg,#5C0A25,#3B0618);color:#fff;margin-bottom:12px}
@@ -6011,6 +6023,13 @@ html.nmf:not(.gl-lt) .n22-vc span.ok{background:#12301F;color:#8FE0B5;border-col
 .n23-k b{font-size:15px;font-weight:800}.n23-k strong{font-family:NMPF,serif;font-size:21px;margin-top:4px;white-space:nowrap}
 .n23-k s{font-size:12px;color:var(--mut)}.n23-k>span{margin-top:8px;width:100%;font-weight:800;font-size:14px;padding:9px 0;border-radius:11px;background:var(--bg);border:1px solid var(--line)}
 .n23-k.on>span{background:var(--rose);color:#fff;border-color:var(--rose)}.n23-k.busy{opacity:.6;pointer-events:none}
+.n23-free{display:flex!important;gap:12px;align-items:center;width:100%;margin-bottom:12px;background:linear-gradient(120deg,#5C0A25,#3B0618)!important;color:#fff!important;border-radius:20px;padding:12px!important}
+.n23-free img{width:92px;aspect-ratio:3/2;object-fit:cover;border-radius:12px;flex:none}.n23-free small{display:block;font-size:12px;font-weight:800;letter-spacing:.12em;opacity:.85}.n23-free b{display:block;font-family:NMPF,serif;font-size:20px}
+.n23-free em{display:inline-block;margin-top:6px;font-style:normal;font-weight:800;font-size:14px;background:#fff;color:#5C0A25;padding:7px 12px;border-radius:10px}
+.n23-fr{display:flex;gap:12px;align-items:flex-start;margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:12px}
+.n23-fr img{width:92px;aspect-ratio:3/2;object-fit:cover;border-radius:12px;flex:none}.n23-fr small{font-size:12px;font-weight:800;letter-spacing:.12em;color:var(--rose)}
+.n23-fr b{display:block;font-size:16px;margin-top:2px}.n23-fr span{display:block;font-size:13px;color:var(--mut);margin-top:3px}
+.n23-fr button{margin-top:10px;background:var(--rose)!important;color:#fff!important;font-weight:800;font-size:14px;padding:9px 14px!important;border-radius:11px}
 .n23-fine{font-size:13px;color:var(--mut);margin:10px 2px 0}
 .n23-on{display:flex;gap:12px;align-items:center;margin-top:24px;background:linear-gradient(120deg,#5C0A25,#3B0618);color:#fff;border-radius:20px;padding:12px}
 .n23-on img{width:92px;aspect-ratio:3/2;object-fit:cover;border-radius:12px;flex:none}
