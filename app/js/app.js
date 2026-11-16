@@ -4769,7 +4769,7 @@ function epSvc(s,n){return (s||[]).slice(0,n).map(x=>`<li><span>${esc(x.t)}</spa
 /* Families: the list */
 function renderEP(){if(EPS.list===undefined)setTimeout(epLoadList,0);const me=S.me||{};const L=EPS.list;
   const chips=`<div class="ep-chips" role="tablist">${[['','All','sparkle'],...EP_CATS.map(([k,i])=>[k,k,i])].map(([k,t,i])=>`<button class="ep-chip${EPS.cat===k?' on':''}" data-a="epCat" data-k="${esc(k)}" aria-pressed="${EPS.cat===k}">${ic(i)}<span>${esc(t)}</span></button>`).join('')}</div>`;
-  const card=b=>`<article class="ep-card${b.sponsored?' spon':''}"><div class="ep-ch"><span class="ep-ic">${ic((EP_CATS.find(c=>c[0]===b.category)||['','sparkle'])[1])}</span><div class="grow"><b>${esc(b.name)}</b><small>${esc(b.category)} · ${esc(b.city)}</small></div>${b.sponsored?'<i class="ep-spon">Sponsored</i>':''}</div>
+  const card=b=>`<article class="ep-card${b.sponsored?' spon':''}"><div class="ep-ch"><span class="ep-ic">${ic((EP_CATS.find(c=>c[0]===b.category)||['','sparkle'])[1])}</span><div class="grow"><b>${esc(b.name)}</b><small>${esc(b.category)} · ${esc(b.city)}</small></div>${b.sponsored?'<i class="ep-spon">Sponsored</i>':b.featured?'<i class="ep-spon">Featured</i>':''}</div>
     <p class="ep-ver">${ic('shield')} Verified business</p>${b.about?`<p class="ep-ab">${esc(b.about)}</p>`:''}
     ${(b.services||[]).length?`<ul class="ep-svc">${epSvc(b.services,4)}</ul>`:''}
     ${EPS.req===b.id?epReqForm(b):`<button class="btn primary block" data-a="epReq" data-id="${b.id}">Send a request</button>`}</article>`;
@@ -4801,7 +4801,7 @@ function renderEPB(full){if(EPS.mine===undefined)setTimeout(epLoadMine,0);const 
     <label>Business registration number <small>(checked by a person, never shown)</small></label><input id="ep-bl" maxlength="60" value="${esc((b&&b.licence)||'')}">
     <label>One line about you</label><input id="ep-ba" maxlength="200" value="${esc((b&&b.about)||'')}" placeholder="e.g. Hall for up to 300 guests, halal and vegetarian kitchens">
     <button class="btn primary block" data-a="epSave"${EPS.busy==='save'?' disabled':''}>${EPS.busy==='save'?'Saving…':b?'Save details':'Create my page'}</button></div>`;
-  if(!b)return shell(`<div class="ep-hero"><b>Show families your services and prices</b><span>7 days free, no card. Then ${pxs('ep_basic','US$29')} or ${pxs('ep_pro','US$59')} a month, paid on neumarry.com. Nothing renews by itself.</span></div>${form}`);
+  if(!b)return shell(`<div class="ep-hero"><b>Show families your services and prices</b><span>7 days free, no card. Then ${pxs('ep_basic','CA$49')} or ${pxs('ep_pro','CA$99')} a month, paid on neumarry.com. Nothing renews by itself.</span></div>${form}`);
   const until=b.planUntil?new Date(b.planUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'}):'';
   const status=`<div class="ep-st"><div class="ep-sti ${b.active?'ok':'off'}">${ic(b.active?'check':'clock')}<div><b>${b.active?(b.plan==='ep_pro'?'Event Partner Pro':'Event Partner'):'Page not showing'}</b><small>${b.active?'Active until '+until:'Pick a plan below to show your page'}</small></div></div>
     <div class="ep-sti ${b.verified?'ok':'wait'}">${ic(b.verified?'shield':'clock')}<div><b>${b.verified?'Verified business':b.licence?'Checking your registration':'Add your registration number'}</b><small>${b.verified?'Families see the badge':b.licence?'Usually within 24 hours':'Needed before families can see you'}</small></div></div>
@@ -4811,8 +4811,9 @@ function renderEPB(full){if(EPS.mine===undefined)setTimeout(epLoadMine,0);const 
     ${rows.length<lim?`<button class="btn ghost block" data-a="epRowAdd">${ic('plus')} Add a service</button>`:`<p class="ep-fine">Up to ${lim} services on this plan.</p>`}
     <button class="btn primary block" data-a="epSvcSave"${EPS.busy==='svc'?' disabled':''}>${EPS.busy==='svc'?'Saving…':'Save services'}</button></div>`;
   const plan=(k,t,items,pro)=>`<div class="ep-plan${pro?' pro':''}${b.plan===k&&b.active?' on':''}"><div class="ep-ph"><b>${t}</b><span>${pxs(k,P[k]?money(P[k],'USD'):'')}<small> a month</small></span></div><ul>${items.map(x=>`<li>${ic('check')}${esc(x)}</li>`).join('')}</ul>
-    <button class="btn ${pro?'':'primary'} block" data-a="epPlan" data-k="${k}"${EPS.busy===k?' disabled':''}>${EPS.busy===k?'One moment…':!M.trialUsed&&!b.active?'Start 7 days free · no card':b.plan===k&&b.active?'Add 1 more month · '+money(P[k],'USD'):'Pay 1 month · '+money(P[k],'USD')}</button></div>`;
-  const plans=`<h3 class="ep-h3">Plans</h3>${plan('ep_basic','Event Partner',['Your page with services and prices','Up to 10 services','Families send you requests'],false)}${plan('ep_pro','Event Partner Pro',['Everything in Event Partner','Unlimited services','Shown first in your city, marked "Sponsored"','Host Introduction Evenings (Host plan included)','Page views and requests'],true)}${plan('ep_host','Host plan',['Host Introduction Evenings at your place','Set your dinner price and keep it','Guest list with first names and door codes'],false)}${b.active&&['ep_pro','ep_host'].includes(b.plan)&&b.verified?`<button class="btn gold block" data-a="ivHost">${ic('users')}Host Introduction Evenings</button>`:''}
+    <button class="btn ${pro?'':'primary'} block" data-a="epPlan" data-k="${k}"${EPS.busy===k?' disabled':''}>${EPS.busy===k?'One moment…':!M.trialUsed&&!b.active?'Start 7 days free · no card':b.plan===k&&b.active?'Add 1 more month · '+pxs(k,money(P[k],'USD')):'Pay 1 month · '+pxs(k,money(P[k],'USD'))}</button></div>`;
+  const plans=`<h3 class="ep-h3">Plans</h3>${plan('ep_basic','Basic',['Your page with services and prices','Up to 10 services','Families send you requests'],false)}${plan('ep_pro','Featured',['Everything in Basic','Unlimited services','Shown before Basic partners, marked "Featured"','Host Introduction Evenings (Host plan included)','Page views and requests'],true)}${plan('ep_host','Host plan',['Host Introduction Evenings at your place','Set your dinner price and keep it','Guest list with first names and door codes'],false)}${b.active&&['ep_pro','ep_host'].includes(b.plan)&&b.verified?`<button class="btn gold block" data-a="ivHost">${ic('users')}Host Introduction Evenings</button>`:''}
+${b.active&&!isNative?`<div class="ep-plan"><div class="ep-ph"><b>Sponsored week</b><span>${pxs('ep_sponsor','CA$150')}<small> a week</small></span></div><ul><li>${ic('check')}Top of the list in your country for 7 days</li><li>${ic('check')}Marked "Sponsored"</li></ul><button class="btn primary block" data-a="epSponsor"${EPS.busy==='sp'?' disabled':''}>${EPS.busy==='sp'?'One moment…':'Pay 1 week · '+pxs('ep_sponsor','CA$150')}</button></div>`:''}
     <p class="ep-fine">${isNative?'Plans are paid on the NeuMarry website, not in this app.':'Paid once with PayPal. Nothing renews by itself.'} NeuMarry takes no share of what families pay you.</p>`;
   const reqs=`<h3 class="ep-h3">Requests from families <small>${(M.requests||[]).length}</small></h3>${(M.requests||[]).length?(M.requests||[]).map(r=>`<div class="ep-req"><b>${esc(r.name)}${r.guests?' · '+r.guests+' guests':''}</b><small>${r.date?esc(new Date(r.date+'T12:00:00').toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'})):'Date open'}${r.note?' · '+esc(r.note):''}</small>${r.email?`<a class="link" href="mailto:${esc(r.email)}">${esc(r.email)}</a>`:''}</div>`).join(''):`<p class="ep-fine">No requests yet. Families can send one once your page is showing.</p>`}`;
   return shell(status+plans+svc+reqs+form)}
@@ -4829,7 +4830,7 @@ function renderEPB(full){if(EPS.mine===undefined)setTimeout(epLoadMine,0);const 
   const _w=renderWelcome;renderWelcome=function(){if(EPS.full)return renderEPB(true);
     if(EP_ON()&&bizMode()&&!(API.email&&API.email()))return `<div class="ep-full"><div class="scroll" id="main"><div class="main-inner pad ep-in ep-welc">
       <img src="img/nm-mark.png" alt="" class="ep-mk"><h1>NeuMarry Event Partners</h1><p>Show families your venue or wedding service, with your prices. 7 days free, no card.</p>
-      <ul class="ep-svc"><li><span>Event Partner</span><b>${pxs('ep_basic','US$29')} a month</b></li><li><span>Event Partner Pro</span><b>${pxs('ep_pro','US$59')} a month</b></li></ul>
+      <ul class="ep-svc"><li><span>Basic</span><b>${pxs('ep_basic','CA$49')} a month</b></li><li><span>Featured</span><b>${pxs('ep_pro','CA$99')} a month</b></li><li><span>Sponsored week</span><b>${pxs('ep_sponsor','CA$150')} a week</b></li></ul>
       <button class="btn primary block" data-a="start">Create my business account</button><button class="btn ghost block" data-a="login">I already have an account</button>
       <button class="link" data-a="epNotBiz">I am looking for a partner, not a business</button></div></div></div>`;
     return _w.apply(this,arguments)};
@@ -4861,7 +4862,7 @@ function renderEPB(full){if(EPS.mine===undefined)setTimeout(epLoadMine,0);const 
       EPS.busy='svc';render();try{const n=await API.rpc('ep_services',{svc,cur:epCur()});toast(n+' service'+(n===1?'':'s')+' saved.','tick2');EPS.busy='';await epLoadMine()}
       catch(e){EPS.busy='';render();toast(/too many/.test(epErr(e))?'Too many services for this plan.':'Could not save. Please try again.','info')}},
     async epPlan(el){const k=el.dataset.k,M=EPS.mine||{},b=M.biz;if(!b)return;EPS.busy=k;render();
-      try{if(!M.trialUsed&&!b.active){await API.rpc('start_trial15',{bid:b.id,prod:k});toast('Your 14 free days have started. No card, nothing renews by itself.','tick2')}
+      try{if(!M.trialUsed&&!b.active){await API.rpc('start_trial15',{bid:b.id,prod:k});toast('Your 7 free days have started. No card, nothing renews by itself.','tick2')}
         else{await API.rpc('buy_biz_plan15',{bid:b.id,prod:k});toast('Paid. Your page shows for one more month.','tick2')}}
       catch(e){const m=epErr(e);if(/trial used/.test(m))toast('Your free days were already used. Please pick a paid month.','info')}
       EPS.busy='';await epLoadMine()},
@@ -5770,7 +5771,7 @@ html.nmf:not(.gl-lt) .n7-foot h4{color:#2E2A31}
       <div class="n22-fb">${f?`<div class="n22-fit"><div class="n22-big">${f}<span>%</span></div><div><small>Fit with you</small><div class="n22-bar"><i style="width:${f}%"></i></div></div></div>`:''}
         ${w.length?`<div class="n22-why">${w.map((t,i)=>`<div><span><img src="img/pl/${th[i%3]}.webp" alt=""></span>${esc(t)}</div>`).join('')}</div>`:''}
         ${vchips(p).length?`<div class="n22-vc">${vchips(p).map(c=>`<span class="${c[0]}">${c[1]}</span>`).join('')}</div>`:''}
-        ${acts(p)}</div></div>`}
+        ${acts(p)}${window.NM_SUPER_BTN?window.NM_SUPER_BTN(p):''}</div></div>`}
   function mini(p){const f=fit(p);return `<button class="n22-nx" data-a="${rev(p)?'open':'reveal'}" data-id="${p.id}"><img src="${rootImg(p.oc)}" alt=""><span><b>${title(p)}</b><small>${routeTxt(p)}</small></span>${f?`<em>${f}%</em>`:''}</button>`}
   function forYou(){let list=[];try{list=matchList()}catch(e){}
     const live=(()=>{try{return isLive()}catch(e){return true}})();
@@ -5780,12 +5781,14 @@ html.nmf:not(.gl-lt) .n7-foot h4{color:#2E2A31}
     let out='';
     if(live&&picks.length){out+=`<div class="n22-fh"><div><small>YOUR MATCHES TODAY</small><h2>${picks.length} introduction${picks.length===1?'':'s'}</h2></div><span class="n22-cd">New in ${countdown()}</span></div>${featured(picks[0])}`;
       if(picks.length>1)out+=`<div class="n22-nxs">${picks.slice(1).map(mini).join('')}</div>`;
+      if(window.NM_SPOT_ROW)out+=window.NM_SPOT_ROW(list,mini);
       out+=`<button class="n22-all" data-a="n22All"><span><b>See all members</b><small>${list.length} ${list.length===1?'person fits':'people fit'} you · browse everyone</small></span><i>→</i></button>`}
     else out+=`<div class="n22-fh"><div><small>YOUR INTRODUCTIONS</small><h2>${live?'New members soon':'Get introduced every morning'}</h2></div></div>
       <div class="n22-empty"><img src="img/pl/to.webp" alt=""><div><b>${live?'New members of your roots appear here as they join':'You are '+pct+'% verified'}</b><small>${live?'Your Matches tab shows everyone who fits you today.':'Finish your checks to go live. People of your roots in your city, picked for your values.'}</small>${live?'':`<button data-a="cnme">Continue</button>`}</div></div>`;
     const r=recv();
-    if(r.length)out+=sec('They said yes to you','Real members, waiting for your answer')+`<button class="n22-yy" data-a="goLikes"><span class="n22-yt">${r.slice(0,4).map(p=>`<i><img src="${rootImg(p.oc)}" alt=""></i>`).join('')}</span><span class="n22-yc"><b>${r.length} ${r.length===1?'person':'people'} said yes</b><small>See who and answer${isGold()?'':' with Gold'}.</small><em>See who</em></span></button>`;
+    if(r.length)out+=sec('They said yes to you','Real members, waiting for your answer')+`<button class="n22-yy" data-a="goLikes"><span class="n22-yt">${r.slice(0,4).map(p=>`<i><img src="${rootImg(p.oc)}" alt=""></i>`).join('')}</span><span class="n22-yc"><b>${r.length} ${r.length===1?'person':'people'} said yes</b><small>${(()=>{const n=r.filter(p=>window.NM_SUPER_IN&&window.NM_SUPER_IN.has(p.id)).length;return n?`${n} Super Intro${n>1?'s':''}: you can answer without Gold.`:`See who and answer${isGold()?'':' with Gold'}.`})()}</small><em>See who</em></span></button>`;
     if(typeof window.NM_BOOST_CARD==='function')out+=window.NM_BOOST_CARD();
+    if(typeof window.NM_EXTRAS_CARD==='function')out+=window.NM_EXTRAS_CARD();
     if(!isGold()){let L=null;try{L=price()}catch(e){}
       if(L&&L.sym)out+=sec('Plans','Find your person faster','gold')+`<div class="n22-pl"><button class="n22-pc" data-a="nmfGo" data-k="gold">${(()=>{const o=S.px&&S.px.gold_m3&&S.px.gold_m3.was?S.px.gold_m3:null;return o?`<em class="n22-off">${o.pct}% OFF · NEW YEAR</em>`:''})()}<small>GOLD · 3 MONTHS</small><b>${esc(L.sym+L.pm3)}<i>/month</i></b><s>${esc(L.sym+L.m3)} in total${(()=>{const o=S.px&&S.px.gold_m3&&S.px.gold_m3.was;return o?` <del>${esc(L.sym+(o/100).toFixed(2))}</del>`:''})()}</s><ul><li>See who said yes</li><li>Chat after a yes</li><li>Family can view</li></ul><span>Choose</span></button>
         <button class="n22-pc on" data-a="nmfGo" data-k="gold"><em>BEST VALUE</em><small>GOLD · 6 MONTHS</small><b>${esc(L.sym+L.pm6)}<i>/month</i></b><s>${esc(L.sym+L.m6)} in total</s><ul><li>Everything in Gold</li><li>Lowest price a month</li><li>Cancel any time</li></ul><span>Choose</span></button></div>`}
@@ -5802,12 +5805,12 @@ html.nmf:not(.gl-lt) .n7-foot h4{color:#2E2A31}
     return `<div class="cn-page n22-pg"><div class="scroll" id="main">${head(k)}<div class="n22-bd">${body(k)}<div class="n22-foot"><h4>Marry smart.<br>Stay rooted.</h4><p>NeuCoNet Private Limited</p></div></div></div></div>`}
 
   /* ---------- Matches tab: grid of roots-place cards ---------- */
-  function card(p){const f=fit(p);return `<div class="n22-mc"><button class="n22-mp" data-a="${rev(p)?'open':'reveal'}" data-id="${p.id}"><img src="${rootImg(p.oc)}" alt="">${f?`<span class="n22-fp">${f}%</span>`:''}<span class="n22-mn"><b>${title(p)}</b><small>${routeTxt(p)}</small></span></button>
+  function card(p){const f=fit(p);return `<div class="n22-mc"><button class="n22-mp" data-a="${rev(p)?'open':'reveal'}" data-id="${p.id}"><img src="${rootImg(p.oc)}" alt="">${f?`<span class="n22-fp">${f}%</span>`:''}${window.NM_SUPER_IN&&window.NM_SUPER_IN.has(p.id)?'<span class="n22-sup">Super Intro</span>':''}<span class="n22-mn"><b>${title(p)}</b><small>${routeTxt(p)}</small></span></button>
     ${vchips(p).length?`<div class="n22-vc">${vchips(p).map(c=>`<span class="${c[0]}">${c[1]}</span>`).join('')}</div>`:''}${acts(p)}</div>`}
   function matches(){const seg=S.n22m||'for';let list=[];try{list=matchList()}catch(e){}
     let all=[];try{all=PROFILES.filter(p=>baseEligible(p)&&!p.paused)}catch(e){}
     const r=recv();const sl=all.filter(p=>(S.shortlist||[]).includes(p.id));
-    const L=seg==='yes'?r:seg==='sl'?sl:seg==='all'?all.filter(p=>S.interests[p.id]!=='declined'):list.slice().sort((a,b)=>(BST(b)-BST(a))||(fit(b)-fit(a)));
+    const SUP=p=>(window.NM_SUPER_IN&&window.NM_SUPER_IN.has(p.id))?1:0;const L=seg==='yes'?r.slice().sort((a,b)=>SUP(b)-SUP(a)):seg==='sl'?sl:seg==='all'?all.filter(p=>S.interests[p.id]!=='declined'):list.slice().sort((a,b)=>(BST(b)-BST(a))||(fit(b)-fit(a)));
     const SG=[['for','For you',0],['yes','Said yes',r.length],['sl','Shortlist',0],['all','All',0]];
     const empty={for:'No one fits your filters yet. Widen age or distance in Me.',yes:'No one has said yes yet. Your introductions start the conversation.',sl:'Save people you like and they wait here.',all:'No members yet.'}[seg];
     return `<div class="cn-page n22-pg"><div class="scroll" id="main"><div class="n22-mh"><img class="n22-hb" src="img/pl/hall.webp" alt=""><i class="n22-ov"></i><div class="n22-mt"><small>PEOPLE OF YOUR ROOTS</small><h1>Matches</h1><p>${list.length} member${list.length===1?'':'s'} fit your plans</p></div>
@@ -5960,6 +5963,7 @@ html.nmf:not(.gl-lt) .n22-vc span.ok{background:#12301F;color:#8FE0B5;border-col
 .n22-mc .n22-vc,.n22-mc .n22-two{margin:10px 8px 0}.n22-mc .n22-vc{margin-top:8px}
 .n22-mc .n22-two{margin-top:auto;padding-top:10px;gap:6px}.n22-mc .n22-x,.n22-mc .n22-y{height:42px;font-size:14px}
 .n22-mc .n22-done{font-size:13px;padding:10px}
+.n22-sup{position:absolute;z-index:1;top:8px;left:8px;font-size:12px;font-weight:800;background:#fff;color:#5C0A25;padding:4px 8px;border-radius:8px}
 .n22-fine{font-size:13px;color:var(--mut);margin:16px 2px 0}
 @media (prefers-reduced-motion:reduce){.n22-hb,.n22-rot,.n22-bar i{animation:none}}
 `;
@@ -6034,6 +6038,109 @@ html.nmf:not(.gl-lt) .n22-vc span.ok{background:#12301F;color:#8FE0B5;border-col
 .n23-on{display:flex;gap:12px;align-items:center;margin-top:24px;background:linear-gradient(120deg,#5C0A25,#3B0618);color:#fff;border-radius:20px;padding:12px}
 .n23-on img{width:92px;aspect-ratio:3/2;object-fit:cover;border-radius:12px;flex:none}
 .n23-on small{font-size:12px;font-weight:800;letter-spacing:.12em;opacity:.85}.n23-on b{display:block;font-family:NMPF,serif;font-size:20px}.n23-on span{font-size:13px;opacity:.9}
+`;
+  const s=document.createElement('style');s.textContent=css;document.head.appendChild(s);
+})();
+
+/* ---------- NeuMarry Super Intro, Travel Pass, Weekend Spotlight, Sponsored week for wedding partners (his ok 16 Nov 2026 09:18).
+   Super Intro: a yes that arrives on top with a mark; it can be sent and answered without Gold (sender ID + selfie checked).
+   Travel Pass: 30 days of matches in a city you choose. Weekend Spotlight: your card on top of Home for people who fit you,
+   Friday to Sunday. All paid on the website with PayPal (pay15 flow); nothing is bought inside the Android app. ---------- */
+(function(){
+  const ON=()=>!!window.NM_APP;
+  const E={d:null,at:0,busy:'',tc:'',tcity:''};
+  window.NM_SUPER_IN=new Set();window.NM_SPOT=new Set();
+  const money=(c,cur)=>{try{return new Intl.NumberFormat('en-US',{style:'currency',currency:cur}).format(c/100)}catch(e){return (c/100).toFixed(2)+' '+cur}};
+  const pr=k=>{const p=E.d&&E.d.prices&&E.d.prices[k];return p&&p.cents?money(p.cents,p.currency):''};
+  const sold=k=>{const p=E.d&&E.d.prices&&E.d.prices[k];return p&&p.cents&&p.sell!==false};
+  const day=t=>new Date(t).toLocaleDateString('en',{weekday:'short',day:'numeric',month:'short',timeZone:'UTC'});
+  async function load(force){if(!ON()||!S.me)return;if(!force&&Date.now()-E.at<60e3)return;E.at=Date.now();
+    try{E.d=await API.rpc('my_extras15');window.NM_SUPER_IN=new Set(E.d.super_in||[]);window.NM_SPOT=new Set(E.d.spot||[]);
+      const t=E.d.travel;window.NM_TRAVEL=t?{country:t.country,city:t.city}:null;if(S.tab==='matches'||S.tab==='mlist')render()}catch(e){}}
+
+  /* Travel Pass: people in the travel city's country count as in range, measured from the travel city */
+  const _pf=passFilters;passFilters=function(p,o){const T=window.NM_TRAVEL;
+    if(ON()&&T&&p&&p.country===T.country&&p.country!==(S.me&&S.me.country)){const me=S.me,pf=Object.assign({},me.prefs,o||{});
+      if(!_pf(p,Object.assign({},o||{},{liveCountry:'Any',radius:0})))return false;
+      const a=coordsOf({country:T.country,city:T.city}),b=pCoords(p);const r=pf.radius>0?pf.radius:150;return !(a&&b)||hav(a,b)<=r}
+    return _pf.apply(this,arguments)};
+
+  /* Super Intro button under today's introduction */
+  window.NM_SUPER_BTN=function(p){if(!E.d||S.interests[p.id])return '';const n=E.d.sintro||0;
+    if(n)return `<button class="n24-sb" data-a="n24Super" data-id="${p.id}"><b>Send a Super Intro</b><small>Arrives on top, marked. ${n} left</small></button>`;
+    if(isNative||!sold('sintro_1'))return '';
+    return `<button class="n24-sb" data-a="n24Packs"><b>Super Intro · from ${esc(pr('sintro_1'))}</b><small>Your yes arrives on top, marked. Works without Gold.</small></button>`};
+
+  /* Spotlight row on Home: real members who fit you and booked this weekend */
+  window.NM_SPOT_ROW=function(list,mini){const sp=(list||[]).filter(p=>window.NM_SPOT.has(p.id)).slice(0,4);if(!sp.length)return '';
+    return `<div class="n22-sec"><div><h2>In the spotlight</h2><p>This weekend, among people who fit you</p></div></div><div class="n22-nxs">${sp.map(mini).join('')}</div>`};
+
+  /* More ways to be seen: Super Intro packs, Travel Pass, Weekend Spotlight */
+  window.NM_EXTRAS_CARD=function(){const d=E.d;if(!d)return '';
+    const t=d.travel,sp=d.spotlight,n=d.sintro||0;
+    const buy=!isNative;
+    const packs=buy&&sold('sintro_1')?`<div class="n24-pk">${[['sintro_1','1'],['sintro_3','3'],['sintro_10','10']].map(([k,l],i)=>`<button class="n24-p${i===1?' on':''}" data-a="n24Pack" data-k="${k}"><b>${l}</b><small>Super Intro${l==='1'?'':'s'}</small><strong>${esc(pr(k))}</strong></button>`).join('')}</div>`:'';
+    const superT=`<div class="n24-t"><img src="img/p15/rings.webp" alt=""><div class="n24-tb"><small>SUPER INTRO</small><b>Your yes, on top</b><span>Arrives first in their list with a mark. They can answer and chat without Gold.${n?` You have ${n}.`:''}</span>${packs}</div></div>`;
+    let travelT='';
+    if(t)travelT=`<div class="n24-t"><img src="img/pl/to.webp" alt=""><div class="n24-tb"><small>TRAVEL PASS · ON</small><b>Matching in ${esc(t.city)}</b><span>Until ${esc(day(t.until))}. People there who fit you show in Matches.</span><div class="n24-row"><button class="n24-g" data-a="n24TravelOpen">Change city</button><button class="n24-g" data-a="n24TravelStop">Stop</button></div>${E.tOpen?travelPick(true):''}</div></div>`;
+    else if(buy&&sold('travel_pass'))travelT=`<div class="n24-t"><img src="img/pl/to.webp" alt=""><div class="n24-tb"><small>TRAVEL PASS</small><b>Match in another city</b><span>30 days of matches in a city you pick, before you move or while you visit. ${esc(pr('travel_pass'))}, paid once.</span>${E.tOpen?travelPick(false):`<button class="n24-go" data-a="n24TravelOpen">Pick a city</button>`}</div></div>`;
+    let spotT='';
+    if(sp)spotT=`<div class="n24-t"><img src="img/pl/lights.webp" alt=""><div class="n24-tb"><small>WEEKEND SPOTLIGHT · BOOKED</small><b>${esc(day(sp.from))} to ${esc(day(new Date(Date.parse(sp.until)-1)))}</b><span>Your card shows on top of Home for people who fit you.</span></div></div>`;
+    else if(buy&&sold('spotlight'))spotT=`<div class="n24-t"><img src="img/pl/lights.webp" alt=""><div class="n24-tb"><small>WEEKEND SPOTLIGHT</small><b>On top of Home, Friday to Sunday</b><span>People who fit you see your card first, all weekend. ${esc(pr('spotlight'))}, paid once.</span><button class="n24-go" data-a="n24Spot"${E.busy==='spot'?' disabled':''}>${E.busy==='spot'?'One moment…':'Book this weekend'}</button></div></div>`;
+    if(!(packs||n||travelT||spotT))return '';
+    return `<div class="n22-sec"><div><h2>More ways to be seen</h2><p>Paid once. No subscription.</p></div></div><div class="n24-list">${superT}${travelT}${spotT}</div>`};
+  function travelPick(change){const cs=(typeof COUNTRIES!=='undefined'?COUNTRIES:[]).map(c=>c[0]);const c=E.tc||'';
+    const cities=c?(typeof ALL_CITIES!=='undefined'?ALL_CITIES:[]).filter(x=>x[1]===c).map(x=>x[0]):[];
+    return `<div class="n24-pick"><select id="n24-c" data-a="n24TC" aria-label="Country"><option value="">Country</option>${cs.map(x=>`<option${x===c?' selected':''}>${esc(x)}</option>`).join('')}</select>
+      <select id="n24-ci" aria-label="City"${c?'':' disabled'}><option value="">City</option>${cities.map(x=>`<option${x===E.tcity?' selected':''}>${esc(x)}</option>`).join('')}</select>
+      <button class="n24-go" data-a="n24TravelGo"${E.busy==='tr'?' disabled':''}>${E.busy==='tr'?'One moment…':change?'Save city':'Start Travel Pass · '+esc(pr('travel_pass'))}</button></div>`}
+  const err=e=>typeof em15==='function'?em15(e):String(e&&e.message||e);
+  Object.assign(A,{
+    n24Packs(){const el=document.querySelector('.n24-pk');if(el)el.scrollIntoView({behavior:'smooth',block:'center'})},
+    async n24Pack(el){if(E.busy)return;E.busy='pk';try{const r=await API.rpc('sintro_buy15',{pack:el.dataset.k});toast(`Ready: ${r&&r.left} Super Intro${r&&r.left===1?'':'s'} to send.`,'tick2')}catch(e){}E.busy='';await load(true);render()},
+    async n24Super(el){if(E.busy)return;if(typeof needVerified==='function'&&needVerified())return;const id=el.dataset.id;E.busy='su';
+      try{await API.rpc('super_intro15',{to_:id});S.interests[id]='sent';save();toast('Super Intro sent. It arrives on top of their list.','heart')}
+      catch(e){const m=err(e);toast(/verify first/.test(m)?'Finish your ID and selfie check first.':/already sent/.test(m)?'You already said yes to this person.':'Could not send. Please try again.','info')}
+      E.busy='';await load(true);render()},
+    n24TravelOpen(){E.tOpen=!E.tOpen;render()},
+    n24TC(el){},
+    async n24TravelGo(){const c=(document.getElementById('n24-c')||{}).value,ci=(document.getElementById('n24-ci')||{}).value;
+      if(!c||!ci){toast('Pick a country and a city.','info');return}E.busy='tr';render();
+      try{const r=await API.rpc('travel_start15',{cty:ci,ctry:c});E.tOpen=false;toast(`Travel Pass on: matching in ${ci}.`,'tick2');await loadCards();}
+      catch(e){if(!/payments are not open/.test(err(e)))toast('Could not start. Please try again.','info')}
+      E.busy='';await load(true);render()},
+    async n24TravelStop(){try{await API.rpc('travel_stop15');toast('Travel Pass stopped. Matching at home again.','info');await loadCards()}catch(e){}await load(true);render()},
+    async n24Spot(){E.busy='spot';render();try{const r=await API.rpc('spotlight_start15');toast(`Weekend Spotlight booked: ${day(r.from)} to ${day(Date.parse(r.until)-1)}.`,'tick2')}
+      catch(e){const m=err(e);if(/already booked/.test(m))toast('Your Spotlight is already booked.','info')}E.busy='';await load(true);render()},
+    async epSponsor(){const b=EPS.mine&&EPS.mine.biz;if(!b)return;EPS.busy='sp';render();
+      try{const r=await API.rpc('buy_ep_sponsor15',{bid:b.id});toast('Sponsored until '+new Date(r.sponsoredUntil).toLocaleDateString('en',{day:'numeric',month:'short'})+'. You show on top of the list.','tick2')}
+      catch(e){if(/plan first/.test(err(e)))toast('Start a plan first, then add a Sponsored week.','info')}
+      EPS.busy='';await epLoadMine()}});
+  /* country choice re-renders the city list (select change) */
+  document.addEventListener('change',e=>{const t=e.target;if(t&&t.id==='n24-c'){E.tc=t.value;E.tcity='';render()}if(t&&t.id==='n24-ci')E.tcity=t.value});
+  /* a Super Intro can be answered without Gold */
+  const _acc=A.accept;A.accept=async function(el){const id=el.dataset.id;
+    if(ON()&&!isGold()&&window.NM_SUPER_IN.has(id)){if(needVerified())return;
+      try{await API.update('interests',{from_user:'eq.'+id,to_user:'eq.'+S.me.id},{status:'accepted'});S.interests[id]='mutual';await refreshCards([id]);ensureMatchChats();celebrate={id};render()}catch(e){fail(e)}return}
+    return _acc.apply(this,arguments)};
+  const _lm=loadMe;loadMe=async function(){const r=await _lm.apply(this,arguments);if(ON()&&S.me)setTimeout(()=>load(true),500);return r};
+  const _r=render;render=function(){const o=_r.apply(this,arguments);if(ON()&&(S.tab==='matches'||S.tab==='mlist'))load(false);return o};
+  const css=`
+.n24-sb{display:block!important;width:100%;margin-top:10px;text-align:center!important;border:1.5px dashed var(--rose)!important;border-radius:14px;padding:10px!important}
+.n24-sb b{display:block;color:var(--rose);font-size:15px;font-weight:800}.n24-sb small{font-size:12px;color:var(--mut)}
+.n24-list{display:grid;gap:12px}
+.n24-t{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:12px}
+.n24-t>img{width:92px;aspect-ratio:3/2;object-fit:cover;border-radius:12px;flex:none}
+.n24-tb{flex:1;min-width:0}.n24-tb small{font-size:12px;font-weight:800;letter-spacing:.1em;color:var(--rose)}.n24-tb b{display:block;font-size:16px;margin-top:2px}
+.n24-tb>span{display:block;font-size:13px;color:var(--mut);margin-top:3px}
+.n24-go{margin-top:10px;background:var(--rose)!important;color:#fff!important;font-weight:800;font-size:14px;padding:9px 14px!important;border-radius:11px}
+.n24-g{margin-top:10px;background:var(--bg)!important;border:1px solid var(--line)!important;font-weight:800;font-size:14px;padding:8px 12px!important;border-radius:11px}
+.n24-row{display:flex;gap:8px}
+.n24-pk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:10px}
+.n24-p{display:flex!important;flex-direction:column;align-items:center!important;text-align:center!important;border:1px solid var(--line)!important;border-radius:12px;padding:8px 2px!important;background:var(--bg)!important}
+.n24-p.on{border:2px solid var(--rose)!important}.n24-p b{font-size:18px;font-weight:800}.n24-p small{font-size:11px;color:var(--mut)}.n24-p strong{font-size:14px;font-weight:800;margin-top:2px;white-space:nowrap}
+.n24-pick{display:grid;gap:8px;margin-top:10px}
+.n24-pick select{width:100%;height:44px;border-radius:11px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-size:15px;padding:0 10px}
 `;
   const s=document.createElement('style');s.textContent=css;document.head.appendChild(s);
 })();
