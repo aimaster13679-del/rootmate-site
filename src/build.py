@@ -56,7 +56,7 @@ def page_meta(slug):
     get = lambda k: re.search(r'<!--%s: (.*?)-->' % k, t).group(1)
     return dict(slug=slug, title=get('title'), desc=get('desc'), short=get('short'), kind=get('kind'), body=re.sub(r'<!--.*?-->\n?', '', t))
 P = [page_meta(p) for p in PAGES]
-TODAY = '2026-10-22'
+TODAY = '2026-11-16'  # last real change of the pages (new home look 16 Nov 2026); update when pages change
 OG = SITE + 'og-image.png'
 def esc(x): return x.replace('&', '&amp;').replace('"', '&quot;').replace('<', '&lt;')
 def social(title, desc, url, kind='website'):
