@@ -5286,7 +5286,7 @@ function admWho(id){if(!(S.me&&S.me.isAdmin))return '';a3whoLoad(id);const m=A3.
       const lt=de.classList.contains('gl-lt');const st=(hd||!lt||S.screen==='welcome')?'DARK':'LIGHT';
       render._bar=S.screen==='welcome'?'DARK':'LIGHT';/* keeps the older bar code quiet; this block decides */
       if(st!==window.__sapBar){window.__sapBar=st;const B=Plug().SystemBars;if(B&&B.setStyle)B.setStyle({style:st}).catch(()=>{})}
-      const m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',hd?'#0F1B3D':(lt?'#F1F2F4':'#0B1226'))}catch(e){}
+      const m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',hd?'#3B0618':(lt?'#FAF6F7':'#100C0F'))}catch(e){}
     return out};
   const SAPTABS=[['ring','For you','sort-best'],['globe','Same roots','roots'],['ticket','Events','events'],['dish','First meet','meet'],['home','Family','family'],['crown','Gold','gold']];
   function sapHead(){const me=S.me||{};const city=esc(me.cityName||me.city||'');const nm=esc(((me.name||'').split(' ')[0])||'');
@@ -5788,7 +5788,7 @@ html.nmf:not(.gl-lt) .n7-foot h4{color:#2E2A31}
       if(window.NM_SPOT_ROW)out+=window.NM_SPOT_ROW(list,mini);
       out+=`<button class="n22-all" data-a="n22All"><span><b>See all members</b><small>${list.length} ${list.length===1?'person fits':'people fit'} you · browse everyone</small></span><i>→</i></button>`}
     else out+=`<div class="n22-fh"><div><small>YOUR INTRODUCTIONS</small><h2>${live?'New members soon':'Get introduced every morning'}</h2></div></div>
-      <div class="n22-empty"><img src="img/pl/to.webp" alt=""><div><b>${live?'New members of your roots appear here as they join':'You are '+pct+'% verified'}</b><small>${live?'Your Matches tab shows everyone who fits you today.':'Finish your checks to go live. People of your roots in your city, picked for your values.'}</small>${live?'':`<button data-a="cnme">Continue</button>`}</div></div>`;
+      <div class="n22-empty"><img src="img/pl/to.webp" alt=""><div><b>${live?'New members of your roots appear here as they join':'ID checks: '+(pct/20)+' of 5 done'}</b><small>${live?'Your Matches tab shows everyone who fits you today.':'Members go live when all 5 checks are done. Then people of your roots in your city, picked for your values, appear here.'}</small>${live?'':`<button data-a="goVerify" data-n="1">Continue checks</button>`}</div></div>`;
     const r=recv();
     if(r.length)out+=sec('They said yes to you','Real members, waiting for your answer')+`<button class="n22-yy" data-a="goLikes"><span class="n22-yt">${r.slice(0,4).map(p=>`<i><img src="${rootImg(p.oc)}" alt=""></i>`).join('')}</span><span class="n22-yc"><b>${r.length} ${r.length===1?'person':'people'} said yes</b><small>${(()=>{const n=r.filter(p=>window.NM_SUPER_IN&&window.NM_SUPER_IN.has(p.id)).length;return n?`${n} Super Intro${n>1?'s':''}: you can answer without Gold.`:`See who and answer${isGold()?'':' with Gold'}.`})()}</small><em>See who</em></span></button>`;
     out+=seenCard();
@@ -6193,6 +6193,110 @@ html.nmf:not(.gl-lt) .n22-vc span.ok{background:#12301F;color:#8FE0B5;border-col
   async function partnerRenew(){try{const B=Bill();if(!B||!S.me)return;const r=await B.restore();
     for(const p of ((r&&r.purchases)||[]).filter(x=>(x.products||[]).includes(SUBP)&&x.state===1))await API.fn('play15',{productId:SUBP,purchaseToken:p.purchaseToken}).catch(()=>{})}catch(e){}}
   const _lm=loadMe;loadMe=async function(){const r=await _lm.apply(this,arguments);if(window.NM_PLAY&&window.NM_PLAY()&&S.me)setTimeout(partnerRenew,3000);return r};
+})();
+
+/* ---------- NeuMarry v14 "Me" page + phone bars (his ask 16 Nov 2026 17:08: "Me" still looked old, black icons on black,
+   20% on Home vs 57% inside was confusing). NeuMarry app only (window.NM_APP), for every member (no admin-only stage).
+   - Same wine header as Home with the member's own photo (rounded rectangle, never a circle).
+   - Two clear numbers, named the same everywhere: "Profile N% complete" and "ID checks N of 5".
+   - Every door is a real photo tile (3:2, whole photo), no small icons.
+   - Phone top bar takes the header colour, bottom bar the tab bar colour (Bars plugin; older builds ignore it). ---------- */
+(function(){
+  const ON=()=>!!window.NM_APP;
+  const checksOf=me=>{const v=(me&&me.v)||{};let ph=false;try{ph=photoOk()}catch(e){ph=!!(me&&me.photo)}return [ph,v.id,v.selfie,v.roots,v.lives].filter(Boolean).length};
+  window.NM_CHECKS=checksOf;
+  const flagOf=n=>{try{return flag(n)}catch(e){return ''}};
+  const tile=(a,k,img,t,s,extra)=>`<button type="button" class="n26-t" data-a="${a}"${k?` data-k="${k}"`:''}${extra||''}><span class="n26-ti"><img src="img/pl/${img}.webp" alt=""></span><b>${esc(t)}</b><small>${esc(s)}</small></button>`;
+
+  function hero(src){const me=S.me||{};const pct=completeness(me),n=checksOf(me);const parts=String(me.name||'').trim().split(/\s+/);
+    const nm=esc(parts[0]||'')+(parts[1]?' '+esc(parts[1][0])+'.':'')+(me.age?', '+me.age:'');
+    const plan=me.plan==='gold'?'Gold member':me.plan==='concierge'?'Concierge member':'Free member';
+    const ph=me.photo?`<img src="${esc(me.photo)}" alt="Your photo">`:`<span class="n26-np">${esc(initials(me.name)||'')}</span>`;
+    const seg=[0,1,2,3,4].map(i=>`<i class="${i<n?'on':''}"></i>`).join('');
+    const has=x=>src.includes('data-a="'+x+'"');
+    const tiles=[
+      tile('funGo','.v2card,.panel.v2','dinner','Family circle','Share a match with family'),
+      tile('funGo','.v2voice','mic','Voice intro','30 seconds · optional'),
+      tile(isGold()?'funGo':'upgrade',isGold()?'.likes':'','ringbox',isGold()?'Gold is on':'Gold','See who said yes',isGold()?'':' data-r="me"'),
+      tile('n26Boost','','lights','Be seen first','Boost, Super Intro, Travel Pass'),
+      has('ivList')?tile('ivList','','ev1','Introduction Evenings','Small dinners of your roots'):'',
+      has('epOpen')?tile('epOpen','','hall','Event Partners','Venues and wedding services'):'',
+      has('epBiz')?tile('epBiz','','ballroom','Your business','List a venue or service'):''
+    ].join('');
+    return `<div class="n22-pg n26"><div class="n26-hd"><img class="n26-hb" src="img/pl/elegant.webp" alt=""><i class="n26-ov"></i>
+      <div class="n26-top"><div class="n26-tx"><div class="n26-k">MY PROFILE · ${esc(plan.toUpperCase())}</div><div class="n26-nm">${nm}</div><div class="n26-rt">${flagOf(me.oc)} ${esc(me.os||me.oc||'')} → ${flagOf(me.country)} ${esc((()=>{try{return myPlace()}catch(e){return me.city||''}})())}</div></div><span class="n26-ph">${ph}</span></div>
+      <div class="n26-bt"><button data-a="edit">Edit profile</button><button data-a="previewMe">See it as others do</button></div></div>
+     <div class="n26-bd">
+      <div class="n26-two">
+       <button class="n26-st" data-a="edit"><small>PROFILE</small><b>${pct}%<em> complete</em></b><span class="n26-bar"><i style="width:${pct}%"></i></span><span class="n26-go${pct<100?'':' ok'}">${pct<100?'Finish profile':'All done'}</span></button>
+       <button class="n26-st" data-a="${n<5?'goVerify':'funGo'}" data-n="${me.v&&me.v.id&&me.v.selfie?(me.v.roots?3:2):1}" data-k=".vrow"><small>ID CHECKS</small><b>${n}<em> of 5 done</em></b><span class="n26-seg">${seg}</span><span class="n26-go${n<5?'':' ok'}">${n<5?'Continue checks':'All checks done'}</span></button>
+      </div>
+      <p class="n26-hint">${n<5?'Members go live when all 5 ID checks are done. A full profile gets more yeses.':'You are live. A full profile gets more yeses.'}</p>
+      <div class="n26-h">For you</div><div class="n26-g">${tiles}</div>
+     </div></div>`}
+
+  if(typeof renderMe==='function'){const _me=renderMe;renderMe=function(){const h=_me.apply(this,arguments);if(!ON())return h;
+    if(!/class="(fu-me|me-card|tpp)/.test(h)&&!h.includes('data-a="previewMe"'))return h;
+    try{const tp=document.createElement('template');tp.innerHTML=h;const R=sel=>tp.content.querySelectorAll(sel).forEach(e=>e.remove());
+      tp.content.querySelectorAll('.me-card').forEach(e=>{const p=e.closest('.panel');(p||e).remove()});
+      R('.topbar');R('.rl-mesig');R('.fu-me');R('.fu-tiles');R('.tpp');R('.fu-mepanel');R('.ep-me');R('.fu-t');
+      return hero(h)+'<div class="n26-rest">'+tp.innerHTML+'</div>'}catch(e){return h}}}
+
+  Object.assign(A,{n26Boost(){S.tab='matches';S.n22='seen';view=null;render();const m=document.getElementById('main');if(m)m.scrollTop=0}});
+
+  /* phone bars follow the screen: top = colour at the very top, bottom = tab bar / page colour */
+  const col=el=>{while(el&&el!==document.documentElement){const c=getComputedStyle(el).backgroundColor;if(c&&c!=='transparent'&&!/rgba\(.*,\s*0\)$/.test(c))return c;el=el.parentElement}return getComputedStyle(document.body).backgroundColor};
+  const hex=c=>{const m=String(c).match(/\d+(\.\d+)?/g);if(!m)return null;const [r,g,b]=m.map(Number);return '#'+[r,g,b].map(x=>Math.round(x).toString(16).padStart(2,'0')).join('').toUpperCase()};
+  const lum=h=>{const n=parseInt(h.slice(1),16);return ((n>>16)*299+((n>>8)&255)*587+(n&255)*114)/1000};
+  let last='';const bars=()=>{try{const B=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.Bars;if(!B||!ON())return;
+    const top=hex(col(document.elementFromPoint(innerWidth/2,2))),bot=hex(col(document.elementFromPoint(innerWidth/2,innerHeight-2)));if(!top||!bot)return;
+    const k=top+bot;if(k===last)return;last=k;B.set({top,bottom:bot,light:lum(top)>150,navLight:lum(bot)>150}).catch(()=>{})}catch(e){}};
+  const _r=render;render=function(){const o=_r.apply(this,arguments);if(ON())requestAnimationFrame(()=>setTimeout(bars,60));return o};
+  try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>setTimeout(bars,100))}catch(e){}
+
+  const css=`
+
+.n26-hd{position:relative;overflow:hidden;background:#3B0618;color:#fff;padding:calc(18px + env(safe-area-inset-top)) 16px 34px}
+.n26-hb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.45}
+.n26-ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(92,10,37,.72),rgba(59,6,24,.96))}
+.n26-top,.n26-bt{position:relative}
+.n26-top{display:flex;gap:14px;align-items:center;justify-content:space-between}
+.n26-tx{min-width:0}
+.n26-k{font-size:12px;font-weight:800;letter-spacing:.12em;opacity:.9}
+.n26-nm{font-family:NMPF,serif;font-weight:700;font-size:30px;line-height:1.15;margin:4px 0 4px;color:#fff;font-variant-numeric:lining-nums}
+.n26-rt{margin:0;font-size:15px;font-weight:600;opacity:.95}
+.n26-ph{width:92px;height:116px;flex:none;border-radius:18px;overflow:hidden;border:2px solid rgba(255,255,255,.55);box-shadow:0 10px 28px rgba(0,0,0,.3);background:#5C0A25;display:flex;align-items:center;justify-content:center}
+.n26-ph img{width:100%;height:100%;object-fit:cover;display:block}
+.n26-np{font-size:30px;font-weight:800;color:#fff}
+.n26-bt{display:flex;gap:10px;margin-top:18px}
+.n26-bt button{flex:1;height:46px;border-radius:14px!important;font-weight:800!important;font-size:15px;text-align:center!important}
+.n26-bt button:first-child{background:#fff!important;color:#3B0618!important}
+.n26-bt button:last-child{background:rgba(255,255,255,.14)!important;color:#fff!important;border:1px solid rgba(255,255,255,.35)!important}
+.n26-bd{position:relative;margin-top:-16px;background:var(--bg);border-radius:26px 26px 0 0;padding:20px 16px 8px}
+.n26-two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.n26-st{display:flex!important;flex-direction:column;gap:6px;background:var(--card)!important;border:1px solid var(--line)!important;border-radius:20px;padding:16px 14px!important}
+.n26-st small{font-size:12px;font-weight:800;letter-spacing:.12em;color:var(--rose)}
+.n26-st b{font-size:30px;font-weight:800;line-height:1.1;font-variant-numeric:lining-nums;color:var(--ink)}
+.n26-st b em{font-style:normal;font-size:14px;font-weight:700;color:var(--mut)}
+.n26-bar{display:block;height:8px;border-radius:6px;background:var(--line);overflow:hidden}.n26-bar i{display:block;height:100%;background:var(--rose);border-radius:6px}
+.n26-seg{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}.n26-seg i{height:8px;border-radius:4px;background:var(--line)}.n26-seg i.on{background:#14714A}
+.n26-go{margin-top:6px;text-align:center;font-weight:800;font-size:14px;padding:10px;border-radius:12px;background:var(--rose);color:#fff}
+.n26-go.ok{background:transparent;color:#14714A;border:1px solid #14714A}
+html.nmf:not(.gl-lt) .n26-go.ok{color:#5FD39A;border-color:#2F7A55}
+.n26-hint{margin:12px 2px 0;font-size:14px;line-height:1.45;color:var(--mut)}
+.n26-h{font-family:NMPF,serif;font-weight:700;font-size:24px;margin:22px 2px 12px;color:var(--ink)}
+.n26-g{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.n26-t{display:flex!important;flex-direction:column;gap:3px;background:var(--card)!important;border:1px solid var(--line)!important;border-radius:20px;padding:8px 8px 12px!important;overflow:hidden}
+.n26-t:last-child:nth-child(odd){grid-column:span 2}
+.n26-ti{display:block;aspect-ratio:3/2;border-radius:14px;overflow:hidden;margin-bottom:6px;background:var(--line)}
+.n26-ti img{width:100%;height:100%;object-fit:cover;display:block}
+.n26-t b{font-size:16px;font-weight:800;line-height:1.25;color:var(--ink);padding:0 4px}
+.n26-t small{font-size:13px;line-height:1.35;color:var(--mut);padding:0 4px}
+.n26-rest{padding-top:6px}
+.opt input,.opt input:disabled{opacity:0!important;-webkit-appearance:none;appearance:none;background:none!important;border:0!important;box-shadow:none!important}
+.n26-rest>.rl-admin{margin:4px 16px 14px}
+`;
+  const s=document.createElement('style');s.id='n26-css';s.textContent=css;document.head.appendChild(s);
 })();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
