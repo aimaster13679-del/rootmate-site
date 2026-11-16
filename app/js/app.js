@@ -1023,7 +1023,7 @@ function renderSignup(){if(S.suInter&&!S.editMode)return journeyScreen(S.suInter
     <div class="t"><small>${edit?'Edit profile':'Step '+st+' of 6 · saved'}</small><h2>${STEPS[st-1]}</h2>
     ${edit?`<div class="steps-nav" role="tablist">${STEPS.map((s,i)=>`<button data-a="suJump" data-n="${i+1}" class="${i+1===st?'on':''}" role="tab" aria-selected="${i+1===st}">${i+1}. ${SHORT[i]}</button>`).join('')}</div>`:`<div class="progress" aria-hidden="true">${STEPS.map((_,i)=>`<i class="${i<st?'on':''}"></i>`).join('')}</div>${S.draft&&S.draft.g!=='M'?`<p class="su-offer">${ic('crown')}<span>First 300 verified women in every country get <b>3 months of Gold free</b></span></p>`:''}`}</div></div>
   <div class="scroll" id="su-scroll"><div class="form pad">${edit?'':`<p class="su-trust">${ic('shield')}<span>${SU_TRUST[st-1]}</span></p>`}${body}</div></div>
-  <div class="su-foot pad">${edit?`<button class="btn ghost" data-a="suCancel"${busy?' disabled':''}>Discard</button><button class="btn primary" data-a="suSave"${busy?' disabled':''}>${busy==='save'?spinner('Saving')+' Saving':'Save changes'}</button>`:
+  <div class="su-foot pad">${edit?`<button class="btn ghost" data-a="suSave"${busy?' disabled':''}>Save & exit</button><button class="btn primary" data-a="edNext"${busy?' disabled':''}>${busy==='save'?spinner('Saving')+' Saving':st<6?'Next: '+SHORT[st]+' ›':'Finish'}</button>`:
     st===5&&!vReady?`<button class="btn ghost" data-a="suNext">Do this later</button><button class="btn primary" data-a="vGo" data-n="${vFirst}">${vAny?'Next check':'Start'}</button>`:
     `<button class="btn primary" data-a="suNext"${busy?' disabled':''}>${busy==='save'?spinner('Saving')+' '+esc(S.saveMsg||'Saving'):st===6?'Finish and see matches':'Continue'}</button>`}</div>`;
 }
@@ -6261,7 +6261,27 @@ html.nmf:not(.gl-lt) .n22-vc span.ok{background:#12301F;color:#8FE0B5;border-col
       if(mn){mn.insertAdjacentHTML('afterbegin',hh);mn.classList.add('n26-main');return tp.innerHTML}
       return hh+'<div class="n26-rest">'+tp.innerHTML+'</div>'}catch(e){return h}}}
 
-  Object.assign(A,{n26Boost(){S.n22='seen';view=null;const t=document.querySelector('[data-a=tab][data-k=matches]');if(t)t.click();else{S.tab='matches';render()}if(S.n22!=='seen'){S.n22='seen';render()}const m=document.getElementById('main');if(m)m.scrollTop=0}});
+  /* Edit profile, step by step (his ask 16 Nov 17:59): Next saves this step, a short celebration, then the next step; Finish = big celebration */
+  const STEPN=['About you','Your roots','Where you live','Values','Verify','Privacy'];
+  function party(big,title,sub,pct){try{document.querySelectorAll('.n26-party').forEach(e=>e.remove());const rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const cols=['#D61F4F','#FF8FA8','#FFC94D','#4CC38A','#5AA9FF','#B57BFF','#FFFFFF'];const n=rm?0:(big?90:48);let cf='';
+    for(let i=0;i<n;i++){const x=Math.random()*100,dx=(Math.random()*2-1)*120,dl=Math.random()*.25,du=1.1+Math.random()*.9,r=Math.random()*720-360,w=6+Math.random()*6;
+      cf+=`<i style="left:${x}%;width:${w}px;height:${w*1.6}px;background:${cols[i%cols.length]};animation-delay:${dl}s;animation-duration:${du}s;--dx:${dx}px;--r:${r}deg"></i>`}
+    const bl=big&&!rm?[0,1,2,3,4].map(i=>`<b class="n26-bl" style="left:${10+i*19}%;animation-delay:${i*.12}s;background:${cols[i]}"></b>`).join(''):'';
+    const el=document.createElement('div');el.className='n26-party'+(big?' big':'');el.setAttribute('role','status');
+    el.innerHTML=`<div class="n26-cf">${cf}${bl}</div><div class="n26-pc"><div class="n26-pe">${big?'🎉':'✓'}</div><b>${esc(title)}</b><span>${esc(sub)}</span><span class="n26-bar"><i style="width:${pct}%"></i></span><small>Profile ${pct}% complete</small></div>`;
+    el.addEventListener('click',()=>el.remove());document.body.appendChild(el);try{navigator.vibrate&&navigator.vibrate(big?[30,40,30]:20)}catch(e){}
+    setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),400)},big?3200:1700)}catch(e){}}
+  async function saveStep(){const d=S.draft;const row=profileRow(d);delete row.terms_version;delete row.terms_at;delete row.marketing_ok;
+    await API.update('profiles',{id:'eq.'+S.me.id},row);await API.insert('preferences',prefsRow(d.prefs,S.me.id),{upsert:true,returning:false});
+    const errs=await uploadAll(d);try{await loadMe()}catch(e){}return errs}
+  Object.assign(A,{async edNext(){if(busy||!S.draft)return;const st=S.step;const e=validateStep(st,S.draft);S.errors=e;if(Object.keys(e).length){showErrors();return}
+    busy='save';render();let errs=[];try{errs=await saveStep()}catch(err){busy='';render();fail(err,'profile');return}
+    busy='';const pct=completeness(S.me||{});
+    if(st<6){goStep(st+1);party(false,'Step '+st+' of 6 done',STEPN[st-1]+' saved. Next: '+STEPN[st],pct);if(errs.length)toast(errs[0],'info');return}
+    try{await loadCards()}catch(x){}S.draft=null;S.editMode=false;S.screen='app';S.tab='me';S.errors={};render();
+    party(true,pct>=100?'Your profile is complete':'Profile saved',pct>=100?'Members who fit you now see your full profile.':'Profile '+pct+'%. Finish the rest any time from Me.',pct);if(errs.length)toast(errs[0],'info')},
+  n26Boost(){S.n22='seen';view=null;const t=document.querySelector('[data-a=tab][data-k=matches]');if(t)t.click();else{S.tab='matches';render()}if(S.n22!=='seen'){S.n22='seen';render()}const m=document.getElementById('main');if(m)m.scrollTop=0}});
 
   /* phone bars follow the screen: top = colour at the very top, bottom = tab bar / page colour */
   const col=el=>{while(el&&el!==document.documentElement){const c=getComputedStyle(el).backgroundColor;if(c&&c!=='transparent'&&!/rgba\(.*,\s*0\)$/.test(c))return c;el=el.parentElement}return getComputedStyle(document.body).backgroundColor};
@@ -6316,6 +6336,27 @@ html.nmf:not(.gl-lt) .n26-go.ok{color:#5FD39A;border-color:#2F7A55}
 #main.n26-main>.n22-pg.n26{margin:0 0 6px}
 .opt input,.opt input:disabled{opacity:0!important;-webkit-appearance:none;appearance:none;background:none!important;border:0!important;box-shadow:none!important}
 .n26-rest>.rl-admin{margin:4px 16px 14px}
+
+.n26-party{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(10,6,9,.35);animation:n26in .2s ease-out}
+.n26-party.out{opacity:0;transition:opacity .35s}
+@keyframes n26in{from{opacity:0}to{opacity:1}}
+.n26-cf{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.n26-cf i{position:absolute;top:-20px;border-radius:2px;animation:n26fall 1.6s cubic-bezier(.2,.6,.4,1) forwards}
+@keyframes n26fall{0%{transform:translate(0,0) rotate(0)}100%{transform:translate(var(--dx),105vh) rotate(var(--r))}}
+.n26-bl{position:absolute;bottom:-90px;width:46px;height:58px;border-radius:50% 50% 46% 46%;opacity:.95;animation:n26up 2.6s ease-in forwards}
+.n26-bl:after{content:"";position:absolute;left:50%;top:100%;width:1px;height:40px;background:rgba(255,255,255,.6)}
+@keyframes n26up{0%{transform:translateY(0)}80%{transform:translateY(-75vh) scale(1);opacity:.95}100%{transform:translateY(-80vh) scale(1.5);opacity:0}}
+.n26-pc{position:relative;width:min(320px,84vw);background:#fff;color:#1B1218;border-radius:24px;padding:22px 20px;text-align:center;box-shadow:0 30px 60px -20px rgba(0,0,0,.5);animation:n26pop .45s cubic-bezier(.2,1.4,.4,1)}
+html.nmf:not(.gl-lt) .n26-pc{background:#1C161A;color:#F5EEF1}
+@keyframes n26pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.n26-pe{width:64px;height:64px;margin:0 auto 10px;border-radius:20px;background:#D61F4F;color:#fff;font-size:32px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.n26-party.big .n26-pe{background:#FFF0F3;font-size:38px}
+.n26-pc b{display:block;font-family:NMPF,serif;font-size:24px;line-height:1.2}
+.n26-pc span{display:block;font-size:14px;line-height:1.4;opacity:.8;margin-top:6px}
+.n26-pc .n26-bar{margin-top:14px;opacity:1;background:#F1EAED}.n26-pc .n26-bar i{background:#D61F4F}
+html.nmf:not(.gl-lt) .n26-pc .n26-bar{background:#2E252A}
+.n26-pc small{display:block;margin-top:6px;font-size:13px;font-weight:800;color:#D61F4F}
+@media (prefers-reduced-motion:reduce){.n26-pc{animation:none}}
 `;
   const s=document.createElement('style');s.id='n26-css';s.textContent=css;document.head.appendChild(s);
 })();
