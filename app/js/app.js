@@ -5718,6 +5718,247 @@ html.nmf:not(.gl-lt) .n7-foot h4{color:#2E2A31}
   });
 })();
 
+/* ---------- NeuMarry v14 look (his ok 16 Nov 2026 00:12 "Haan, shuru karo" on mock handoff/mocks/nm-v14):
+   deep wine header over a real wedding photo, 5 photo section tabs (For you · Wedding · Evenings · Gold · Family),
+   matchmaking first: today's introduction as a big roots-to-city card with fit %, 3 real reasons, Not now / Say yes;
+   Matches tab as a 2-column grid of roots-place cards. NeuMarry app only (window.NM_APP).
+   Real data only: picks, fit, reasons, likes and prices come from the member's own data; a block without data is hidden.
+   No person photos anywhere: roots and city places stand in until both say yes. ---------- */
+(function(){
+  const ON=()=>!!window.NM_APP;
+  const PL={mexico:'mx','south korea':'kr',korea:'kr',india:'in',canada:'ca',philippines:'ca',brazil:'br'};
+  const CT={toronto:'to',mississauga:'to',brampton:'to',seoul:'seoul2'};
+  const rootImg=c=>`img/pl/${PL[String(c||'').toLowerCase()]||'table'}.webp`;
+  const cityImg=c=>`img/pl/${CT[String(c||'').toLowerCase()]||'lights'}.webp`;
+  const TH={all:['#5C0A25','#3B0618','elegant'],wed:['#0A3B33','#062720','arch2'],eve:['#2C0E39','#1A0723','ev1'],fam:['#132C4E','#0C1C35','dinner']};
+  const SECS=[['all','For you','p15/rings'],['wed','Wedding','pl/arch2'],['eve','Evenings','pl/ev1'],['gold','Gold','pl/ringbox'],['fam','Family','pl/dinner']];
+  const epOn=()=>{try{return typeof EP_ON==='function'?EP_ON():false}catch(e){return false}};
+  const fit=p=>{try{return compat(p).total}catch(e){return 0}};
+  const why=p=>{try{return whyChips(p).map(x=>x.t)}catch(e){return []}};
+  const rev=p=>isGold()||(S.picks&&S.picks.revealed&&S.picks.revealed.includes(p.id));
+  const title=p=>`${esc(rev(p)?shown(p):(p.job||(p.oc?p.oc+' roots':'Member')))}${p.age?', '+esc(String(p.age)):''}`;
+  const routeTxt=p=>esc([p.oc||p.os,p.cityName].filter(Boolean).join(' → '));
+  const recv=()=>{try{return PROFILES.filter(p=>baseEligible(p)&&S.interests[p.id]==='received')}catch(e){return []}};
+  const upcoming=()=>{try{if(typeof NO_EVENTS!=='undefined'&&NO_EVENTS)return [];return (events()||[]).filter(e=>e&&e.date&&e.date>Date.now()&&e.status!=='cancelled').sort((a,b)=>a.date-b.date)}catch(e){return []}};
+  const sec=(t,s,go)=>`<div class="n22-sec"><div><h2>${t}</h2>${s?`<p>${s}</p>`:''}</div>${go?`<button data-a="nmfGo" data-k="${go}">See all</button>`:''}</div>`;
+  const vchips=p=>{const v=p.v||{};const c=[];if(v.id&&v.selfie)c.push(['ok','ID checked']);if(p.ans&&p.ans[8]===0)c.push(['','Within 1 year']);if(v.roots)c.push(['','Roots proved']);return c.slice(0,2)};
+  const acts=p=>{const st=S.interests[p.id];
+    if(st==='sent')return `<div class="n22-two"><span class="n22-done">Your yes is sent</span></div>`;
+    if(st==='mutual')return `<div class="n22-two"><button class="n22-y" data-a="openchat" data-id="${p.id}">Open chat</button></div>`;
+    return `<div class="n22-two"><button class="n22-x" data-a="pass" data-id="${p.id}">Not now</button><button class="n22-y" data-a="interest" data-id="${p.id}">Say yes</button></div>`};
+
+  /* ---------- header ---------- */
+  function head(k){const me=S.me||{};const t=TH[k]||TH.all;const name=(me.name||'').split(' ')[0];
+    const words=k==='wed'?['venues','photographers','jewellers','honeymoon']:k==='eve'?['this week','your city','roots dinners']:k==='fam'?['family view','shortlist']:[me.oc?me.oc+' roots':'your roots','your city','ready to marry','your values'];
+    const big=k==='wed'?'Plan the big day':k==='eve'?'Meet in person':k==='fam'?'Decide together':'Your roots, your wedding';
+    const small=k==='wed'?'WEDDING PARTNERS':k==='eve'?'INTRODUCTION EVENINGS':k==='fam'?'FAMILY ROOM':(name?'HELLO, '+name.toUpperCase():'WELCOME');
+    const tabs=SECS.filter(s=>s[0]!=='wed'||epOn()).map(([id,l,im])=>`<button class="n22-tb${id===k?' on':''}" data-a="n22Sec" data-k="${id}" aria-pressed="${id===k}"><span><img src="img/${im}.webp" alt=""></span><b>${l}</b></button>`).join('');
+    return `<div class="n22-hd" style="--t1:${t[0]};--t2:${t[1]}"><img class="n22-hb" src="img/pl/${t[2]}.webp" alt=""><i class="n22-ov"></i>
+      <div class="n22-top"><img class="n22-lg" src="img/icon-192.png" alt="NeuMarry"><div><small>${esc(small)}</small><h1>${big}</h1></div></div>
+      <button class="n22-sr" data-a="nmfGo" data-k="mlist" aria-label="Search matches"><svg viewBox="0 0 24 24"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zm9 16-3.6-3.6"/></svg><span class="n22-st">Search <span class="n22-rot">${[...words,words[0]].map(w=>`<b>${esc(w)}</b>`).join('')}</span></span></button>
+      <div class="n22-tabs" role="tablist">${tabs}</div></div>`}
+
+  /* ---------- For you: today's introductions first ---------- */
+  function countdown(){const n=new Date(),m=new Date(n);m.setHours(24,0,0,0);const s=Math.max(0,Math.floor((m-n)/1000));const p=x=>String(x).padStart(2,'0');return `<b data-n22="h">${p(Math.floor(s/3600))}</b>:<b data-n22="m">${p(Math.floor(s%3600/60))}</b>:<b data-n22="s">${p(s%60)}</b>`}
+  function featured(p){const f=fit(p);const w=why(p);const th=['dinner','ev2','table'];
+    return `<div class="n22-feat"><button class="n22-rte" data-a="${rev(p)?'open':'reveal'}" data-id="${p.id}" aria-label="Open this introduction">
+        <span class="n22-a"><img src="${rootImg(p.oc)}" alt=""><em><small>ROOTS</small>${esc(p.oc||p.os||'')}</em></span><span class="n22-b"><img src="${cityImg(p.cityName)}" alt=""><em><small>LIVES IN</small>${esc(p.cityName||'')}</em></span>
+        <svg viewBox="0 0 358 160" preserveAspectRatio="none"><path d="M60 118 C 120 14, 240 14, 300 118"/></svg>
+        ${S.me&&p.oc===S.me.oc?'<span class="n22-pill">Same roots as you</span>':''}<span class="n22-lk">Photo opens on mutual yes</span>
+        <span class="n22-fn"><b>${title(p)}</b><small>${esc([p.os&&p.os!==p.oc?p.os+' roots':'',p.cityName,(()=>{try{const d=Math.round(km(p));return d>0&&d<1000?d+' km away':''}catch(e){return ''}})()].filter(Boolean).join(' · '))}</small></span></button>
+      <div class="n22-fb">${f?`<div class="n22-fit"><div class="n22-big">${f}<span>%</span></div><div><small>Fit with you</small><div class="n22-bar"><i style="width:${f}%"></i></div></div></div>`:''}
+        ${w.length?`<div class="n22-why">${w.map((t,i)=>`<div><span><img src="img/pl/${th[i%3]}.webp" alt=""></span>${esc(t)}</div>`).join('')}</div>`:''}
+        ${vchips(p).length?`<div class="n22-vc">${vchips(p).map(c=>`<span class="${c[0]}">${c[1]}</span>`).join('')}</div>`:''}
+        ${acts(p)}</div></div>`}
+  function mini(p){const f=fit(p);return `<button class="n22-nx" data-a="${rev(p)?'open':'reveal'}" data-id="${p.id}"><img src="${rootImg(p.oc)}" alt=""><span><b>${title(p)}</b><small>${routeTxt(p)}</small></span>${f?`<em>${f}%</em>`:''}</button>`}
+  function forYou(){let list=[];try{list=matchList()}catch(e){}
+    const live=(()=>{try{return isLive()}catch(e){return true}})();
+    let picks=[];try{picks=(list.length>=6?ensurePicks():list).slice(0,3)}catch(e){picks=list.slice(0,3)}
+    picks=picks.filter(p=>S.interests[p.id]!=='declined');if(list.length<6)picks.sort((x,y)=>fit(y)-fit(x));
+    const me=S.me||{};const v=me.v||{};const pct=[photoOk(),v.id,v.selfie,v.roots,v.lives].filter(Boolean).length*20;
+    let out='';
+    if(live&&picks.length){out+=`<div class="n22-fh"><div><small>YOUR MATCHES TODAY</small><h2>${picks.length} introduction${picks.length===1?'':'s'}</h2></div><span class="n22-cd">New in ${countdown()}</span></div>${featured(picks[0])}`;
+      if(picks.length>1)out+=`<div class="n22-nxs">${picks.slice(1).map(mini).join('')}</div>`}
+    else out+=`<div class="n22-fh"><div><small>YOUR INTRODUCTIONS</small><h2>${live?'New members soon':'Get introduced every morning'}</h2></div></div>
+      <div class="n22-empty"><img src="img/pl/to.webp" alt=""><div><b>${live?'New members of your roots appear here as they join':'You are '+pct+'% verified'}</b><small>${live?'Your Matches tab shows everyone who fits you today.':'Finish your checks to go live. People of your roots in your city, picked for your values.'}</small>${live?'':`<button data-a="cnme">Continue</button>`}</div></div>`;
+    const r=recv();
+    if(r.length)out+=sec('They said yes to you','Real members, waiting for your answer')+`<button class="n22-yy" data-a="goLikes"><span class="n22-yt">${r.slice(0,4).map(p=>`<i><img src="${rootImg(p.oc)}" alt=""></i>`).join('')}</span><span class="n22-yc"><b>${r.length} ${r.length===1?'person':'people'} said yes</b><small>See who and answer${isGold()?'':' with Gold'}.</small><em>See who</em></span></button>`;
+    if(!isGold()){let L=null;try{L=price()}catch(e){}
+      if(L&&L.sym)out+=sec('Plans','Find your person faster','gold')+`<div class="n22-pl"><button class="n22-pc" data-a="nmfGo" data-k="gold"><small>GOLD · 3 MONTHS</small><b>${esc(L.sym+L.pm3)}<i>/month</i></b><s>${esc(L.sym+L.m3)} in total</s><ul><li>See who said yes</li><li>Chat after a yes</li><li>Family can view</li></ul><span>Choose</span></button>
+        <button class="n22-pc on" data-a="nmfGo" data-k="gold"><em>BEST VALUE</em><small>GOLD · 6 MONTHS</small><b>${esc(L.sym+L.pm6)}<i>/month</i></b><s>${esc(L.sym+L.m6)} in total</s><ul><li>Everything in Gold</li><li>Lowest price a month</li><li>Cancel any time</li></ul><span>Choose</span></button></div>`}
+    out+=evenings(3);
+    return out}
+  function evenings(n){const ev=upcoming();if(!ev.length)return '';
+    return sec('Introduction Evenings','Small dinners for people of your roots')+`<div class="n22-rail">${ev.slice(0,n).map((e,i)=>{const d=new Date(e.date);return `<button class="n22-ev" data-a="openEvent" data-id="${e.id}"><span class="n22-ei"><img src="img/pl/${['ev1','ev2','dinner'][i%3]}.webp" alt=""><span class="n22-dt"><b>${d.getDate()}</b>${esc(d.toLocaleString('en',{month:'short'}).toUpperCase())}</span></span><span class="n22-et"><b>${esc(e.title||'')}</b><small>${esc(e.city||'')}</small></span></button>`}).join('')}</div>`}
+  function body(k){
+    if(k==='wed')return sec('Wedding partners','Venues, photographers, jewellers and more. You contact and pay them directly.')+`<button class="n22-big1" data-a="epOpen"><img src="img/pl/arch2.webp" alt=""><span><b>See wedding partners</b><small>Compare prices and choose freely</small></span></button>`;
+    if(k==='eve'){const e=evenings(12);return e||`<div class="n22-empty" style="margin-top:18px"><img src="img/pl/ev1.webp" alt=""><div><b>No evenings in your city yet</b><small>When an evening is planned near you, it shows here with its real date and price.</small></div></div>`}
+    if(k==='fam')return sec('Family Room','Your family sees only what you share')+`<button class="n22-big1" data-a="tab" data-k="connections"><img src="img/pl/dinner.webp" alt=""><span><b>Bring your family in</b><small>After you both say yes, invite your parents from the chat to meet the family.</small></span></button>`;
+    return forYou()}
+  function home(){const k=S.n22||'all';
+    return `<div class="cn-page n22-pg"><div class="scroll" id="main">${head(k)}<div class="n22-bd">${body(k)}<div class="n22-foot"><h4>Marry smart.<br>Stay rooted.</h4><p>NeuCoNet Private Limited</p></div></div></div></div>`}
+
+  /* ---------- Matches tab: grid of roots-place cards ---------- */
+  function card(p){const f=fit(p);return `<div class="n22-mc"><button class="n22-mp" data-a="${rev(p)?'open':'reveal'}" data-id="${p.id}"><img src="${rootImg(p.oc)}" alt="">${f?`<span class="n22-fp">${f}%</span>`:''}<span class="n22-mn"><b>${title(p)}</b><small>${routeTxt(p)}</small></span></button>
+    ${vchips(p).length?`<div class="n22-vc">${vchips(p).map(c=>`<span class="${c[0]}">${c[1]}</span>`).join('')}</div>`:''}${acts(p)}</div>`}
+  function matches(){const seg=S.n22m||'for';let list=[];try{list=matchList()}catch(e){}
+    let all=[];try{all=PROFILES.filter(p=>baseEligible(p)&&!p.paused)}catch(e){}
+    const r=recv();const sl=all.filter(p=>(S.shortlist||[]).includes(p.id));
+    const L=seg==='yes'?r:seg==='sl'?sl:seg==='all'?all.filter(p=>S.interests[p.id]!=='declined'):list.slice().sort((a,b)=>fit(b)-fit(a));
+    const SG=[['for','For you',0],['yes','Said yes',r.length],['sl','Shortlist',0],['all','All',0]];
+    const empty={for:'No one fits your filters yet. Widen age or distance in Me.',yes:'No one has said yes yet. Your introductions start the conversation.',sl:'Save people you like and they wait here.',all:'No members yet.'}[seg];
+    return `<div class="cn-page n22-pg"><div class="scroll" id="main"><div class="n22-mh"><img class="n22-hb" src="img/pl/hall.webp" alt=""><i class="n22-ov"></i><div class="n22-mt"><small>PEOPLE OF YOUR ROOTS</small><h1>Matches</h1><p>${list.length} member${list.length===1?'':'s'} fit your plans</p></div>
+      <div class="n22-seg">${SG.map(([k,l,n])=>`<button class="${seg===k?'on':''}" data-a="n22Seg" data-k="${k}">${l}${n?`<i>${n}</i>`:''}</button>`).join('')}</div></div>
+      <div class="n22-bd n22-mb">${L.length?`<div class="n22-grid">${L.slice(0,60).map(card).join('')}</div>`:`<div class="n22-empty" style="margin-top:6px"><img src="img/pl/ca.webp" alt=""><div><b>${empty}</b></div></div>`}
+      <p class="n22-fine">Member photos stay hidden until both say yes. Roots and city photos stand in.</p></div></div></div>`}
+
+  const _rm=renderMatches;renderMatches=function(){if(!ON())return _rm.apply(this,arguments);
+    if(S.tab==='matches')return home();if(S.tab==='mlist')return matches();return _rm.apply(this,arguments)};
+  let tmr=null;
+  const _r=render;render=function(){const out=_r.apply(this,arguments);
+    try{if(ON()){const onHome=S.tab==='matches'&&!view;const m=document.querySelector('meta[name=theme-color]');
+      if(m&&(onHome||(S.tab==='mlist'&&!view)))m.setAttribute('content',onHome?(TH[S.n22||'all']||TH.all)[0]:'#3B0618');
+      clearInterval(tmr);if(onHome&&document.querySelector('[data-n22="s"]'))tmr=setInterval(()=>{const h=document.querySelector('[data-n22="h"]');if(!h){clearInterval(tmr);return}
+        const n=new Date(),md=new Date(n);md.setHours(24,0,0,0);const s=Math.max(0,Math.floor((md-n)/1000)),p=x=>String(x).padStart(2,'0');
+        h.textContent=p(Math.floor(s/3600));document.querySelector('[data-n22="m"]').textContent=p(Math.floor(s%3600/60));document.querySelector('[data-n22="s"]').textContent=p(s%60)},1000)}}catch(e){}
+    return out};
+  Object.assign(A,{
+    n22Sec(el){const k=el.dataset.k;if(k==='gold'){S.tab='gold';view=null;render();return}S.n22=k;render();const m=document.getElementById('main');if(m)m.scrollTop=0},
+    n22Seg(el){S.n22m=el.dataset.k;render()}});
+
+  const css=`
+@font-face{font-family:NMPF;src:url(fonts/nm-pf600.woff2) format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:NMPF;src:url(fonts/nm-pf700.woff2) format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:NMPJ;src:url(fonts/nm-pj500.woff2) format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:NMPJ;src:url(fonts/nm-pj700.woff2) format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:NMPJ;src:url(fonts/nm-pj800.woff2) format('woff2');font-weight:800;font-display:swap}
+.n22-pg{--ink:#1B1218;--mut:#6F6168;--card:#fff;--line:#EFE6EA;--bg:#FAF6F7;--rose:#D61F4F;background:var(--bg);color:var(--ink);font-family:NMPJ,system-ui,sans-serif}
+html.nmf:not(.gl-lt) .n22-pg{--ink:#F5EEF1;--mut:#B6A6AE;--card:#1C161A;--line:#2E252A;--bg:#100C0F}
+.n22-pg button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer;text-align:left;padding:0}
+.n22-hd,.n22-mh{position:relative;overflow:hidden;background:var(--t2,#3B0618);color:#fff;padding:calc(14px + env(safe-area-inset-top)) 16px 30px}
+.n22-mh{--t1:#5C0A25;--t2:#3B0618;padding-bottom:20px}
+.n22-hb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.5;animation:n22kb 16s ease-out infinite alternate}
+.n22-ov{position:absolute;inset:0;background:linear-gradient(180deg,color-mix(in srgb,var(--t1) 70%,transparent),color-mix(in srgb,var(--t2) 96%,transparent))}
+@keyframes n22kb{from{transform:scale(1.04)}to{transform:scale(1.14) translate(-2%,1%)}}
+.n22-top,.n22-sr,.n22-tabs,.n22-mt,.n22-seg{position:relative}
+.n22-top{display:flex;gap:12px;align-items:center}
+.n22-lg{width:48px;height:48px;border-radius:14px;flex:none}
+.n22-top small,.n22-mt small{font-size:12px;font-weight:800;letter-spacing:.12em;opacity:.9}
+.n22-top h1{font-family:NMPF,serif;font-weight:700;font-size:27px;line-height:1.15;margin:2px 0 0}
+.n22-sr{display:flex!important;align-items:center;gap:10px;width:100%;margin-top:16px;height:52px;padding:0 16px!important;border-radius:16px;background:#fff!important;color:#1B1218!important;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.n22-sr svg{width:22px;height:22px;fill:none;stroke:#1B1218;stroke-width:2.2;stroke-linecap:round;flex:none}
+.n22-st{font-size:16px;color:#6F6168;display:flex;gap:5px;height:24px;line-height:24px;overflow:hidden;-webkit-mask:linear-gradient(transparent,#000 22%,#000 78%,transparent)}
+.n22-rot{display:flex;flex-direction:column;animation:n22rot 10s infinite}
+.n22-rot b{display:block;height:24px;color:#1B1218;font-weight:800;white-space:nowrap}
+@keyframes n22rot{0%,20%{transform:translateY(0)}25%,45%{transform:translateY(-24px)}50%,70%{transform:translateY(-48px)}75%,95%{transform:translateY(-72px)}100%{transform:translateY(-96px)}}
+.n22-tabs{display:flex;justify-content:space-between;gap:6px;margin-top:16px}
+.n22-tb{flex:1;display:flex!important;flex-direction:column;align-items:center;gap:6px;color:#fff!important;opacity:.85}
+.n22-tb span{width:58px;height:58px;border-radius:16px;overflow:hidden;border:2px solid rgba(255,255,255,.35);display:block}
+.n22-tb img{width:100%;height:100%;object-fit:cover;display:block}
+.n22-tb b{font-size:13px;font-weight:700;white-space:nowrap}
+.n22-tb.on{opacity:1}.n22-tb.on span{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.25)}
+.n22-tb.on b{border-bottom:3px solid #fff;padding-bottom:3px}
+.n22-bd{position:relative;margin-top:-16px;background:var(--bg);border-radius:26px 26px 0 0;padding:20px 16px 110px}
+.n22-mb{margin-top:-10px}
+.n22-fh{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:14px}
+.n22-fh small,.n22-pc small{font-size:12px;font-weight:800;letter-spacing:.12em;color:var(--rose)}
+.n22-fh h2{font-family:NMPF,serif;font-size:28px;font-weight:700;margin:4px 0 0;line-height:1.1}
+.n22-cd{font-size:13px;color:var(--mut);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 10px;white-space:nowrap}
+.n22-cd b{color:var(--ink);font-variant-numeric:tabular-nums}
+.n22-feat{background:var(--card);border-radius:24px;overflow:hidden;box-shadow:0 10px 30px rgba(60,10,30,.12);border:1px solid var(--line)}
+.n22-rte{position:relative;display:block!important;width:100%;height:300px;background:#2A0A18!important;overflow:hidden}
+.n22-a,.n22-b{position:absolute;top:0;bottom:0;width:50%;overflow:hidden}.n22-a{left:0}.n22-b{right:0}
+.n22-a img,.n22-b img{width:100%;height:100%;object-fit:cover;display:block}
+.n22-a em,.n22-b em{position:absolute;z-index:2;top:158px;font-style:normal;color:#fff;font-weight:800;font-size:17px;text-shadow:0 1px 8px rgba(0,0,0,.6)}
+.n22-a em{left:16px}.n22-b em{right:16px;text-align:right}
+.n22-a em small,.n22-b em small{display:block;font-size:12px;letter-spacing:.12em;opacity:.85}
+.n22-rte::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.1) 30%,rgba(20,4,12,.85))}
+.n22-rte svg{position:absolute;left:0;top:30px;width:100%;height:160px;z-index:1;fill:none;stroke:#fff;stroke-width:2.5;stroke-dasharray:6 0;filter:drop-shadow(0 0 6px rgba(255,255,255,.7))}
+.n22-pill{position:absolute;z-index:2;left:50%;top:150px;transform:translateX(-50%);background:#fff;color:var(--rose);font-weight:800;font-size:14px;padding:6px 14px;border-radius:999px;white-space:nowrap}
+.n22-lk{position:absolute;z-index:2;right:12px;top:12px;background:rgba(20,6,12,.65);color:#fff;font-size:13px;font-weight:700;padding:6px 10px;border-radius:10px;backdrop-filter:blur(8px)}
+.n22-fn{position:absolute;z-index:2;left:16px;right:16px;bottom:14px;color:#fff}
+.n22-fn b{display:block;font-family:NMPF,serif;font-size:30px;font-weight:700;line-height:1.1}
+.n22-fn small{font-size:15px;opacity:.92}
+.n22-fb{padding:16px}
+.n22-fit{display:flex;align-items:center;gap:14px}
+.n22-fit>div:last-child{flex:1}.n22-fit small{font-size:15px;font-weight:700;color:var(--mut)}
+.n22-big{font-family:NMPF,serif;font-size:44px;font-weight:700;color:var(--rose);line-height:1}.n22-big span{font-size:20px}
+.n22-bar{height:8px;border-radius:8px;background:color-mix(in srgb,var(--rose) 14%,transparent);margin-top:8px;overflow:hidden}
+.n22-bar i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#E8577D,var(--rose));animation:n22bar 1.2s ease-out}
+@keyframes n22bar{from{width:0!important}}
+.n22-why{margin-top:14px;display:grid;gap:10px}
+.n22-why div{display:flex;align-items:center;gap:12px;font-size:16px;font-weight:700}
+.n22-why span{width:44px;height:44px;border-radius:12px;overflow:hidden;flex:none}.n22-why img{width:100%;height:100%;object-fit:cover}
+.n22-vc{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.n22-vc span{font-size:13px;font-weight:700;padding:6px 10px;border-radius:10px;background:var(--bg);border:1px solid var(--line)}
+.n22-vc span.ok{background:#E6F6EE;color:#14714A;border-color:#CDEBDC}
+html.nmf:not(.gl-lt) .n22-vc span.ok{background:#12301F;color:#8FE0B5;border-color:#1D4A31}
+.n22-two{display:flex;gap:10px;margin-top:14px}
+.n22-x,.n22-y{flex:1;height:50px;border-radius:14px;font-weight:800!important;font-size:16px;text-align:center!important}
+.n22-x{background:var(--bg)!important;border:1px solid var(--line)!important}
+.n22-y{background:var(--rose)!important;color:#fff!important;box-shadow:0 6px 16px rgba(214,31,79,.3)}
+.n22-y:active,.n22-x:active{transform:scale(.97)}
+.n22-done{flex:1;text-align:center;font-weight:800;color:#14714A;padding:14px;border-radius:14px;background:#E6F6EE}
+.n22-nxs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:12px}
+.n22-nx{display:flex!important;flex-direction:column;background:var(--card)!important;border:1px solid var(--line)!important;border-radius:18px;overflow:hidden;position:relative}
+.n22-nx img{width:100%;aspect-ratio:3/2;object-fit:cover}
+.n22-nx span{padding:10px}.n22-nx b{display:block;font-size:15px}.n22-nx small{font-size:13px;color:var(--mut)}
+.n22-nx em{position:absolute;top:8px;right:8px;font-style:normal;font-weight:800;font-size:13px;background:#fff;color:var(--rose);padding:3px 8px;border-radius:8px}
+.n22-sec{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin:28px 0 12px}
+.n22-sec h2{font-family:NMPF,serif;font-size:23px;font-weight:700;margin:0}
+.n22-sec p{margin:3px 0 0;font-size:14px;color:var(--mut)}
+.n22-sec button{font-size:14px;font-weight:800;color:var(--rose)!important;white-space:nowrap}
+.n22-yy{display:flex!important;gap:12px;align-items:center;width:100%;background:linear-gradient(120deg,#3A0A1E,#170610)!important;color:#fff!important;border-radius:20px;padding:12px!important}
+.n22-yt{display:grid;grid-template-columns:1fr 1fr;gap:4px;width:96px;flex:none}
+.n22-yt i{display:block;aspect-ratio:1;border-radius:10px;overflow:hidden}.n22-yt img{width:100%;height:100%;object-fit:cover;filter:blur(5px);transform:scale(1.2)}
+.n22-yc b{display:block;font-family:NMPF,serif;font-size:20px}.n22-yc small{display:block;font-size:14px;opacity:.85;margin:3px 0 8px}
+.n22-yc em{font-style:normal;font-weight:800;font-size:14px;background:#fff;color:var(--rose);padding:7px 12px;border-radius:10px;display:inline-block}
+.n22-pl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;padding-top:10px}
+.n22-pg .nmf-sub{display:none!important}
+.n22-pc{position:relative;display:flex!important;flex-direction:column;background:var(--card)!important;border:1px solid var(--line)!important;border-radius:20px;padding:16px 14px!important}
+.n22-pc.on{border:2px solid var(--rose)!important}
+.n22-pc em{position:absolute;top:-10px;left:12px;font-style:normal;font-size:11px;font-weight:800;letter-spacing:.08em;background:var(--rose);color:#fff;padding:4px 8px;border-radius:8px}
+.n22-pc b{font-family:NMPF,serif;font-size:22px;white-space:nowrap;margin-top:6px}.n22-pc b i{font-family:NMPJ,sans-serif;font-style:normal;font-size:13px;color:var(--mut)}
+.n22-pc s{text-decoration:none;font-size:13px;color:var(--mut)}
+.n22-pc ul{list-style:none;padding:0;margin:10px 0 12px;font-size:13px;display:grid;gap:5px}
+.n22-pc li::before{content:"✓ ";color:var(--rose);font-weight:800}
+.n22-pc>span{margin-top:auto;text-align:center;font-weight:800;font-size:14px;padding:10px;border-radius:12px;background:var(--rose);color:#fff}
+.n22-pc:not(.on)>span{background:var(--bg);color:var(--ink);border:1px solid var(--line)}
+.n22-rail{display:flex;gap:12px;overflow-x:auto;margin:0 -16px;padding:0 16px 4px;scrollbar-width:none}
+.n22-ev{flex:0 0 220px;display:flex!important;flex-direction:column;background:var(--card)!important;border:1px solid var(--line)!important;border-radius:18px;overflow:hidden}
+.n22-ei{position:relative;display:block}.n22-ei img{width:100%;aspect-ratio:3/2;object-fit:cover;display:block}
+.n22-dt{position:absolute;top:8px;left:8px;background:#fff;color:#1B1218;border-radius:10px;padding:4px 8px;font-size:11px;font-weight:800;text-align:center}.n22-dt b{display:block;font-size:18px}
+.n22-et{padding:10px 12px}.n22-et b{display:block;font-size:15px}.n22-et small{color:var(--mut);font-size:13px}
+.n22-big1{position:relative;display:block!important;width:100%;border-radius:22px;overflow:hidden}
+.n22-big1 img{width:100%;aspect-ratio:3/2;object-fit:cover;display:block}
+.n22-big1 span{display:block;padding:14px 16px;background:var(--card)}.n22-big1 b{display:block;font-size:18px}.n22-big1 small{font-size:14px;color:var(--mut)}
+.n22-empty{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:12px}
+.n22-empty img{width:96px;aspect-ratio:3/2;object-fit:cover;border-radius:14px;flex:none}
+.n22-empty b{display:block;font-size:15px}.n22-empty small{display:block;font-size:13px;color:var(--mut);margin-top:3px}
+.n22-empty button{margin-top:8px;background:var(--rose)!important;color:#fff!important;font-weight:800;padding:8px 14px!important;border-radius:10px}
+.n22-foot{margin-top:34px;color:var(--mut)}.n22-foot h4{font-family:NMPF,serif;font-size:30px;line-height:1.1;margin:0 0 6px;color:color-mix(in srgb,var(--ink) 30%,transparent)}.n22-foot p{font-size:13px;margin:0}
+.n22-mt h1{font-family:NMPF,serif;font-size:34px;margin:2px 0}.n22-mt p{margin:0;font-size:15px;opacity:.9}
+.n22-seg{display:flex;gap:4px;margin-top:14px;background:rgba(255,255,255,.14);border-radius:14px;padding:4px}
+.n22-seg button{flex:1;text-align:center!important;color:#fff!important;font-weight:700;font-size:14px;padding:9px 2px!important;border-radius:10px;white-space:nowrap}
+.n22-seg button.on{background:#fff!important;color:#1B1218!important}
+.n22-seg i{font-style:normal;font-size:11px;background:var(--rose,#D61F4F);color:#fff;border-radius:6px;padding:1px 5px;margin-left:4px}
+.n22-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.n22-mc{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;padding-bottom:10px;display:flex;flex-direction:column}
+.n22-mp{position:relative;display:block!important;width:100%}
+.n22-mp img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
+.n22-mp::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(20,4,12,.85))}
+.n22-lk2{position:absolute;z-index:1;top:8px;left:8px;font-size:11px;font-weight:700;color:#fff;background:rgba(20,6,12,.6);padding:4px 7px;border-radius:8px}
+.n22-fp{position:absolute;z-index:1;top:8px;right:8px;font-size:13px;font-weight:800;background:#fff;color:var(--rose);padding:3px 7px;border-radius:8px}
+.n22-mn{position:absolute;z-index:1;left:10px;right:10px;bottom:8px;color:#fff}.n22-mn b{display:block;font-family:NMPF,serif;font-size:19px;line-height:1.15}.n22-mn small{font-size:12px;opacity:.92}
+.n22-mc .n22-vc,.n22-mc .n22-two{margin:10px 8px 0}.n22-mc .n22-vc{margin-top:8px}
+.n22-mc .n22-two{margin-top:auto;padding-top:10px;gap:6px}.n22-mc .n22-x,.n22-mc .n22-y{height:42px;font-size:14px}
+.n22-mc .n22-done{font-size:13px;padding:10px}
+.n22-fine{font-size:13px;color:var(--mut);margin:16px 2px 0}
+@media (prefers-reduced-motion:reduce){.n22-hb,.n22-rot,.n22-bar i{animation:none}}
+`;
+  const s=document.createElement('style');s.id='n22-css';s.textContent=css;document.head.appendChild(s);
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 /* only on the first open after installing (fast open stays ~1 s every other time; later updates come quietly) */
 if(liveUpd.U()&&!(()=>{try{return localStorage.getItem('nm.upd1')}catch(e){return 1}})()){try{localStorage.setItem('nm.upd1','1')}catch(e){}liveUpd.first().then(ok=>{if(!ok)boot()})}else 
