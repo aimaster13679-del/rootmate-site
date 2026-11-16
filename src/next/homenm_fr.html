@@ -76,7 +76,44 @@ footer{padding:34px 0 40px;color:var(--mt);font-size:14px}footer .wrap{display:f
 @media (max-width:520px){.wrap{padding:0 16px}.bento{gap:10px}.t .ph{height:110px}.t.w2 .ph{height:150px}.t .tx{padding:11px 12px 13px}.t .tx b{font-size:15px}.t .tx small{font-size:13px}
  .mosaic{grid-template-rows:130px 120px 130px;gap:10px}.bz{grid-template-columns:110px 1fr}.final{padding:26px 18px}.lead{font-size:16.5px}.sh{display:block}}
 @media (prefers-reduced-motion:reduce){.flags .row,.kick i{animation:none}}
-</style></head>
+</style><style id="nm-v14">
+/* NeuMarry v14 look on the website (same as the app: deep wine, real wedding photo, serif headings, rose buttons) */
+@font-face{font-family:NMPF;src:url(/app/fonts/nm-pf700.woff2) format('woff2');font-weight:700;font-display:swap}
+:root{--nmw1:#5C0A25;--nmw2:#3B0618;--nmr:#D61F4F}
+body{background:#FAF6F7!important}
+@media (prefers-color-scheme:dark){body{background:#100C0F!important}}
+nav{background:var(--nmw2);padding:10px 0}
+nav .bar{background:transparent!important;border:0!important;box-shadow:none!important;color:#fff}
+nav .logo{color:#fff!important}nav .nl a{color:rgba(255,255,255,.85)!important}
+.btn{border-radius:14px!important}
+.btn.p{background:var(--nmr)!important;color:#fff!important;border-color:var(--nmr)!important;box-shadow:0 10px 24px -10px rgba(214,31,79,.55)!important}
+.btn.s{background:#fff!important;color:#1B1218!important;border-color:#fff!important}
+.hero{position:relative;overflow:hidden;color:#fff;padding:40px 0 34px;background:var(--nmw2)}
+.hero::before{content:"";position:absolute;inset:0;background:url(/app/img/pl/elegant.webp) center/cover;opacity:.45;animation:nmkb 18s ease-out infinite alternate}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(92,10,37,.72),rgba(59,6,24,.96))}
+.hero>*{position:relative;z-index:1}
+@keyframes nmkb{from{transform:scale(1.04)}to{transform:scale(1.14) translate(-2%,1%)}}
+.hero h1{font-family:NMPF,Georgia,serif;font-weight:700;letter-spacing:0}
+.hero h1 em{background:none!important;-webkit-background-clip:initial!important;background-clip:initial!important;color:#FFB3C6!important}
+.hero .lead,.hero .trust span{color:rgba(255,255,255,.9)!important}
+.kick{background:rgba(255,255,255,.14)!important;color:#fff!important;border-color:rgba(255,255,255,.25)!important;border-radius:10px!important}
+.kick i{border-radius:2px!important;background:#FFB3C6!important}
+.ph{border-radius:20px!important}.ph b{border-radius:10px!important}
+.flags .row>*{border-radius:12px!important}
+h2{font-family:NMPF,Georgia,serif;font-weight:700;letter-spacing:0}
+.n{border-radius:12px!important;background:rgba(214,31,79,.1)!important;color:var(--nmr)!important}
+.final{background:linear-gradient(120deg,var(--nmw1),var(--nmw2))!important;color:#fff!important}
+.final h2,.final p{color:#fff!important}
+@media (prefers-reduced-motion:reduce){.hero::before{animation:none}}
+.hero .ph b{color:#1B1218!important;background:rgba(255,255,255,.92)!important}
+.hero .flags span{color:#1B1218!important;background:#fff!important;border-radius:10px!important}
+.trust svg{color:#FFB3C6!important}
+.pc.hi{background:#fff!important;border:2px solid var(--nmr)!important}
+@media (prefers-color-scheme:dark){.pc.hi{background:#1C161A!important}}
+.pc li:before{border-radius:5px!important;background:rgba(214,31,79,.12) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23D61F4F' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 12l4 4 8-8'/%3E%3C/svg%3E") center/12px no-repeat!important}
+.faq svg,.faq summary::after,.faq b{color:var(--nmr)}
+</style>
+</head>
 <body><main>
 <nav><div class="wrap"><div class="bar g"><a class="logo" href="#"><img src="img/icon-192.png" alt="">NeuMarry</a>
  <div class="nl"><a href="#how">Comment ça marche</a><a href="#trust">Sécurité</a><a href="#family">Famille</a><a href="#plans">Forfaits</a></div>
