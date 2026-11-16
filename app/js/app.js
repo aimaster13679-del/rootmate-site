@@ -4479,6 +4479,7 @@ Object.assign(P15V,{adcheck:adCheck15,biz:biz15v,services:svc15v,svcplan:svcPlan
       const own=(t,raw)=>{toast(t,'info');P15.shownAt=Date.now();P15.shownMsg=t;const x=new Error(t);x.raw=raw;return x};
       if(/p2p payments coming soon/.test(em15(e)))throw own('Paying here opens soon. Until then nothing is charged.','p2p coming soon');
       const prod=need(e);if(!prod)throw e;
+      if(isNative&&window.NM_APP&&Bill()&&['boost_start15','sintro_buy15','travel_start15','spotlight_start15'].includes(name)){const x=new Error('play needed');x.raw='play';x.prod=String(prod).split('__')[0];throw x}
       if(isNative)throw own('This is not available in the app yet.','not in app');
       if(S.px&&S.px[prod]&&S.px[prod].sell===false)throw own('Buying opens soon in your country.','country soon');
       let r;try{r=await API.fn('pay15',{action:'start',product:prod,web:true,site:(typeof naOn==='function'&&naOn())?'neuamigo':'neumarry'})}catch(z){throw own('PayPal could not open. Please try again.','paypal')}
@@ -5990,15 +5991,16 @@ html.nmf:not(.gl-lt) .n22-vc span.ok{background:#12301F;color:#8FE0B5;border-col
     if(live)return `<div class="n23-on"><img src="img/pl/lights.webp" alt=""><div><small>BOOST IS ON</small><b>You are shown first</b><span>Ends in ${esc(left(d.until))}. People who fit you see you at the top of Matches.</span></div></div>`;
     const free=(d.credits&&d.credits.boost_1h)||0;
     const freeCard=free?`<div class="n22-sec"><div><h2>Boost</h2><p>Be seen first by people who fit you</p></div></div><button class="n23-free" data-a="b23Buy" data-k="boost_1h"><img src="img/pl/lights.webp" alt=""><span><small>READY TO USE</small><b>${free} free Boost hour${free>1?'s':''}</b><em>Use 1 hour now</em></span></button>`:'';
-    if(isNative)return freeCard?freeCard+friendCard():'';
-    const cp=(d.coupons||[])[0];
+    const PLAY=isNative&&!!(window.NM_PLAY&&window.NM_PLAY());
+    if(isNative&&!PLAY)return freeCard?freeCard+friendCard():'';
+    const cp=isNative?null:(d.coupons||[])[0];
     const sold=KINDS.every(k=>d.prices[k[0]]&&d.prices[k[0]].sell!==false);if(!sold)return '';
     const ends=cp&&cp.ends?new Date(cp.ends).toLocaleDateString('en',{day:'numeric',month:'short',timeZone:'UTC'}):'';
     return `<div class="n22-sec"><div><h2>Boost</h2><p>Be seen first by people who fit you</p></div></div>
       ${cp?`<div class="n23-cp"><div class="n23-cl"><b>${cp.pct===50?'Half price':cp.pct+'% off'}</b><small>${cp.code==='WELCOMEBACK'?'Welcome back · on any Boost':'on your first Boost'}</small></div><div class="n23-cr"><span>${esc(cp.code)}</span><small>Once per account${ends?' · till '+esc(ends):''}</small></div></div>`:''}
       <div class="n23-ks">${KINDS.map(([k,l,t],i)=>{const p=d.prices[k];const now=cp?Math.round(p.cents*(100-cp.pct)/100):p.cents;
         return `<button class="n23-k${i===1?' on':''}" data-a="b23Buy" data-k="${k}"${cp?` data-c="${esc(cp.code)}"`:''}><em>${t}</em><b>${l}</b><strong>${esc(money(now,p.currency))}</strong>${cp?`<s>${esc(money(p.cents,p.currency))}</s>`:''}<span>Boost</span></button>`}).join('')}</div>
-      <p class="n23-fine">Paid once with PayPal on neumarry.com. No subscription. You stay shown first only among people who already fit you.</p>`.replace('<div class="n22-sec"><div><h2>Boost</h2><p>Be seen first by people who fit you</p></div></div>',freeCard||'<div class="n22-sec"><div><h2>Boost</h2><p>Be seen first by people who fit you</p></div></div>')+friendCard()};
+      <p class="n23-fine">${isNative?'Paid once with Google Play.':'Paid once with PayPal on neumarry.com.'} No subscription. You stay shown first only among people who already fit you.</p>`.replace('<div class="n22-sec"><div><h2>Boost</h2><p>Be seen first by people who fit you</p></div></div>',freeCard||'<div class="n22-sec"><div><h2>Boost</h2><p>Be seen first by people who fit you</p></div></div>')+friendCard()};
   function friendCard(){const f=B.d&&B.d.friend;
     return `<div class="n23-fr"><img src="img/pl/dinner.webp" alt=""><div><small>INVITE A FRIEND</small><b>You both get 1 free Boost hour</b><span>When your friend joins with your link and their ID and selfie are checked.${f&&f.rewarded?` ${f.rewarded} reward${f.rewarded>1?'s':''} so far.`:''}</span><button data-a="b23Share">${f&&f.code?'Share my link':'Get my link'}</button></div></div>`}
   Object.assign(A,{async b23Share(){let c=B.d&&B.d.friend&&B.d.friend.code;
@@ -6068,7 +6070,7 @@ html.nmf:not(.gl-lt) .n22-vc span.ok{background:#12301F;color:#8FE0B5;border-col
   /* Super Intro button under today's introduction */
   window.NM_SUPER_BTN=function(p){if(!E.d||S.interests[p.id])return '';const n=E.d.sintro||0;
     if(n)return `<button class="n24-sb" data-a="n24Super" data-id="${p.id}"><b>Send a Super Intro</b><small>Arrives on top, marked. ${n} left</small></button>`;
-    if(isNative||!sold('sintro_1'))return '';
+    if((isNative&&!(window.NM_PLAY&&window.NM_PLAY()))||!sold('sintro_1'))return '';
     return `<button class="n24-sb" data-a="n24Packs"><b>Super Intro · from ${esc(pr('sintro_1'))}</b><small>Your yes arrives on top, marked. Works without Gold.</small></button>`};
 
   /* Spotlight row on Home: real members who fit you and booked this weekend */
@@ -6078,7 +6080,7 @@ html.nmf:not(.gl-lt) .n22-vc span.ok{background:#12301F;color:#8FE0B5;border-col
   /* More ways to be seen: Super Intro packs, Travel Pass, Weekend Spotlight */
   window.NM_EXTRAS_CARD=function(){const d=E.d;if(!d)return '';
     const t=d.travel,sp=d.spotlight,n=d.sintro||0;
-    const buy=!isNative;
+    const buy=!isNative||!!(window.NM_PLAY&&window.NM_PLAY());
     const packs=buy&&sold('sintro_1')?`<div class="n24-pk">${[['sintro_1','1'],['sintro_3','3'],['sintro_10','10']].map(([k,l],i)=>`<button class="n24-p${i===1?' on':''}" data-a="n24Pack" data-k="${k}"><b>${l}</b><small>Super Intro${l==='1'?'':'s'}</small><strong>${esc(pr(k))}</strong></button>`).join('')}</div>`:'';
     const superT=`<div class="n24-t"><img src="img/p15/rings.webp" alt=""><div class="n24-tb"><small>SUPER INTRO</small><b>Your yes, on top</b><span>Arrives first in their list with a mark. They can answer and chat without Gold.${n?` You have ${n}.`:''}</span>${packs}</div></div>`;
     let travelT='';
@@ -6143,6 +6145,23 @@ html.nmf:not(.gl-lt) .n22-vc span.ok{background:#12301F;color:#8FE0B5;border-col
 .n24-pick select{width:100%;height:44px;border-radius:11px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-size:15px;padding:0 10px}
 `;
   const s=document.createElement('style');s.textContent=css;document.head.appendChild(s);
+})();
+
+/* ---------- NeuMarry: Boost, Super Intro packs, Travel Pass, Weekend Spotlight bought with Google Play inside the Android app
+   (his ok 16 Nov 2026 09:51; Play account is the company's own since 13 Nov). Same prices as the website. When the server
+   says a payment is needed, Google Play's own sheet opens for that one product; the server checks it with Google (play15),
+   keeps it as a credit, and the same action runs again and uses it. Coupons stay on the website. ---------- */
+(function(){
+  if(!(typeof window!=='undefined'))return;
+  const NAMES=['boost_start15','sintro_buy15','travel_start15','spotlight_start15'];
+  const _rpc=API.rpc;
+  API.rpc=async function(name,args){
+    if(!(window.NM_APP&&isNative&&NAMES.includes(name)))return _rpc.apply(this,arguments);
+    let a=args;if(name==='boost_start15'&&a&&a.coupon)a=Object.assign({},a,{coupon:null});
+    for(let i=0;;i++){try{return await _rpc.call(this,name,a)}catch(e){
+      if(!(e&&e.raw==='play'&&e.prod)||i>=1||typeof P15!=='object'||!P15.playBuy)throw e;
+      const v=await P15.playBuy('nm_'+e.prod,false);if(!v||v.pending)throw new Error('Your payment is pending. It switches on when Google Play confirms it.')}}};
+  window.NM_PLAY=()=>!!(window.NM_APP&&isNative&&Bill());
 })();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
