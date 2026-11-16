@@ -4479,7 +4479,7 @@ Object.assign(P15V,{adcheck:adCheck15,biz:biz15v,services:svc15v,svcplan:svcPlan
       const own=(t,raw)=>{toast(t,'info');P15.shownAt=Date.now();P15.shownMsg=t;const x=new Error(t);x.raw=raw;return x};
       if(/p2p payments coming soon/.test(em15(e)))throw own('Paying here opens soon. Until then nothing is charged.','p2p coming soon');
       const prod=need(e);if(!prod)throw e;
-      if(isNative&&window.NM_APP&&Bill()&&['boost_start15','sintro_buy15','travel_start15','spotlight_start15'].includes(name)){const x=new Error('play needed');x.raw='play';x.prod=String(prod).split('__')[0];throw x}
+      if(isNative&&window.NM_APP&&Bill()&&['boost_start15','sintro_buy15','travel_start15','spotlight_start15','buy_ep_sponsor15'].includes(name)){const x=new Error('play needed');x.raw='play';x.prod=String(prod).split('__')[0];throw x}
       if(isNative)throw own('This is not available in the app yet.','not in app');
       if(S.px&&S.px[prod]&&S.px[prod].sell===false)throw own('Buying opens soon in your country.','country soon');
       let r;try{r=await API.fn('pay15',{action:'start',product:prod,web:true,site:(typeof naOn==='function'&&naOn())?'neuamigo':'neumarry'})}catch(z){throw own('PayPal could not open. Please try again.','paypal')}
@@ -4812,10 +4812,10 @@ function renderEPB(full){if(EPS.mine===undefined)setTimeout(epLoadMine,0);const 
     ${rows.length<lim?`<button class="btn ghost block" data-a="epRowAdd">${ic('plus')} Add a service</button>`:`<p class="ep-fine">Up to ${lim} services on this plan.</p>`}
     <button class="btn primary block" data-a="epSvcSave"${EPS.busy==='svc'?' disabled':''}>${EPS.busy==='svc'?'Saving…':'Save services'}</button></div>`;
   const plan=(k,t,items,pro)=>`<div class="ep-plan${pro?' pro':''}${b.plan===k&&b.active?' on':''}"><div class="ep-ph"><b>${t}</b><span>${pxs(k,P[k]?money(P[k],'USD'):'')}<small> a month</small></span></div><ul>${items.map(x=>`<li>${ic('check')}${esc(x)}</li>`).join('')}</ul>
-    <button class="btn ${pro?'':'primary'} block" data-a="epPlan" data-k="${k}"${EPS.busy===k?' disabled':''}>${EPS.busy===k?'One moment…':!M.trialUsed&&!b.active?'Start 7 days free · no card':b.plan===k&&b.active?'Add 1 more month · '+pxs(k,money(P[k],'USD')):'Pay 1 month · '+pxs(k,money(P[k],'USD'))}</button></div>`;
+    <button class="btn ${pro?'':'primary'} block" data-a="epPlan" data-k="${k}"${EPS.busy===k?' disabled':''}>${EPS.busy===k?'One moment…':!M.trialUsed&&!b.active?'Start 7 days free · no card':b.plan===k&&b.active?'Add 1 more month · '+pxs(k,money(P[k],'USD')):((isNative&&window.NM_PLAY&&window.NM_PLAY())?'Subscribe · '+pxs(k,money(P[k],'USD'))+' a month':'Pay 1 month · '+pxs(k,money(P[k],'USD')))}</button></div>`;
   const plans=`<h3 class="ep-h3">Plans</h3>${plan('ep_basic','Basic',['Your page with services and prices','Up to 10 services','Families send you requests'],false)}${plan('ep_pro','Featured',['Everything in Basic','Unlimited services','Shown before Basic partners, marked "Featured"','Host Introduction Evenings (Host plan included)','Page views and requests'],true)}${plan('ep_host','Host plan',['Host Introduction Evenings at your place','Set your dinner price and keep it','Guest list with first names and door codes'],false)}${b.active&&['ep_pro','ep_host'].includes(b.plan)&&b.verified?`<button class="btn gold block" data-a="ivHost">${ic('users')}Host Introduction Evenings</button>`:''}
-${b.active&&!isNative?`<div class="ep-plan"><div class="ep-ph"><b>Sponsored week</b><span>${pxs('ep_sponsor','CA$150')}<small> a week</small></span></div><ul><li>${ic('check')}Top of the list in your country for 7 days</li><li>${ic('check')}Marked "Sponsored"</li></ul><button class="btn primary block" data-a="epSponsor"${EPS.busy==='sp'?' disabled':''}>${EPS.busy==='sp'?'One moment…':'Pay 1 week · '+pxs('ep_sponsor','CA$150')}</button></div>`:''}
-    <p class="ep-fine">${isNative?'Plans are paid on the NeuMarry website, not in this app.':'Paid once with PayPal. Nothing renews by itself.'} NeuMarry takes no share of what families pay you.</p>`;
+${b.active&&(!isNative||(window.NM_PLAY&&window.NM_PLAY()))?`<div class="ep-plan"><div class="ep-ph"><b>Sponsored week</b><span>${pxs('ep_sponsor','CA$150')}<small> a week</small></span></div><ul><li>${ic('check')}Top of the list in your country for 7 days</li><li>${ic('check')}Marked "Sponsored"</li></ul><button class="btn primary block" data-a="epSponsor"${EPS.busy==='sp'?' disabled':''}>${EPS.busy==='sp'?'One moment…':'Pay 1 week · '+pxs('ep_sponsor','CA$150')}</button></div>`:''}
+    <p class="ep-fine">${isNative?((window.NM_PLAY&&window.NM_PLAY())?'Paid with Google Play. Plans renew every month until you cancel them in Google Play.':'Plans are paid on the NeuMarry website, not in this app.'):'Paid once with PayPal. Nothing renews by itself.'} NeuMarry takes no share of what families pay you.</p>`;
   const reqs=`<h3 class="ep-h3">Requests from families <small>${(M.requests||[]).length}</small></h3>${(M.requests||[]).length?(M.requests||[]).map(r=>`<div class="ep-req"><b>${esc(r.name)}${r.guests?' · '+r.guests+' guests':''}</b><small>${r.date?esc(new Date(r.date+'T12:00:00').toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short',year:'numeric'})):'Date open'}${r.note?' · '+esc(r.note):''}</small>${r.email?`<a class="link" href="mailto:${esc(r.email)}">${esc(r.email)}</a>`:''}</div>`).join(''):`<p class="ep-fine">No requests yet. Families can send one once your page is showing.</p>`}`;
   return shell(status+plans+svc+reqs+form)}
 
@@ -6166,7 +6166,7 @@ html.nmf:not(.gl-lt) .n22-vc span.ok{background:#12301F;color:#8FE0B5;border-col
    keeps it as a credit, and the same action runs again and uses it. Coupons stay on the website. ---------- */
 (function(){
   if(!(typeof window!=='undefined'))return;
-  const NAMES=['boost_start15','sintro_buy15','travel_start15','spotlight_start15'];
+  const NAMES=['boost_start15','sintro_buy15','travel_start15','spotlight_start15','buy_ep_sponsor15'];
   const _rpc=API.rpc;
   API.rpc=async function(name,args){
     if(!(window.NM_APP&&isNative&&NAMES.includes(name)))return _rpc.apply(this,arguments);
@@ -6175,6 +6175,24 @@ html.nmf:not(.gl-lt) .n22-vc span.ok{background:#12301F;color:#8FE0B5;border-col
       if(!(e&&e.raw==='play'&&e.prod)||i>=1||typeof P15!=='object'||!P15.playBuy)throw e;
       const v=await P15.playBuy('nm_'+e.prod,false);if(!v||v.pending)throw new Error('Your payment is pending. It switches on when Google Play confirms it.')}}};
   window.NM_PLAY=()=>!!(window.NM_APP&&isNative&&Bill());
+  /* Wedding-partner plans as a monthly Google Play subscription (his choice A, 16 Nov 2026): neumarry_partner, base plans basic / featured */
+  const SUBP='neumarry_partner',BP={ep_basic:'basic',ep_pro:'featured'};
+  async function partnerSub(bid,prod){const B=Bill();
+    const r=await B.getProducts({ids:[SUBP]});const pd=((r&&r.products)||[]).find(x=>x.productId===SUBP);if(!pd)throw new Error('Google Play is not ready for this plan yet. Please try again later.');
+    const o=(pd.offers||[]).find(x=>x.basePlanId===BP[prod]&&!x.offerId)||(pd.offers||[]).find(x=>x.basePlanId===BP[prod]);if(!o)throw new Error('Google Play is not ready for this plan yet. Please try again later.');
+    let res;try{res=await B.purchase({productId:SUBP,offerToken:o.offerToken,accountId:S.me.id})}catch(e){const c=String((e&&e.code)||'');const x=new Error(c==='cancelled'?'cancelled':'Google Play could not finish the payment.');x.code=c;throw x}
+    const p=((res&&res.purchases)||[]).find(x=>(x.products||[]).includes(SUBP));if(!p){const x=new Error('cancelled');x.code='cancelled';throw x}
+    if(p.state===2)throw new Error('Your payment is pending. It switches on when Google Play confirms it.');
+    const v=await API.fn('play15',{productId:SUBP,purchaseToken:p.purchaseToken,bid});if(!v||!v.entitled)throw new Error('Google Play has not confirmed this payment yet.');
+    return {plan:v.plan||prod,planUntil:v.planUntil}}
+  const _rpc2=API.rpc;
+  API.rpc=async function(name,args){
+    if(window.NM_PLAY&&window.NM_PLAY()&&name==='buy_biz_plan15'&&args&&BP[args.prod])return partnerSub(args.bid,args.prod);
+    return _rpc2.apply(this,arguments)};
+  /* renewals: Google renews the plan every month; when the partner opens the app, the new period is saved */
+  async function partnerRenew(){try{const B=Bill();if(!B||!S.me)return;const r=await B.restore();
+    for(const p of ((r&&r.purchases)||[]).filter(x=>(x.products||[]).includes(SUBP)&&x.state===1))await API.fn('play15',{productId:SUBP,purchaseToken:p.purchaseToken}).catch(()=>{})}catch(e){}}
+  const _lm=loadMe;loadMe=async function(){const r=await _lm.apply(this,arguments);if(window.NM_PLAY&&window.NM_PLAY()&&S.me)setTimeout(partnerRenew,3000);return r};
 })();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
