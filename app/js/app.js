@@ -6637,6 +6637,17 @@ html.nmf .n26-g .n26-t b{grid-column:2;font:500 15px ${F}!important;color:var(--
 html.nmf .n26-g .n26-t small{grid-column:2;font:500 13px ${F}!important;color:var(--p-mu)!important;margin:2px 0 0!important}
 html.nmf .n26-g .n26-t::after{content:"›";grid-column:3;grid-row:1/3;font:500 20px ${F};color:var(--p-mu)}
 html.nmf .n26-hint{color:var(--p-mu)!important;font:500 13px ${F}!important}
+
+/* Phone insets (his screenshot 20 Nov 13:12: too much empty space on top): <html> already keeps the page below the status bar
+   (padding-top: var(--sat)), so headers must not add the inset a second time; same for the tab capsule at the bottom. */
+html.nmf{background:var(--p-bg)!important}
+html.nmf:not(.edge-t) .p29-hd{padding-top:10px!important}
+html.nmf:not(.edge-t) .n22-mh,html.nmf:not(.edge-t) .n26-hd,html.nmf:not(.edge-t) .nmf-top,html.nmf:not(.edge-t) .nmf-hd{padding-top:12px!important}
+html.nmf.edge-t .p29-hd{padding-top:calc(var(--sat) + 10px)!important}
+html.nmf:not(.edge-b) #app .navwrap{padding-bottom:10px!important}
+html.nmf.edge-b #app .navwrap{padding-bottom:calc(var(--sab) + 10px)!important}
+html.nmf .nmf-top::before,html.nmf .nmf-top::after,html.nmf .nmf-hd::before,html.nmf .nmf-hd::after{display:none!important}
+html.nmf .nmf-top{background-image:none!important}
 `;
   function addCss(){if(document.getElementById('p29css'))return;const s=document.createElement('style');s.id='p29css';s.textContent=css;document.head.appendChild(s)}
   const TITLE={all:'Today',wed:'Wedding partners',eve:'Evenings',gold:'Gold',fam:'Family',seen:'Be seen first'};
