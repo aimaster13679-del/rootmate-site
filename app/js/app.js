@@ -6442,8 +6442,25 @@ html.nmf #app .navwrap .nmf-nav .nmf-n{background:#E11D48!important;color:#fff!i
     const old=bd.querySelector('.n22-empty button[data-a="goVerify"]');
     if(old){const em=old.closest('.n22-empty');const fh=em&&em.previousElementSibling;if(fh&&fh.classList.contains('n22-fh'))fh.remove();if(em)em.remove()}
     bd.insertAdjacentHTML('afterbegin',card())}
+
+  /* Premium tab icons (his ask 20 Nov 2026 11:26): thin outline when not chosen, solid when chosen, like Netflix/Instagram/Airbnb.
+     Matches = two joined rings (marriage), Gold = medal (his pick B, 20 Nov 11:32; crown rejected). Custom drawn, one stroke width, rounded joins. */
+  const IC27={
+    matches:['<path d="M4 10.2 12 4l8 6.2V19a1.2 1.2 0 0 1-1.2 1.2H14.6v-4.6a2.6 2.6 0 0 0-5.2 0v4.6H5.2A1.2 1.2 0 0 1 4 19z"/>',
+             '<path d="M3.6 10.1 12 3.6l8.4 6.5V19a1.6 1.6 0 0 1-1.6 1.6h-4.4v-5a2.4 2.4 0 0 0-4.8 0v5H5.2A1.6 1.6 0 0 1 3.6 19z"/>'],
+    mlist:['<circle cx="8.7" cy="14" r="5.6"/><circle cx="15.3" cy="14" r="5.6"/><path d="M12 6.1l1.5-2 1.5 2-1.5 1.4z" transform="translate(-1.5 0)"/>',
+           'RINGS'],
+    connections:['<path d="M4.5 5.5h10a1.8 1.8 0 0 1 1.8 1.8v6a1.8 1.8 0 0 1-1.8 1.8H9.2L6 17.6v-2.5H4.5a1.8 1.8 0 0 1-1.8-1.8v-6a1.8 1.8 0 0 1 1.8-1.8z"/><path d="M18.6 9.2h.9a1.8 1.8 0 0 1 1.8 1.8v5.4a1.8 1.8 0 0 1-1.8 1.8h-1.2v2.3l-3-2.3h-3.1a1.8 1.8 0 0 1-1.6-1"/>',
+                 '<path d="M4.5 4.8h10a2.4 2.4 0 0 1 2.4 2.4v6a2.4 2.4 0 0 1-2.4 2.4H9.4L5.4 18.6v-3H4.5a2.4 2.4 0 0 1-2.4-2.4v-6a2.4 2.4 0 0 1 2.4-2.4z"/><path d="M18.4 8.6h1.1a2.4 2.4 0 0 1 2.4 2.4v5.4a2.4 2.4 0 0 1-2.4 2.4h-.6v2.6l-3.6-2.6h-2.6a2.4 2.4 0 0 1-2.2-1.4h5.1a3 3 0 0 0 3-3z"/>'],
+    gold:['<circle cx="12" cy="9.4" r="5.6"/><path d="M8.6 13.9 7.4 21l4.6-2.4 4.6 2.4-1.2-7.1"/><path d="m12 6.9.8 1.6 1.7.2-1.3 1.2.4 1.7-1.6-.9-1.6.9.4-1.7-1.3-1.2 1.7-.2z"/>',
+          '<path d="M12 3.2a6.2 6.2 0 1 0 0 12.4 6.2 6.2 0 0 0 0-12.4zm0 3.3.9 1.8 2 .3-1.5 1.4.4 2-1.8-1-1.8 1 .4-2-1.5-1.4 2-.3z"/><path d="m8.3 15.4-1.2 6.2 4.9-2.5 4.9 2.5-1.2-6.2a7.6 7.6 0 0 1-7.4 0z"/>'],
+    me:['<circle cx="12" cy="8.2" r="3.9"/><path d="M4.6 20.2c.6-3.9 3.6-6.2 7.4-6.2s6.8 2.3 7.4 6.2"/>',
+        '<circle cx="12" cy="8" r="4.5"/><path d="M3.9 20.6c.4-4.3 3.7-7.1 8.1-7.1s7.7 2.8 8.1 7.1a.8.8 0 0 1-.8.9H4.7a.8.8 0 0 1-.8-.9z"/>']};
+  function icons(){document.querySelectorAll('.navwrap .nmf-nav button[data-k]').forEach(b=>{const d=IC27[b.dataset.k];const sv=b.querySelector('svg');if(!d||!sv)return;
+    const on=b.classList.contains('on');const want=on?'s':'o';if(sv.dataset.i27===want)return;sv.dataset.i27=want;
+    sv.setAttribute('viewBox','0 0 24 24');sv.innerHTML=on&&d[1]==='RINGS'?`<g fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round">${d[0].replace(/<path[^>]*\/>/,'')}</g><path d="M12 2.9l1.9 2.4L12 7.1l-1.9-1.8z" fill="currentColor"/>`:on?`<g fill="currentColor" stroke="none">${d[1]}</g>`:`<g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${d[0]}</g>`})}
   const _r=render;render=function(){const out=_r.apply(this,arguments);
-    try{if(ON()){addCss();inject();
+    try{if(ON()){addCss();inject();icons();
       const dark=!document.documentElement.classList.contains('gl-lt');const m=document.querySelector('meta[name=theme-color]');
       if(m&&dark&&!view&&(S.tab==='matches'||S.tab==='mlist'))m.setAttribute('content',TOP)}}catch(e){}
     return out};
