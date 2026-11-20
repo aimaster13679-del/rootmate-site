@@ -6374,13 +6374,6 @@ html.nmf:not(.gl-lt) .n26-pc .n26-bar{background:#2E252A}
   const ON=()=>!!window.NM_APP;
   const TOP='#2A0F1C';
   const css=`
-html.nmf:not(.gl-lt) .n22-pg{--ink:#F7EFF3;--mut:#C4B4BC;--card:rgba(255,255,255,.065);--line:rgba(255,255,255,.10);--bg:#140B11}
-html.nmf:not(.gl-lt) body,html.nmf:not(.gl-lt) .n22-pg{background:#140B11}
-html.nmf:not(.gl-lt) .n22-hd,html.nmf:not(.gl-lt) .n22-mh{background:${TOP}}
-html.nmf:not(.gl-lt) .n22-hb{opacity:.74}
-html.nmf:not(.gl-lt) .n22-ov{background:linear-gradient(180deg,${TOP} 0%,rgba(42,15,28,.62) 16%,rgba(120,24,58,.30) 52%,rgba(20,11,17,.94) 100%)}
-html.nmf:not(.gl-lt) .n22-bd{background:radial-gradient(120% 340px at 50% 0,rgba(232,69,111,.16),rgba(232,69,111,0) 70%),radial-gradient(90% 420px at 100% 55%,rgba(124,64,255,.07),rgba(0,0,0,0) 70%),#140B11}
-html.nmf:not(.gl-lt) .n22-feat,html.nmf:not(.gl-lt) .n22-empty,html.nmf:not(.gl-lt) .n22-pc,html.nmf:not(.gl-lt) .n22-ev,html.nmf:not(.gl-lt) .n22-all,html.nmf:not(.gl-lt) .n22-yy,html.nmf:not(.gl-lt) .n22-cd{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.035))!important;border:1px solid rgba(255,255,255,.10)!important;box-shadow:0 18px 40px -24px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.06)!important}
 .n27{position:relative;margin:0 0 18px;padding:16px;border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.04));border:1px solid rgba(240,86,122,.45);box-shadow:0 22px 44px -26px rgba(214,31,79,.65),inset 0 1px 0 rgba(255,255,255,.07);color:var(--ink)}
 html.gl-lt .n27{background:#fff;border-color:rgba(214,31,79,.35);box-shadow:0 14px 34px -22px rgba(214,31,79,.45)}
 .n27 small.k{display:block;font:800 11px/1 NMPJ,system-ui,sans-serif;letter-spacing:.14em;color:#FF8FA9}
@@ -6398,7 +6391,7 @@ html.gl-lt .n27 small.k{color:#D61F4F}
 .n27-bar{height:6px;border-radius:6px;background:rgba(255,255,255,.09);overflow:hidden;margin:0 0 14px}
 html.gl-lt .n27-bar,html.gl-lt .n27-st div{background:#F7F1F3}
 .n27-bar span{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#E8456F,#FF8FA9);transition:width .8s ease}
-.n27 .n27-go{display:flex!important;align-items:center;justify-content:center;width:100%;height:50px;border-radius:15px;background:linear-gradient(180deg,#F0567A,#D61F4F)!important;color:#fff!important;font:800 15.5px NMPJ,system-ui,sans-serif;text-align:center!important;box-shadow:0 12px 28px -10px rgba(232,69,111,.8);animation:n27glow 3.2s ease-in-out infinite}
+.n27 .n27-go{display:flex!important;align-items:center;justify-content:center;width:100%;height:50px;border-radius:15px;background:linear-gradient(180deg,#F0567A,#D61F4F)!important;color:#fff!important;font:800 15.5px NMPJ,system-ui,sans-serif;text-align:center!important;box-shadow:0 12px 28px -10px rgba(232,69,111,.8);}
 @keyframes n27glow{0%,100%{box-shadow:0 12px 28px -10px rgba(232,69,111,.7)}50%{box-shadow:0 14px 34px -8px rgba(240,86,122,.95)}}
 .n27-how{margin:12px 0 0;padding-top:12px;border-top:1px solid var(--line);font:600 12.5px/1.45 NMPJ,system-ui,sans-serif;color:var(--mut)}
 .n27-how b{color:var(--ink)}
@@ -6463,6 +6456,186 @@ html.nmf #app .navwrap .nmf-nav .nmf-n{background:#E11D48!important;color:#fff!i
     try{if(ON()){addCss();inject();icons();
       const dark=!document.documentElement.classList.contains('gl-lt');const m=document.querySelector('meta[name=theme-color]');
       if(m&&dark&&!view&&(S.tab==='matches'||S.tab==='mlist'))m.setAttribute('content',TOP)}}catch(e){}
+    return out};
+})();
+
+/* ---------- NeuMarry premium icon set (his ask 20 Nov 2026 11:35: the eye, star, heart... 3D emoji pictures across the app
+   must be premium, professional and rich, like the new tab icons). NeuMarry app only (window.NM_APP).
+   Every img/f3/<name>.webp picture (except the big welcome globe) is swapped for one custom line icon of the same family:
+   monochrome thin line (1.6) in the text colour, white on rose buttons (pro redesign, his ok 20 Nov 11:54). Size comes from the picture it replaces. ---------- */
+(function(){
+  if(typeof window==='undefined')return;
+  const ON=()=>!!window.NM_APP;
+  const I={
+    eye:'<path class="f" d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3.2"/><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/>',
+    star:'<path class="f" d="m12 3.6 2.5 5.1 5.6.8-4 3.9 1 5.6L12 16.4 6.9 19l1-5.6-4-3.9 5.6-.8z"/><path d="m12 3.6 2.5 5.1 5.6.8-4 3.9 1 5.6L12 16.4 6.9 19l1-5.6-4-3.9 5.6-.8z"/>',
+    heart:'<path class="f" d="M12 20s-7.6-4.5-9-9.4C2.1 7.4 4.1 4.6 7.2 4.6c2 0 3.5 1.1 4.8 2.9 1.3-1.8 2.8-2.9 4.8-2.9 3.1 0 5.1 2.8 4.2 6C19.6 15.5 12 20 12 20z"/><path d="M12 20s-7.6-4.5-9-9.4C2.1 7.4 4.1 4.6 7.2 4.6c2 0 3.5 1.1 4.8 2.9 1.3-1.8 2.8-2.9 4.8-2.9 3.1 0 5.1 2.8 4.2 6C19.6 15.5 12 20 12 20z"/>',
+    chat:'<path class="f" d="M5 4.5h14a2 2 0 0 1 2 2v8.5a2 2 0 0 1-2 2h-7.5L7 20.5v-3.5H5a2 2 0 0 1-2-2V6.5a2 2 0 0 1 2-2z"/><path d="M5 4.5h14a2 2 0 0 1 2 2v8.5a2 2 0 0 1-2 2h-7.5L7 20.5v-3.5H5a2 2 0 0 1-2-2V6.5a2 2 0 0 1 2-2z"/><path d="M7.5 9.5h9M7.5 12.8h5.5"/>',
+    check:'<circle class="f" cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="9"/><path d="m7.8 12.3 2.8 2.8 5.6-5.8"/>',
+    clock:'<circle class="f" cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="9"/><path d="M12 7v5.2l3.4 2"/>',
+    copy:'<rect class="f" x="8" y="8" width="12" height="12" rx="2.4"/><rect x="8" y="8" width="12" height="12" rx="2.4"/><path d="M16 4.8V4.6A1.6 1.6 0 0 0 14.4 3H5.6A1.6 1.6 0 0 0 4 4.6v8.8A1.6 1.6 0 0 0 5.6 15H6"/>',
+    crown:'<path class="f" d="M12 3.4a5.9 5.9 0 1 0 0 11.8 5.9 5.9 0 0 0 0-11.8z"/><circle cx="12" cy="9.3" r="5.9"/><path d="M8.5 14.2 7.3 21l4.7-2.4 4.7 2.4-1.2-6.8"/><path d="m12 6.6.8 1.7 1.8.2-1.3 1.2.4 1.8-1.7-.9-1.7.9.4-1.8-1.3-1.2 1.8-.2z"/>',
+    gift:'<rect class="f" x="3.5" y="9" width="17" height="11.5" rx="2"/><rect x="3.5" y="9" width="17" height="11.5" rx="2"/><path d="M2.8 9h18.4M12 9v11.5M12 9C10.5 6.2 7.6 4.6 6.8 6.4c-.7 1.6 1.7 2.6 5.2 2.6zm0 0c1.5-2.8 4.4-4.4 5.2-2.6.7 1.6-1.7 2.6-5.2 2.6z"/>',
+    globe:'<circle class="f" cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9S14.6 18.4 12 21c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3z"/>',
+    home:'<path class="f" d="M4 10.2 12 4l8 6.2V19a1.2 1.2 0 0 1-1.2 1.2H5.2A1.2 1.2 0 0 1 4 19z"/><path d="M4 10.2 12 4l8 6.2V19a1.2 1.2 0 0 1-1.2 1.2H14.6v-4.6a2.6 2.6 0 0 0-5.2 0v4.6H5.2A1.2 1.2 0 0 1 4 19z"/>',
+    id:'<rect class="f" x="2.8" y="5" width="18.4" height="14" rx="2.4"/><rect x="2.8" y="5" width="18.4" height="14" rx="2.4"/><circle cx="8.6" cy="11" r="2.1"/><path d="M5.6 16c.5-1.6 1.6-2.4 3-2.4s2.5.8 3 2.4M14.4 10h3.8M14.4 13.4h2.6"/>',
+    info:'<circle class="f" cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="9"/><path d="M12 11v5.4M12 7.7v.1"/>',
+    lock:'<rect class="f" x="4.5" y="10.5" width="15" height="10" rx="2.4"/><rect x="4.5" y="10.5" width="15" height="10" rx="2.4"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5M12 14.6v2"/>',
+    mail:'<rect class="f" x="3" y="5.5" width="18" height="13" rx="2.4"/><rect x="3" y="5.5" width="18" height="13" rx="2.4"/><path d="m3.8 7 8.2 6 8.2-6"/>',
+    mic:'<rect class="f" x="8.8" y="3" width="6.4" height="11" rx="3.2"/><rect x="8.8" y="3" width="6.4" height="11" rx="3.2"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M9 21h6"/>',
+    pin:'<path class="f" d="M12 21s6.5-6 6.5-11a6.5 6.5 0 0 0-13 0c0 5 6.5 11 6.5 11z"/><path d="M12 21s6.5-6 6.5-11a6.5 6.5 0 0 0-13 0c0 5 6.5 11 6.5 11z"/><circle cx="12" cy="10" r="2.4"/>',
+    scan:'<path d="M4 8.5V6a2 2 0 0 1 2-2h2.5M15.5 4H18a2 2 0 0 1 2 2v2.5M20 15.5V18a2 2 0 0 1-2 2h-2.5M8.5 20H6a2 2 0 0 1-2-2v-2.5"/><circle class="f" cx="12" cy="10.4" r="2.8"/><circle cx="12" cy="10.4" r="2.8"/><path d="M7.8 16.6c.8-1.8 2.3-2.7 4.2-2.7s3.4.9 4.2 2.7"/>',
+    send:'<path class="f" d="M21 3 3.5 10.4l7 2.9L21 3z"/><path d="M21 3 3.5 10.4l7 2.9 2.9 7.2z"/><path d="m10.5 13.3 4.2-4.2"/>',
+    shield:'<path class="f" d="M12 3 4.5 6v5.6c0 4.5 3.2 8.2 7.5 9.4 4.3-1.2 7.5-4.9 7.5-9.4V6z"/><path d="M12 3 4.5 6v5.6c0 4.5 3.2 8.2 7.5 9.4 4.3-1.2 7.5-4.9 7.5-9.4V6z"/><path d="m8.8 12.1 2.2 2.2 4.2-4.4"/>',
+    trash:'<path class="f" d="M6 7.5h12l-.9 11.7a1.8 1.8 0 0 1-1.8 1.6H8.7a1.8 1.8 0 0 1-1.8-1.6z"/><path d="M4 7.5h16M9.5 7.5V5.2A1.2 1.2 0 0 1 10.7 4h2.6a1.2 1.2 0 0 1 1.2 1.2v2.3M6 7.5l.9 11.7a1.8 1.8 0 0 0 1.8 1.6h6.6a1.8 1.8 0 0 0 1.8-1.6L18 7.5M10 11v6M14 11v6"/>',
+    users:'<circle class="f" cx="9" cy="8.4" r="3.4"/><circle cx="9" cy="8.4" r="3.4"/><path d="M2.8 19.6c.5-3.4 3-5.4 6.2-5.4s5.7 2 6.2 5.4M15.6 5.2a3.2 3.2 0 0 1 0 6.3M17.8 14.4c2 .6 3.3 2.4 3.6 5"/>',
+    search:'<circle class="f" cx="10.6" cy="10.6" r="6.6"/><circle cx="10.6" cy="10.6" r="6.6"/><path d="m15.6 15.6 4.9 4.9"/>',
+    camera:'<rect class="f" x="3" y="6.5" width="18" height="13" rx="2.6"/><path d="M8.2 6.5 9.6 4.2h4.8l1.4 2.3H18.4A2.6 2.6 0 0 1 21 9.1v7.8a2.6 2.6 0 0 1-2.6 2.6H5.6A2.6 2.6 0 0 1 3 16.9V9.1a2.6 2.6 0 0 1 2.6-2.6z"/><circle cx="12" cy="13" r="3.4"/>'};
+  const css=`.i28{display:inline-grid;place-items:center;flex:none;vertical-align:middle}
+.i28 svg{width:100%;height:100%;overflow:visible}
+.i28 svg *{fill:none;stroke:var(--p-tx,#F4EFF1);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.i28 svg .f{display:none}
+.i28.w svg *,html.gl-lt .i28.w svg *{stroke:#fff}.i28.w svg .f{fill:rgba(255,255,255,.22)}`;
+  const defs=`<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<linearGradient id="n28g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFB3C4"/><stop offset=".55" stop-color="#FF6F93"/><stop offset="1" stop-color="#E11D48"/></linearGradient>
+<linearGradient id="n28gl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F0567A"/><stop offset="1" stop-color="#B8123A"/></linearGradient>
+<linearGradient id="n28f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF6F93" stop-opacity=".30"/><stop offset="1" stop-color="#E11D48" stop-opacity=".10"/></linearGradient></defs></svg>`;
+  function setup(){if(document.getElementById('n28css'))return;const s=document.createElement('style');s.id='n28css';s.textContent=css;document.head.appendChild(s);
+    const d=document.createElement('div');d.id='n28defs';d.innerHTML=defs;document.body.appendChild(d)}
+  function swap(root){(root||document).querySelectorAll('img[src*="img/f3/"]').forEach(im=>{const n=(im.getAttribute('src')||'').split('/').pop().replace('.webp','');const p=I[n];if(!p)return;
+      const cs=getComputedStyle(im);let w=parseFloat(cs.width)||im.width||24,h=parseFloat(cs.height)||im.height||w;if(w<8)w=h=20;
+      const sp=document.createElement('span');sp.className='i28 '+(im.className||'');sp.setAttribute('aria-hidden','true');
+      sp.style.width=w+'px';sp.style.height=h+'px';if(cs.marginRight!=='0px')sp.style.marginRight=cs.marginRight;if(cs.marginBottom!=='0px')sp.style.marginBottom=cs.marginBottom;if(cs.display==='block')sp.style.display='grid';
+      if(onRose(im))sp.classList.add('w');
+      sp.innerHTML=`<svg viewBox="0 0 24 24">${p}</svg>`;im.replaceWith(sp)})}
+  /* icon sitting on a rose button: draw it white so it stays readable */
+  function onRose(el){let e=el.parentElement;for(let i=0;i<4&&e;i++,e=e.parentElement){const c=getComputedStyle(e);const bg=c.backgroundColor+' '+c.backgroundImage;
+      const m=bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?/);if(m&&(m[4]===undefined||+m[4]>.6)){const r=+m[1],g=+m[2],b=+m[3];if(r>170&&g<110&&b<140)return true;if(r+g+b<700&&!(r>170&&g<110))return false}}return false}
+  let mo=null;
+  const _r=render;render=function(){const out=_r.apply(this,arguments);
+    try{if(ON()){setup();swap();if(!mo){mo=new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1&&(n.tagName==='IMG'||n.querySelector))swap(n.tagName==='IMG'?n.parentNode:n)});mo.observe(document.getElementById('app')||document.body,{childList:true,subtree:true})}}}catch(e){}
+    return out};
+})();
+
+/* ---------- NeuMarry professional redesign (his ok 20 Nov 2026 11:54 on mock handoff/mocks/pro; his feedback 11:44:
+   'chote bachho jesa or bhadda ... professional designers ki tarah socho'). NeuMarry app only (window.NM_APP).
+   Design rules (one system for every screen):
+   - Colours: calm near-black / white surfaces, one text colour + one grey; rose #E11D48 ONLY on the main action and tiny badges.
+   - One font (Plus Jakarta Sans), sizes 28 / 22 / 17 / 15 / 13, weights 700 / 600 / 500. No serif display font.
+   - Corners 12-16, hairline borders, few boxes, more space. Icons monochrome thin line (part28).
+   - Header: plain greeting + title + avatar; section switch as a quiet text row (no photo bubbles, no rolling search).
+   Real data only; nothing here invents numbers. ---------- */
+(function(){
+  if(typeof window==='undefined')return;
+  const ON=()=>!!window.NM_APP;
+  const F="'Plus Jakarta Sans',NMPJ,system-ui,-apple-system,'Segoe UI',sans-serif";
+  const css=`
+html.nmf{--p-bg:#FFFFFF;--p-s1:#F6F4F5;--p-s2:#FFFFFF;--p-ln:#ECE7EA;--p-tx:#141013;--p-mu:#6F676C;--p-ac:#E11D48}
+html.nmf:not(.gl-lt){--p-bg:#0E0B0D;--p-s1:#151114;--p-s2:#1A1518;--p-ln:#241E22;--p-tx:#F4EFF1;--p-mu:#A79FA4}
+html.nmf.nmf body,html.nmf.nmf.cine.sap.c3.gl body #app,html.nmf.nmf.cine.sap.c3.gl:not(.gl-lt) body #app,html.nmf.nmf.cine.sap.c3.gl.gl-lt body #app{background:var(--p-bg)!important}
+html.nmf .n22-pg,html.nmf .nmf-pg,html.nmf .n26-pg,html.nmf .cn-page{--ink:var(--p-tx);--mut:var(--p-mu);--card:var(--p-s1);--line:var(--p-ln);--bg:var(--p-bg);--rose:var(--p-ac);background:var(--p-bg)!important;color:var(--p-tx);font-family:${F}!important}
+html.nmf .n22-pg *,html.nmf .nmf-pg *,html.nmf .n26-pg *,html.nmf .view *{font-family:${F}!important;letter-spacing:0!important}
+html.nmf .n22-pg h1,html.nmf .n22-pg h2,html.nmf .n22-pg h3,html.nmf .nmf-pg h1,html.nmf .nmf-pg h2,html.nmf .n26-pg h1,html.nmf .n26-pg h2{font-family:${F}!important;font-style:normal}
+/* header */
+.p29-hd{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;padding:calc(18px + env(safe-area-inset-top)) 20px 6px;background:var(--p-bg);color:var(--p-tx)}
+.p29-hd small{display:block;font:500 13px/1.3 ${F};color:var(--p-mu);margin-bottom:4px}
+.p29-hd h1{font:700 28px/1.12 ${F};margin:0;color:var(--p-tx)}
+.p29-av{flex:none;width:38px;height:38px;border-radius:12px;background:var(--p-s1);border:1px solid var(--p-ln);color:var(--p-tx);font:600 15px ${F};display:grid;place-items:center;cursor:pointer}
+.p29-seg{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:12px 20px 4px;background:var(--p-bg)}
+.p29-seg::-webkit-scrollbar{display:none}
+.p29-seg button{flex:none;padding:8px 14px;border-radius:10px;border:1px solid var(--p-ln);background:transparent;color:var(--p-mu);font:600 13.5px ${F};cursor:pointer;white-space:nowrap}
+.p29-seg button.on{background:var(--p-tx);border-color:var(--p-tx);color:var(--p-bg)}
+html.nmf .n22-hd{display:none!important}
+html.nmf .n22-bd{margin-top:0!important;border-radius:0!important;background:var(--p-bg)!important;padding:18px 20px 120px!important}
+/* section titles */
+html.nmf .n22-fh small,html.nmf .n22-pc small{color:var(--p-mu)!important;letter-spacing:0!important;font:600 13px ${F}!important;text-transform:none}
+html.nmf .n22-fh h2,html.nmf .n22-sec h2{font:600 17px/1.3 ${F}!important;margin:2px 0 0!important;color:var(--p-tx)}
+html.nmf .n22-sec p{font:500 13px ${F}!important;color:var(--p-mu)!important}
+html.nmf .n22-sec button,html.nmf .n22-more{color:var(--p-mu)!important;font:600 13px ${F}!important}
+html.nmf .n22-cd{background:transparent!important;border:0!important;box-shadow:none!important;color:var(--p-mu)!important;padding:0!important;font:500 13px ${F}!important}
+html.nmf .n22-cd b{color:var(--p-mu)!important;font-weight:600}
+/* cards: quiet surfaces, hairlines, no glow */
+html.nmf .n22-feat,html.nmf .n22-empty,html.nmf .n22-pc,html.nmf .n22-all,html.nmf .n22-yy,html.nmf .n22-pu,html.nmf .nmf-card,html.nmf .nmf-plan,html.nmf .n26-st{background:var(--p-s1)!important;border:1px solid var(--p-ln)!important;box-shadow:none!important;border-radius:16px!important;color:var(--p-tx)}
+html.nmf .n22-ev,html.nmf .n22-mini{background:transparent!important;border:0!important;box-shadow:none!important}
+html.nmf .n22-pill,html.nmf .n22-lk,html.nmf .cn-badge,html.nmf .n22-pct{background:rgba(14,11,13,.72)!important;color:#fff!important;border:0!important;font:600 12px ${F}!important;border-radius:8px!important;box-shadow:none!important}
+html.nmf .n22-feat svg path{stroke:rgba(255,255,255,.7)!important}
+html.nmf .n22-vc span{background:transparent!important;border:1px solid var(--p-ln)!important;color:var(--p-mu)!important;font:600 12.5px ${F}!important;border-radius:8px!important}
+html.nmf .n22-vc span.ok{color:var(--p-tx)!important}
+/* numbers and bars: ink, not rose */
+html.nmf .n22-fit b,html.nmf .n22-big,html.nmf .n22-pg [class*="pct"] b{color:var(--p-tx)!important}
+html.nmf .n22-pg [class*="bar"] i,html.nmf .n22-pg [class*="bar"]>span,html.nmf .n26-bar i{background:var(--p-tx)!important}
+html.nmf .n22-pg [class*="bar"],html.nmf .n26-bar{background:var(--p-ln)!important}
+/* buttons: one rose main action, everything else outline */
+html.nmf .n22-y,html.nmf .n27-go,html.nmf .nmf-cta,html.nmf .n22-pg .btn.primary,html.nmf .view .btn.primary{background:var(--p-ac)!important;color:#fff!important;border:0!important;box-shadow:none!important;border-radius:12px!important;font:600 15px ${F}!important}
+html.nmf .n22-x,html.nmf .n22-pg .btn:not(.primary),html.nmf .view .btn:not(.primary){background:transparent!important;color:var(--p-tx)!important;border:1px solid var(--p-ln)!important;box-shadow:none!important;border-radius:12px!important;font:600 15px ${F}!important}
+html.nmf .n26-go{background:transparent!important;color:var(--p-tx)!important;border:1px solid var(--p-ln)!important;box-shadow:none!important}
+html.nmf .n26-go:not(.ok){background:var(--p-ac)!important;border-color:var(--p-ac)!important;color:#fff!important}
+/* next-step card in the same calm style */
+html.nmf .n27{background:var(--p-s1)!important;border:1px solid var(--p-ln)!important;box-shadow:none!important}
+html.nmf .n27 small.k{color:var(--p-mu)!important;letter-spacing:0!important;font:600 13px ${F}!important}
+html.nmf .n27-st div{background:transparent!important;border-color:var(--p-ln)!important}
+html.nmf .n27-st .now{border-color:var(--p-tx)!important}
+html.nmf .n27-st .now i{background:var(--p-tx)!important;color:var(--p-bg)!important}
+html.nmf .n27-st .ok i{background:transparent!important;color:var(--p-tx)!important;border:1px solid var(--p-ln)}
+html.nmf .n27-bar span{background:var(--p-tx)!important}
+/* the live counters block: simple, no glow */
+html.nmf .n22-dot{display:none!important}
+html.nmf .n22-pu img,html.nmf .n22-pu>i{opacity:.35!important}
+
+/* Matches, Me, Gold headers: plain, no wine photo veil */
+html.nmf .n22-mh,html.nmf .n26-hd,html.nmf .nmf-hd,html.nmf .nmf-top{background:var(--p-bg)!important;color:var(--p-tx)!important;box-shadow:none!important;border-radius:0!important}
+html.nmf .n22-mh .n22-hb,html.nmf .n22-mh .n22-ov,html.nmf .n26-hd .n26-hb,html.nmf .n26-hd .n26-ov,html.nmf .nmf-hd img,html.nmf .nmf-hd>i,html.nmf .nmf-top>img{display:none!important}
+html.nmf .n22-mh *,html.nmf .n26-hd *,html.nmf .nmf-hd *{color:var(--p-tx)!important;text-shadow:none!important}
+html.nmf .n22-mh small,html.nmf .n26-hd small,html.nmf .n26-k,html.nmf .nmf-hd small,html.nmf .n22-mh .nmf-sub,html.nmf .n22-mh p{color:var(--p-mu)!important;letter-spacing:0!important;font:500 13px ${F}!important;text-transform:none!important}
+html.nmf .n22-mh h1,html.nmf .n26-hd h1,html.nmf .nmf-hd b,html.nmf .nmf-hd h1{font:700 28px/1.12 ${F}!important}
+html.nmf .n22-seg,html.nmf .seg{background:transparent!important;box-shadow:none!important;border:0!important;gap:6px!important;padding:0!important}
+html.nmf .n22-seg button,html.nmf .seg button{flex:none!important;padding:8px 14px!important;border-radius:10px!important;border:1px solid var(--p-ln)!important;background:transparent!important;color:var(--p-mu)!important;font:600 13.5px ${F}!important;box-shadow:none!important}
+html.nmf .n22-seg button.on,html.nmf .seg button.on{background:var(--p-tx)!important;border-color:var(--p-tx)!important;color:var(--p-bg)!important}
+html.nmf .n26-hd .n26-bt button,html.nmf .n26-hd .n26-bt a{background:transparent!important;border:1px solid var(--p-ln)!important;color:var(--p-tx)!important;box-shadow:none!important}
+/* Gold: neutral tiles instead of coloured candy boxes */
+html.nmf .nmf-t{background:var(--p-s1)!important;border:1px solid var(--p-ln)!important;color:var(--p-tx)!important;font:600 13px ${F}!important}
+html.nmf .nmf-plan.on{border-color:var(--p-tx)!important}
+html.nmf .nmf-tag{background:var(--p-tx)!important;color:var(--p-bg)!important}
+/* Home: calm extra blocks */
+html.nmf .n22-fh small{display:none!important}
+html.nmf .n22-all *{color:var(--p-tx)!important}html.nmf .n22-all small{color:var(--p-mu)!important}
+html.nmf .n22-pu{background:var(--p-s1)!important}html.nmf .n22-pu>img{display:none!important}
+html.nmf .n22-pug>div{background:transparent!important;border:1px solid var(--p-ln)!important;box-shadow:none!important}
+html.nmf .n22-pug b{color:var(--p-tx)!important}
+html.nmf .n22-pux small{color:var(--p-mu)!important;letter-spacing:0!important}
+html.nmf .n22-seen{background:var(--p-s1)!important;border:1px solid var(--p-ln)!important;box-shadow:none!important}
+html.nmf [class*="sup"][class*="dash"],html.nmf .n23-si,html.nmf .n24-si,html.nmf .n24-sib{border-style:solid!important;border-color:var(--p-ln)!important;background:var(--p-s1)!important;color:var(--p-tx)!important}
+/* Profile: a calm place photo instead of the pink placeholder blob */
+html.nmf .px-tph{background:url(img/pl/to.webp) center/cover no-repeat!important}
+html.nmf .px-tph .av-art,html.nmf .px-tph .av-ini{display:none!important}
+html.nmf .px-tph .av{background:transparent!important;box-shadow:none!important}
+html.nmf .px-fit,html.nmf .nm-seal{background:var(--p-s1)!important;color:var(--p-tx)!important;border:1px solid var(--p-ln)!important;box-shadow:none!important}
+html.nmf .px-fit *,html.nmf .nm-seal *{color:var(--p-tx)!important}
+html.nmf .px-tile{background:var(--p-s1)!important;border:1px solid var(--p-ln)!important;color:var(--p-tx)!important;box-shadow:none!important}
+html.nmf .px-tile.on{background:var(--p-ac)!important;border-color:var(--p-ac)!important;color:#fff!important}
+html.nmf .px-float{background:var(--p-bg)!important;border:1px solid var(--p-ln)!important;box-shadow:none!important}
+html.nmf .px-tabs button{background:transparent!important;border:1px solid var(--p-ln)!important;color:var(--p-mu)!important;box-shadow:none!important}
+html.nmf .px-tabs button.on{background:var(--p-tx)!important;color:var(--p-bg)!important;border-color:var(--p-tx)!important}
+
+html.nmf .n24-sb{background:var(--p-s1)!important;border:1px solid var(--p-ln)!important;box-shadow:none!important;border-radius:14px!important}
+html.nmf .n24-sb b{color:var(--p-tx)!important;font:600 15px ${F}!important}html.nmf .n24-sb small{color:var(--p-mu)!important}
+html.nmf .n22-pu>i{display:none!important}
+html.nmf .n22-nx em,html.nmf .n22-pg em[class=""],html.nmf .n22-mini em{background:rgba(14,11,13,.72)!important;color:#fff!important;border:0!important;box-shadow:none!important}
+html.nmf .nmf-av,html.nmf .cn-av{background:var(--p-s1)!important;border:1px solid var(--p-ln)!important;color:var(--p-tx)!important;box-shadow:none!important}
+html.nmf .n26-st small{color:var(--p-mu)!important;letter-spacing:0!important}
+html.nmf .n22-fp{background:rgba(14,11,13,.72)!important;color:#fff!important;border:0!important;box-shadow:none!important;font:600 12px ${F}!important}
+`;
+  function addCss(){if(document.getElementById('p29css'))return;const s=document.createElement('style');s.id='p29css';s.textContent=css;document.head.appendChild(s)}
+  const TITLE={all:'Today',wed:'Wedding partners',eve:'Evenings',gold:'Gold',fam:'Family',seen:'Be seen first'};
+  function header(){const old=document.querySelector('.n22-hd');if(!old||old.dataset.p29)return;old.dataset.p29='1';
+    const me=S.me||{};const name=(me.name||'').split(' ')[0];const k=S.n22||'all';
+    const hr=new Date().getHours();const hi=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
+    const segs=[...old.querySelectorAll('.n22-tb')].map(b=>`<button data-a="n22Sec" data-k="${b.dataset.k}" class="${b.classList.contains('on')?'on':''}">${esc((b.querySelector('b')||{}).textContent||'')}</button>`).join('');
+    const ini=esc(((me.name||'?')[0]||'?').toUpperCase());
+    old.insertAdjacentHTML('beforebegin',`<div class="p29-hd"><div><small>${esc(name?hi+', '+name:hi)}</small><h1>${esc(TITLE[k]||'Today')}</h1></div><button class="p29-av" data-a="tab" data-k="me" aria-label="My profile">${ini}</button></div>${segs?`<div class="p29-seg" role="tablist">${segs}</div>`:''}`)}
+  const _r=render;render=function(){const out=_r.apply(this,arguments);
+    try{if(ON()){addCss();header();
+      const m=document.querySelector('meta[name=theme-color]');if(m&&!view)m.setAttribute('content',document.documentElement.classList.contains('gl-lt')?'#FFFFFF':'#0E0B0D')}}catch(e){}
     return out};
 })();
 
