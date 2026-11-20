@@ -6720,6 +6720,51 @@ html.nmf .nmf-top{background-image:none!important}
     return out};
 })();
 
+/* part30: Play Age Signals 18+ screen for NeuMarry (owner "18+ abhi karo" 20 Nov 2026 14:16; same shared AgeCheck plugin
+   as NeuAmigo part55). Android only. Google Play says "under 18" -> this screen covers the app; no answer or any
+   error -> the app works as normal (never lock out an adult). We never see or keep a birth date. */
+(function(){
+  const N=window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform()&&Capacitor.Plugins&&Capacitor.Plugins.AgeCheck;
+  const TEST=/[?&]age18=1/.test(location.search);
+  if(!N&&!TEST) return;
+  const KEY='nm_u18';
+  function lsg(){try{return localStorage.getItem(KEY)==='1'}catch(e){return false}}
+  function lss(v){try{v?localStorage.setItem(KEY,'1'):localStorage.removeItem(KEY)}catch(e){}}
+  function show(){
+    if(document.getElementById('nm30')) return;
+    const de=document.documentElement,dark=!de.classList.contains('gl-lt');
+    const bg=dark?'#0E0B0D':'#FFFFFF',card=dark?'#151114':'#F6F4F5',ink=dark?'#F4EFF1':'#141013',mu=dark?'#A79FA4':'#6F676C',ln=dark?'#3A3237':'#D9D2D6',acc='#E11D48';
+    const F="'Plus Jakarta Sans',system-ui,sans-serif";
+    const d=document.createElement('div');d.id='nm30';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');
+    d.style.cssText=`position:fixed;inset:0;z-index:2147483000;background:${bg};color:${ink};overflow:auto;font-family:${F}`;
+    d.innerHTML=`<div style="padding:calc(var(--sat,0px) + 20px) 20px calc(var(--sab,0px) + 24px);display:flex;flex-direction:column;min-height:100%;box-sizing:border-box;max-width:520px;margin:0 auto">
+ <div style="display:flex;align-items:center;gap:10px"><img src="img/nm-mark.png" alt="" style="width:36px;height:36px;border-radius:10px"><b style="font:700 18px ${F}">NeuMarry</b></div>
+ <div style="flex:1;min-height:28px;max-height:90px"></div>
+ <div style="align-self:flex-start;padding:6px 10px;border-radius:8px;border:1px solid ${ln};color:${mu};font:600 12px ${F};letter-spacing:.06em;text-transform:uppercase">Adults only · 18+</div>
+ <h1 style="font:700 28px/1.18 ${F};margin:14px 0 10px">NeuMarry is for people aged 18 and over</h1>
+ <p style="font:500 15px/1.5 ${F};color:${mu};margin:0">NeuMarry is a matrimony app. Only adults can join, in every country.</p>
+ <div style="margin-top:20px;background:${card};border:1px solid ${ln};border-radius:16px;padding:14px 16px;font:500 14px/1.5 ${F};color:${mu}"><b style="display:block;color:${ink};font-weight:600;margin-bottom:2px">Why you see this</b>Google Play says this account belongs to someone under 18. We do not see or keep your birth date.</div>
+ <div style="flex:1;min-height:24px"></div>
+ <button id="nm30x" style="border:0;background:${acc};color:#fff;font:600 16px ${F};padding:16px;border-radius:14px;width:100%">Close app</button>
+ <button id="nm30f" style="border:0;background:none;color:${ink};font:600 14px ${F};margin-top:8px;padding:10px">Age wrong? Fix it in your Google account</button>
+</div>`;
+    document.body.appendChild(d);
+    try{const B=Capacitor.Plugins.Bars;B&&B.set({top:bg,bottom:bg,light:!dark})}catch(e){}
+    d.querySelector('#nm30x').onclick=()=>{try{Capacitor.Plugins.App.exitApp()}catch(e){}};
+    d.querySelector('#nm30f').onclick=()=>{try{Capacitor.Plugins.Browser.open({url:'https://myaccount.google.com/personal-info'})}catch(e){location.href='https://myaccount.google.com/personal-info'}};
+  }
+  function hide(){const d=document.getElementById('nm30');d&&d.remove()}
+  function run(){if(!N)return;
+    N.check().then(r=>{
+      if(r&&r.under18){lss(1);show()}
+      else if(r&&r.known){lss(0);hide()}
+    }).catch(()=>{});
+  }
+  function boot(){if(TEST||lsg())show();run()}
+  document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot):boot();
+  try{N&&Capacitor.Plugins.App.addListener('resume',run)}catch(e){}
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 /* only on the first open after installing (fast open stays ~1 s every other time; later updates come quietly) */
 if(liveUpd.U()&&!(()=>{try{return localStorage.getItem('nm.upd1')}catch(e){return 1}})()){try{localStorage.setItem('nm.upd1','1')}catch(e){}liveUpd.first().then(ok=>{if(!ok)boot()})}else 
