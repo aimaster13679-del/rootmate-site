@@ -6361,6 +6361,77 @@ html.nmf:not(.gl-lt) .n26-pc .n26-bar{background:#2E252A}
   const s=document.createElement('style');s.id='n26-css';s.textContent=css;document.head.appendChild(s);
 })();
 
+/* ---------- NeuMarry rich dark + clear next step (his ok 20 Nov 2026 10:50 on mock handoff/mocks/dark-rich;
+   his ask 10:38: keep the dark theme but premium, professional, fun and rich, not 'like a cave'; after login a member must
+   understand at once what comes next, like the big apps). NeuMarry app only (window.NM_APP).
+   - Dark colours: warm plum-black with a soft rose glow instead of near-black + heavy wine; cards are lifted glass.
+   - Header: the photo shows brighter under a lighter rose veil; the phone's top bar keeps the header's top colour.
+   - Home, member not live yet: one "Your next step" card (Profile · Photo + ID · Introductions) with one button.
+   - Calm, adult motion: blocks rise in order on open, press feedback, a slow glow on the main button; none with reduce motion.
+   Real data only: steps come from the member's own checks. ---------- */
+(function(){
+  if(typeof window==='undefined')return;
+  const ON=()=>!!window.NM_APP;
+  const TOP='#2A0F1C';
+  const css=`
+html.nmf:not(.gl-lt) .n22-pg{--ink:#F7EFF3;--mut:#C4B4BC;--card:rgba(255,255,255,.065);--line:rgba(255,255,255,.10);--bg:#140B11}
+html.nmf:not(.gl-lt) body,html.nmf:not(.gl-lt) .n22-pg{background:#140B11}
+html.nmf:not(.gl-lt) .n22-hd,html.nmf:not(.gl-lt) .n22-mh{background:${TOP}}
+html.nmf:not(.gl-lt) .n22-hb{opacity:.74}
+html.nmf:not(.gl-lt) .n22-ov{background:linear-gradient(180deg,${TOP} 0%,rgba(42,15,28,.62) 16%,rgba(120,24,58,.30) 52%,rgba(20,11,17,.94) 100%)}
+html.nmf:not(.gl-lt) .n22-bd{background:radial-gradient(120% 340px at 50% 0,rgba(232,69,111,.16),rgba(232,69,111,0) 70%),radial-gradient(90% 420px at 100% 55%,rgba(124,64,255,.07),rgba(0,0,0,0) 70%),#140B11}
+html.nmf:not(.gl-lt) .n22-feat,html.nmf:not(.gl-lt) .n22-empty,html.nmf:not(.gl-lt) .n22-pc,html.nmf:not(.gl-lt) .n22-ev,html.nmf:not(.gl-lt) .n22-all,html.nmf:not(.gl-lt) .n22-yy,html.nmf:not(.gl-lt) .n22-cd{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.035))!important;border:1px solid rgba(255,255,255,.10)!important;box-shadow:0 18px 40px -24px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.06)!important}
+html.nmf:not(.gl-lt) .nav,html.nmf:not(.gl-lt) .navwrap{background:rgba(28,16,24,.90)!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.n27{position:relative;margin:0 0 18px;padding:16px;border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.04));border:1px solid rgba(240,86,122,.45);box-shadow:0 22px 44px -26px rgba(214,31,79,.65),inset 0 1px 0 rgba(255,255,255,.07);color:var(--ink)}
+html.gl-lt .n27{background:#fff;border-color:rgba(214,31,79,.35);box-shadow:0 14px 34px -22px rgba(214,31,79,.45)}
+.n27 small.k{display:block;font:800 11px/1 NMPJ,system-ui,sans-serif;letter-spacing:.14em;color:#FF8FA9}
+html.gl-lt .n27 small.k{color:#D61F4F}
+.n27 h2{font:800 19px/1.25 NMPJ,system-ui,sans-serif;margin:8px 0 4px}
+.n27 p{font:600 13.5px/1.45 NMPJ,system-ui,sans-serif;color:var(--mut);margin:0}
+.n27-st{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 12px}
+.n27-st div{min-width:0;padding:10px 9px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid var(--line)}
+.n27-st i{display:grid;place-items:center;width:24px;height:24px;border-radius:7px;font:800 12px NMPJ,system-ui,sans-serif;font-style:normal;background:rgba(255,255,255,.10)}
+.n27-st b{display:block;font:800 13px/1.2 NMPJ,system-ui,sans-serif;margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:clip}
+.n27-st em{display:block;font:600 11.5px/1.3 NMPJ,system-ui,sans-serif;font-style:normal;color:var(--mut);margin-top:2px}
+.n27-st .ok i{background:#2BB673;color:#0B1A12}
+.n27-st .now{border-color:rgba(240,86,122,.75);background:rgba(240,86,122,.13)}
+.n27-st .now i{background:#E8456F;color:#fff}
+.n27-bar{height:6px;border-radius:6px;background:rgba(255,255,255,.09);overflow:hidden;margin:0 0 14px}
+html.gl-lt .n27-bar,html.gl-lt .n27-st div{background:#F7F1F3}
+.n27-bar span{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#E8456F,#FF8FA9);transition:width .8s ease}
+.n27 .n27-go{display:flex!important;align-items:center;justify-content:center;width:100%;height:50px;border-radius:15px;background:linear-gradient(180deg,#F0567A,#D61F4F)!important;color:#fff!important;font:800 15.5px NMPJ,system-ui,sans-serif;text-align:center!important;box-shadow:0 12px 28px -10px rgba(232,69,111,.8);animation:n27glow 3.2s ease-in-out infinite}
+@keyframes n27glow{0%,100%{box-shadow:0 12px 28px -10px rgba(232,69,111,.7)}50%{box-shadow:0 14px 34px -8px rgba(240,86,122,.95)}}
+.n27-how{margin:12px 0 0;padding-top:12px;border-top:1px solid var(--line);font:600 12.5px/1.45 NMPJ,system-ui,sans-serif;color:var(--mut)}
+.n27-how b{color:var(--ink)}
+.n22-bd>*{animation:n27up .5s cubic-bezier(.2,.8,.2,1) both}
+.n22-bd>*:nth-child(2){animation-delay:.06s}.n22-bd>*:nth-child(3){animation-delay:.12s}.n22-bd>*:nth-child(4){animation-delay:.18s}.n22-bd>*:nth-child(n+5){animation-delay:.24s}
+@keyframes n27up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.n22-pg button:active{transform:scale(.97);transition:transform .08s}
+@media (prefers-reduced-motion:reduce){.n22-bd>*,.n27 .n27-go{animation:none}.n22-pg button:active{transform:none}}`;
+  function addCss(){if(document.getElementById('n27css'))return;const s=document.createElement('style');s.id='n27css';s.textContent=css;document.head.appendChild(s)}
+  function card(){const me=S.me||{};const v=me.v||{};let ph=false;try{ph=photoOk()}catch(e){}
+    const n=[ph,v.id,v.selfie,v.roots,v.lives].filter(Boolean).length;
+    const step=v.id&&v.selfie?(v.roots?3:2):1;
+    const t=!ph?'Add your photo and a quick ID check':n<5?'Finish your ID checks':'Your checks are being reviewed';
+    const pct=Math.round(((1+n/5)/3)*100);
+    return `<div class="n27" data-n27="1"><small class="k">YOUR NEXT STEP</small><h2>${t}</h2>
+      <p>Members only see checked profiles. Once you are live, introductions start.</p>
+      <div class="n27-st"><div class="ok"><i>✓</i><b>Profile</b><em>Done</em></div><div class="now"><i>2</i><b>Photo + ID</b><em>${n} of 5 done</em></div><div><i>3</i><b>Daily intros</b><em>Every morning</em></div></div>
+      <div class="n27-bar"><span style="width:${pct}%"></span></div>
+      ${n<5?`<button class="n27-go" data-a="goVerify" data-n="${step}">Continue · step 2 of 3</button>`:''}
+      <div class="n27-how"><b>How it works:</b> once you are live, new introductions arrive every morning, picked for your roots, values and city. You chat first, then bring your families in.</div></div>`}
+  function inject(){if(!ON()||S.tab!=='matches'||view)return;let live=true;try{live=typeof isLive==='function'?isLive():true}catch(e){}
+    const bd=document.querySelector('.n22-bd');if(!bd||live||bd.querySelector('[data-n27]'))return;
+    const old=bd.querySelector('.n22-empty button[data-a="goVerify"]');
+    if(old){const em=old.closest('.n22-empty');const fh=em&&em.previousElementSibling;if(fh&&fh.classList.contains('n22-fh'))fh.remove();if(em)em.remove()}
+    bd.insertAdjacentHTML('afterbegin',card())}
+  const _r=render;render=function(){const out=_r.apply(this,arguments);
+    try{if(ON()){addCss();inject();
+      const dark=!document.documentElement.classList.contains('gl-lt');const m=document.querySelector('meta[name=theme-color]');
+      if(m&&dark&&!view&&(S.tab==='matches'||S.tab==='mlist'))m.setAttribute('content',TOP)}}catch(e){}
+    return out};
+})();
+
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 /* only on the first open after installing (fast open stays ~1 s every other time; later updates come quietly) */
 if(liveUpd.U()&&!(()=>{try{return localStorage.getItem('nm.upd1')}catch(e){return 1}})()){try{localStorage.setItem('nm.upd1','1')}catch(e){}liveUpd.first().then(ok=>{if(!ok)boot()})}else 
