@@ -1212,7 +1212,7 @@ function renderMe(){
     ${me.photoPending?`<p class="hint">${ic('info')} Your photo is waiting for a quick check by our team.</p>`:''}
     <div class="complete"><div class="hint">Profile ${pct}% complete${pct<100?' · a complete profile builds more trust':''}</div><div class="bar"><i style="width:${pct}%"></i></div></div>
     <button class="btn ghost" data-a="edit">Edit profile</button></div>
-   <button class="likes nm-bio" data-a="shareBio"><span class="pi">${ic('send')}</span><span class="tx"><b>Family biodata</b><span>Send a private 7-day link to your family. They can answer 👍 or 🤔. No phone, email or photos.</span></span>${ic('back','flipx')}</button>${(S.bioReacts||[]).length?`<div class="fam-r"><b>${ic('users')}Your family said</b>${S.bioReacts.slice(0,5).map(r=>`<span>${r.reaction==='good'?'👍 Looks good':'🤔 Let’s talk'}${r.who?` · ${esc(r.who)}`:''}</span>`).join('')}</div>`:''}${S.bioUntil?`<p class="hint">Your link works until ${esc(new Date(S.bioUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short'}))}. <button class="link" data-a="stopBio">Stop link</button></p>`:''}
+   <button class="likes nm-bio" data-a="shareBio"><span class="pi">${ic('send')}</span><span class="tx"><b>Family biodata</b><span>Send a private 7-day link to your family. They can answer “Looks good” or “Let’s talk”. No phone, email or photos.</span></span>${ic('back','flipx')}</button>${(S.bioReacts||[]).length?`<div class="fam-r"><b>${ic('users')}Your family said</b>${S.bioReacts.slice(0,5).map(r=>`<span>${r.reaction==='good'?'Looks good':'Let’s talk'}${r.who?` · ${esc(r.who)}`:''}</span>`).join('')}</div>`:''}${S.bioUntil?`<p class="hint">Your link works until ${esc(new Date(S.bioUntil).toLocaleDateString(RM_I18N.locale,{day:'numeric',month:'short'}))}. <button class="link" data-a="stopBio">Stop link</button></p>`:''}
    ${recheckCall(me)}<div class="panel"><h3>Verification</h3><div>${vr(idS[0],'Government ID',idS[1],1)}${vr(sS[0],'Live selfie',sS[1],1)}${vr(rS[0],`Roots: ${me.os}, ${me.oc}`,rS[0]==='ok'&&me.rootsAt?`Proven with a document · ${dt(me.rootsAt)}`:rS[1],2)}${vr(lS[0],`Lives in: ${myPlace()}, ${me.country}`,lS[1],3)}${me.locOk?vr('ok','Location check',`Confirmed · ${dt(me.locAt)}`):''}<div class="vrow">${ic('info','no-ic')}<span class="tx"><b>Phone number</b><small>${me.phone?esc(me.phone)+' · code checks by SMS are coming soon':'Optional · add it in Edit profile'}</small></span></div></div></div>
    ${NO_EVENTS?'':workCard()}
    <div class="panel"><h3>Privacy</h3><div>
@@ -2724,15 +2724,15 @@ function v2noteFrom(id){const i=(RAW.ints||[]).find(x=>x.from_user===id&&x.to_us
 const FAM={list:null,busy:false};
 function famLoad(){if(FAM.list||FAM.busy)return;FAM.busy=true;API.rpc('my_family_shares').then(r=>{FAM.list=r||[];FAM.busy=false;render()}).catch(()=>{FAM.list=[];FAM.busy=false})}
 function famHas(id){return (FAM.list||[]).some(x=>x.id===id)}
-function famBlock(){famLoad();const L=FAM.list||[];if(!L.length)return `<div class="panel v2"><p class="v2lb" style="margin:0 0 6px">Family circle</p><p class="v2lede" style="margin:0">Tap <b>Share with family</b> on anyone in your matches. Your family sees them on your private link and tells you 👍 or 🤔. They never talk to your matches.</p></div>`;
+function famBlock(){famLoad();const L=FAM.list||[];if(!L.length)return `<div class="panel v2"><p class="v2lb" style="margin:0 0 6px">Family circle</p><p class="v2lede" style="margin:0">Tap <b>Share with family</b> on anyone in your matches. Your family sees them on your private link and tells you “Looks good” or “Let’s talk”. They never talk to your matches.</p></div>`;
   return `<div class="panel v2"><div class="v2rowsp"><p class="v2lb" style="margin:0">Family circle · ${L.length} shared</p>${S.bioUntil?'':`<button class="v2pill" data-a="shareBio">Send link</button>`}</div>
    <div style="display:grid;gap:8px;margin-top:10px">${L.map(x=>{const p=byId(x.id);const nm=p?shown(p):'Member';const rs=x.reactions||[];
-    return `<button class="v2famr" data-a="open" data-id="${x.id}">${p?avatar(p,'sm'):''}<span><b>${esc(nm)}${p?', '+p.age:''}</b><small>${rs.length?rs.slice(0,2).map(r=>`${r.reaction==='good'?'👍 Looks good':'🤔 Let’s talk'}${r.who?' · '+esc(r.who):''}`).join(' &nbsp; '):'No answer yet'}</small></span>${ic('chev')}</button>`}).join('')}</div>
+    return `<button class="v2famr" data-a="open" data-id="${x.id}">${p?avatar(p,'sm'):''}<span><b>${esc(nm)}${p?', '+p.age:''}</b><small>${rs.length?rs.slice(0,2).map(r=>`${r.reaction==='good'?'Looks good':'Let’s talk'}${r.who?' · '+esc(r.who):''}`).join(' &nbsp; '):'No answer yet'}</small></span>${ic('chev')}</button>`}).join('')}</div>
    <p class="v2note" style="margin-top:8px">${ic('lock')} Family sees first name, age, work, roots and city only. No photos or contacts. You decide.</p></div>`}
 (function(){
   const _me=renderMe;renderMe=function(){const h=_me();if(!V2())return h;const k='<button class="likes nm-bio" data-a="shareBio">';return h.includes(k)?h.replace(k,famBlock()+k):h};
   const _pv=renderProfileView;renderProfileView=function(id,isMe){const h=_pv(id,isMe);if(!V2()||isMe)return h;const p=byId(id);if(!p||locked(p)||!(p.v&&p.v.id&&p.v.selfie&&p.v.roots&&p.v.lives))return h;famLoad();
-    const on=famHas(id);const btn=`<button class="v2act v2" data-a="v2fam" data-id="${id}" style="${on?'background:var(--good-soft,#E9F5EE);border-color:var(--good)':''}"><span class="ibox">${ic('users')}</span><span><b>${on?'Shared with your family':'Share with family'}</b><small>${on?'Tap to remove. Your family sees first name, age, work, roots and city.':'Your family sees safe facts on your private link and answers 👍 or 🤔'}</small></span>${ic(on?'check':'chev')}</button>`;
+    const on=famHas(id);const btn=`<button class="v2act v2" data-a="v2fam" data-id="${id}" style="${on?'background:var(--good-soft,#E9F5EE);border-color:var(--good)':''}"><span class="ibox">${ic('users')}</span><span><b>${on?'Shared with your family':'Share with family'}</b><small>${on?'Tap to remove. Your family sees first name, age, work, roots and city.':'Your family sees safe facts on your private link and answers “Looks good” or “Let’s talk”'}</small></span>${ic(on?'check':'chev')}</button>`;
     const k='<div class="panel"><h3>About</h3>';return h.includes(k)?h.replace(k,btn+k):h};
   A.v2fam=async function(el){const id=el.dataset.id,on=!famHas(id);
     try{await API.rpc('family_share',{target:id,on_:on});FAM.list=null;famLoad();toast(on?'Shared with your family. Send them your biodata link from Me.':'Removed from your family circle.',on?'users':'check')}
@@ -3795,7 +3795,7 @@ function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^
       <div class="rl-rl"><p class="eb">What you share</p>${ring.map((r,i)=>`<div><i style="background:${col[i]}"></i>${esc(r.l)}<span>${r.v}%</span></div>`).join('')}</div></div>
       ${tz?`<p class="rl-tz">${ic('clock')}${esc(hhmm(tz))} in ${esc(p.cityName||p.country)} now</p>`:''}</section>`;
     const wy=why(p,3);const wblk=wy.length?`<section class="rl-whyb"><p class="eb">Why you were introduced</p>${wy.map(w=>`<div>${ic('check')}${esc(w)}</div>`).join('')}</section>`:'';
-    const fblk=famGood(id)?`<div class="rl-fam rl-famp"><span class="rl-fi">${ic('users')}</span><div class="rl-ft"><b>Your family gave a 👍</b><small>They read the safe facts you shared. Only you see this.</small></div></div>`:'';
+    const fblk=famGood(id)?`<div class="rl-fam rl-famp"><span class="rl-fi">${ic('users')}</span><div class="rl-ft"><b>Your family said “Looks good”</b><small>They read the safe facts you shared. Only you see this.</small></div></div>`:'';
     const A_=i=>{try{return p.ans&&p.ans[i]!=null&&QS[i].o[p.ans[i]]?QS[i].o[p.ans[i]]:''}catch(e){return ''}};
     const CH=[['Roots',[['Grew up',[p.os,p.oc].filter(Boolean).join(', ')],['Mother tongue',p.t],['Faith',p.r]]],
       ['City',[['Lives in',[p.cityName,p.country].filter(Boolean).join(', ')],['Work',p.job],['Studied',p.edu],['Settling',A_(0)]]],
@@ -6624,6 +6624,19 @@ html.nmf .n22-nx em,html.nmf .n22-pg em[class=""],html.nmf .n22-mini em{backgrou
 html.nmf .nmf-av,html.nmf .cn-av{background:var(--p-s1)!important;border:1px solid var(--p-ln)!important;color:var(--p-tx)!important;box-shadow:none!important}
 html.nmf .n26-st small{color:var(--p-mu)!important;letter-spacing:0!important}
 html.nmf .n22-fp{background:rgba(14,11,13,.72)!important;color:#fff!important;border:0!important;box-shadow:none!important;font:600 12px ${F}!important}
+
+/* Me: "For you" photo tiles become one clean grouped list (iPhone settings style, mock pro_5) */
+html.nmf .n26-h{font:600 12px ${F}!important;color:var(--p-mu)!important;letter-spacing:.06em!important;text-transform:uppercase;margin:22px 4px 8px!important}
+html.nmf .n26-g{display:block!important;background:var(--p-s1)!important;border:1px solid var(--p-ln)!important;border-radius:16px!important;padding:0 16px!important;grid-template-columns:none!important}
+html.nmf .n26-g .n26-t{display:grid!important;grid-template-columns:24px 1fr 14px;grid-template-rows:auto auto;column-gap:14px;align-items:center;width:100%!important;min-height:0!important;padding:14px 0!important;margin:0!important;border:0!important;border-bottom:1px solid var(--p-ln)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;text-align:left!important;aspect-ratio:auto!important}
+html.nmf .n26-g .n26-t:last-child{border-bottom:0!important}
+html.nmf .n26-g .n26-ti{grid-row:1/3;width:24px!important;height:24px!important;border:0!important;border-radius:0!important;background:transparent!important;overflow:visible!important;aspect-ratio:auto!important;margin:0!important}
+html.nmf .n26-g .n26-ti img{display:none!important}
+html.nmf .n26-g .n26-ti svg{width:24px;height:24px;fill:none;stroke:var(--p-tx);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+html.nmf .n26-g .n26-t b{grid-column:2;font:500 15px ${F}!important;color:var(--p-tx)!important;margin:0!important}
+html.nmf .n26-g .n26-t small{grid-column:2;font:500 13px ${F}!important;color:var(--p-mu)!important;margin:2px 0 0!important}
+html.nmf .n26-g .n26-t::after{content:"›";grid-column:3;grid-row:1/3;font:500 20px ${F};color:var(--p-mu)}
+html.nmf .n26-hint{color:var(--p-mu)!important;font:500 13px ${F}!important}
 `;
   function addCss(){if(document.getElementById('p29css'))return;const s=document.createElement('style');s.id='p29css';s.textContent=css;document.head.appendChild(s)}
   const TITLE={all:'Today',wed:'Wedding partners',eve:'Evenings',gold:'Gold',fam:'Family',seen:'Be seen first'};
@@ -6633,8 +6646,18 @@ html.nmf .n22-fp{background:rgba(14,11,13,.72)!important;color:#fff!important;bo
     const segs=[...old.querySelectorAll('.n22-tb')].map(b=>`<button data-a="n22Sec" data-k="${b.dataset.k}" class="${b.classList.contains('on')?'on':''}">${esc((b.querySelector('b')||{}).textContent||'')}</button>`).join('');
     const ini=esc(((me.name||'?')[0]||'?').toUpperCase());
     old.insertAdjacentHTML('beforebegin',`<div class="p29-hd"><div><small>${esc(name?hi+', '+name:hi)}</small><h1>${esc(TITLE[k]||'Today')}</h1></div><button class="p29-av" data-a="tab" data-k="me" aria-label="My profile">${ini}</button></div>${segs?`<div class="p29-seg" role="tablist">${segs}</div>`:''}`)}
+
+  const MI={dinner:'<circle cx="9" cy="8.4" r="3.4"/><path d="M2.8 19.6c.5-3.4 3-5.4 6.2-5.4s5.7 2 6.2 5.4M15.6 5.2a3.2 3.2 0 0 1 0 6.3M17.8 14.4c2 .6 3.3 2.4 3.6 5"/>',
+    mic:'<rect x="8.8" y="3" width="6.4" height="11" rx="3.2"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M9 21h6"/>',
+    ringbox:'<circle cx="12" cy="9.4" r="5.6"/><path d="M8.6 13.9 7.4 21l4.6-2.4 4.6 2.4-1.2-7.1"/>',
+    lights:'<path d="M12 3.2c.5 4.3 2.1 6.3 6.2 6.9-4.1.7-5.7 2.7-6.2 7-.5-4.3-2.1-6.3-6.2-7 4.1-.6 5.7-2.6 6.2-6.9z"/>',
+    ev1:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.4"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+    hall:'<path d="M12 21s6.5-6 6.5-11a6.5 6.5 0 0 0-13 0c0 5 6.5 11 6.5 11z"/><circle cx="12" cy="10" r="2.4"/>',
+    ballroom:'<rect x="3" y="7" width="18" height="13" rx="2.4"/><path d="M8.5 7V5.4A1.4 1.4 0 0 1 9.9 4h4.2a1.4 1.4 0 0 1 1.4 1.4V7M3 12.5h18"/>'};
+  function meList(){document.querySelectorAll('.n26-g .n26-ti').forEach(t=>{if(t.dataset.p29)return;const im=t.querySelector('img');const k=im?(im.getAttribute('src')||'').split('/').pop().replace('.webp',''):'';
+    const d=MI[k]||MI.lights;t.dataset.p29='1';t.insertAdjacentHTML('beforeend',`<svg viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`)})}
   const _r=render;render=function(){const out=_r.apply(this,arguments);
-    try{if(ON()){addCss();header();
+    try{if(ON()){addCss();header();meList();
       const m=document.querySelector('meta[name=theme-color]');if(m&&!view)m.setAttribute('content',document.documentElement.classList.contains('gl-lt')?'#FFFFFF':'#0E0B0D')}}catch(e){}
     return out};
 })();
