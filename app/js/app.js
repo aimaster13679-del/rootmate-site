@@ -6530,8 +6530,8 @@ html.nmf #app .navwrap .nmf-nav .nmf-n{background:#E11D48!important;color:#fff!i
   const ON=()=>!!window.NM_APP;
   const F="'Plus Jakarta Sans',NMPJ,system-ui,-apple-system,'Segoe UI',sans-serif";
   const css=`
-html.nmf{--p-bg:#FFFFFF;--p-s1:#F6F4F5;--p-s2:#FFFFFF;--p-ln:#ECE7EA;--p-tx:#141013;--p-mu:#6F676C;--p-ac:#E11D48}
-html.nmf:not(.gl-lt){--p-bg:#0E0B0D;--p-s1:#151114;--p-s2:#1A1518;--p-ln:#241E22;--p-tx:#F4EFF1;--p-mu:#A79FA4}
+html.nmf{--p-ln2:#D9D2D6;--p-bg:#FFFFFF;--p-s1:#F6F4F5;--p-s2:#FFFFFF;--p-ln:#ECE7EA;--p-tx:#141013;--p-mu:#6F676C;--p-ac:#E11D48}
+html.nmf:not(.gl-lt){--p-ln2:#3A3237;--p-bg:#0E0B0D;--p-s1:#151114;--p-s2:#1A1518;--p-ln:#241E22;--p-tx:#F4EFF1;--p-mu:#A79FA4}
 html.nmf.nmf body,html.nmf.nmf.cine.sap.c3.gl body #app,html.nmf.nmf.cine.sap.c3.gl:not(.gl-lt) body #app,html.nmf.nmf.cine.sap.c3.gl.gl-lt body #app{background:var(--p-bg)!important}
 html.nmf .n22-pg,html.nmf .nmf-pg,html.nmf .n26-pg,html.nmf .cn-page{--ink:var(--p-tx);--mut:var(--p-mu);--card:var(--p-s1);--line:var(--p-ln);--bg:var(--p-bg);--rose:var(--p-ac);background:var(--p-bg)!important;color:var(--p-tx);font-family:${F}!important}
 html.nmf .n22-pg *,html.nmf .nmf-pg *,html.nmf .n26-pg *,html.nmf .view *{font-family:${F}!important;letter-spacing:0!important}
@@ -6638,6 +6638,53 @@ html.nmf .n26-g .n26-t small{grid-column:2;font:500 13px ${F}!important;color:va
 html.nmf .n26-g .n26-t::after{content:"›";grid-column:3;grid-row:1/3;font:500 20px ${F};color:var(--p-mu)}
 html.nmf .n26-hint{color:var(--p-mu)!important;font:500 13px ${F}!important}
 
+/* Home avatar: a clear small button (his screenshot 20 Nov 14:06: the "S" had no border) */
+html.nmf #app .p29-av{width:40px!important;height:40px!important;border-radius:12px!important;background:var(--p-s1)!important;border:1px solid var(--p-ln2)!important;color:var(--p-tx)!important;font:600 15px ${F}!important;display:grid!important;place-items:center!important;box-shadow:none!important;align-self:center}
+html.nmf #app .p29-av:active{background:var(--p-ln)!important}
+
+/* Me, lower half (voice, verification, privacy, plan, safety, help): same grouped-list look as the rest (20 Nov 14:06) */
+html.nmf .p29-me{padding:0 16px 24px!important;background:var(--p-bg)!important;font-family:${F}!important}
+html.nmf .p29-me .panel,html.nmf .p29-me .v2card,html.nmf .p29-me .likes{background:var(--p-s1)!important;background-image:none!important;border:1px solid var(--p-ln)!important;border-radius:16px!important;box-shadow:none!important;padding:16px!important;margin:12px 0 0!important;backdrop-filter:none!important}
+html.nmf .p29-me .panel::before,html.nmf .p29-me .panel::after,html.nmf .p29-me .v2card::before,html.nmf .p29-me .v2card::after{display:none!important}
+html.nmf .p29-me .panel>h3,html.nmf .p29-me .v2lb{font:600 12px ${F}!important;color:var(--p-mu)!important;letter-spacing:.06em!important;text-transform:uppercase!important;margin:0 0 6px!important}
+html.nmf .p29-me .v2lede,html.nmf .p29-me .sub,html.nmf .p29-me ul.hint li{font:500 14px/1.5 ${F}!important;color:var(--p-mu)!important}
+html.nmf .p29-me .v2lede b{color:var(--p-tx)!important;font-weight:600!important}
+html.nmf .p29-me ul.hint{gap:8px!important}
+html.nmf .p29-me .vrow,html.nmf .p29-me .tgl{padding:13px 0!important;border-bottom:1px solid var(--p-ln)!important;gap:14px!important}
+html.nmf .p29-me .vrow:last-child,html.nmf .p29-me .tgl:last-child{border-bottom:0!important;padding-bottom:0!important}
+html.nmf .p29-me .vrow .tx b,html.nmf .p29-me .tgl .tx b,html.nmf .p29-me .rowi .tx b,html.nmf .p29-me .likes .tx b{display:block;font:500 15px/1.3 ${F}!important;color:var(--p-tx)!important}
+html.nmf .p29-me .vrow .tx small,html.nmf .p29-me .tgl .tx small,html.nmf .p29-me .rowi .tx>span,html.nmf .p29-me .likes .tx>span{display:block;font:500 13px/1.4 ${F}!important;color:var(--p-mu)!important;margin-top:2px!important}
+html.nmf .p29-me .i28 svg *{stroke:var(--p-mu)!important}
+html.nmf #app .p29-me .vrow .btn.sm.primary,html.nmf .p29-me .vrow .btn.sm{background:transparent!important;background-image:none!important;border:1px solid var(--p-ln2)!important;color:var(--p-tx)!important;font:600 13px ${F}!important;border-radius:10px!important;padding:8px 14px!important;box-shadow:none!important;min-height:0!important}
+html.nmf .p29-me .tgl i{width:44px!important;height:26px!important;border-radius:9px!important;background:var(--p-ln2)!important;box-shadow:none!important}
+html.nmf .p29-me .tgl i::after{width:20px!important;height:20px!important;border-radius:6px!important;box-shadow:none!important;background:#fff!important}
+html.nmf .p29-me .tgl input:checked+i{background:var(--p-ac)!important}
+html.nmf .p29-me .tgl input:checked+i::after{transform:translateX(18px)!important}
+html.nmf .p29-me .callout{background:transparent!important;border:1px solid var(--p-ln)!important;border-radius:12px!important;color:var(--p-tx)!important;font:500 13px/1.45 ${F}!important;box-shadow:none!important;margin:12px 0!important}
+html.nmf .p29-me .btn.gold{background:var(--p-ac)!important;background-image:none!important;color:#fff!important;border:0!important;border-radius:14px!important;box-shadow:none!important;font:600 14px ${F}!important;white-space:nowrap;padding-left:10px!important;padding-right:10px!important;width:100%;margin-top:4px!important}
+html.nmf .p29-me .btn.gold .i28 svg *{stroke:#fff!important}
+html.nmf .p29-me .rowi{display:grid!important;grid-template-columns:24px 1fr 14px;column-gap:14px;align-items:center;width:100%!important;background:transparent!important;border:0!important;border-bottom:1px solid var(--p-ln)!important;border-radius:0!important;box-shadow:none!important;padding:13px 0!important;margin:0!important;text-align:left!important}
+html.nmf .p29-me .rowi:last-child{border-bottom:0!important;padding-bottom:0!important}
+html.nmf .p29-me .rowi::after{content:"›";font:500 20px ${F};color:var(--p-mu)}
+html.nmf .p29-me .likes{display:grid!important;grid-template-columns:24px 1fr 14px;column-gap:14px;align-items:center;width:100%!important;text-align:left!important}
+html.nmf .p29-me .likes .pi{background:transparent!important;border:0!important;box-shadow:none!important;width:24px!important;height:24px!important}
+html.nmf .p29-me .likes>.ic.tx{display:none!important}
+html.nmf .p29-me .likes::after{content:"›";font:500 20px ${F};color:var(--p-mu)}
+html.nmf .p29-me .v2rowsp b{font:600 15px ${F}!important;color:var(--p-tx)!important;display:flex;align-items:center;gap:8px}
+html.nmf .p29-me .v2pill{background:transparent!important;border:1px solid var(--p-ln)!important;color:var(--p-mu)!important;font:500 12px ${F}!important;border-radius:8px!important;padding:4px 8px!important;white-space:nowrap}
+html.nmf .p29-me .v2chips{gap:8px!important;margin-top:12px!important}
+html.nmf .p29-me .v2chip{background:transparent!important;background-image:none!important;border:1px solid var(--p-ln2)!important;color:var(--p-tx)!important;font:500 13px ${F}!important;border-radius:10px!important;padding:8px 12px!important;box-shadow:none!important}
+html.nmf .p29-me .v2chip.on{background:var(--p-tx)!important;color:var(--p-bg)!important;border-color:var(--p-tx)!important}
+html.nmf .p29-me .v2vrow{margin-top:14px!important;gap:14px!important;align-items:center!important}
+html.nmf .p29-me .v2mic{width:48px!important;height:48px!important;border-radius:14px!important;background:var(--p-ac)!important;background-image:none!important;box-shadow:none!important;border:0!important;outline:0!important;flex:none}
+html.nmf .p29-me .v2mic::before,html.nmf .p29-me .v2mic::after{display:none!important}
+html.nmf .p29-me .v2mic .i28 svg *{stroke:#fff!important}
+html.nmf .p29-me .v2vrow b{font:600 15px ${F}!important;color:var(--p-tx)!important;display:block}
+html.nmf .p29-me .v2vrow small,html.nmf .p29-me .v2note{font:500 13px/1.4 ${F}!important;color:var(--p-mu)!important}
+html.nmf .p29-me .v2note{margin-top:12px!important;display:flex;gap:8px;align-items:flex-start}
+html.nmf .p29-me .btn.ghost.block{background:transparent!important;border:1px solid var(--p-ln2)!important;color:var(--p-tx)!important;border-radius:14px!important;font:600 15px ${F}!important;box-shadow:none!important;margin-top:16px!important}
+html.nmf .p29-me .note{font:500 12px ${F}!important;color:var(--p-mu)!important;text-align:center}
+
 /* Phone insets (his screenshot 20 Nov 13:12: too much empty space on top): <html> already keeps the page below the status bar
    (padding-top: var(--sat)), so headers must not add the inset a second time; same for the tab capsule at the bottom. */
 html.nmf{background:var(--p-bg)!important}
@@ -6668,7 +6715,7 @@ html.nmf .nmf-top{background-image:none!important}
   function meList(){document.querySelectorAll('.n26-g .n26-ti').forEach(t=>{if(t.dataset.p29)return;const im=t.querySelector('img');const k=im?(im.getAttribute('src')||'').split('/').pop().replace('.webp',''):'';
     const d=MI[k]||MI.lights;t.dataset.p29='1';t.insertAdjacentHTML('beforeend',`<svg viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`)})}
   const _r=render;render=function(){const out=_r.apply(this,arguments);
-    try{if(ON()){addCss();header();meList();
+    try{if(ON()){addCss();header();meList();document.querySelectorAll('.n26~.main-inner,.n26 .main-inner').forEach(e=>e.classList.add('p29-me'));
       const m=document.querySelector('meta[name=theme-color]');if(m&&!view)m.setAttribute('content',document.documentElement.classList.contains('gl-lt')?'#FFFFFF':'#0E0B0D')}}catch(e){}
     return out};
 })();
