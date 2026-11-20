@@ -6381,7 +6381,6 @@ html.nmf:not(.gl-lt) .n22-hb{opacity:.74}
 html.nmf:not(.gl-lt) .n22-ov{background:linear-gradient(180deg,${TOP} 0%,rgba(42,15,28,.62) 16%,rgba(120,24,58,.30) 52%,rgba(20,11,17,.94) 100%)}
 html.nmf:not(.gl-lt) .n22-bd{background:radial-gradient(120% 340px at 50% 0,rgba(232,69,111,.16),rgba(232,69,111,0) 70%),radial-gradient(90% 420px at 100% 55%,rgba(124,64,255,.07),rgba(0,0,0,0) 70%),#140B11}
 html.nmf:not(.gl-lt) .n22-feat,html.nmf:not(.gl-lt) .n22-empty,html.nmf:not(.gl-lt) .n22-pc,html.nmf:not(.gl-lt) .n22-ev,html.nmf:not(.gl-lt) .n22-all,html.nmf:not(.gl-lt) .n22-yy,html.nmf:not(.gl-lt) .n22-cd{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.035))!important;border:1px solid rgba(255,255,255,.10)!important;box-shadow:0 18px 40px -24px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.06)!important}
-html.nmf:not(.gl-lt) .nav,html.nmf:not(.gl-lt) .navwrap{background:rgba(28,16,24,.90)!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
 .n27{position:relative;margin:0 0 18px;padding:16px;border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.04));border:1px solid rgba(240,86,122,.45);box-shadow:0 22px 44px -26px rgba(214,31,79,.65),inset 0 1px 0 rgba(255,255,255,.07);color:var(--ink)}
 html.gl-lt .n27{background:#fff;border-color:rgba(214,31,79,.35);box-shadow:0 14px 34px -22px rgba(214,31,79,.45)}
 .n27 small.k{display:block;font:800 11px/1 NMPJ,system-ui,sans-serif;letter-spacing:.14em;color:#FF8FA9}
@@ -6407,6 +6406,24 @@ html.gl-lt .n27-bar,html.gl-lt .n27-st div{background:#F7F1F3}
 .n22-bd>*:nth-child(2){animation-delay:.06s}.n22-bd>*:nth-child(3){animation-delay:.12s}.n22-bd>*:nth-child(4){animation-delay:.18s}.n22-bd>*:nth-child(n+5){animation-delay:.24s}
 @keyframes n27up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 .n22-pg button:active{transform:scale(.97);transition:transform .08s}
+/* Bottom tab bar like Netflix's floating capsule (his ask 20 Nov 2026 11:19 'Netflix jesa kar do' + his Netflix screenshot;
+   the full-width bar with a big rose pill looked 'bhadda'): small centred glass capsule, chosen tab in a soft grey pill, page shows behind */
+html.nmf:not(.x) #app .navwrap,html.nmf:not(.gl-lt) #app .navwrap,html.nmf.gl-lt #app .navwrap{background:transparent!important;border:0!important;box-shadow:none!important;padding:0 0 calc(10px + env(safe-area-inset-bottom))!important;pointer-events:none}
+html.nmf.nmf.cine.sap.c3.gl:not(.gl-lt) body #app,html.nmf.nmf.cine.sap.c3.gl:not(.gl-lt) body{background:#140B11!important}
+html.nmf.nmf.cine.sap.c3.gl.gl-lt body #app,html.nmf.nmf.cine.sap.c3.gl.gl-lt body{background:#FAF6F7!important}
+html.nmf #app .navwrap .nav.nmf-nav{pointer-events:auto;width:max-content!important;max-width:calc(100% - 24px);margin:0 auto!important;gap:2px!important;padding:6px!important;border-radius:999px!important;background:rgba(40,35,39,.84)!important;backdrop-filter:blur(22px) saturate(1.3);-webkit-backdrop-filter:blur(22px) saturate(1.3);border:1px solid rgba(255,255,255,.09)!important;box-shadow:0 12px 32px rgba(0,0,0,.55)!important}
+html.nmf.gl-lt #app .navwrap .nav.nmf-nav{background:rgba(255,255,255,.88)!important;border-color:rgba(0,0,0,.08)!important;box-shadow:0 10px 28px rgba(0,0,0,.14)!important}
+html.nmf #app .navwrap .nav.nmf-nav button{flex:none!important;width:62px;min-height:52px!important;gap:3px!important;padding:0!important;border-radius:999px!important;font:700 10.5px/1.1 NMPJ,system-ui,sans-serif!important;background:transparent!important;box-shadow:none!important}
+html.nmf #app .navwrap .nav.nmf-nav button svg{width:22px!important;height:22px!important}
+html.nmf:not(.gl-lt) #app .navwrap .nav.nmf-nav button.on{background:rgba(255,255,255,.13)!important}
+html.nmf.gl-lt #app .navwrap .nav.nmf-nav button.on{background:rgba(0,0,0,.07)!important}
+html.nmf:not(.gl-lt) #app .navwrap .nav.nmf-nav button:not(.on),html.nmf:not(.gl-lt) #app .navwrap .nav.nmf-nav button:not(.on) *{color:#A29CA4!important}
+html.nmf:not(.gl-lt) #app .navwrap .nav.nmf-nav button.on,html.nmf:not(.gl-lt) #app .navwrap .nav.nmf-nav button.on *{color:#FFFFFF!important}
+html.nmf.gl-lt #app .navwrap .nav.nmf-nav button:not(.on),html.nmf.gl-lt #app .navwrap .nav.nmf-nav button:not(.on) *{color:#7E7884!important}
+html.nmf.gl-lt #app .navwrap .nav.nmf-nav button.on,html.nmf.gl-lt #app .navwrap .nav.nmf-nav button.on *{color:#111111!important}
+html.nmf:not(.gl-lt) #app .navwrap .nav.nmf-nav button .nmf-cut{fill:#2F292E!important}
+html.nmf.gl-lt #app .navwrap .nav.nmf-nav button .nmf-cut{fill:#F2F2F2!important}
+html.nmf #app .navwrap .nmf-nav .nmf-n{background:#E11D48!important;color:#fff!important;border-color:transparent!important;top:2px!important;right:calc(50% - 20px)!important}
 @media (prefers-reduced-motion:reduce){.n22-bd>*,.n27 .n27-go{animation:none}.n22-pg button:active{transform:none}}`;
   function addCss(){if(document.getElementById('n27css'))return;const s=document.createElement('style');s.id='n27css';s.textContent=css;document.head.appendChild(s)}
   function card(){const me=S.me||{};const v=me.v||{};let ph=false;try{ph=photoOk()}catch(e){}
