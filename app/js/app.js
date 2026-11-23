@@ -3781,7 +3781,7 @@ function rlSig(seed,ini,layers){let h=2166136261;for(const c of String(seed)){h^
   function askSheet(){const p=byId(S.rlAsk);if(!p){S.rlAsk=null;return ''}let Q=[];try{Q=v2replyOpts(p).slice(0,3)}catch(e){}
     Q=Q.concat([`What made you choose ${p.cityName}?`,'What does a family weekend look like for you?']).filter((x,i,a)=>x&&a.indexOf(x)===i).slice(0,5);const cur=(S.v2note||{})[p.id]||'';
     return `<div class="rl-askw" role="dialog" aria-label="Start with a question"><div class="rl-ask"><div class="rl-askh"><span class="rl-sgw" style="width:64px;height:64px">${rlSig(p.id,'',3)}</span><div><p class="eb">No blank likes</p><b>Start with a question from ${esc(p.first||shown(p))}'s story</b></div><button class="rl-b" data-a="rlAskClose" aria-label="Close">${ic('x')}</button></div>
-     <p class="rl-askp">When ${esc(p.first||'they')} says yes, the Bridge opens with your question on top.</p>
+     <p class="rl-askp">When ${p.first?esc(p.first)+' says':'they say'} yes, the Bridge opens with your question on top.</p>
      <div class="rl-qs">${Q.map(q=>`<button class="rl-q${cur===q?' on':''}" data-a="rlAskPick" data-id="${p.id}" data-v="${esc(q)}"><span>${esc(q)}</span><i></i></button>`).join('')}</div>
      <button class="rl-go" data-a="interest" data-id="${p.id}"${cur?'':' disabled'}>${ic('send')}Send question</button></div></div>`}
   A.rlPage=function(el){const pg=el.parentNode.nextElementSibling;if(pg){const c=pg.children[+el.dataset.k];pg.scrollTo({left:c.offsetLeft-pg.offsetLeft,behavior:'smooth'})}};
@@ -6763,6 +6763,358 @@ html.nmf .nmf-top{background-image:none!important}
   function boot(){if(TEST||lsg())show();run()}
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot):boot();
   try{N&&Capacitor.Plugins.App.addListener('resume',run)}catch(e){}
+})();
+
+/* part31: "Joy" look, MOCK ONLY until the owner's ok (his ask 22 Nov 2026 23:22: dark feels hopeless; a matrimony app
+   must look light, joyful, peaceful, premium; people (matches) first). Switched on only with ?joy=1 or
+   localStorage nm.joy=1, so nothing changes for members. What it does: always the light look, a warm ivory + rose
+   palette, and on Home for a member who is not live yet the people come first and the checks card becomes a short strip. */
+(function(){
+  let J=false;try{if(/[?&]joy=1/.test(location.search))localStorage.setItem('nm.joy','1');J=localStorage.getItem('nm.joy')==='1'}catch(e){J=/[?&]joy=1/.test(location.search)}
+  if(!J)return;
+  const F="'Plus Jakarta Sans',NMPJ,system-ui,sans-serif";
+  const CSS=`
+html.nmf.joy{--p-bg:#FFF8F4;--p-s1:#FFFFFF;--p-s2:#FFF0EA;--p-ln:#F4E3DC;--p-ln2:#E9D2C9;--p-tx:#2B1620;--p-mu:#806670;--p-ac:#E11D48;background:#FFF8F4!important}
+html.nmf.joy body,html.nmf.joy #app,html.nmf.joy .n22-pg,html.nmf.joy #main{background:var(--p-bg)!important}
+html.nmf.joy .p29-hd h1,html.nmf.joy .n22-mh h1{color:var(--p-tx)!important}
+html.nmf.joy .p29-seg button{background:#fff!important;border:1px solid var(--p-ln)!important;color:var(--p-mu)!important}
+html.nmf.joy .p29-seg button.on,html.nmf.joy .n22-seg button.on,html.nmf.joy .seg button.on,html.nmf.joy .px-tabs button.on,html.nmf.joy .p29-me .v2chip.on{background:#FFE3EA!important;border-color:#FFC9D6!important;color:#B4123C!important}
+html.nmf.joy .n22-bd>section,html.nmf.joy .n22-card,html.nmf.joy .n22-c,html.nmf.joy .n26-list,html.nmf.joy .p29-me .panel,html.nmf.joy .p29-me .v2card,html.nmf.joy .n27{box-shadow:0 10px 30px -18px rgba(150,60,70,.28)!important}
+html.nmf.joy #app .navwrap .nav.nmf-nav{background:rgba(255,255,255,.94)!important;border:1px solid var(--p-ln)!important;box-shadow:0 12px 30px -14px rgba(150,60,70,.35)!important}
+html.nmf.joy #app .navwrap .nav.nmf-nav button{color:#9A848C!important}
+html.nmf.joy #app .navwrap .nav.nmf-nav button.on{background:#FFE3EA!important;color:#B4123C!important}
+html.nmf.joy .p29-av{background:#FFE3EA!important;border-color:#FFC9D6!important;color:#B4123C!important}
+/* people first for a member who is not live yet */
+html.nmf.joy .n27.j31{padding:14px 16px!important;margin:18px 0 0!important;background:#fff!important;border:1px solid var(--p-ln)!important}
+html.nmf.joy .n27.j31 .n27-st,html.nmf.joy .n27.j31 .n27-how,html.nmf.joy .n27.j31>p{display:none!important}
+html.nmf.joy .n27.j31 h2{font:700 17px/1.25 ${F}!important;margin:4px 0 10px!important}
+.j31-hero{margin:2px 0 14px}
+.j31-hero b{display:block;font:700 22px/1.2 ${F};color:var(--p-tx)}
+.j31-hero span{display:block;font:500 14px/1.45 ${F};color:var(--p-mu);margin-top:4px}
+`;
+  function css(){if(!document.getElementById('j31css')){const s=document.createElement('style');s.id='j31css';s.textContent=CSS;document.head.appendChild(s)}}
+  function people(){const bd=document.querySelector('.n22-bd');const c=bd&&bd.querySelector('[data-n27]');if(!c||c.classList.contains('j31'))return;
+    c.classList.add('j31');const rail=[...bd.children].find(e=>e!==c&&e.querySelector('img'));if(rail)bd.insertBefore(c,rail.nextSibling)}
+  const _r=render;render=function(){const out=_r.apply(this,arguments);
+    try{const h=document.documentElement;if(h.classList.contains('nmf')){h.classList.add('gl-lt','joy');css();people();
+      const m=document.querySelector('meta[name=theme-color]');if(m&&!view)m.setAttribute('content','#FFF8F4')}}catch(e){}
+    return out};
+  try{document.documentElement.classList.add('gl-lt')}catch(e){}
+})();
+
+/* part32: "Love" design, step 1 = opening + first screen (his ok 23 Nov 2026 00:10 on handoff/mocks/joy3/neumarry-idea-v3.mp4).
+   NOT live: only with ?love=1 or localStorage nm.love=1, until he has seen the real screens and says ok.
+   Idea: light, joyful, photo first, few boxes, words that rise, one line that draws a heart. Same buttons as before
+   (data-a start / login / lang / legal), so sign-up and sign-in work exactly as today. */
+(function(){
+  /* LIVE for everyone since his ok 24 Nov 2026 00:48; '?love=0' switches it off on one device (for checks) */
+  let L=true;try{if(/[?&]love=0/.test(location.search))localStorage.setItem('nm.love','0');if(/[?&]love=1/.test(location.search))localStorage.removeItem('nm.love');L=localStorage.getItem('nm.love')!=='0'}catch(e){}
+  if(!L)return;
+  setTimeout(()=>{try{window.__rm.blank=()=>blankDraft();window.__rm.go=(st,sub)=>{if(!S.draft){S.draft=blankDraft();S.draft.name='Daniel Costa'}S.draft.v2b=sub||'a';S.screen='signup';S.step=st;S.errors={};render()}}catch(e){}},0); /* test hooks for screenshots only */
+  /* the old opening must not play under the new one (when this goes live, index.html gets the heart opening itself) */
+  try{const k=document.createElement('style');k.textContent='#nm-splash{display:none!important}';document.head.appendChild(k)}catch(e){}
+  const PF="NMPF,'Playfair Display',Georgia,serif",PJ="'Plus Jakarta Sans',NMPJ,system-ui,sans-serif";
+  const HP='M100 160C20 105 20 30 70 30c25 0 30 25 30 32 0-7 5-32 30-32 50 0 50 75-30 130z';
+  const CSS=`
+@font-face{font-family:NMPF;src:url(fonts/nm-pf600.woff2) format('woff2');font-weight:600;font-display:swap}
+.lv{position:absolute;inset:0;background:#FBF6F0;color:#2B1A24;overflow:hidden;font-family:${PJ}}
+.lv-ph{position:absolute;left:0;top:0;right:0;height:58%;overflow:hidden}
+.lv-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:lvzoom 14s linear both}
+.lv-ph::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46%;background:linear-gradient(180deg,rgba(251,246,240,0),#FBF6F0 92%)}
+.lv-top{position:absolute;left:20px;right:20px;top:calc(var(--sat,0px) + 14px);display:flex;justify-content:space-between;align-items:center;z-index:2}
+.lv-brand{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.92);padding:6px 12px 6px 6px;border-radius:14px;font:700 15px ${PJ}}
+.lv-brand img{width:30px;height:30px;border-radius:9px}
+.lv-lang{border:0;background:rgba(255,255,255,.92);color:#2B1A24;font:700 13px ${PJ};height:42px;min-width:46px;border-radius:14px}
+.lv-bd{position:absolute;left:24px;right:24px;bottom:calc(var(--sab,0px) + 18px);z-index:2}
+.lv-k{font:700 11.5px ${PJ};letter-spacing:.16em;color:#D61F4F}
+.lv-h{font:600 clamp(29px,8.9vw,36px)/1.13 ${PF};margin:10px 0 0;letter-spacing:0}
+.lv-h span{display:inline-block;white-space:pre;animation:lvrise .6s cubic-bezier(.2,.8,.2,1) both}
+.lv-p{font:500 15px/1.5 ${PJ};color:#7C6A72;margin:12px 0 0;animation:lvrise .7s cubic-bezier(.2,.8,.2,1) calc(var(--d,0s) + 1.2s) both}
+.lv-cta{position:relative;overflow:hidden;display:block;width:100%;height:56px;margin-top:20px;border:0;border-radius:18px;background:#D61F4F;color:#fff;font:700 16.5px ${PJ};box-shadow:0 18px 30px -16px rgba(214,31,79,.7);animation:lvrise .7s cubic-bezier(.2,.8,.2,1) calc(var(--d,0s) + 1.5s) both}
+.lv-cta::after{content:"";position:absolute;top:0;bottom:0;left:-90px;width:70px;background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);animation:lvshine 1.1s ease-in-out calc(var(--d,0s) + 2.4s) both}
+.lv-cta:active{transform:scale(.97)}
+.lv-si{text-align:center;font:600 14px ${PJ};color:#7C6A72;margin:14px 0 0;animation:lvfade .6s linear calc(var(--d,0s) + 1.9s) both}
+.lv-si button,.lv-lg button{border:0;background:none;padding:6px 2px;font:inherit;color:#2B1A24;font-weight:700}
+.lv-lg{text-align:center;font:500 11.5px/1.4 ${PJ};color:#9A8A91;margin:6px 0 0;animation:lvfade .6s linear calc(var(--d,0s) + 2s) both}
+.lv-lg button{text-decoration:underline;font-weight:600;color:#7C6A72}
+.lv-open{position:absolute;inset:0;z-index:9;background:#FBF6F0;display:grid;place-items:center;animation:lvout .5s ease 2.5s both}
+.lv-open .w{position:relative;width:260px;text-align:center;margin-top:-40px}
+.lv-open svg{display:block;width:260px;height:234px}
+.lv-open .hl{fill:none;stroke:#D61F4F;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:lvdraw 1.25s ease-in-out .15s both}
+.lv-open .hf{fill:#FCE1E6;animation:lvfade .7s ease-out 1.1s both}
+.lv-open img{position:absolute;left:98px;top:82px;width:64px;height:64px;border-radius:20px;box-shadow:0 20px 34px -16px rgba(214,31,79,.6);animation:lvpop .6s cubic-bezier(.2,.8,.2,1) 1.05s both,lvbeat .9s ease-in-out 1.75s both}
+.lv-open b{display:block;font:600 36px ${PF};margin-top:18px;animation:lvrise .6s cubic-bezier(.2,.8,.2,1) 1.3s both}
+.lv-open i{display:block;font:600 17px ${PF};font-style:italic;color:#7C6A72;margin-top:10px;animation:lvfade .5s linear 1.9s both}
+@keyframes lvzoom{from{transform:scale(1.02)}to{transform:scale(1.16)}}
+@keyframes lvrise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes lvfade{from{opacity:0}to{opacity:1}}
+@keyframes lvshine{to{transform:translateX(560px)}}
+@keyframes lvdraw{to{stroke-dashoffset:0}}
+@keyframes lvpop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+@keyframes lvbeat{0%,100%{transform:scale(1)}25%{transform:scale(1.08)}50%{transform:scale(1)}75%{transform:scale(1.05)}}
+@keyframes lvout{to{opacity:0;visibility:hidden}}
+@media (prefers-reduced-motion:reduce){.lv *,.lv-open,.lv-open *{animation-duration:.01s!important;animation-delay:0s!important}.lv-open{display:none}}
+@media (max-height:700px){.lv-ph{height:50%}.lv-p{display:none}}
+`;
+  let opened=false;
+  function words(t,d0){let d=.35+d0;return t.split(' ').map(w=>{d+=.1;return `<span style="animation-delay:${d.toFixed(2)}s">${esc(w)} </span>`}).join('')}
+  function welcome(){
+    const dl=opened?0:2.4;const open=opened?'':`<div class="lv-open" aria-hidden="true"><div class="w"><svg viewBox="0 0 200 180"><path class="hf" d="${HP}"/><path class="hl" d="${HP}" pathLength="1"/></svg><img src="img/nm-mark.png" alt=""><b>NeuMarry</b><i>Where one heart finds another</i></div></div>`;
+    opened=true;
+    return `<div class="lv" style="--d:${dl}s">${open}
+  <div class="lv-ph"><img src="img/pl/arch2.webp" alt=""></div>
+  <div class="lv-top"><div class="lv-brand"><img src="img/nm-mark.png" alt=""><span>NeuMarry</span></div><button class="lv-lang" data-a="lang" aria-label="Language">${esc((typeof LANG!=='undefined'&&LANG&&LANG.toUpperCase&&LANG.toUpperCase())||'EN')}</button></div>
+  <div class="lv-bd">
+    <div class="lv-k">MARRIAGE, NOT DATING</div>
+    <h1 class="lv-h">${words('Find your person from your roots, where you live now.',dl)}</h1>
+    <p class="lv-p">For people who grew up in one country and built a life in another. Every member is ID checked.</p>
+    <button class="lv-cta" data-a="start">Meet people of my roots</button>
+    <p class="lv-si">Already a member? <button data-a="login">Sign in</button></p>
+    <p class="lv-lg">By continuing you agree to our <button data-a="legal" data-k="terms">Terms</button> and <button data-a="legal" data-k="privacy">Privacy Policy</button>.</p>
+  </div></div>`}
+  const _w=renderWelcome;renderWelcome=function(){try{if(!document.getElementById('lv-css')){const s=document.createElement('style');s.id='lv-css';s.textContent=CSS;document.head.appendChild(s)}return welcome()}catch(e){return _w.apply(this,arguments)}};
+  if(typeof renderWelcomeC3==='function')renderWelcomeC3=function(){return renderWelcome()};
+  if(typeof renderWelcomeV2==='function')renderWelcomeV2=function(){return renderWelcome()};
+
+  /* ---- step 2 (his ok 24 Nov 2026 00:15 on preview v3): sign-in and sign-up in the Love look.
+     Same screens and same fields as today (nothing about saving changes); only the look:
+     his photo on top, a light sheet below, Playfair headings, clear tappable rows, one rose button. ---- */
+  const LP='img/love/';
+  const ROOT_PH={'India':'udaipur','Brazil':'rio','South Korea':'seoul','Korea':'seoul','Mexico':'mexico','Nigeria':'lagos','Lebanon':'byblos','Philippines':'palawan','Romania':'romania','Poland':'krakow'};
+  const CITY_PH={'Canada':'toronto','United Kingdom':'london','UK':'london','United States':'newyork','USA':'newyork','United Arab Emirates':'dubai','UAE':'dubai','Australia':'sydney'};
+  function heroFor(){
+    if(S.screen==='auth')return 'cafe';
+    const d=S.draft||{},st=S.step,sub=d.v2b||'a';
+    if(st===1)return 'bouquet';
+    if(st===2)return ROOT_PH[d.oc]||'family';
+    if(st===3&&sub==='a')return CITY_PH[d.country]||'toronto';
+    if(st===3)return 'table';
+    if(st===4)return 'aisle';
+    return 'rings';
+  }
+  const CSS2=`
+html.lvs,html.lvs body,html.lvs #app{background:#FBF6F0!important}
+html.lvs #app{color:#2B1A24}
+html.lvs .su-head,html.lvs .v2head{background:#FBF6F0!important;border:0!important;box-shadow:none!important}
+html.lvs .v2segs i{background:#EADBD3!important}html.lvs .v2segs i.d,html.lvs .v2segs i.h{background:#D61F4F!important}
+html.lvs .v2pt,html.lvs .su-head .t small{color:#7C6A72!important;font-family:${PJ}!important}
+html.lvs .rl-hsig{display:none!important}
+.lv-hero{position:relative;height:208px;overflow:hidden;margin:0}
+.lv-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:lvzoom 16s linear both}
+html.lvs #su-scroll{background:#FBF6F0!important;padding-top:0!important}
+html.lvs #su-scroll>.form.pad{position:relative;background:#FBF6F0!important;border-radius:28px 28px 0 0;margin-top:-28px!important;padding-top:24px!important;animation:lvrise .6s cubic-bezier(.2,.8,.2,1) both}
+html.lvs .auth-h,html.lvs .v2h{font:600 30px/1.15 ${PF}!important;color:#2B1A24!important;letter-spacing:0!important}
+html.lvs .auth-h em,html.lvs .v2h em{color:#D61F4F!important;font-style:italic!important;background:none!important;-webkit-text-fill-color:#D61F4F!important}
+html.lvs .lede,html.lvs .v2lede,html.lvs .hint,html.lvs .note{color:#7C6A72!important;font-family:${PJ}!important}
+html.lvs .v2lb,html.lvs .flabel{font:700 11.5px ${PJ}!important;letter-spacing:.12em!important;text-transform:uppercase!important;color:#7C6A72!important}
+html.lvs .v2gain{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;color:#7C6A72!important}
+html.lvs .v2gain .i28,html.lvs .v2gain .ic{display:none!important}
+html.lvs .v2hc,html.lvs .v2gt-a{display:none!important}
+html.lvs .v2chip,html.lvs .v2fl,html.lvs .authbtn,html.lvs .pick,html.lvs .v2gt,html.lvs .v2card,html.lvs .fld input,html.lvs .fld textarea{background:#fff!important;background-image:none!important;border:1px solid #E6D6CD!important;border-radius:14px!important;color:#2B1A24!important;box-shadow:none!important}
+html.lvs .v2chip,html.lvs .authbtn,html.lvs .v2gt,html.lvs .pick,html.lvs .fld input{border-radius:999px!important}
+html.lvs .v2chip{padding:9px 16px!important}
+html.lvs .v2fl{border-radius:22px!important}
+html.lvs .v2card,html.lvs .consent,html.lvs .v2roots{border-radius:26px!important}
+html.lvs .fld textarea{border-radius:22px!important}
+html.lvs .iconbtn{border-radius:999px!important}
+html.lvs .authbtn .ai{background:none!important;border-radius:999px!important}
+html.lvs .v2row .av,html.lvs .v2card .av{display:none!important}
+html.lvs .v2card.v2row{background:transparent!important;border:0!important;padding:4px 0!important}
+html.lvs .v2card.v2row b{font:600 20px ${PF}!important;color:#2B1A24!important}
+html.lvs .v2pill{background:none!important;border:0!important;color:#D61F4F!important;font-weight:700!important;text-decoration:underline}
+html.lvs .v2chip.on,html.lvs .v2fl.on,html.lvs .v2gt.on{border:2px solid #D61F4F!important;background:#FDEEF1!important;color:#B0123A!important}
+html.lvs .v2gt{min-height:74px!important;justify-content:center!important;text-align:left!important;padding:14px 16px!important}
+html.lvs .authbtn{height:56px!important;font:600 16px ${PJ}!important}
+html.lvs .btn.primary{background:#D61F4F!important;background-image:none!important;color:#fff!important;border:0!important;border-radius:999px!important;font:700 16.5px ${PJ}!important;box-shadow:0 16px 28px -16px rgba(214,31,79,.7)!important}
+html.lvs .btn.primary:active{transform:scale(.97)}
+html.lvs .v2foot{background:#FBF6F0!important;border-top:1px solid #EFE4DA!important;box-shadow:none!important}
+html.lvs .consent{padding:4px 18px!important;box-shadow:0 18px 30px -26px rgba(60,20,30,.5)!important}
+html.lvs .ck{display:flex!important;gap:14px!important;align-items:flex-start!important;padding:16px 0!important;border-bottom:1px solid #F1E6DE!important;margin:0!important;cursor:pointer}
+html.lvs .ck:last-of-type{border-bottom:0!important}
+html.lvs .ck span{font:500 14.5px/1.5 ${PJ}!important;color:#2B1A24!important}
+html.lvs .ck input{-webkit-appearance:none!important;appearance:none!important;flex:none!important;width:26px!important;height:26px!important;margin:0!important;border:1.5px solid #D8C6BC!important;border-radius:9px!important;background:#fff!important;display:grid!important;place-items:center!important;transition:background .2s,border-color .2s}
+html.lvs .ck input:checked{background:#D61F4F!important;border-color:#D61F4F!important}
+html.lvs .ck input:checked::after{content:"";width:7px;height:12px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:translateY(-1px) rotate(45deg)}
+html.lvs .ck:last-of-type span{color:#7C6A72!important;font-size:13.5px!important}
+html.lvs .auth .lede{font:500 15px/1.5 ${PJ}!important;margin:8px 0 18px!important}
+html.lvs .authlist{gap:12px!important;margin-top:20px!important}
+html.lvs .authbtn{justify-content:center!important;gap:12px!important}
+html.lvs .authbtn#g-own{background:#2B1A24!important;color:#fff!important;border-color:#2B1A24!important}
+html.lvs .authbtn#g-own .ai{background:#fff!important;width:30px!important;height:30px!important;border-radius:999px!important;display:grid!important;place-items:center!important}
+html.lvs .authbtn .ai:not(.g){display:none!important}
+html.lvs .auth .note,html.lvs .auth .hint{text-align:center!important}
+
+html.lvs .consent{background:#fff!important;border:1px solid #EFE4DA!important;border-radius:18px!important}
+html.lvs .v2roots{background:#fff!important;border:1px solid #E6D6CD!important;border-radius:16px!important;box-shadow:none!important}
+html.lvs .link{color:#D61F4F!important}
+html.lvs .auth-h em,html.lvs .v2h em{font-family:${PF}!important;font-weight:600!important}
+html.lvs .v2map{display:none!important}
+html.lvs .av,html.lvs .av img,html.lvs .av-art{border-radius:22px!important}
+html.lvs .row2 .pick{font-size:14.5px!important}html.lvs .row2 .pick span{overflow:hidden;text-overflow:ellipsis}
+html.lvs .iconbtn{background:#fff!important;border:1px solid #EFE4DA!important;border-radius:999px!important;color:#2B1A24!important}
+`;
+  function hero(){
+    const de=document.documentElement,on=S.screen==='auth'||S.screen==='signup';
+    de.classList.toggle('lvs',on);if(!on)return;
+    if(!document.getElementById('lv-css2')){const k=document.createElement('style');k.id='lv-css2';k.textContent=CSS2;document.head.appendChild(k)}
+    const sc=document.getElementById('su-scroll');if(!sc)return;
+    const want=LP+heroFor()+'.webp';let h=sc.querySelector(':scope>.lv-hero');
+    if(!h){h=document.createElement('div');h.className='lv-hero';h.setAttribute('aria-hidden','true');h.innerHTML='<img alt="">';sc.insertBefore(h,sc.firstChild)}
+    const im=h.querySelector('img');if(!im.getAttribute('src')||im.getAttribute('src')!==want)im.setAttribute('src',want);
+    try{const m=document.querySelector('meta[name=theme-color]');m&&m.setAttribute('content','#FBF6F0')}catch(e){}
+  }
+
+  /* ---- step 3: Home in the Love look (same data and buttons as today: real counts from the live numbers block,
+     today's introduction, Not now / Say yes; Say yes without Gold already opens the Gold plans). ---- */
+  const CSS3=`
+html.lva,html.lva body,html.lva #app,html.lva .n22-pg,html.lva #main{background:#FBF6F0!important}
+html.lva{--p-bg:#FBF6F0;--p-s1:#FFFFFF;--p-ln:#EFE4DA;--p-ln2:#E6D6CD;--p-tx:#2B1A24;--p-mu:#7C6A72;--p-ac:#D61F4F}
+html.lva .p29-hd h1,html.lva .p29-hd .t,html.lva .n22-mh h1{font:600 34px/1.1 ${PF}!important;color:#2B1A24!important;letter-spacing:0!important}
+html.lva .p29-hd small,html.lva .p29-hd p{color:#7C6A72!important}
+.lv-count{font:600 14px/1.4 ${PJ};color:#2B1A24;margin:6px 0 0;animation:lvrise .6s cubic-bezier(.2,.8,.2,1) .2s both}
+.lv-count b{color:#D61F4F;font-weight:800}
+html.lva .p29-seg button{background:#fff!important;border:1px solid #EFE4DA!important;color:#7C6A72!important;border-radius:14px!important}
+html.lva .p29-seg button.on{background:#2B1A24!important;border-color:#2B1A24!important;color:#fff!important}
+html.lva .p29-av{background:#FCE7EA!important;border-color:#F6CFD8!important;color:#B0123A!important}
+html.lva #app .navwrap .nav.nmf-nav{background:rgba(255,255,255,.96)!important;border:1px solid #EFE4DA!important;box-shadow:0 14px 30px -16px rgba(90,40,50,.4)!important}
+html.lva #app .navwrap .nav.nmf-nav button{color:#A2929A!important}
+html.lva #app .navwrap .nav.nmf-nav button.on{background:#FCE7EA!important;color:#B0123A!important}
+html.lva .n22-fh h2,html.lva .n22-sec h2{font:600 23px/1.2 ${PF}!important;color:#2B1A24!important}
+html.lva .n22-fh small,html.lva .n22-sec p{color:#7C6A72!important}
+/* today's introduction = one big photo, words on it */
+html.lva .n22-feat{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;animation:lvrise .7s cubic-bezier(.2,.8,.2,1) both}
+html.lva .n22-rte{position:relative;display:block;width:100%;height:420px;border-radius:28px;overflow:hidden;padding:0;border:0;background:#EADBD3;box-shadow:0 26px 40px -26px rgba(60,20,30,.6)}
+html.lva .n22-rte .n22-b,html.lva .n22-rte svg{display:none!important}
+html.lva .n22-rte .n22-a{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;border-radius:0!important}
+html.lva .n22-rte .n22-a img{width:100%!important;height:100%!important;object-fit:cover!important;animation:lvzoom 16s linear both}
+html.lva .n22-rte .n22-a em{position:absolute!important;left:20px!important;top:18px!important;background:none!important;color:#fff!important;font:700 11.5px ${PJ}!important;letter-spacing:.14em!important;text-shadow:0 1px 10px rgba(0,0,0,.4)}
+html.lva .n22-rte::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(24,8,16,.45),transparent 30%,transparent 50%,rgba(24,8,16,.8));pointer-events:none}
+html.lva .n22-rte .n22-fn{position:absolute!important;left:20px!important;right:20px!important;bottom:20px!important;z-index:2;text-align:left;background:none!important;padding:0!important}
+html.lva .n22-rte .n22-fn b{display:block;font:600 34px/1.1 ${PF}!important;color:#fff!important}
+html.lva .n22-rte .n22-fn small{display:block;font:600 14px ${PJ}!important;color:#fff!important;opacity:.92;margin-top:6px}
+html.lva .n22-rte .n22-lk,html.lva .n22-rte .n22-pill{position:absolute!important;z-index:2;background:rgba(255,255,255,.92)!important;color:#2B1A24!important;border-radius:10px!important;font:700 11.5px ${PJ}!important;padding:6px 9px!important;border:0!important}
+html.lva .n22-rte .n22-lk{right:16px!important;top:14px!important;left:auto!important;bottom:auto!important}
+html.lva .n22-rte .n22-pill{left:20px!important;bottom:92px!important;top:auto!important}
+html.lva .n22-fb{background:transparent!important;border:0!important;box-shadow:none!important;padding:18px 4px 0!important}
+html.lva .n22-big{font:600 46px/1 ${PF}!important;color:#D61F4F!important}
+html.lva .n22-bar{background:#EFE4DA!important}html.lva .n22-bar i{background:#D61F4F!important}
+html.lva .n22-why>div{border-bottom:1px solid #EFE4DA!important;background:none!important;padding:12px 0!important;font:600 15px ${PJ}!important;color:#2B1A24!important}
+html.lva .n22-why span{display:none!important}
+html.lva .n22-vc span{background:#E7EFE6!important;color:#2F5B4C!important;border:0!important;border-radius:10px!important}
+html.lva .n22-two{align-items:center!important;gap:16px!important}
+html.lva .n22-x{background:none!important;border:0!important;box-shadow:none!important;color:#7C6A72!important;font:700 15px ${PJ}!important;flex:0 0 auto!important;padding:0 6px!important}
+html.lva .n22-y{background:#D61F4F!important;background-image:none!important;color:#fff!important;border:0!important;border-radius:18px!important;height:56px!important;font:700 16.5px ${PJ}!important;flex:1!important;box-shadow:0 16px 28px -16px rgba(214,31,79,.7)!important}
+/* more people: tall photo cards */
+html.lva .n22-nx{background:#fff!important;border:1px solid #EFE4DA!important;border-radius:22px!important;box-shadow:none!important;overflow:hidden}
+html.lva .n22-nx b{font:600 18px ${PF}!important;color:#2B1A24!important}
+html.lva .n22-nx em{background:rgba(255,255,255,.92)!important;color:#2B1A24!important;border-radius:10px!important}
+html.lva .n22-all{background:#fff!important;border:1px solid #EFE4DA!important;border-radius:18px!important;color:#2B1A24!important;box-shadow:none!important}
+/* real numbers block: light, no dark slab */
+html.lva .n22-pu{background:#fff!important;color:#2B1A24!important;border:1px solid #EFE4DA!important}
+html.lva .n22-pu>img,html.lva .n22-pu>i{display:none!important}
+html.lva .n22-pug>div{background:none!important;border:0!important;border-bottom:1px solid #EFE4DA!important;border-radius:0!important}
+html.lva .n22-pug b{font:600 30px ${PF}!important;color:#D61F4F!important}
+html.lva .n22-pug em,html.lva .n22-pun,html.lva .n22-pux p{color:#7C6A72!important}
+html.lva .n22-pux small{color:#2B1A24!important}
+html.lva .n22-seen{background:#fff!important;color:#2B1A24!important;border:1px solid #EFE4DA!important}
+html.lva .n22-seen img{opacity:1!important}
+html.lva .n22-seen small,html.lva .n22-seen em{color:#7C6A72!important}html.lva .n22-seen b{color:#2B1A24!important}
+html.lva .n27{background:#fff!important;border:1px solid #EFE4DA!important;box-shadow:none!important}
+html.lva .n27 h2{font:600 22px ${PF}!important;color:#2B1A24!important}
+html.lva .n22-foot{color:#7C6A72!important}
+html.lva .p29-seg button,html.lva .p29-av,html.lva .n22-all,html.lva .n22-vc span,html.lva .n22-y,html.lva .n22-rte .n22-lk,html.lva .n22-rte .n22-pill,html.lva .n22-nx em{border-radius:999px!important}
+html.lva .n22-rte{border-radius:32px!important}html.lva .n22-nx,html.lva .n22-pu,html.lva .n22-seen,html.lva .n27{border-radius:28px!important}
+html.lva #app .navwrap .nav.nmf-nav,html.lva #app .navwrap .nav.nmf-nav button{border-radius:999px!important}
+html.lva .btn.primary,html.lva .n27-go{border-radius:999px!important}
+/* other tabs: same ivory page, Playfair headings, pill buttons (first pass) */
+html.lva #app .n26,html.lva #app .n26-hd,html.lva #app .nmf-top,html.lva #app .nmf-hd,html.lva #app .scroll,html.lva #app .page,html.lva #app .main-inner{background:#FBF6F0!important}
+html.lva #app h1{font-family:${PF}!important;font-weight:600!important;color:#2B1A24!important;letter-spacing:0!important}
+html.lva #app h2,html.lva #app h3{font-family:${PF}!important;font-weight:600!important;letter-spacing:0!important}
+html.lva #app .btn,html.lva #app .chip,html.lva #app .seg button,html.lva #app .n26-seg button,html.lva #app .tabs button{border-radius:999px!important}
+html.lva #app .btn.primary,html.lva #app .n22-gcta{background:#D61F4F!important;background-image:none!important;color:#fff!important;border:0!important}
+html.lva .n22-grid{align-items:stretch!important}
+html.lva .n22-mc{display:flex!important;flex-direction:column!important;background:#fff!important;border:1px solid #EFE4DA!important;border-radius:28px!important;overflow:hidden!important;box-shadow:0 18px 30px -24px rgba(60,20,30,.45)!important;padding:0!important}
+html.lva .n22-mc .n22-mp{flex:1 1 auto!important;min-height:250px!important;border-radius:0!important;margin:0!important}
+html.lva .n22-mc .n22-mp img{height:100%!important;object-fit:cover!important}
+html.lva .n22-mc .n22-vc{display:block!important;padding:10px 14px 0!important;margin:0!important;font:600 12.5px ${PJ}!important;color:#2F5B4C!important}
+html.lva .n22-mc .n22-vc span{display:inline!important;background:none!important;padding:0!important;border:0!important;color:#2F5B4C!important;font:inherit!important}
+html.lva .n22-mc .n22-vc span+span::before{content:" · "}
+html.lva .n22-mc .n22-two{display:flex!important;flex-direction:column-reverse!important;align-items:stretch!important;gap:2px!important;padding:12px 12px 8px!important;margin:0!important}
+html.lva .n22-mc .n22-x{font-size:13.5px!important;padding:8px 6px!important;white-space:nowrap!important;text-align:center!important}
+html.lva .n22-mc .n22-y{flex:none!important;width:100%!important;min-width:0!important;height:44px!important;padding:0 12px!important;font-size:15px!important;white-space:nowrap!important;border-radius:999px!important;aspect-ratio:auto!important}
+html.lva .n22-mc .n22-done{font:600 13.5px ${PJ}!important;color:#7C6A72!important}
+/* profile page */
+html.lva .px-tph{background-size:cover!important;background-position:center!important}
+html.lva #app .px-cb,html.lva .px-cb{background:rgba(255,255,255,.92)!important;color:#2B1A24!important;border:0!important;border-radius:999px!important;box-shadow:0 6px 16px -8px rgba(0,0,0,.35)!important}
+html.lva .px-fit{background:none!important;border:0!important;box-shadow:none!important;width:auto!important;height:auto!important;display:flex!important;flex-direction:column!important;align-items:flex-end!important}
+html.lva .px-fit b{font:600 30px/1 ${PF}!important;color:#D61F4F!important}
+html.lva .px-fit small{font:700 10.5px ${PJ}!important;letter-spacing:.14em!important;text-transform:uppercase!important;color:#7C6A72!important}
+html.lva .px-tile{flex-direction:row!important;gap:8px!important;height:48px!important;border-radius:999px!important;background:#fff!important;border:1px solid #E6D6CD!important;color:#2B1A24!important;font:700 14.5px ${PJ}!important;box-shadow:none!important}
+html.lva .px-tile .i28,html.lva .px-tile .ic{display:none!important}
+html.lva #app .px-tile.on,html.lva .px-tile.on{background:#D61F4F!important;border-color:#D61F4F!important;color:#fff!important}
+html.lva #app .rbtn,html.lva .rbtn{border-radius:999px!important;background:#fff!important;border:1px solid #E6D6CD!important;color:#2B1A24!important;box-shadow:none!important}
+html.lva .btn.primary .ic,html.lva .btn.primary .i28{display:none!important}
+/* Me, Gold, Chats: softer, rounder, no plain icons */
+html.lva #app .n26-ph{border-radius:24px!important}
+@media (max-width:374px){html.lva #app .n26-st .btn,html.lva #app .n26-st button,html.lva #app .n26-go{font-size:13px!important;padding:0 8px!important;white-space:nowrap!important;min-height:42px!important;display:flex!important;align-items:center!important;justify-content:center!important}html.lva #app .n26-st b{font-size:26px!important}}
+html.lva #app .n27 .n27-st>*,html.lva #app .n27 [class*=n27-s]>div{border-radius:20px!important}
+html.lva #app .n27-go{border-radius:999px!important;background:#D61F4F!important}
+html.lva #app .n26-ph.lv-noph{background:#FDEEF1!important;border:1.5px dashed #E8A9B8!important;display:grid!important;place-items:center!important;color:#B0123A!important;font:700 13px/1.3 ${PJ}!important;text-align:center!important}
+html.lva #app .n26-ph.lv-noph>*{display:none!important}
+html.lva #app .n26-ph.lv-noph::after{content:"Add your photo"}
+html.lva #app .n26-st,html.lva #app .n26-g,html.lva #app .nmf-card,html.lva #app .nmf-t,html.lva #app .callout,html.lva #app .empty{border-radius:26px!important;border:1px solid #EFE4DA!important;box-shadow:none!important;background:#fff!important}
+html.lva #app .n26-go,html.lva #app .nmf-av{border-radius:999px!important}
+html.lva #app .n26-g svg,html.lva #app .n26-g .i28,html.lva #app .n26-g .ic:not(.tx),html.lva #app .nmf-t svg,html.lva #app .nmf-t .i28,html.lva #app .eic{display:none!important}
+html.lva #app .nmf-t{justify-content:center!important;text-align:center!important}
+html.lva #app .n26-hd b,html.lva #app .n26-nm{font-family:${PF}!important;font-weight:600!important}
+/* 'start with a question' sheet */
+html.lva .rl-ask{background:#FBF6F0!important;border-radius:30px 30px 0 0!important;box-shadow:0 -20px 40px -20px rgba(60,20,30,.4)!important}
+html.lva .rl-ask .rl-sgw{display:none!important}
+html.lva .rl-ask b{font:600 23px/1.2 ${PF}!important;color:#2B1A24!important}
+html.lva .rl-ask .eb{color:#D61F4F!important;font:700 11.5px ${PJ}!important;letter-spacing:.14em!important;text-transform:uppercase!important}
+html.lva .rl-ask .rl-b{border-radius:16px!important;background:#fff!important;border:1px solid #EFE4DA!important}
+html.lva .rl-ask button.rl-q{border-radius:22px!important;background:#fff!important;border:1px solid #E6D6CD!important}
+html.lva .rl-ask .btn,html.lva .rl-ask [data-a*=Send],html.lva .rl-ask [data-a*=send]{border-radius:999px!important}
+html.lva .rl-q i{border-radius:7px!important;border:2px solid #E1CFC6!important;background:#fff!important}
+html.lva .rl-q.on{border-color:#D61F4F!important;background:#FFF5F7!important}
+html.lva .rl-q.on i{background:#D61F4F url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3.2L15 7' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat!important;border-color:#D61F4F!important}
+html.lva .rl-ask [data-a=close],html.lva .rl-ask .x{border-radius:16px!important}
+html.lva .rl-go:not([disabled]){background:#D61F4F!important;color:#fff!important;border:0!important}
+html.lva .rl-go svg{display:none!important}
+html.lva #app button.lvp{width:auto!important;min-width:76px!important;height:44px!important;padding:0 18px!important;border-radius:999px!important;aspect-ratio:auto!important}
+html.lva #app .panel,html.lva #app .card,html.lva #app .v2card,html.lva #app .n26-card,html.lva #app .n22-nx{border-radius:26px!important}
+
+
+`;
+  function home(){
+    const de=document.documentElement,on=S.screen==='app';
+    de.classList.toggle('lva',on);if(!on)return;
+    if(!document.getElementById('lv-css3')){const k=document.createElement('style');k.id='lv-css3';k.textContent=CSS3;document.head.appendChild(k)}
+    const bd=document.querySelector('.n22-bd')||document.createElement('div');
+    /* his photos for the roots picture where we have one */
+    bd.querySelectorAll('.n22-rte .n22-a').forEach(a=>{const t=(a.querySelector('em')||{}).textContent||'';const c=t.replace(/^ROOTS/,'').trim();const k=ROOT_PH[c];const im=a.querySelector('img');if(k&&im&&!im.dataset.lv){im.dataset.lv=1;im.src=LP+k+'.webp'}});
+    /* people first: the 'next step' card goes after the first photo rail */
+    const n27=bd.querySelector('[data-n27]');if(n27&&!n27.dataset.lvm){n27.dataset.lvm=1;const rail=[...bd.children].find(e=>e!==n27&&e.querySelector('img')&&!e.classList.contains('n22-pu'));if(rail)bd.insertBefore(n27,rail.nextSibling)}
+    /* his bright photos instead of the old dark ones: by the member's roots country when the card says it, else by picture kind */
+    const FMAP={mx:'mexico',kr:'seoul',in:'udaipur',br:'rio',ca:'toronto',to:'toronto',seoul2:'seoul',table:'table',dinner:'table',elegant:'bouquet',hall:'aisle',arch2:'aisle',ringbox:'rings',rings:'rings',lights:'cafe',hero:'family',ev2:'table'};
+    document.querySelectorAll('#app img').forEach(im=>{if(im.dataset.lv)return;const m=(im.getAttribute('src')||'').match(/img\/(?:pl|p15)\/([a-z0-9]+)\.webp/);if(!m)return;im.dataset.lv=1;
+      let k=null;const card=im.closest('button,article,li,.n22-nx,.n26-card,div');const txt=card?(card.textContent||''):'';for(const c in ROOT_PH){if(txt.indexOf(c)>=0&&txt.indexOf(c)<(txt.indexOf('→')>=0?txt.indexOf('→'):9999)){k=ROOT_PH[c];break}}
+      k=k||FMAP[m[1]];if(k)im.src=LP+k+'.webp'});
+    /* profile hero: the member's roots photo */
+    const tph=document.querySelector('.px-tph');if(tph&&!tph.dataset.lv){let t='';document.querySelectorAll('#app *').forEach(e=>{if(!t&&e.children.length===0&&(e.textContent||'').trim()==='Grew up'&&e.nextElementSibling)t=e.nextElementSibling.textContent||''});if(!t){const m=document.querySelector('.px-tph').closest('[class*=px]');t=m?(m.textContent||''):''}let k=null,best=1e9;for(const c in ROOT_PH){const i=t.indexOf(c);if(i>=0&&i<best){best=i;k=ROOT_PH[c]}}tph.dataset.lv=1;tph.style.setProperty('background-image',`url(${LP}${k||'aisle'}.webp)`,'important')}
+    document.querySelectorAll('#app .n26-ph').forEach(e=>{e.classList.toggle('lv-noph',!e.querySelector('img'));if(!e.dataset.lvt){e.dataset.lvt=1;e.addEventListener('click',()=>{try{if(!e.querySelector('img'))A.goPhoto()}catch(x){}})}});
+    /* round buttons become pills (his 24 Nov 00:23: no squares, an oval/pill look) */
+    requestAnimationFrame(()=>{try{document.querySelectorAll('#app button').forEach(b=>{if(b.classList.contains('lvp')||b.closest('.navwrap')||b.classList.contains('n22-y')||b.classList.contains('n22-x'))return;const r=b.getBoundingClientRect();if(r.width<28||r.width>90||Math.abs(r.width-r.height)>3)return;const br=parseFloat(getComputedStyle(b).borderTopLeftRadius)||0;if(br>=r.width/2-2&&(b.textContent||'').trim().length>2)b.classList.add('lvp')})}catch(e){}});
+    /* the real count line under the title (copied from the live numbers block; hidden when there is none) */
+    const src=bd.querySelector('.n22-pux p:not(.n22-pun)');const hd=document.querySelector('.p29-hd');
+    if(hd){const box=hd.querySelector('h1')&&hd.querySelector('h1').parentNode||hd;let c=hd.querySelector('.lv-count');if(src&&/\d/.test(src.textContent)){if(!c){c=document.createElement('p');c.className='lv-count';box.appendChild(c)}const h=src.innerHTML.replace(/ from /,' members from ').replace(/ in /,' live in ');if(c.innerHTML!==h)c.innerHTML=h}else if(c)c.remove()}
+  }
+  const _r=render;render=function(){const out=_r.apply(this,arguments);
+    try{home()}catch(e){}
+    try{hero()}catch(e){}
+    try{if(S.screen==='welcome'&&document.querySelector('.lv')){const m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content','#FBF6F0');
+      const B=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.Bars;B&&B.set&&B.set({top:'#00000000',bottom:'#FBF6F0',light:true})}}catch(e){}
+    return out};
 })();
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
