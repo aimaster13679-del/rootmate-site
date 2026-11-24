@@ -18,6 +18,9 @@ PLAY_CSS = ('<style>.gplay{display:inline-flex;align-items:center;gap:10px;backg
 PLAY_SVG = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 2.6v18.8c0 .5.5.8.9.6l10.6-10.1L4.9 2c-.4-.2-.9.1-.9.6z" fill="#34A853"/>'
             '<path d="M15.5 11.9 4.9 22c.2.1.5.1.7 0l12.6-7.2-2.7-2.9z" fill="#EA4335"/><path d="M18.2 9.1 5.6 1.9c-.2-.1-.5-.1-.7 0l10.6 10z" fill="#4285F4"/>'
             '<path d="m18.2 9.1-2.7 2.8 2.7 2.9 2.9-1.7c.8-.5.8-1.7 0-2.2z" fill="#FBBC04"/></svg>')
+PLAY_SVG = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#00D7FE" d="M3.6 2.3l10.2 10.2L3.6 22.7c-.4-.2-.6-.6-.6-1.1V3.4c0-.5.2-.9.6-1.1z"/>'
+            '<path fill="#FFCE00" d="M17.2 9.1l-3.4 3.4 3.4 3.4 3.9-2.2c1.1-.6 1.1-1.7 0-2.3z"/><path fill="#00F076" d="M3.6 2.3c.3-.2.8-.2 1.3.1l12.3 6.7-3.4 3.4z"/>'
+            '<path fill="#F83A4C" d="M13.8 12.5l3.4 3.4-12.3 6.7c-.5.3-1 .3-1.3.1z"/></svg>')
 def play_btn(lang='en'):
     top, name = ('Disponible sur', 'Google Play') if lang == 'fr' else ('GET IT ON', 'Google Play')
     return (f'<a class="gplay" href="{PLAY_URL}" target="_blank" rel="noopener" aria-label="{"Télécharger NeuMarry sur Google Play" if lang == "fr" else "Get NeuMarry on Google Play"}">'
@@ -497,6 +500,8 @@ if LAUNCH15:
     NM_HOME = os.environ.get('NM_HOME', 'homenm')
     for src_name, out_rel, lang, other, legal in ((NM_HOME + '.html', 'index.html', 'en', 'fr/', ''), (NM_HOME + '_fr.html', os.path.join('fr', 'index.html'), 'fr', '../', 'fr/')):
         h = rd(os.path.join('next', src_name))
+        if '__PLAY__' in h:  # Love home (his ask 24 Nov 2026): every main button opens NeuMarry on Google Play
+            h = h.replace('__PLAY__', PLAY_URL).replace('__PLAYSVG__', PLAY_SVG)
         up = '../' if lang == 'fr' else ''
         h = h.replace('src="img/icon-192.png"', 'src="/app/img/icon-192.png"').replace('src="img/', 'src="/app/img/p15/')
         h = h.replace('<a class="logo" href="#">', '<a class="logo" href="/' + ('fr/' if lang == 'fr' else '') + '">')

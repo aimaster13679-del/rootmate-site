@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>NeuMarry : le mariage pour les personnes qui vivent à l’étranger</title>
+<meta name="theme-color" content="#FBF6F0">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap">
+<style>
+:root{--bg:#FBF6F0;--ink:#2B1A24;--mt:#6E5A63;--rose:#D61F4F;--ln:#EADCD3;--PF:'Playfair Display',Georgia,serif;--PJ:'Plus Jakarta Sans',system-ui,sans-serif;color-scheme:light}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:500 16px/1.6 var(--PJ)}
+a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+h1,h2,h3{font-family:var(--PF);font-weight:600;letter-spacing:0;margin:0}
+.eb{font:800 11.5px/1 var(--PJ);letter-spacing:.16em;text-transform:uppercase;color:var(--rose)}
+/* follow band */
+.fol{background:#fff;border-bottom:1px solid var(--ln);font:700 13px var(--PJ)}
+.fol .wrap{display:flex;align-items:center;justify-content:center;gap:10px;min-height:40px;flex-wrap:wrap}
+.fol span{color:var(--mt)}
+.fol a{color:var(--rose);padding:5px 12px;border-radius:999px;border:1px solid #F2C9D3;background:#FFF5F7}
+/* header */
+header{position:sticky;top:0;z-index:20;background:rgba(251,246,240,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;min-height:62px;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;font:700 20px var(--PF)}
+.logo img{width:36px;height:36px;border-radius:10px}
+nav{display:flex;align-items:center;gap:22px;font:700 14px var(--PJ)}
+nav .nl{color:var(--mt)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:999px;font:800 15px var(--PJ);padding:14px 24px;white-space:nowrap}
+.btn.r{background:var(--rose);color:#fff;box-shadow:0 14px 30px -14px rgba(214,31,79,.7)}
+.btn.w{background:#fff;color:var(--ink)}
+.btn.sm{padding:10px 18px;font-size:14px}
+.btn svg{width:20px;height:20px;flex:none}
+.tl{font:700 15px var(--PJ);border-bottom:1.5px solid currentColor;padding-bottom:2px}
+@media(max-width:760px){nav .nl{display:none}}
+/* hero */
+.hero{position:relative;min-height:min(86vh,760px);display:flex;align-items:flex-end;color:#fff;overflow:hidden}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:zm 18s ease-out both}
+@keyframes zm{from{transform:scale(1.08)}to{transform:scale(1)}}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(43,26,36,0) 22%,rgba(43,26,36,.55) 48%,rgba(43,26,36,.88) 100%)}
+.hero .wrap{text-shadow:0 2px 18px rgba(20,8,14,.35)}.hero .btn{text-shadow:none}
+.hero .wrap{position:relative;z-index:1;padding-bottom:46px;width:100%}
+.hero .eb{color:#FFD9E2}
+.hero h1{font-size:clamp(44px,9vw,84px);line-height:1.04;margin:14px 0 14px;max-width:12ch}
+.hero h1 i{font-style:italic;color:#FFC2D1}
+.hero p{font-size:17.5px;max-width:34ch;margin:0 0 24px;color:rgba(255,255,255,.92)}
+.hero .acts{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.rise{opacity:0;transform:translateY(18px);animation:ri .9s cubic-bezier(.2,.7,.2,1) forwards}
+.d1{animation-delay:.15s}.d2{animation-delay:.35s}.d3{animation-delay:.55s}.d4{animation-delay:.75s}
+@keyframes ri{to{opacity:1;transform:none}}
+/* trust line */
+.trust{display:flex;justify-content:center;gap:12px 28px;flex-wrap:wrap;padding:22px 0;border-bottom:1px solid var(--ln);font:700 14.5px var(--PJ)}
+.tk{display:inline-flex;align-items:center;gap:8px}
+.tk:before{content:"";width:18px;height:18px;border-radius:6px;background:var(--rose) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3.2L15 7' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat;flex:none}
+/* sections */
+section{padding:72px 0}
+.sh{max-width:640px;margin-bottom:34px}
+.sh h2{font-size:clamp(32px,5.6vw,50px);line-height:1.1;margin:12px 0 10px}
+.sh p{color:var(--mt);margin:0;font-size:17px}
+/* steps */
+.steps{display:grid;gap:40px}
+@media(min-width:860px){.steps{grid-template-columns:repeat(3,1fr);gap:28px}}
+.st img{width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:28px}
+.st b{display:block;font:600 40px/1 var(--PF);color:var(--rose);margin:18px 0 6px}
+.st h3{font-size:24px;margin-bottom:6px}
+.st p{margin:0;color:var(--mt)}
+/* roots rail */
+.rail{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 22px 10px;margin:0 -22px;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.rc{flex:none;width:230px;scroll-snap-align:start;position:relative;border-radius:26px;overflow:hidden;color:#fff}
+.rc img{width:100%;aspect-ratio:2/3;object-fit:cover;transition:transform .6s}
+.rc:hover img{transform:scale(1.04)}
+.rc:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(20,10,16,.72))}
+.rc span{position:absolute;left:16px;right:16px;bottom:14px;z-index:1;font:600 13px var(--PJ);color:rgba(255,255,255,.85)}
+.rc span b{display:block;font:600 22px/1.2 var(--PF);color:#fff}
+.cities{margin-top:22px;color:var(--mt);font-size:16px}
+.cities b{color:var(--ink)}
+/* split rows */
+.split{display:grid;gap:34px;align-items:center}
+@media(min-width:860px){.split{grid-template-columns:1.05fr 1fr;gap:60px}.split.rv .ph{order:2}}
+.split .ph img{width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:32px}
+.list{list-style:none;padding:0;margin:22px 0 0;display:grid;gap:16px}
+.list li{display:grid;grid-template-columns:22px 1fr;gap:12px}
+.list li:before{content:"";width:20px;height:20px;margin-top:3px;border-radius:7px;background:var(--rose) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3.2L15 7' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/15px no-repeat}
+.list b{display:block;font:800 16px var(--PJ)}
+.list span{color:var(--mt);font-size:15px}
+/* plans */
+.plans{border-top:1px solid var(--ln)}
+.pl{display:grid;grid-template-columns:1fr auto;gap:6px 18px;padding:26px 0;border-bottom:1px solid var(--ln);align-items:center}
+.pl h3{font-size:28px}
+.pl .pr{font:600 30px var(--PF);text-align:right}
+.pl .pr small{font:600 14px var(--PJ);color:var(--mt)}
+.pl p{grid-column:1/-1;margin:0;color:var(--mt)}
+.pl.g h3,.pl.g .pr{color:var(--rose)}
+.note{font-size:13.5px;color:var(--mt);margin-top:14px}
+/* faq */
+details{border-bottom:1px solid var(--ln);padding:20px 0}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:16px;font:600 20px/1.35 var(--PF)}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"+";font:500 26px/1 var(--PJ);color:var(--rose);transition:transform .3s}
+details[open] summary:after{transform:rotate(45deg)}
+details p{margin:10px 0 0;color:var(--mt)}
+/* final */
+.fin{position:relative;color:#fff;text-align:center;overflow:hidden;padding:120px 0}
+.fin img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.fin:after{content:"";position:absolute;inset:0;background:rgba(43,26,36,.55)}
+.fin .wrap{position:relative;z-index:1}
+.fin h2{font-size:clamp(36px,6vw,60px);line-height:1.08;margin:12px auto 14px;max-width:14ch}
+.fin p{margin:0 auto 26px;max-width:36ch;color:rgba(255,255,255,.9)}
+.fin .eb{color:#FFD9E2}
+/* heart line */
+.hl{width:64px;height:56px;margin:0 auto 6px}
+.hl path{fill:none;stroke:#FFC2D1;stroke-width:2.4;stroke-linecap:round;stroke-dasharray:160;stroke-dashoffset:160}
+.on .hl path{animation:dr 1.8s ease forwards}@keyframes dr{to{stroke-dashoffset:0}}
+/* footer */
+footer{padding:46px 0 40px;font-size:14.5px;color:var(--mt)}
+footer .wrap{display:grid;gap:22px}
+footer .row{display:flex;flex-wrap:wrap;gap:10px 22px}
+footer .row a{color:var(--ink);font-weight:700}
+footer .fl a{color:var(--rose);padding:7px 14px;border-radius:999px;border:1px solid #F2C9D3;background:#FFF5F7;font-weight:800}
+/* sticky app button on phones */
+.stick{position:fixed;left:16px;right:16px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:30;display:none}
+.stick .btn{width:100%}
+@media(max-width:760px){.stick{display:block}.stick.hide{opacity:0;pointer-events:none}body{padding-bottom:80px}}
+.stick{transition:opacity .3s}
+.sr{opacity:0;transform:translateY(26px);transition:opacity .8s,transform .8s cubic-bezier(.2,.7,.2,1)}.sr.on{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rise,.sr{opacity:1;transform:none}.hl path{stroke-dashoffset:0}}
+</style></head>
+<body>
+<div class="fol"><div class="wrap"><span>Suivre NeuMarry</span><a href="https://www.instagram.com/neumarry_match" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/profile.php?id=61595614954211" target="_blank" rel="noopener">Facebook</a></div></div>
+<header><div class="wrap">
+ <a class="logo" href="/fr/"><img src="/app/img/icon-192.png" alt="">NeuMarry</a>
+ <nav><a class="nl" href="#how">Comment ça marche</a><a class="nl" href="#safe">Sécurité</a><a class="nl" href="#plans">Formules</a><a class="btn r sm" data-play href="__PLAY__">Obtenir l’appli</a></nav>
+</div></header>
+
+<div class="hero">
+ <img src="/app/img/love/aisle.webp" alt="Une allée de mariage fleurie">
+ <div class="wrap">
+  <div class="eb rise d1">Le mariage pour ceux qui vivent à l’étranger</div>
+  <h1 class="rise d2">Un cœur en trouve <i>un autre.</i></h1>
+  <p class="rise d3">Rencontrez quelqu’un de vos racines, dans la ville où vous vivez aujourd’hui, dont les projets de mariage rejoignent les vôtres.</p>
+  <div class="acts rise d4"><a class="btn w" data-play href="__PLAY__">__PLAYSVG__Télécharger NeuMarry sur Google Play</a><a class="tl" href="/app/">Ouvrir dans le navigateur</a></div>
+ </div>
+</div>
+<div class="wrap trust"><span class="tk">Pièce d’identité et selfie vérifiés</span><span class="tk">Votre numéro reste privé</span><span class="tk">Votre famille peut participer</span></div>
+
+<section id="how"><div class="wrap">
+ <div class="sh sr"><div class="eb">How it works</div><h2>Trois étapes sereines vers la bonne personne.</h2><p>La plupart des réponses se font d’un geste. Pas de swipe, pas de discussions sans fin.</p></div>
+ <div class="steps">
+  <div class="st sr"><img src="/app/img/love/cafe.webp" alt="Deux tasses sur une table de café" loading="lazy"><b>1</b><h3>Racontez votre histoire en quelques gestes</h3><p>Où vous avez grandi, où vous vivez, et vos projets de mariage.</p></div>
+  <div class="st sr"><img src="/app/img/love/table.webp" alt="Une table dressée pour deux familles" loading="lazy"><b>2</b><h3>Faites-vous vérifier</h3><p>Pièce d’identité officielle et selfie en direct, vérifiés par une vraie personne. La photo de la pièce est supprimée après la vérification.</p></div>
+  <div class="st sr"><img src="/app/img/love/rings.webp" alt="Deux alliances" loading="lazy"><b>3</b><h3>Dites oui avec soin</h3><p>Commencez par une question tirée de son histoire. Le chat montre vos deux heures locales, pour parler quand vous êtes tous deux éveillés.</p></div>
+ </div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap">
+ <div class="sh sr"><div class="eb">Vos racines, votre ville</div><h2>Deux chez-soi. Une personne qui comprend les deux.</h2><p>Chaque profil montre où la personne a grandi et où elle vit aujourd’hui.</p></div>
+ <div class="rail">
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/lagos.webp" alt="Lagos" loading="lazy"><span>A grandi à<b>Lagos</b></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/mexico.webp" alt="Mexico" loading="lazy"><span>A grandi au<b>Mexique</b></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/seoul.webp" alt="Seoul" loading="lazy"><span>A grandi à<b>Séoul</b></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/udaipur.webp" alt="Udaipur" loading="lazy"><span>A grandi en<b>Inde</b></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/byblos.webp" alt="Byblos" loading="lazy"><span>A grandi au<b>Liban</b></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/palawan.webp" alt="Palawan" loading="lazy"><span>A grandi aux<b>Philippines</b></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/rio.webp" alt="Rio de Janeiro" loading="lazy"><span>A grandi au<b>Brésil</b></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/krakow.webp" alt="Kraków" loading="lazy"><span>A grandi en<b>Pologne</b></span></a>
+ </div>
+ <p class="cities sr">Vit aujourd’hui à <b>Toronto, Londres, Dubaï, New York, Sydney</b> et dans toutes les villes du monde.</p>
+</div></section>
+
+<section id="safe" style="padding-top:0"><div class="wrap split">
+ <div class="ph sr"><img src="/app/img/love/bouquet.webp" alt="Un bouquet de mariée" loading="lazy"></div>
+ <div class="sr"><div class="eb">Sûr dès la conception</div><h2 style="font-size:clamp(32px,5.6vw,46px);line-height:1.1;margin:12px 0 0">Le mariage est une grande décision. Nous l’avons conçu pour cela.</h2>
+  <ul class="list">
+   <li><div><b>Chaque profil est vérifié</b><span>Pièce d’identité et selfie en direct, vérifiés par notre équipe avant tout intérêt.</span></div></li>
+   <li><div><b>Vos coordonnées restent privées</b><span>Téléphone, courriel et adresse exacte ne sont jamais affichés.</span></div></li>
+   <li><div><b>Aucune demande d’argent</b><span>Les messages qui demandent de l’argent, des coordonnées bancaires ou des cartes-cadeaux sont bloqués.</span></div></li>
+   <li><div><b>Signaler et bloquer</b><span>Une vraie personne lit chaque signalement, en général sous 24 heures.</span></div></li>
+  </ul></div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap split rv">
+ <div class="ph sr"><img src="/app/img/love/family.webp" alt="Une maison familiale avec une table dressée" loading="lazy"></div>
+ <div class="sr"><div class="eb">Family Room</div><h2 style="font-size:clamp(32px,5.6vw,46px);line-height:1.1;margin:12px 0 12px">Votre famille à vos côtés. Même depuis un autre pays.</h2>
+  <p style="color:var(--mt);margin:0 0 22px">Partagez un profil avec vos parents grâce à un lien privé de 7 jours. Ils voient l’essentiel, jamais les photos ni les coordonnées, et peuvent répondre « Ça me plaît ».</p>
+  <a class="btn r" data-play href="__PLAY__">__PLAYSVG__Get the app</a></div>
+</div></section>
+
+<section id="plans" style="padding-top:0"><div class="wrap" style="max-width:760px">
+ <div class="sh sr"><div class="eb">Plans</div><h2>Voyez d’abord qui vous correspond.</h2><p>L’inscription et la vérification sont sans frais. Gold ouvre les noms, les photos, le « oui » et le chat.</p></div>
+ <div class="plans sr">
+  <div class="pl"><h3>Départ</h3><div class="pr">0 $</div><p>Profil et vérification · combien de personnes vous correspondent et votre % · outils de sécurité</p></div>
+  <div class="pl g"><h3>Gold</h3><div class="pr">39,99 $ US <small>/ mois</small></div><p>Profils complets et photos (selon chaque membre) · dire oui et discuter · sélections du jour</p></div>
+ </div>
+ <p class="note">Payé une fois sur neumarry.com avec PayPal ; rien ne se renouvelle tout seul.</p>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap" style="max-width:760px">
+ <div class="sh sr"><div class="eb">Questions</div><h2>Bon à savoir.</h2></div>
+ <details><summary>À qui s’adresse NeuMarry ?</summary><p>Aux personnes de tous les pays qui vivent loin du pays où elles ont grandi et qui souhaitent se marier avec quelqu’un qui comprend leurs deux mondes.</p></details>
+ <details><summary>Est-ce une appli de rencontre ?</summary><p>Non. NeuMarry est uniquement pour le mariage. Pas de swipe, et chaque membre est vérifié.</p></details>
+ <details><summary>Mes parents peuvent-ils créer mon profil ?</summary><p>Oui, avec votre accord. Vous faites vous-même la vérification d’identité, et le profil indique qui l’a créé.</p></details>
+ <details><summary>Où sont les chambres, événements et amis ?</summary><p>Ils sont dans notre appli séparée NeuAmigo sur neuamigo.com.</p></details>
+</div></section>
+
+<div class="fin">
+ <img src="/app/img/love/udaipur.webp" alt="" loading="lazy">
+ <div class="wrap sr">
+  <svg class="hl" viewBox="0 0 64 56"><path d="M32 50C14 38 4 28 4 16 4 8 10 3 17 3c6 0 11 4 15 10 4-6 9-10 15-10 7 0 13 5 13 13 0 12-10 22-28 34z"/></svg>
+  <div class="eb">La bonne personne vit peut-être dans votre ville</div>
+  <h2>Commencez votre histoire aujourd’hui.</h2>
+  <p>Checked members only. Votre famille peut participer.</p>
+  <a class="btn r" data-play href="__PLAY__">__PLAYSVG__Télécharger NeuMarry sur Google Play</a>
+ </div>
+</div>
+
+<footer><div class="wrap">
+ <div class="row fl"><a href="https://www.instagram.com/neumarry_match" target="_blank" rel="noopener">Suivre sur Instagram</a><a href="https://www.facebook.com/profile.php?id=61595614954211" target="_blank" rel="noopener">Suivre sur Facebook</a></div>
+ <div class="row"><a href="/about.html">À propos</a><a href="/faq.html">FAQ</a><a href="/fr/privacy.html">Confidentialité</a><a href="/fr/terms.html">Conditions</a><a href="/delete-account.html">Supprimer le compte</a><a href="/child-safety.html">Sécurité des enfants</a><a href="mailto:support@neumarry.com">support@neumarry.com</a><a class="lang" href="/" hreflang="en">English</a></div>
+ <div>© 2026 NEUCONET PRIVATE LIMITED · Surat, Gujarat, India</div>
+</div></footer>
+<div class="stick" id="stick"><a class="btn r" data-play href="__PLAY__">__PLAYSVG__Télécharger NeuMarry sur Google Play</a></div>
+<script>
+(function(){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.15});
+document.querySelectorAll('.sr').forEach(function(el){io.observe(el)});
+var st=document.getElementById('stick'),h=document.querySelector('.hero');
+function u(){var r=h.getBoundingClientRect().bottom;st.classList.toggle('hide',r>0)}addEventListener('scroll',u,{passive:true});u();})();
+</script>
+</body></html>
