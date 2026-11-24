@@ -497,7 +497,7 @@ if LAUNCH15:
     # the broad home (home15) now lives on neuamigo.com (built from these same sources by rootmate/scripts/build_neuamigo_site.py).
     # Until NeuMarry is public on Google Play (closed test first), the app button installs the web app (his 10 Nov 01:10).
     PLAY = '/app/?install=1'
-    NM_HOME = os.environ.get('NM_HOME', 'homenm')
+    NM_HOME = os.environ.get('NM_HOME', 'homelove')
     for src_name, out_rel, lang, other, legal in ((NM_HOME + '.html', 'index.html', 'en', 'fr/', ''), (NM_HOME + '_fr.html', os.path.join('fr', 'index.html'), 'fr', '../', 'fr/')):
         h = rd(os.path.join('next', src_name))
         if '__PLAY__' in h:  # Love home (his ask 24 Nov 2026): every main button opens NeuMarry on Google Play
@@ -523,7 +523,7 @@ if LAUNCH15:
             h = h.replace(m, f2)
         desc = (('Verified matrimony for people living abroad: meet someone from your roots, in your city, with your family by your side.' if lang == 'en'
                  else 'Mariage vérifié pour les personnes qui vivent à l’étranger : rencontrez quelqu’un de vos racines, dans votre ville, avec votre famille.')
-                if NM_HOME == 'homenm' else
+                if NM_HOME in ('homenm', 'homelove') else
                 ('Rooms, job referrals, a flight buddy for parents, events and friends for people living abroad. Now open in Toronto.' if lang == 'en'
                  else 'Chambres, recommandations d’emploi, compagnon de voyage pour les parents, événements et amis pour les personnes qui vivent à l’étranger.'))
         url = SITE + ('fr/' if lang == 'fr' else '')
