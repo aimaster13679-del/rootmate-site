@@ -50,6 +50,8 @@ nav .nl{color:var(--mt)}
 .trust{display:flex;justify-content:center;gap:12px 28px;flex-wrap:wrap;padding:22px 0;border-bottom:1px solid var(--ln);font:700 14.5px var(--PJ)}
 .tk{display:inline-flex;align-items:center;gap:8px}
 .tk:before{content:"";width:18px;height:18px;border-radius:6px;background:var(--rose) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3.2L15 7' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat;flex:none}
+a.st,a.ph,a.pl,a.rc{transition:transform .25s}a.st:active,a.ph:active,a.pl:active,a.rc:active{transform:scale(.985)}
+a.st img,a.ph img{transition:transform .6s}a.st:hover img,a.ph:hover img{transform:scale(1.02)}
 /* sections */
 section{padding:72px 0}
 .sh{max-width:640px;margin-bottom:34px}
@@ -68,9 +70,9 @@ section{padding:72px 0}
 .rc{flex:none;width:230px;scroll-snap-align:start;position:relative;border-radius:26px;overflow:hidden;color:#fff}
 .rc img{width:100%;aspect-ratio:2/3;object-fit:cover;transition:transform .6s}
 .rc:hover img{transform:scale(1.04)}
-.rc:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(20,10,16,.72))}
+.rc:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(20,10,16,.8))}
 .rc span{position:absolute;left:16px;right:16px;bottom:14px;z-index:1;font:600 13px var(--PJ);color:rgba(255,255,255,.85)}
-.rc span b{display:block;font:600 22px/1.2 var(--PF);color:#fff}
+.rc span b{display:block;font:600 22px/1.2 var(--PF);color:#fff}.rc em{display:block;font:600 13px var(--PJ);font-style:normal;color:rgba(255,255,255,.85);margin-top:2px}.rc u{display:inline-block;margin-top:10px;text-decoration:none;font:800 12.5px var(--PJ);color:#fff;padding:7px 13px;border-radius:999px;background:rgba(214,31,79,.92)}
 .cities{margin-top:22px;color:var(--mt);font-size:16px}
 .cities b{color:var(--ink)}
 /* split rows */
@@ -119,7 +121,7 @@ footer .fl a{color:var(--rose);padding:7px 14px;border-radius:999px;border:1px s
 /* sticky app button on phones */
 .stick{position:fixed;left:16px;right:16px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:30;display:none}
 .stick .btn{width:100%}
-@media(max-width:760px){.stick{display:block}.stick.hide{opacity:0;pointer-events:none}body{padding-bottom:80px}}
+
 .stick{transition:opacity .3s}
 .sr{opacity:0;transform:translateY(26px);transition:opacity .8s,transform .8s cubic-bezier(.2,.7,.2,1)}.sr.on{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rise,.sr{opacity:1;transform:none}.hl path{stroke-dashoffset:0}}
@@ -145,29 +147,29 @@ footer .fl a{color:var(--rose);padding:7px 14px;border-radius:999px;border:1px s
 <section id="how"><div class="wrap">
  <div class="sh sr"><div class="eb">How it works</div><h2>Three calm steps to your person.</h2><p>Most answers are taps. No swiping, no endless chatting.</p></div>
  <div class="steps">
-  <div class="st sr"><img src="/app/img/love/cafe.webp" alt="Two coffee cups on a café table" loading="lazy"><b>1</b><h3>Tell your story in taps</h3><p>Where you grew up, where you live now, and your plans for marriage.</p></div>
-  <div class="st sr"><img src="/app/img/love/table.webp" alt="A dinner table set for two families" loading="lazy"><b>2</b><h3>Get checked</h3><p>Government ID and a live selfie, checked by a real person. The ID photo is deleted after the check.</p></div>
-  <div class="st sr"><img src="/app/img/love/rings.webp" alt="Two wedding rings" loading="lazy"><b>3</b><h3>Say yes with care</h3><p>Start with a question from their story. Chat shows both clocks, so you talk when you are both awake.</p></div>
+  <a class="st sr" data-play href="__PLAY__"><img src="/app/img/love/cafe.webp" alt="Two coffee cups on a café table" loading="lazy"><b>1</b><h3>Tell your story in taps</h3><p>Where you grew up, where you live now, and your plans for marriage.</p></a>
+  <a class="st sr" data-play href="__PLAY__"><img src="/app/img/love/table.webp" alt="A dinner table set for two families" loading="lazy"><b>2</b><h3>Get checked</h3><p>Government ID and a live selfie, checked by a real person. The ID photo is deleted after the check.</p></a>
+  <a class="st sr" data-play href="__PLAY__"><img src="/app/img/love/rings.webp" alt="Two wedding rings" loading="lazy"><b>3</b><h3>Say yes with care</h3><p>Start with a question from their story. Chat shows both clocks, so you talk when you are both awake.</p></a>
  </div>
 </div></section>
 
 <section style="padding-top:0"><div class="wrap">
  <div class="sh sr"><div class="eb">Your roots, your city</div><h2>Two homes. One person who understands both.</h2><p>Every profile shows where someone grew up and where they live now.</p></div>
  <div class="rail">
-  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/lagos.webp" alt="Lagos" loading="lazy"><span>Grew up in<b>Lagos</b></span></a>
-  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/mexico.webp" alt="Mexico" loading="lazy"><span>Grew up in<b>Mexico</b></span></a>
-  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/seoul.webp" alt="Seoul" loading="lazy"><span>Grew up in<b>Seoul</b></span></a>
-  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/udaipur.webp" alt="Udaipur" loading="lazy"><span>Grew up in<b>India</b></span></a>
-  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/byblos.webp" alt="Byblos" loading="lazy"><span>Grew up in<b>Lebanon</b></span></a>
-  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/palawan.webp" alt="Palawan" loading="lazy"><span>Grew up in<b>the Philippines</b></span></a>
-  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/rio.webp" alt="Rio de Janeiro" loading="lazy"><span>Grew up in<b>Brazil</b></span></a>
-  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/krakow.webp" alt="Kraków" loading="lazy"><span>Grew up in<b>Poland</b></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/lagos.webp" alt="Lagos" loading="lazy"><span>Grew up in<b>Lagos</b><em>Lives in Toronto</em><u>See who fits</u></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/mexico.webp" alt="Mexico" loading="lazy"><span>Grew up in<b>Mexico</b><em>Lives in London</em><u>See who fits</u></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/seoul.webp" alt="Seoul" loading="lazy"><span>Grew up in<b>Seoul</b><em>Lives in Dubai</em><u>See who fits</u></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/udaipur.webp" alt="Udaipur" loading="lazy"><span>Grew up in<b>India</b><em>Lives in New York</em><u>See who fits</u></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/byblos.webp" alt="Byblos" loading="lazy"><span>Grew up in<b>Lebanon</b><em>Lives in Sydney</em><u>See who fits</u></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/palawan.webp" alt="Palawan" loading="lazy"><span>Grew up in<b>the Philippines</b><em>Lives in Toronto</em><u>See who fits</u></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/rio.webp" alt="Rio de Janeiro" loading="lazy"><span>Grew up in<b>Brazil</b><em>Lives in London</em><u>See who fits</u></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/krakow.webp" alt="Kraków" loading="lazy"><span>Grew up in<b>Poland</b><em>Lives in Dubai</em><u>See who fits</u></span></a>
  </div>
  <p class="cities sr">Now living in <b>Toronto, London, Dubai, New York, Sydney</b> and every other city of the world.</p>
 </div></section>
 
 <section id="safe" style="padding-top:0"><div class="wrap split">
- <div class="ph sr"><img src="/app/img/love/bouquet.webp" alt="A wedding bouquet" loading="lazy"></div>
+ <a class="ph sr" data-play href="__PLAY__"><img src="/app/img/love/bouquet.webp" alt="A wedding bouquet" loading="lazy"></a>
  <div class="sr"><div class="eb">Safe by design</div><h2 style="font-size:clamp(32px,5.6vw,46px);line-height:1.1;margin:12px 0 0">Marriage is a big decision. We built for it.</h2>
   <ul class="list">
    <li><div><b>Every profile is checked</b><span>ID and live selfie, checked by our team before anyone can send an interest.</span></div></li>
@@ -178,17 +180,16 @@ footer .fl a{color:var(--rose);padding:7px 14px;border-radius:999px;border:1px s
 </div></section>
 
 <section style="padding-top:0"><div class="wrap split rv">
- <div class="ph sr"><img src="/app/img/love/family.webp" alt="A family home with a set table" loading="lazy"></div>
+ <a class="ph sr" data-play href="__PLAY__"><img src="/app/img/love/family.webp" alt="A family home with a set table" loading="lazy"></a>
  <div class="sr"><div class="eb">Family Room</div><h2 style="font-size:clamp(32px,5.6vw,46px);line-height:1.1;margin:12px 0 12px">Your family, by your side. Even from another country.</h2>
-  <p style="color:var(--mt);margin:0 0 22px">Share a match with your parents through a private 7-day link. They see the basics, never photos or contact details, and can answer "Looks good".</p>
-  <a class="btn r" data-play href="__PLAY__">__PLAYSVG__Get the app</a></div>
+  <p style="color:var(--mt);margin:0">Share a match with your parents through a private 7-day link. They see the basics, never photos or contact details, and can answer "Looks good".</p></div>
 </div></section>
 
 <section id="plans" style="padding-top:0"><div class="wrap" style="max-width:760px">
  <div class="sh sr"><div class="eb">Plans</div><h2>See who fits you first.</h2><p>Joining and getting checked has no fee. Gold opens names, photos, saying yes and chat.</p></div>
  <div class="plans sr">
-  <div class="pl"><h3>Start</h3><div class="pr">$0</div><p>Profile and check · see how many people fit you and your match % · safety tools</p></div>
-  <div class="pl g"><h3>Gold</h3><div class="pr">US$39.99 <small>/ month</small></div><p>Full profiles and photos (as each member allows) · say yes and chat · daily picks</p></div>
+  <a class="pl" data-play href="__PLAY__"><h3>Start</h3><div class="pr">$0</div><p>Profile and check · see how many people fit you and your match % · safety tools</p></a>
+  <a class="pl g" data-play href="__PLAY__"><h3>Gold</h3><div class="pr">US$39.99 <small>/ month</small></div><p>Full profiles and photos (as each member allows) · say yes and chat · daily picks</p></a>
  </div>
  <p class="note">Paid once on neumarry.com with PayPal; nothing renews by itself.</p>
 </div></section>
@@ -217,11 +218,9 @@ footer .fl a{color:var(--rose);padding:7px 14px;border-radius:999px;border:1px s
  <div class="row"><a href="/about.html">About</a><a href="/faq.html">FAQ</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/delete-account.html">Delete account</a><a href="/child-safety.html">Child safety</a><a href="mailto:support@neumarry.com">support@neumarry.com</a><a class="lang" href="/fr/" hreflang="fr">Français</a></div>
  <div>© 2026 NEUCONET PRIVATE LIMITED · Surat, Gujarat, India</div>
 </div></footer>
-<div class="stick" id="stick"><a class="btn r" data-play href="__PLAY__">__PLAYSVG__Get NeuMarry on Google Play</a></div>
 <script>
 (function(){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.15});
 document.querySelectorAll('.sr').forEach(function(el){io.observe(el)});
-var st=document.getElementById('stick'),h=document.querySelector('.hero');
-function u(){var r=h.getBoundingClientRect().bottom;st.classList.toggle('hide',r>0)}addEventListener('scroll',u,{passive:true});u();})();
+})();
 </script>
 </body></html>

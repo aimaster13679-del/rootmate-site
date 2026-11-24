@@ -50,6 +50,8 @@ nav .nl{color:var(--mt)}
 .trust{display:flex;justify-content:center;gap:12px 28px;flex-wrap:wrap;padding:22px 0;border-bottom:1px solid var(--ln);font:700 14.5px var(--PJ)}
 .tk{display:inline-flex;align-items:center;gap:8px}
 .tk:before{content:"";width:18px;height:18px;border-radius:6px;background:var(--rose) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3.2L15 7' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat;flex:none}
+a.st,a.ph,a.pl,a.rc{transition:transform .25s}a.st:active,a.ph:active,a.pl:active,a.rc:active{transform:scale(.985)}
+a.st img,a.ph img{transition:transform .6s}a.st:hover img,a.ph:hover img{transform:scale(1.02)}
 /* sections */
 section{padding:72px 0}
 .sh{max-width:640px;margin-bottom:34px}
@@ -68,9 +70,9 @@ section{padding:72px 0}
 .rc{flex:none;width:230px;scroll-snap-align:start;position:relative;border-radius:26px;overflow:hidden;color:#fff}
 .rc img{width:100%;aspect-ratio:2/3;object-fit:cover;transition:transform .6s}
 .rc:hover img{transform:scale(1.04)}
-.rc:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(20,10,16,.72))}
+.rc:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(20,10,16,.8))}
 .rc span{position:absolute;left:16px;right:16px;bottom:14px;z-index:1;font:600 13px var(--PJ);color:rgba(255,255,255,.85)}
-.rc span b{display:block;font:600 22px/1.2 var(--PF);color:#fff}
+.rc span b{display:block;font:600 22px/1.2 var(--PF);color:#fff}.rc em{display:block;font:600 13px var(--PJ);font-style:normal;color:rgba(255,255,255,.85);margin-top:2px}.rc u{display:inline-block;margin-top:10px;text-decoration:none;font:800 12.5px var(--PJ);color:#fff;padding:7px 13px;border-radius:999px;background:rgba(214,31,79,.92)}
 .cities{margin-top:22px;color:var(--mt);font-size:16px}
 .cities b{color:var(--ink)}
 /* split rows */
@@ -119,7 +121,7 @@ footer .fl a{color:var(--rose);padding:7px 14px;border-radius:999px;border:1px s
 /* sticky app button on phones */
 .stick{position:fixed;left:16px;right:16px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:30;display:none}
 .stick .btn{width:100%}
-@media(max-width:760px){.stick{display:block}.stick.hide{opacity:0;pointer-events:none}body{padding-bottom:80px}}
+
 .stick{transition:opacity .3s}
 .sr{opacity:0;transform:translateY(26px);transition:opacity .8s,transform .8s cubic-bezier(.2,.7,.2,1)}.sr.on{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rise,.sr{opacity:1;transform:none}.hl path{stroke-dashoffset:0}}
@@ -145,29 +147,29 @@ footer .fl a{color:var(--rose);padding:7px 14px;border-radius:999px;border:1px s
 <section id="how"><div class="wrap">
  <div class="sh sr"><div class="eb">How it works</div><h2>Trois étapes sereines vers la bonne personne.</h2><p>La plupart des réponses se font d’un geste. Pas de swipe, pas de discussions sans fin.</p></div>
  <div class="steps">
-  <div class="st sr"><img src="/app/img/love/cafe.webp" alt="Deux tasses sur une table de café" loading="lazy"><b>1</b><h3>Racontez votre histoire en quelques gestes</h3><p>Où vous avez grandi, où vous vivez, et vos projets de mariage.</p></div>
-  <div class="st sr"><img src="/app/img/love/table.webp" alt="Une table dressée pour deux familles" loading="lazy"><b>2</b><h3>Faites-vous vérifier</h3><p>Pièce d’identité officielle et selfie en direct, vérifiés par une vraie personne. La photo de la pièce est supprimée après la vérification.</p></div>
-  <div class="st sr"><img src="/app/img/love/rings.webp" alt="Deux alliances" loading="lazy"><b>3</b><h3>Dites oui avec soin</h3><p>Commencez par une question tirée de son histoire. Le chat montre vos deux heures locales, pour parler quand vous êtes tous deux éveillés.</p></div>
+  <a class="st sr" data-play href="__PLAY__"><img src="/app/img/love/cafe.webp" alt="Deux tasses sur une table de café" loading="lazy"><b>1</b><h3>Racontez votre histoire en quelques gestes</h3><p>Où vous avez grandi, où vous vivez, et vos projets de mariage.</p></a>
+  <a class="st sr" data-play href="__PLAY__"><img src="/app/img/love/table.webp" alt="Une table dressée pour deux familles" loading="lazy"><b>2</b><h3>Faites-vous vérifier</h3><p>Pièce d’identité officielle et selfie en direct, vérifiés par une vraie personne. La photo de la pièce est supprimée après la vérification.</p></a>
+  <a class="st sr" data-play href="__PLAY__"><img src="/app/img/love/rings.webp" alt="Deux alliances" loading="lazy"><b>3</b><h3>Dites oui avec soin</h3><p>Commencez par une question tirée de son histoire. Le chat montre vos deux heures locales, pour parler quand vous êtes tous deux éveillés.</p></a>
  </div>
 </div></section>
 
 <section style="padding-top:0"><div class="wrap">
  <div class="sh sr"><div class="eb">Vos racines, votre ville</div><h2>Deux chez-soi. Une personne qui comprend les deux.</h2><p>Chaque profil montre où la personne a grandi et où elle vit aujourd’hui.</p></div>
  <div class="rail">
-  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/lagos.webp" alt="Lagos" loading="lazy"><span>A grandi à<b>Lagos</b></span></a>
-  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/mexico.webp" alt="Mexico" loading="lazy"><span>A grandi au<b>Mexique</b></span></a>
-  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/seoul.webp" alt="Seoul" loading="lazy"><span>A grandi à<b>Séoul</b></span></a>
-  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/udaipur.webp" alt="Udaipur" loading="lazy"><span>A grandi en<b>Inde</b></span></a>
-  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/byblos.webp" alt="Byblos" loading="lazy"><span>A grandi au<b>Liban</b></span></a>
-  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/palawan.webp" alt="Palawan" loading="lazy"><span>A grandi aux<b>Philippines</b></span></a>
-  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/rio.webp" alt="Rio de Janeiro" loading="lazy"><span>A grandi au<b>Brésil</b></span></a>
-  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/krakow.webp" alt="Kraków" loading="lazy"><span>A grandi en<b>Pologne</b></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/lagos.webp" alt="Lagos" loading="lazy"><span>A grandi à<b>Lagos</b><em>Vit à Toronto</em><u>Voir les profils</u></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/mexico.webp" alt="Mexico" loading="lazy"><span>A grandi au<b>Mexique</b><em>Vit à Londres</em><u>Voir les profils</u></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/seoul.webp" alt="Seoul" loading="lazy"><span>A grandi à<b>Séoul</b><em>Vit à Dubaï</em><u>Voir les profils</u></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/udaipur.webp" alt="Udaipur" loading="lazy"><span>A grandi en<b>Inde</b><em>Vit à New York</em><u>Voir les profils</u></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/byblos.webp" alt="Byblos" loading="lazy"><span>A grandi au<b>Liban</b><em>Vit à Sydney</em><u>Voir les profils</u></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/palawan.webp" alt="Palawan" loading="lazy"><span>A grandi aux<b>Philippines</b><em>Vit à Toronto</em><u>Voir les profils</u></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/rio.webp" alt="Rio de Janeiro" loading="lazy"><span>A grandi au<b>Brésil</b><em>Vit à Londres</em><u>Voir les profils</u></span></a>
+  <a class="rc" data-play href="__PLAY__"><img src="/app/img/love/krakow.webp" alt="Kraków" loading="lazy"><span>A grandi en<b>Pologne</b><em>Vit à Dubaï</em><u>Voir les profils</u></span></a>
  </div>
  <p class="cities sr">Vit aujourd’hui à <b>Toronto, Londres, Dubaï, New York, Sydney</b> et dans toutes les villes du monde.</p>
 </div></section>
 
 <section id="safe" style="padding-top:0"><div class="wrap split">
- <div class="ph sr"><img src="/app/img/love/bouquet.webp" alt="Un bouquet de mariée" loading="lazy"></div>
+ <a class="ph sr" data-play href="__PLAY__"><img src="/app/img/love/bouquet.webp" alt="Un bouquet de mariée" loading="lazy"></a>
  <div class="sr"><div class="eb">Sûr dès la conception</div><h2 style="font-size:clamp(32px,5.6vw,46px);line-height:1.1;margin:12px 0 0">Le mariage est une grande décision. Nous l’avons conçu pour cela.</h2>
   <ul class="list">
    <li><div><b>Chaque profil est vérifié</b><span>Pièce d’identité et selfie en direct, vérifiés par notre équipe avant tout intérêt.</span></div></li>
@@ -178,17 +180,16 @@ footer .fl a{color:var(--rose);padding:7px 14px;border-radius:999px;border:1px s
 </div></section>
 
 <section style="padding-top:0"><div class="wrap split rv">
- <div class="ph sr"><img src="/app/img/love/family.webp" alt="Une maison familiale avec une table dressée" loading="lazy"></div>
+ <a class="ph sr" data-play href="__PLAY__"><img src="/app/img/love/family.webp" alt="Une maison familiale avec une table dressée" loading="lazy"></a>
  <div class="sr"><div class="eb">Family Room</div><h2 style="font-size:clamp(32px,5.6vw,46px);line-height:1.1;margin:12px 0 12px">Votre famille à vos côtés. Même depuis un autre pays.</h2>
-  <p style="color:var(--mt);margin:0 0 22px">Partagez un profil avec vos parents grâce à un lien privé de 7 jours. Ils voient l’essentiel, jamais les photos ni les coordonnées, et peuvent répondre « Ça me plaît ».</p>
-  <a class="btn r" data-play href="__PLAY__">__PLAYSVG__Get the app</a></div>
+  <p style="color:var(--mt);margin:0">Partagez un profil avec vos parents grâce à un lien privé de 7 jours. Ils voient l’essentiel, jamais les photos ni les coordonnées, et peuvent répondre « Ça me plaît ».</p></div>
 </div></section>
 
 <section id="plans" style="padding-top:0"><div class="wrap" style="max-width:760px">
  <div class="sh sr"><div class="eb">Plans</div><h2>Voyez d’abord qui vous correspond.</h2><p>L’inscription et la vérification sont sans frais. Gold ouvre les noms, les photos, le « oui » et le chat.</p></div>
  <div class="plans sr">
-  <div class="pl"><h3>Départ</h3><div class="pr">0 $</div><p>Profil et vérification · combien de personnes vous correspondent et votre % · outils de sécurité</p></div>
-  <div class="pl g"><h3>Gold</h3><div class="pr">39,99 $ US <small>/ mois</small></div><p>Profils complets et photos (selon chaque membre) · dire oui et discuter · sélections du jour</p></div>
+  <a class="pl" data-play href="__PLAY__"><h3>Départ</h3><div class="pr">0 $</div><p>Profil et vérification · combien de personnes vous correspondent et votre % · outils de sécurité</p></a>
+  <a class="pl g" data-play href="__PLAY__"><h3>Gold</h3><div class="pr">39,99 $ US <small>/ mois</small></div><p>Profils complets et photos (selon chaque membre) · dire oui et discuter · sélections du jour</p></a>
  </div>
  <p class="note">Payé une fois sur neumarry.com avec PayPal ; rien ne se renouvelle tout seul.</p>
 </div></section>
@@ -217,11 +218,9 @@ footer .fl a{color:var(--rose);padding:7px 14px;border-radius:999px;border:1px s
  <div class="row"><a href="/about.html">À propos</a><a href="/faq.html">FAQ</a><a href="/fr/privacy.html">Confidentialité</a><a href="/fr/terms.html">Conditions</a><a href="/delete-account.html">Supprimer le compte</a><a href="/child-safety.html">Sécurité des enfants</a><a href="mailto:support@neumarry.com">support@neumarry.com</a><a class="lang" href="/" hreflang="en">English</a></div>
  <div>© 2026 NEUCONET PRIVATE LIMITED · Surat, Gujarat, India</div>
 </div></footer>
-<div class="stick" id="stick"><a class="btn r" data-play href="__PLAY__">__PLAYSVG__Télécharger NeuMarry sur Google Play</a></div>
 <script>
 (function(){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.15});
 document.querySelectorAll('.sr').forEach(function(el){io.observe(el)});
-var st=document.getElementById('stick'),h=document.querySelector('.hero');
-function u(){var r=h.getBoundingClientRect().bottom;st.classList.toggle('hide',r>0)}addEventListener('scroll',u,{passive:true});u();})();
+})();
 </script>
 </body></html>
