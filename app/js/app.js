@@ -2343,7 +2343,7 @@ const liveUpd={id:null,v:null,hid:0,
     const cur=await fetch('bundle.json',{cache:'no-store'}).then(r=>r.json()).catch(()=>({}));
     const L=await fetch('https://neumarry.com/nm-update/latest.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json());
     if(!L||!L.version||!L.url||L.version===cur.v||L.version===this.v)return;
-    const b=await U.download({url:L.url,version:L.version,checksum:L.checksum||''});await U.next({id:b.id});this.id=b.id;this.v=L.version}catch(e){}}};
+    const b=await U.download({url:L.url,version:L.version,checksum:L.checksum||''});await U.next({id:b.id});this.id=b.id;this.v=L.version;try{localStorage.setItem('nm.nextid',b.id);localStorage.removeItem('nm.upderr')}catch(e){}}catch(e){try{localStorage.setItem('nm.upderr',String(e&&e.message||e).slice(0,80))}catch(x){}}}};
 /* 12 Nov 2026 (his ask 01:45: every download must open the LATEST version): on the very first screen, while the opening
    animation shows, look for a newer version (max 2.5 s); if there is one, fetch it (max 15 s) and switch to it at once. */
 liveUpd.first=async function(){const U=this.U();if(!U)return false;const T=(p,ms)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(0),ms))]);
@@ -7056,6 +7056,7 @@ html.lva #app .rbtn,html.lva .rbtn{border-radius:999px!important;background:#fff
 html.lva .btn.primary .ic,html.lva .btn.primary .i28{display:none!important}
 /* Me, Gold, Chats: softer, rounder, no plain icons */
 html.lva #app .n26-ph{border-radius:24px!important}
+html.lva .lv-ver{text-align:center;font:600 11.5px ${PJ};color:#9A8A90;margin:22px 0 8px}
 @media (max-width:374px){html.lva #app .n26-st .btn,html.lva #app .n26-st button,html.lva #app .n26-go{font-size:13px!important;padding:0 8px!important;white-space:nowrap!important;min-height:42px!important;display:flex!important;align-items:center!important;justify-content:center!important}html.lva #app .n26-st b{font-size:26px!important}}
 html.lva #app .n27 .n27-st>*,html.lva #app .n27 [class*=n27-s]>div{border-radius:20px!important}
 html.lva #app .n27-go{border-radius:999px!important;background:#D61F4F!important}
@@ -7091,6 +7092,8 @@ html.lva #app .panel,html.lva #app .card,html.lva #app .v2card,html.lva #app .n2
     de.classList.toggle('lva',on);if(!on)return;
     if(!document.getElementById('lv-css3')){const k=document.createElement('style');k.id='lv-css3';k.textContent=CSS3;document.head.appendChild(k)}
     const bd=document.querySelector('.n22-bd')||document.createElement('div');
+  try{const ph=document.querySelector('#app .n26-ph');if(ph&&!document.querySelector('.lv-ver')){const box=ph.closest('.scroll,main,section')||ph.parentNode;const v=document.createElement('p');v.className='lv-ver';
+    fetch('bundle.json',{cache:'no-store'}).then(r=>r.json()).then(j=>{let e='';try{e=localStorage.getItem('nm.upderr')||''}catch(x){}v.textContent='App version '+String(j.v||'').slice(0,6)+(e?' · update: '+e:'')}).catch(()=>{});box.appendChild(v)}}catch(e){}
     /* his photos for the roots picture where we have one */
     bd.querySelectorAll('.n22-rte .n22-a').forEach(a=>{const t=(a.querySelector('em')||{}).textContent||'';const c=t.replace(/^ROOTS/,'').trim();const k=ROOT_PH[c];const im=a.querySelector('img');if(k&&im&&!im.dataset.lv){im.dataset.lv=1;im.src=LP+k+'.webp'}});
     /* people first: the 'next step' card goes after the first photo rail */
@@ -7119,6 +7122,11 @@ html.lva #app .panel,html.lva #app .card,html.lva #app .v2card,html.lva #app .n2
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 /* only on the first open after installing (fast open stays ~1 s every other time; later updates come quietly) */
+/* 26 Nov 2026: a version downloaded earlier is switched on at the next open (local, no waiting), so nobody stays on an old look */
+const nmNext=(()=>{try{return localStorage.getItem('nm.nextid')}catch(e){return null}})();
+if(liveUpd.U()&&nmNext){(async()=>{const U=liveUpd.U();let cur=null;try{cur=await U.current()}catch(e){}
+  const cid=cur&&cur.bundle&&cur.bundle.id;try{localStorage.removeItem('nm.nextid')}catch(e){}
+  if(cid&&cid!==nmNext){try{await U.set({id:nmNext});return}catch(e){}}boot()})()}else
 if(liveUpd.U()&&!(()=>{try{return localStorage.getItem('nm.upd1')}catch(e){return 1}})()){try{localStorage.setItem('nm.upd1','1')}catch(e){}liveUpd.first().then(ok=>{if(!ok)boot()})}else 
 /* NeuMarry matrimony-only build */
 P15on=function(){return false};brand15=function(h){return h};window.NM_APP=true;
