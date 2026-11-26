@@ -3491,6 +3491,7 @@ function GLASS(){try{if(/127\.0\.0\.1/.test(CFG.url||'')){const t=localStorage.g
   const mq=window.matchMedia?matchMedia('(prefers-color-scheme: light)'):null;
   const apply=()=>{const on=GLASS();const h=document.documentElement;h.classList.toggle('gl',on);
     let lt=false;try{const t=localStorage.getItem('nm.glassmode');lt=t?t!=='dark':!(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)   /* 12 Nov 2026 16:17 his ok: follow the phone's own setting; light when it has none; the theme button still wins */}catch(e){}
+    try{if(localStorage.getItem('nm.love')!=='0')lt=true}catch(e){lt=true}   /* 26 Nov 2026: the Love design is light only, also on dark-mode phones */
     h.classList.toggle('gl-lt',on&&lt);
     const m=document.querySelector('meta[name=theme-color]');if(m&&on)m.setAttribute('content',lt?'#F7F8F5':'#0A0C0B')};
   const _r=render;render=function(){apply();_r()};
