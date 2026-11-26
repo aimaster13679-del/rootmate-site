@@ -2343,7 +2343,7 @@ const liveUpd={id:null,v:null,hid:0,
     const cur=await fetch('bundle.json',{cache:'no-store'}).then(r=>r.json()).catch(()=>({}));
     const L=await fetch('https://neumarry.com/nm-update/latest.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json());
     if(!L||!L.version||!L.url||L.version===cur.v||L.version===this.v)return;
-    const b=await U.download({url:L.url,version:L.version,checksum:L.checksum||''});await U.next({id:b.id});this.id=b.id;this.v=L.version;try{localStorage.setItem('nm.nextid',b.id);localStorage.removeItem('nm.upderr')}catch(e){}}catch(e){try{localStorage.setItem('nm.upderr',String(e&&e.message||e).slice(0,80))}catch(x){}}}};
+    const b=await U.download({url:L.url,version:L.version,checksum:L.checksum||''});await U.next({id:b.id});this.id=b.id;this.v=L.version;try{localStorage.setItem('nm.nextid',b.id);localStorage.removeItem('nm.upderr')}catch(e){}try{nmReady(U,b.id)}catch(e){}}catch(e){try{localStorage.setItem('nm.upderr',String(e&&e.message||e).slice(0,80))}catch(x){}}}};
 /* 12 Nov 2026 (his ask 01:45: every download must open the LATEST version): on the very first screen, while the opening
    animation shows, look for a newer version (max 2.5 s); if there is one, fetch it (max 15 s) and switch to it at once. */
 liveUpd.first=async function(){const U=this.U();if(!U)return false;const T=(p,ms)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(0),ms))]);
@@ -7057,6 +7057,7 @@ html.lva #app .rbtn,html.lva .rbtn{border-radius:999px!important;background:#fff
 html.lva .btn.primary .ic,html.lva .btn.primary .i28{display:none!important}
 /* Me, Gold, Chats: softer, rounder, no plain icons */
 html.lva #app .n26-ph{border-radius:24px!important}
+html.lva,html.lva body,html.lva #app,html.lva #main,html.lva .view{background-color:#FBF6F0!important;color-scheme:light!important}
 html.lva .lv-ver{text-align:center;font:600 11.5px ${PJ};color:#9A8A90;margin:22px 0 8px}
 @media (max-width:374px){html.lva #app .n26-st .btn,html.lva #app .n26-st button,html.lva #app .n26-go{font-size:13px!important;padding:0 8px!important;white-space:nowrap!important;min-height:42px!important;display:flex!important;align-items:center!important;justify-content:center!important}html.lva #app .n26-st b{font-size:26px!important}}
 html.lva #app .n27 .n27-st>*,html.lva #app .n27 [class*=n27-s]>div{border-radius:20px!important}
@@ -7123,6 +7124,12 @@ html.lva #app .panel,html.lva #app .card,html.lva #app .v2card,html.lva #app .n2
 
 window.__rm={get S(){return S},get PROFILES(){return PROFILES},A,render,boot,goBack,card:p=>card(p),cel:id=>{celebrate={id};render()},spinner:l=>spinner(l)}; /* used by automated tests */
 /* only on the first open after installing (fast open stays ~1 s every other time; later updates come quietly) */
+/* 26 Nov 2026: once a new version is downloaded, a slim bar offers to use it at once (one tap, about 1 second) */
+function nmReady(U,id){if(document.getElementById('nmup'))return;const d=document.createElement('button');d.id='nmup';d.type='button';
+  d.style.cssText='position:fixed;left:14px;right:14px;bottom:calc(96px + env(safe-area-inset-bottom));z-index:9000;display:flex;align-items:center;justify-content:space-between;gap:12px;border:0;border-radius:999px;padding:12px 14px 12px 20px;background:#D61F4F;color:#fff;font:800 14.5px/1.2 "Plus Jakarta Sans",system-ui,sans-serif;box-shadow:0 14px 34px rgba(80,10,30,.35);cursor:pointer;text-align:left';
+  d.innerHTML='<b style="color:#fff">A new version is ready</b><span style="color:#D61F4F;background:#fff;padding:8px 14px;border-radius:999px;white-space:nowrap">Tap to refresh</span>';
+  d.onclick=()=>{d.disabled=true;d.querySelector('span').textContent='Refreshing...';try{localStorage.removeItem('nm.nextid')}catch(e){}U.set({id:id}).catch(()=>d.remove())};
+  document.body.appendChild(d)}
 /* 26 Nov 2026: a version downloaded earlier is switched on at the next open (local, no waiting), so nobody stays on an old look */
 const nmNext=(()=>{try{return localStorage.getItem('nm.nextid')}catch(e){return null}})();
 if(liveUpd.U()&&nmNext){(async()=>{const U=liveUpd.U();let cur=null;try{cur=await U.current()}catch(e){}
