@@ -7057,6 +7057,12 @@ html.lva #app .rbtn,html.lva .rbtn{border-radius:999px!important;background:#fff
 html.lva .btn.primary .ic,html.lva .btn.primary .i28{display:none!important}
 /* Me, Gold, Chats: softer, rounder, no plain icons */
 html.lva #app .n26-ph{border-radius:24px!important}
+html.lva .fam-r{display:flex!important;flex-wrap:wrap;align-items:center;gap:8px!important;background:#fff;border:1px solid #EFE4DA;border-radius:26px;padding:16px 18px!important;margin:14px 0!important}
+html.lva .fam-r b{width:100%;display:block!important;font:600 19px/1.25 ${PF}!important;color:#2B1A24!important;margin-bottom:2px}
+html.lva .fam-r b .ic,html.lva .fam-r b svg{display:none!important}
+html.lva .fam-r>span{background:#FFF5F7!important;border:1px solid #F2C9D3!important;color:#D61F4F!important;border-radius:999px!important;padding:7px 14px!important;font:800 13.5px ${PJ}!important}
+.a3in{border-radius:999px!important;padding:13px 18px!important;font-size:15px!important}
+.a3in::placeholder{color:#8A7A82!important;opacity:1!important}
 html.lva,html.lva body,html.lva #app,html.lva #main,html.lva .view{background-color:#FBF6F0!important;color-scheme:light!important}
 html.lva .lv-ver{text-align:center;font:600 11.5px ${PJ};color:#9A8A90;margin:22px 0 8px}
 @media (max-width:374px){html.lva #app .n26-st .btn,html.lva #app .n26-st button,html.lva #app .n26-go{font-size:13px!important;padding:0 8px!important;white-space:nowrap!important;min-height:42px!important;display:flex!important;align-items:center!important;justify-content:center!important}html.lva #app .n26-st b{font-size:26px!important}}
